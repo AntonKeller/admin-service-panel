@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "SF Pro Display", "Golos", "system-ui", sans-serif;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+}
+
+*::-webkit-scrollbar {
+  @apply w-1.5 h-3;
+}
+
+*::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-gray-600/50 rounded-xl;
+}
+
+body {
+
+}
