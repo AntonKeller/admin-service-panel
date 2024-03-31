@@ -52,12 +52,12 @@ export default {
 
   methods: {
     click() {
-      // this.$emit('updateTab', "authorization-tab") - переход к авторизации
 
       this.isLoading = !this.isLoading;
 
       let timeout = setTimeout(() => {
         this.isLoading = false;
+        this.$emit('updateTab', "authorization-tab") // - переход к авторизации
         clearTimeout(timeout);
       }, 1500);
     }
