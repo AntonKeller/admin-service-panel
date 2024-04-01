@@ -1,11 +1,6 @@
 <template>
   <div class="index-background">
     <div class="au-panel-wrap">
-      <!--        <div>-->
-      <!--          <c-verify-menu-registration :show="showVerifyAcc"/>-->
-      <!--        </div>-->
-      <!--:class="{'show': !show_verify_acc, 'hide': show_verify_acc}"-->
-<!--      <TheVerifyMenu />-->
       <v-card variant="tonal" class="o-v-card">
 
         <v-tabs v-model="currentTab" bg-color="primary">

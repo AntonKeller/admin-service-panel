@@ -77,16 +77,24 @@ export default {
       console.log('login', this.config.params.login)
       console.log('password', this.config.params.password)
 
-      axios.get('https://jsonplaceholder.typicode.com/users')
-          .then((response) => {
-            console.dir('response', response);
-            this.openUserMenu();
-          })
-          .catch((err) => {
-            console.dir('err', err);
-            this.loginErrMsg = 'Ошибка авторизации';
-          })
+      axios.post('http://192.168.1.1/login', {
 
+        login: this.config.params.login,
+        password: this.config.params.password,
+
+      }).then((response) => {
+
+        console.log('Успешная авторизация по роуту: /login')
+        console.dir('response', response);
+        this.openUserMenu();
+
+      }).catch((err) => {
+
+        console.log('Ошибка авторизации по роуту: /login')
+        console.dir('err', err);
+        this.loginErrMsg = 'Ошибка авторизации';
+
+      })
 
       // http://127.0.0.1:3000/produtos
       // Make a request for a user with a given ID
