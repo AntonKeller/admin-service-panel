@@ -60,6 +60,8 @@
 
     <v-divider vertical></v-divider>
 
+    <button @click="requestUsers">get users</button>
+
     <div class="text-center">
       <v-pagination
           v-model="page"
@@ -72,6 +74,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "inspectors",
 
@@ -121,11 +125,21 @@ export default {
 
   methods: {
 
+    requestUsers() {
+      axios.get('http://192.168.1.26/users')
+          .then((response) => {
+            console.dir('response', response);
+          })
+          .catch((err) => {
+            console.dir('Ошибка получения пользователей', err);
+          })
+    },
+
     genRandomIndex(length) {
       return Math.ceil(Math.random() * (length - 1))
     },
 
-    onClick () {
+    onClick() {
       this.loading = true
 
       setTimeout(() => {

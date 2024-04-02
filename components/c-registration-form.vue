@@ -35,7 +35,7 @@
         class="mt-2"
         type="submit"
         block
-        @click="click"
+        @click="request"
     >Зарегистрировать
     </v-btn>
 
@@ -51,28 +51,28 @@ export default {
   data: () => ({
     emailField: {
       label: 'Почта',
-      value: '',
+      value: '123@mail.ru',
       rules: [
         value => value?.length > 3 || 'Почта введена некорректно'
       ]
     },
     phoneNumberField: {
       label: 'Телефон',
-      value: '',
+      value: '123',
       rules: [
         value => value?.length > 3 || 'Телефон введен некорректно'
       ]
     },
     loginField: {
       label: 'Логин',
-      value: '',
+      value: '123',
       rules: [
         value => value?.length > 3 || 'Логин введен некорректно'
       ]
     },
     passwordField: {
       label: 'Пароль',
-      value: '',
+      value: '123',
       rules: [
         value => value?.length > 3 || 'Пароль введен некорректно'
       ],
@@ -85,11 +85,31 @@ export default {
       this.$emit('updateTab', "verify-tab")
     },
     request() {
-      axios.post('http://192.168.1.1/registration', {
+      axios.post('http://192.168.1.26/registration', {
         email: this.emailField.value,
         phoneNumber: this.phoneNumberField.value,
         login: this.loginField.value,
         password: this.passwordField.value
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': '*',
+          'Access-Control-Allow-Headers': '*'
+
+          // 'Access-Control-Allow-Credentials'
+          // "Cache-Control": "no-cache",
+          // "Content-Type": "application/x-www-form-urlencoded",
+          // "Cache-Control": "no-cache",
+          // "Content-Type": "application/x-www-form-urlencoded",
+          // "Access-Control-Allow-Origin": "*",
+          // 'x-apikey': '59a7ad19f5a9fa0808f11931',
+          // 'Content-Type': 'application/json',
+          // 'Accept': '*/*',
+          // 'Accept-Encoding': 'gzip, deflate, br',
+          // 'Connection': 'keep-alive',
+          // 'Access-Control-Allow-Origin' : '*',
+          // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        }
       }).then((response) => {
         console.log('Запрос на /registration - успешно прошел');
         console.dir('response', response);

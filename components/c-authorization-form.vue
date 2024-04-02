@@ -3,18 +3,16 @@
     <!--    action="http://127.0.0.1:3000/produtos"-->
     <v-form @submit.prevent fast-fail method="POST">
       <v-text-field
-          @input="this.loginErrMsg = ''"
           :loading="isLoading"
           label="Логин"
-          v-model="config.params.login"
+          v-model="loginField.value"
           :rules="loginField.rules"
       ></v-text-field>
 
       <v-text-field
-          @input="this.loginErrMsg = ''"
           :loading="isLoading"
           label="Пароль"
-          v-model="config.params.password"
+          v-model="passwordField.value"
           :rules="passwordField.rules"
           :type="passwordField.isPassword ? 'password' : 'text'"
           :append-icon="!passwordField.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -33,7 +31,6 @@
 
 <script>
 
-import {serverURL} from "../constants/constants"
 import axios from 'axios'
 
 export default {
@@ -45,7 +42,7 @@ export default {
     isLoading: false,
 
     loginField: {
-      value: "",
+      value: "lgonlogon123",
       rules: [
         value => value?.length > 3 ? true : 'Логин введен неверно',
       ],
@@ -54,62 +51,35 @@ export default {
     passwordField: {
       showIcon: false,
       isPassword: true,
-      value: "",
+      value: "1233219872167324fdgdfg",
       rules: [
         value => value?.length > 3 ? true : 'Пароль введен неверно',
       ],
     },
 
-    config: {
-      url: '/users',
-      // method: 'get', // значение по умолчанию
-      // baseURL: 'http' + '://' + serverURL,
-      params: {
-        login: '',
-        password: '',
-      },
-    }
   }),
 
   methods: {
 
     request() {
-      console.log('login', this.config.params.login)
-      console.log('password', this.config.params.password)
 
-      axios.post('http://192.168.1.1/login', {
-
-        login: this.config.params.login,
-        password: this.config.params.password,
-
+      axios.post('http://192.168.1.26/login', {
+        loginOrEmail: this.loginField.value,
+        password: this.passwordField.value
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': '*',
+          'Access-Control-Allow-Headers': '*'
+        }
       }).then((response) => {
-
-        console.log('Успешная авторизация по роуту: /login')
+        console.log('Запрос на /login - успешно прошел');
         console.dir('response', response);
         this.openUserMenu();
-
       }).catch((err) => {
-
-        console.log('Ошибка авторизации по роуту: /login')
+        console.log('Ошибка авторизации по запросу на /login');
         console.dir('err', err);
-        this.loginErrMsg = 'Ошибка авторизации';
-
       })
-
-      // http://127.0.0.1:3000/produtos
-      // Make a request for a user with a given ID
-      // axios.get('/user?ID=12345')
-      //     .then(function (response) {
-      //       console.log(response);
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
-      // axios.get('/user', {
-      //   params: {
-      //     ID: 12345
-      //   }
-      // })
     },
 
     openUserMenu() {
