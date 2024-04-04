@@ -37,20 +37,12 @@
           <v-list-item-title>{{ item.fullName }}</v-list-item-title>
 
           <template v-slot:append>
-            <v-btn
-                size="small"
-                variant="text"
-            >
-              Задачи
-              <v-icon color="orange-darken-4" end>mdi-open-in-new</v-icon>
+            <v-btn size="small" variant="text">
+              Задачи <v-icon color="orange-darken-4" end>mdi-open-in-new</v-icon>
             </v-btn>
 
-            <v-btn
-                size="small"
-                variant="text"
-            >
-              Динамика
-              <v-icon color="orange-darken-4" end>mdi-open-in-new</v-icon>
+            <v-btn size="small" variant="text">
+              Динамика <v-icon color="orange-darken-4" end>mdi-open-in-new</v-icon>
             </v-btn>
 
           </template>
@@ -65,8 +57,8 @@
     <div class="text-center">
       <v-pagination
           v-model="page"
-          :length="15"
-          :total-visible="7"
+          :length="8"
+          :total-visible="2"
       ></v-pagination>
     </div>
 
