@@ -2,45 +2,89 @@
   <v-card class="c-card">
     <v-layout class="c-layout" full-height>
 
-      <v-navigation-drawer
-
-          floating
-          permanent
-      >
-        <v-list
-            density="compact"
-            nav
-        >
-          <v-list-item
-              prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          >
-            Иванов И.И
+      <v-navigation-drawer floating permanent>
+        <v-list density="compact" nav bg-color="indigo" rounded>
+          <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg">
+            Аккаунт
           </v-list-item>
           <v-divider></v-divider>
-          <v-list-item prepend-icon="mdi-account-group-outline" value="users" color="primary">
+          <v-list-item prepend-icon="mdi-account-group-outline" value="users">
             Пользователи
           </v-list-item>
-          <v-list-item prepend-icon="mdi-file-chart-outline" value="tasks" color="primary">
+          <v-list-item prepend-icon="mdi-file-chart-outline" value="tasks">
             Отчеты
           </v-list-item>
-          <v-list-item prepend-icon="mdi-view-module" value="reports" color="primary">
+          <v-list-item prepend-icon="mdi-view-module" value="reports">
             Модули
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
 
       <v-main scrollable>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus eos laudantium neque officia officiis soluta
-        temporibus. Accusantium blanditiis cupiditate facilis impedit, incidunt labore laboriosam perspiciatis
-        recusandae? Impedit officia repellat sint. Ea eaque fugiat hic id illum, ipsum iusto laudantium libero molestias
-        natus numquam quae quaerat quis repudiandae suscipit, unde voluptatum. Ad harum necessitatibus non obcaecati sed
-        sunt tempora. Ad asperiores assumenda commodi consequatur cupiditate delectus, dicta dolor dolore doloremque
-        ducimus enim, explicabo hic laborum magni odio, officiis pariatur quisquam reiciendis repudiandae sint sunt
-        tenetur ullam voluptate. Aspernatur atque distinctio dolor doloremque est et fuga, harum in, iste laboriosam
-        maiores modi molestias nobis obcaecati quibusdam recusandae soluta ullam vero! Accusamus adipisci, aperiam
-        deserunt fugiat illum molestias quibusdam voluptatem voluptatibus! Ad adipisci alias aperiam architecto
-        aspernatur assumenda consequuntur distinctio ea eius error facere fugit harum hic ipsa ipsum labore modi nulla,
-        odit placeat porro provident quas qui repellendus rerum sed tenetur totam ut.
+        <v-card class="mx-auto" variant="text">
+
+          <v-card-title>
+            <v-text-field
+                :loading="searchIsLoading || true"
+                append-inner-icon="mdi-magnify"
+                density="compact"
+                label="Поиск юзеров"
+                variant="outlined"
+                hide-details
+                single-line
+                @click:append-inner="onClick"
+            ></v-text-field>
+          </v-card-title>
+
+          <v-card-subtitle>
+            <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="outlined"
+                    color="indigo">Chip 1
+            </v-chip>
+            <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="outlined"
+                    color="pink">Chip 2
+            </v-chip>
+            <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="outlined"
+                    color="red">Chip 3
+            </v-chip>
+            <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="outlined"
+                    color="blue">Chip 4
+            </v-chip>
+          </v-card-subtitle>
+
+          <v-card-text>
+            <v-list lines="two" max-height="400px">
+              <v-list-item
+                  v-for="file in users"
+                  :key="file.title"
+                  :subtitle="file.subtitle"
+                  :title="file.title"
+              >
+                <template v-slot:prepend>
+                  <v-avatar :color="file.color">
+                    <v-icon color="white">{{ file.icon }}</v-icon>
+                  </v-avatar>
+                </template>
+
+                <template v-slot:append>
+                  <v-btn
+                      color="grey-lighten-1"
+                      icon="mdi-information"
+                      variant="text"
+                  ></v-btn>
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-btn variant="outlined" color="indigo" prepend-icon="mdi-plus-box-outline">
+              Новая
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+
       </v-main>
 
     </v-layout>
@@ -49,9 +93,8 @@
 
 <script>
 
-// const
-
-// await navigateTo('/')
+import axios from "axios";
+import {serverURL} from "../constants/constants";
 
 export default {
 
@@ -62,30 +105,97 @@ export default {
       tab: 'option-1',
       drawer: true,
       rail: true,
+
+      users: [
+        {
+          // id: 1,
+          // login:
+          color: 'blue',
+          icon: 'mdi-clipboard-text',
+          subtitle: 'Jan 20, 2014',
+          title: 'Vacation itinerary',
+        },
+        {
+          color: 'amber',
+          icon: 'mdi-gesture-tap-button',
+          subtitle: 'Jan 10, 2014',
+          title: 'Kitchen remodel',
+        },
+        {
+          color: 'blue',
+          icon: 'mdi-clipboard-text',
+          subtitle: 'Jan 20, 2014',
+          title: 'Vacation itinerary',
+        },
+        {
+          color: 'amber',
+          icon: 'mdi-gesture-tap-button',
+          subtitle: 'Jan 10, 2014',
+          title: 'Kitchen remodel',
+        },
+        {
+          color: 'blue',
+          icon: 'mdi-clipboard-text',
+          subtitle: 'Jan 20, 2014',
+          title: 'Vacation itinerary',
+        },
+        {
+          color: 'amber',
+          icon: 'mdi-gesture-tap-button',
+          subtitle: 'Jan 10, 2014',
+          title: 'Kitchen remodel',
+        },
+        {
+          color: 'blue',
+          icon: 'mdi-clipboard-text',
+          subtitle: 'Jan 20, 2014',
+          title: 'Vacation itinerary',
+        },
+        {
+          color: 'amber',
+          icon: 'mdi-gesture-tap-button',
+          subtitle: 'Jan 10, 2014',
+          title: 'Kitchen remodel',
+        },
+      ],
+
+      folders: [
+        {
+          subtitle: 'Jan 9, 2014',
+          title: 'Photos',
+        },
+        {
+          subtitle: 'Jan 17, 2014',
+          title: 'Recipes',
+        },
+        {
+          subtitle: 'Jan 28, 2014',
+          title: 'Work',
+        },
+      ],
+
     }
   },
 
-  beforeMount() {
-    console.log('beforeMount')
+  mounted() {
+    this.fetchUsers();
+    setInterval(() => this.fetchUsers(), 5 * 60 * 1000);
   },
 
   // https://jsonplaceholder.typicode.com/users
   methods: {
-    fetchData() {
-      fetch('https://jsonplaceholder.typicode.com/users', {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key": 'your-api-key',
-          "X-RapidAPI-Host": 'facts-by-api-ninjas.p.rapidapi.com',
-        },
-      })
+
+    fetchUsers() {
+      axios.get(serverURL + '/users')
           .then((response) => {
-            response.json().then((data) => {
-              this.fact = data[0].fact;
-            });
+            console.log('Пользователи успешно получены', response);
+            this.users = response?.data.map(e => e);
           })
           .catch((err) => {
-            console.error(err);
+            console.log('Ошибка получения пользователей', err);
+          })
+          .finally(() => {
+            this.isLoading = false;
           });
     },
   },

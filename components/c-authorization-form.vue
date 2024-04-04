@@ -34,6 +34,7 @@
 <script>
 
 import axios from 'axios'
+import {serverURL} from "../constants/constants";
 
 export default {
   name: "c-authorization-form",
@@ -67,7 +68,7 @@ export default {
 
       this.isLoading = true;
 
-      axios.post('http://192.168.1.26/login', {
+      axios.post(serverURL + '/login', {
         loginOrEmail: this.loginField.value,
         password: this.passwordField.value
       }, {

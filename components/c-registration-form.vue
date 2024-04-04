@@ -49,6 +49,7 @@
 
 <script>
 import axios from "axios";
+import {serverURL} from '../constants/constants'
 
 export default {
   name: "c-registration-form",
@@ -96,7 +97,7 @@ export default {
 
       this.isLoading = true;
 
-      axios.post('http://192.168.1.26/registration', {
+      axios.post(serverURL + '/registration', {
         email: this.emailField.value,
         phoneNumber: this.phoneNumberField.value,
         login: this.loginField.value,
@@ -115,6 +116,7 @@ export default {
       }).finally(() => {
         this.isLoading = false;
       })
+
     }
   },
 }
