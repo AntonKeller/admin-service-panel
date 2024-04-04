@@ -3,14 +3,16 @@
     <!--    action="http://127.0.0.1:3000/produtos"-->
     <v-form @submit.prevent fast-fail method="POST">
       <v-text-field
-          :loading="isLoading"
+          @input="loginErrMsg=''"
+          :disabled="isLoading"
           label="Логин"
           v-model="loginField.value"
           :rules="loginField.rules"
       ></v-text-field>
 
       <v-text-field
-          :loading="isLoading"
+          @input="loginErrMsg=''"
+          :disabled="isLoading"
           label="Пароль"
           v-model="passwordField.value"
           :rules="passwordField.rules"
@@ -23,7 +25,7 @@
 
       <v-label :text="loginErrMsg" class="text-red-accent-4"/>
 
-      <v-btn @click="request" class="mt-2" block>Войти</v-btn>
+      <v-btn :loading="isLoading" @click="request" class="mt-2" block>Войти</v-btn>
     </v-form>
   </div>
 
@@ -38,7 +40,7 @@ export default {
 
   data: () => ({
 
-    loginErrMsg: 'Ошибка авторизации',
+    loginErrMsg: '',
     isLoading: false,
 
     loginField: {
@@ -63,6 +65,8 @@ export default {
 
     request() {
 
+      this.isLoading = true;
+
       axios.post('http://192.168.1.26/login', {
         loginOrEmail: this.loginField.value,
         password: this.passwordField.value
@@ -73,13 +77,16 @@ export default {
           'Access-Control-Allow-Headers': '*'
         }
       }).then((response) => {
-        console.log('Запрос на /login - успешно прошел');
-        console.dir('response', response);
+        this.loginErrMsg = '';
+        console.dir('Успешная авторизация', response);
         this.openUserMenu();
       }).catch((err) => {
-        console.log('Ошибка авторизации по запросу на /login');
-        console.dir('err', err);
-      })
+        console.log('Ошибка авторизации', err);
+        this.loginErrMsg = 'Ошибка авторизации';
+      }).finally(() => {
+        this.isLoading = false;
+      });
+
     },
 
     openUserMenu() {
