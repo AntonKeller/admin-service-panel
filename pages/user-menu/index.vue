@@ -2,60 +2,7 @@
   <v-card class="c-card" color="deep-purple-lighten-5">
     <v-layout class="c-layout" full-height>
 
-      <v-navigation-drawer permanent width="280" rounded>
-
-        <v-list density="compact" nav bg-color="deep-lighten-5" rounded>
-
-          <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg">
-            <span>Аккаунт</span>
-            <template v-slot:append>
-              <v-btn
-                  icon="mdi-location-exit"
-                  size="small"
-                  variant="text"
-                  color="indigo-lighten-1"
-              />
-            </template>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
-          <v-list-item prepend-icon="mdi-account-group-outline" color="indigo-accent-4" value="users">
-            Пользователи
-            <template v-slot:append>
-              <v-badge
-                  color="info"
-                  content="12"
-                  inline
-              ></v-badge>
-            </template>
-          </v-list-item>
-
-          <v-list-item prepend-icon="mdi-format-list-text" color="indigo-accent-4" value="tasks">
-            Список задач
-          </v-list-item>
-
-          <v-list-item prepend-icon="mdi-file-chart-outline" color="indigo-accent-4" value="reports">
-            Отчеты
-          </v-list-item>
-
-          <v-list-item prepend-icon="mdi-view-module" color="indigo-accent-4" value="modules">
-            Модули
-            <template v-slot:append>
-              <v-badge
-                  color="secondary"
-                  content="12"
-                  inline
-              ></v-badge>
-            </template>
-          </v-list-item>
-
-          <v-list-item prepend-icon="mdi-card-account-details-star-outline" color="indigo-accent-4" value="subscribe">
-            Подписка
-          </v-list-item>
-
-        </v-list>
-      </v-navigation-drawer>
+      <nuxt-layout name="user-menu-nav"/>
 
       <v-main scrollable>
         <v-card class="mx-auto" variant="text">
@@ -120,27 +67,33 @@
 
             </div>
           </v-card-subtitle>
-
+          <!--          color: 'blue',-->
+          <!--          icon: 'mdi-account-network',-->
+          <!--          firstName: 'Vacation itinerary',-->
+          <!--          lastName: 'sdgfhdsjgnds',-->
+          <!--          phoneNumber: 'dsfsdfds',-->
+          <!--          email: 'dsfsdfdsfdsfds',-->
           <v-card-text>
-            <v-list max-height="85vh" lines="two" rounded>
-              <v-list-item
-                  v-for="user in users"
-                  :key="user.title"
-              >
+            <v-list max-height="85vh" lines="two" rounded >
+              <v-list-item v-for="user in users" :key="user.firstName + user.lastName">
 
                 <template v-slot:title>
-                  {{ user.title }}
+                  {{ user.firstName + ' ' + user.lastName }}
                   <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 12px"/>
                 </template>
 
                 <template v-slot:subtitle>
                   <div class="d-flex flex-row ga-2">
-                    <div class="d-inline-block">{{user.subtitle}}</div>
-                    <v-chip prepend-icon="mdi-phone-outgoing-outline" rounded="md" size="x-small" variant="flat" label color="blue">
-                      +7 (499) 555-22-33
+                    <div class="d-inline-block">
+                      {{ user.email }}
+                    </div>
+                    <v-chip prepend-icon="mdi-phone-outgoing-outline" rounded="md" size="x-small" variant="flat" label
+                            color="blue">
+                      {{ user.phoneNumber }}
                     </v-chip>
-                    <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat" label color="teal">
-                      pochta@gmail.com
+                    <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat"
+                            label color="teal">
+                      {{ user.email }}
                     </v-chip>
                   </div>
                 </template>
@@ -152,7 +105,8 @@
                 </template>
 
                 <template v-slot:default>
-
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur deserunt esse minus nesciunt
+                  nulla vel!
                   <v-divider color="indigo" style="margin-top: 4px"></v-divider>
                 </template>
 
@@ -179,7 +133,7 @@
 <script>
 
 import axios from "axios";
-import {serverURL} from "../constants/constants";
+import {serverURL} from "../../constants/constants";
 
 export default {
 
@@ -195,93 +149,13 @@ export default {
       users: [
         {
           color: 'blue',
+          id: '',
           icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'amber',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'blue',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'red',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'blue',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'amber',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'red',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'amber',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'amber',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'blue',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'red',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'blue',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'amber',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
-        },
-        {
-          color: 'red',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
-          title: 'Vacation itinerary',
-        },
-        {
-          color: 'red',
-          icon: 'mdi-account-network',
-          subtitle: 'Jan 10, 2014',
-          title: 'Kitchen remodel',
+          firstName: 'Vacation itinerary',
+          lastName: '',
+          phoneNumber: '',
+          email: '',
+          // subtitle: 'Jan 10, 2014',
         },
       ],
 
@@ -320,7 +194,16 @@ export default {
       axios.get(serverURL + '/users')
           .then((response) => {
             console.log('Пользователи успешно получены', response);
-            this.users = response?.data.map(e => e);
+            console.log(response?.data)
+            this.users = response?.data.map(e => ({
+              color: 'blue',
+              icon: 'mdi-account-network',
+              id: e.id,
+              firstName: e.firstName,
+              lastName: e.lastName,
+              phoneNumber: e.phoneNumber,
+              email: e.email
+            }));
           })
           .catch((err) => {
             console.log('Ошибка получения пользователей', err);
