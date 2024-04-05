@@ -1,13 +1,13 @@
 <template>
-  <v-card class="c-card">
+  <v-card class="c-card" color="deep-purple-lighten-5">
     <v-layout class="c-layout" full-height>
 
-      <v-navigation-drawer floating permanent width="280">
+      <v-navigation-drawer permanent width="280" rounded>
 
-        <v-list density="compact" nav bg-color="indigo-lighten-5" rounded>
+        <v-list density="compact" nav bg-color="deep-lighten-5" rounded>
 
           <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg">
-            Аккаунт
+            <span>Аккаунт</span>
             <template v-slot:append>
               <v-btn
                   icon="mdi-location-exit"
@@ -51,7 +51,7 @@
           </v-list-item>
 
           <v-list-item prepend-icon="mdi-card-account-details-star-outline" color="indigo-accent-4" value="subscribe">
-            Управление подпиской
+            Подписка
           </v-list-item>
 
         </v-list>
@@ -81,15 +81,18 @@
                 <template v-slot:activator="{ props }">
                   <v-btn
                       @click="sorted=!sorted"
-                      color="primary"
-                      variant="elevated"
+                      color="deep-purple-accent-3"
+                      prepend-icon="mdi-sort"
+                      variant="tonal"
                       density="compact"
-                      rounded="0"
+                      rounded="xs"
                       v-bind="props"
-                  >сортировать</v-btn>
+                  >
+                    По умолчанию
+                  </v-btn>
                 </template>
 
-                <v-list>
+                <v-list bg-color="indigo-lighten-5" variant="text" density="compact">
                   <v-list-item v-for="(item, index) in menuItems" :key="index" :value="index">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                   </v-list-item>
@@ -97,39 +100,49 @@
 
               </v-menu>
 
-              <v-chip density="comfortable" size="small" variant="flat"
-                      label
-                      color="indigo">Chip 1
+              <v-chip density="comfortable" size="small" variant="flat" label color="indigo">
+                Chip 1
               </v-chip>
 
-              <v-chip density="comfortable" size="small" variant="flat"
-                      label
-                      color="pink">Chip 2
+              <v-chip density="comfortable" size="small" variant="flat" label color="pink">
+                Chip 2
               </v-chip>
 
-              <v-chip density="comfortable" size="small" variant="flat" label
-                      color="red">Chip 3
+              <v-chip density="comfortable" size="small" variant="flat" label color="red">
+                Chip 3
               </v-chip>
-
-              <v-chip append-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="flat"
-                      label
-                      color="blue">Chip 4
+              <v-chip density="comfortable" size="small" variant="flat" label color="blue">
+                Chip 4
+                <template v-slot:append>
+                  <v-icon style="margin-left:4px">mdi-checkbox-marked-circle</v-icon>
+                </template>
               </v-chip>
 
             </div>
           </v-card-subtitle>
 
           <v-card-text>
-            <v-list max-height="600px" lines="two">
+            <v-list max-height="85vh" lines="two" rounded>
               <v-list-item
                   v-for="user in users"
                   :key="user.title"
-                  :subtitle="user.subtitle"
               >
 
                 <template v-slot:title>
-                  {{user.title}}
-                  <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 12px" />
+                  {{ user.title }}
+                  <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 12px"/>
+                </template>
+
+                <template v-slot:subtitle>
+                  <div class="d-flex flex-row ga-2">
+                    <div class="d-inline-block">{{user.subtitle}}</div>
+                    <v-chip prepend-icon="mdi-phone-outgoing-outline" rounded="md" size="x-small" variant="flat" label color="blue">
+                      +7 (499) 555-22-33
+                    </v-chip>
+                    <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat" label color="teal">
+                      pochta@gmail.com
+                    </v-chip>
+                  </div>
                 </template>
 
                 <template v-slot:prepend>
@@ -139,12 +152,13 @@
                 </template>
 
                 <template v-slot:default>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, in, libero! Impedit nesciunt nihil provident.
+
+                  <v-divider color="indigo" style="margin-top: 4px"></v-divider>
                 </template>
 
                 <template v-slot:append>
                   <v-btn
-                      color="grey-lighten-1"
+                      color="grey"
                       icon="mdi-open-in-new"
                       variant="text"
                   />
@@ -182,7 +196,7 @@ export default {
         {
           color: 'blue',
           icon: 'mdi-account-network',
-          subtitle: 'Jan 20, 2014',
+          subtitle: 'Jan 10, 2014',
           title: 'Vacation itinerary',
         },
         {
@@ -330,6 +344,24 @@ export default {
   width: 0;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #D1C4E9;
+  /*box-shadow: inset 0 0 5px #B39DDB;*/
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #7E57C2;
+  border-radius: 6px;
+}
+
 .c-card {
   height: 100vh;
   padding-top: 1.75rem;
@@ -342,29 +374,6 @@ export default {
   /*max-width: 768px;*/
   max-width: 1024px;
 }
-
-
-.h-full {
-  /*height: 100vh;*/
-}
-
-.index-background {
-  /*padding: 0 30% 0 30%;*/
-}
-
-.index-page-container {
-  display: flex;
-  flex-direction: column;
-  flex: 10px;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/*.left-panel-wrap {*/
-/*  background-color: rgb(22, 60, 157, 0.5);*/
-/*  max-width: 400px;*/
-/*}*/
 
 .au-panel-wrap {
   min-width: 400px;
