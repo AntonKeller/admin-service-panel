@@ -3,7 +3,7 @@ import type TNavItem from '@/utils/types/TNavItem';
 export const navigateItems: Array<TNavItem> = [
     {
         title: 'Пользователи',
-        route: '/menu/users',
+        route: '/manager-menu/users',
         prependIcon: 'mdi-account-group-outline',
         color: 'indigo-accent-4',
         value: 'users',
@@ -16,7 +16,7 @@ export const navigateItems: Array<TNavItem> = [
     },
     {
         title: 'Список задач',
-        route: '/menu/tasks',
+        route: '/manager-menu/tasks',
         prependIcon: 'mdi-format-list-text',
         color: 'indigo-accent-4',
         value: 'tasks',
@@ -29,7 +29,7 @@ export const navigateItems: Array<TNavItem> = [
     },
     {
         title: 'Отчеты',
-        route: '/menu/reports',
+        route: '/manager-menu/reports',
         prependIcon: 'mdi-file-chart-outline',
         color: 'indigo-accent-4',
         value: 'reports',
@@ -42,7 +42,7 @@ export const navigateItems: Array<TNavItem> = [
     },
     {
         title: 'Модули',
-        route: '/menu/modules',
+        route: '/manager-menu/modules',
         prependIcon: 'mdi-view-module',
         color: 'indigo-accent-4',
         value: 'modules',
@@ -55,7 +55,7 @@ export const navigateItems: Array<TNavItem> = [
     },
     {
         title: 'Подписка',
-        route: '/menu/subscribe',
+        route: '/manager-menu/subscribe',
         prependIcon: 'mdi-card-account-details-star-outline',
         color: 'indigo-accent-4',
         value: 'subscribe',

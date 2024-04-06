@@ -93,10 +93,10 @@ export default {
     openUserMenu() {
       this.isLoading = true;
       // const router = useRouter()
-      // router.push("/user-menu");
+      // router.push("/user-manager-menu");
       let timeout = setTimeout(() => {
         const router = useRouter()
-        router.push("/user-menu");
+        router.push("/user-manager-menu");
         clearTimeout(timeout);
       }, 2500);
     }

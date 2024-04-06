@@ -1,5 +1,5 @@
 <template>
-  <nuxt-layout name="menu">
+  <nuxt-layout name="navigate">
     <nuxt-page />
   </nuxt-layout>
 </template>
@@ -7,12 +7,13 @@
 <script>
 export default {
 
-  name: 'MenuPage',
+  name: 'manager-menu',
 
   // beforeCreate: () => {
   //   const router = useRouter()
   //   router.back()
   // },
+
 }
 
 </script>
