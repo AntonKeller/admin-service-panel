@@ -3,7 +3,7 @@
     <v-card class="c-card" color="deep-purple-lighten-5">
       <v-layout class="c-layout" full-height>
         <v-navigation-drawer permanent rounded>
-          <v-list density="compact" nav bg-color="deep-lighten-5" rounded>
+          <v-list density="default" nav rounded>
             <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg">
               <span>Аккаунт</span>
               <template v-slot:append>
@@ -17,6 +17,7 @@
             </v-list-item>
 
             <v-divider></v-divider>
+
             <v-list-item
                 v-for="item of navItems"
                 :key="item.title"
