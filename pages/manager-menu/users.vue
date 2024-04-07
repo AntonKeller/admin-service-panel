@@ -33,36 +33,51 @@
           </template>
 
           <v-list bg-color="indigo-lighten-5" variant="text" density="compact">
-            <v-list-item v-for="(item, index) in menuItems" :key="index" :value="index">
+            <v-list-item
+                v-for="(item, index) in menuItems"
+                :key="index"
+                :value="index"
+                density="compact">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
 
-        <v-chip density="comfortable" size="small" variant="flat" label color="indigo">
-          <NuxtLink link to="/user-manager-menu/manager-menu">sdfsdf</NuxtLink>
+        <v-chip density="comfortable" size="small" variant="flat" color="indigo">
+          Активные
         </v-chip>
 
-        <v-chip density="comfortable" size="small" variant="flat" label color="pink">
-          Chip 2
+        <v-chip density="comfortable" size="small" variant="flat" color="teal">
+          Закрытые
         </v-chip>
 
-        <v-chip density="comfortable" size="small" variant="flat" label color="red">
-          Chip 3
+        <v-chip density="comfortable" size="small" variant="flat" color="lime">
+          Ожидающие
         </v-chip>
-        <v-chip density="comfortable" size="small" variant="flat" label color="blue">
-          Chip 4
-          <template v-slot:append>
-            <v-icon style="margin-left:4px">mdi-checkbox-marked-circle</v-icon>
-          </template>
+        <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="flat" color="red">
+          Отклоненные
+          <!--          <template v-slot:append>-->
+          <!--            <v-icon style="margin-left:4px">mdi-checkbox-marked-circle</v-icon>-->
+          <!--          </template>-->
         </v-chip>
 
       </div>
     </v-card-subtitle>
 
     <v-card-text>
-      <v-list max-height="85vh" lines="two" rounded>
-        <v-list-item v-for="user in users" :key="user.firstName + user.lastName">
+      <v-list max-height="85vh" lines="two" rounded variant="text" bg-color="transparent">
+
+        <v-list-item>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquam blanditiis dolorum esse expedita id illo,
+          laborum sapiente sint vel. Alias, amet beatae culpa dolore dolores ducimus incidunt molestias nisi omnis
+          perspiciatis, praesentium provident quasi repellat similique velit? Ad aperiam cum ducimus fugiat iste, odit
+          officiis quia similique vel voluptas?
+        </v-list-item>
+
+        <v-list-item
+            v-for="user in users"
+            :key="user.firstName + user.lastName"
+        >
 
           <template v-slot:title>
             {{ user.firstName + ' ' + user.lastName }}
@@ -80,6 +95,10 @@
               </v-chip>
               <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat"
                       label color="teal">
+                {{ user.email }}
+              </v-chip>
+              <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat"
+                      label color="indigo">
                 {{ user.email }}
               </v-chip>
             </div>
@@ -102,12 +121,27 @@
                 color="grey"
                 icon="mdi-open-in-new"
                 variant="text"
+                @click="overlay=!overlay"
             />
           </template>
         </v-list-item>
       </v-list>
     </v-card-text>
 
+    <v-overlay v-model="overlay" class="d-flex justify-center align-center text-center">
+      <v-card class="mx-auto" variant="elevated" max-width="480">
+        <v-card-title>TASKS MENU</v-card-title>
+        <v-card-text>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem praesentium, voluptatum. Aspernatur
+          consequatur
+          dolore, doloribus esse eveniet facere ipsa itaque maxime nam natus porro provident quia ratione sequi
+          temporibus
+          tenetur voluptas? Cupiditate dolorem mollitia rerum? Excepturi illum labore molestias nobis numquam odit
+          pariatur
+          quia quo, sit, soluta tenetur unde voluptatum.
+        </v-card-text>
+      </v-card>
+    </v-overlay>
   </v-card>
 </template>
 
@@ -123,6 +157,7 @@ export default {
 
   data() {
     return {
+      overlay: false,
       tab: 'option-1',
       drawer: true,
       rail: true,
@@ -141,8 +176,9 @@ export default {
       ],
 
       menuItems: [
-        {title: 'По убыванию'},
-        {title: 'По возрастанию'},
+        {index: 1, title: 'По производительности'},
+        {index: 2, title: 'По загруженности'},
+        {index: 3, title: 'По загруженности'},
       ],
 
       folders: [
@@ -171,7 +207,7 @@ export default {
   // https://jsonplaceholder.typicode.com/users
   methods: {
     fetchUsers() {
-      axios.get(serverURL + '/users')
+      axios.get(serverURL + '/users', {timeout: 2000})
           .then((response) => {
             console.log('Пользователи успешно получены', response?.data);
             this.users = response?.data.map(e => ({
@@ -186,11 +222,11 @@ export default {
           })
           .catch((err) => {
             console.log('Ошибка получения пользователей', err);
-            this.users = [1, 2, 3, 4, 5, 6, 7].map(e => {
+            this.users = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(e => {
               return {
+                id: e,
                 color: 'blue',
                 icon: 'mdi-account-network',
-                id: e,
                 firstName: 'Игорь',
                 lastName: 'Иванов',
                 phoneNumber: '+7-(951)-689-35-35',
