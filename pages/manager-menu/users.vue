@@ -56,9 +56,6 @@
         </v-chip>
         <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="flat" color="red">
           Отклоненные
-          <!--          <template v-slot:append>-->
-          <!--            <v-icon style="margin-left:4px">mdi-checkbox-marked-circle</v-icon>-->
-          <!--          </template>-->
         </v-chip>
 
       </div>
@@ -121,26 +118,15 @@
                 color="grey"
                 icon="mdi-open-in-new"
                 variant="text"
-                @click="overlay=!overlay"
+                @click="showOverlay(user.firstName + ' ' + user.lastName)"
             />
           </template>
         </v-list-item>
       </v-list>
     </v-card-text>
 
-    <v-overlay v-model="overlay" class="d-flex justify-center align-center text-center">
-      <v-card class="mx-auto" variant="elevated" max-width="480">
-        <v-card-title>TASKS MENU</v-card-title>
-        <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem praesentium, voluptatum. Aspernatur
-          consequatur
-          dolore, doloribus esse eveniet facere ipsa itaque maxime nam natus porro provident quia ratione sequi
-          temporibus
-          tenetur voluptas? Cupiditate dolorem mollitia rerum? Excepturi illum labore molestias nobis numquam odit
-          pariatur
-          quia quo, sit, soluta tenetur unde voluptatum.
-        </v-card-text>
-      </v-card>
+    <v-overlay v-model="overlay" class="d-flex justify-center align-center">
+      <c-selected-user-overlay :user-name="selectedUserName"/>
     </v-overlay>
   </v-card>
 </template>
@@ -149,7 +135,6 @@
 
 import axios from "axios";
 import {serverURL} from "@/constants/constants";
-import {el} from "vuetify/locale";
 
 export default {
 
@@ -157,7 +142,11 @@ export default {
 
   data() {
     return {
+
+      // user overlay
       overlay: false,
+      selectedUserName: null,
+
       tab: 'option-1',
       drawer: true,
       rail: true,
@@ -206,6 +195,12 @@ export default {
 
   // https://jsonplaceholder.typicode.com/users
   methods: {
+
+    showOverlay(userName) {
+      this.selectedUserName = userName;
+      this.overlay = true;
+    },
+
     fetchUsers() {
       axios.get(serverURL + '/users', {timeout: 2000})
           .then((response) => {
