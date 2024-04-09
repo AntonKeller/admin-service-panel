@@ -1,14 +1,31 @@
 <template>
-  <v-card density="compact" color="teal" rounded="sm" variant="elevated" min-width="280">
+  <v-card density="compact"  rounded="sm" variant="elevated" min-width="360">
     <v-card-title>
-      Заголовок
+      Новая задача
     </v-card-title>
-    <v-card-subtitle>
-      Время
-    </v-card-subtitle>
+    <v-card-subtitle>{{Date().toString()}}</v-card-subtitle>
     <v-card-text>
-      Адрес
+      <v-text-field clearable density="compact" variant="outlined" color="blue" label="Заголовок" />
+      <v-text-field clearable density="compact" variant="outlined" color="blue" label="Время" />
+      <v-text-field clearable density="compact" variant="outlined" color="blue" label="Описание" />
+      <v-text-field clearable density="compact" variant="outlined" color="blue" label="Описание" />
     </v-card-text>
+    <v-card-actions>
+      <v-btn
+          rounded="sm"
+          color="blue-grey-darken-3"
+          variant="tonal"
+          density="default"
+          size="small"
+      >Добавить</v-btn>
+      <v-btn
+          rounded="sm"
+          color="blue-grey-darken-3"
+          variant="tonal"
+          density="default"
+          size="small"
+      >Отменить</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
