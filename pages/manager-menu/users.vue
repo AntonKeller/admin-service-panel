@@ -108,7 +108,8 @@
           </template>
 
           <template v-slot:default>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur deserunt esse minus nesciunt
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Consectetur deserunt esse minus nesciunt
             nulla vel!
             <v-divider color="indigo" style="margin-top: 4px"></v-divider>
           </template>
