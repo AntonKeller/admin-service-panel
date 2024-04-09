@@ -1,11 +1,17 @@
 <template>
   <v-card class="mx-auto" variant="flat" color="indigo-lighten-5" :loading="cardLoading">
 
-    <v-card-title>Список задач</v-card-title>
+    <v-card-title>
+      <div>
+        Список задач
+      </div>
+    </v-card-title>
 
     <v-card-subtitle>
       <div class="d-flex ga-2">
-        <span class="d-inline-block">{{ userName }}</span>
+        <span class="d-inline-block">
+          {{ userName }}
+        </span>
         <span
             v-for="chip of chips"
             :key="chip.id"
@@ -19,13 +25,26 @@
               rounded="sm"
           >{{ chip.title }}</v-chip>
         </span>
+        <div class="ml-auto">
+          <v-btn
+              rounded="sm"
+              color="blue-grey-darken-3"
+              variant="elevated"
+              density="default"
+              size="small"
+              icon="mdi-plus"
+              @click="addTask"
+          />
+        </div>
       </div>
     </v-card-subtitle>
 
     <v-card-text>
+
       <span v-show="tasks?.length === 0">
         Список задач пуст
       </span>
+
       <v-skeleton-loader
           width="full"
           color="transparent"
@@ -33,6 +52,7 @@
           v-if="cardLoading"
           type="list-item-three-line"
       ></v-skeleton-loader>
+
       <v-list
           width="512"
           max-height="460"
@@ -47,7 +67,7 @@
             prepend-icon="mdi-map-search-outline"
         >
           <v-list-item-title>
-            <v-card density="compact" :color="task.color" rounded="0" variant="tonal">
+            <v-card density="compact" :color="task.color" rounded="0" variant="elevated">
               <v-card-title>{{ task.title }}</v-card-title>
               <v-card-subtitle>{{ task.address }}</v-card-subtitle>
               <v-card-text>{{ task.description }}</v-card-text>
@@ -59,7 +79,7 @@
                 :key="action.id"
                 rounded="0"
                 :color="task.color"
-                variant="tonal"
+                variant="elevated"
                 density="comfortable"
                 size="small"
                 :icon="action.icon"
@@ -68,6 +88,10 @@
         </v-list-item>
       </v-list>
     </v-card-text>
+
+    <v-overlay v-model="addTaskOverlay" class="d-flex justify-center align-center">
+      <c-add-task-overlay/>
+    </v-overlay>
 
   </v-card>
 </template>
@@ -83,9 +107,11 @@ export default {
 
   data: () => ({
 
+    addTaskOverlay: false,
+
     chips: [
-      {id: 1, color: 'blue', title: 'Активных 5'},
-      {id: 2, color: 'teal', title: 'Завершенных 59'},
+      {id: 1, color: 'blue', title: 'Активных '},
+      {id: 2, color: 'teal', title: 'Завершенных '},
     ],
 
     actions: [
@@ -104,11 +130,14 @@ export default {
   },
 
   methods: {
+
+    addTask() {
+      this.addTaskOverlay = true;
+    },
+
     fetchTasks(id) {
-
       this.cardLoading = true;
-
-      axios.get(serverURL + '/tasks/tasks-by-user/?userId=' + id, {timeout: 5000})
+      axios.get(serverURL + '/tasks/tasks-by-user/?userId=' + id, {timeout: 1000})
           .then(response => {
             console.log('Задачи успешно получены');
             this.tasks = response?.data;
@@ -121,23 +150,23 @@ export default {
                 title: 'Осмотр кранов',
                 address: 'Дек. 26',
                 description: 'Ленина 7, к.2, с.1, офис 4',
-                complete: true,
-                color: 'yellow-darken-4'
+                complete: false,
+                color: 'blue-grey-darken-2'
               },
               {
                 id: 2,
                 title: 'Осмотр складов',
                 address: 'Янв. 13',
                 description: 'Кирова 4, к.2, с.6',
-                complete: true,
-                color: 'yellow-darken-4'
+                complete: false,
+                color: 'blue-grey-darken-2'
               },
               {
                 id: 3,
                 title: 'Осмотр машин',
                 address: 'Мар. 1',
                 description: 'Паперника 1, дом 6, корпус 4',
-                complete: false,
+                complete: true,
                 color: 'teal-darken-1'
               },
               {
@@ -145,7 +174,7 @@ export default {
                 title: 'Осмотр компьютерной техники',
                 address: 'Апр. 8',
                 description: 'Кирова 19, дом 1',
-                complete: false,
+                complete: true,
                 color: 'teal-darken-1'
               },
               {
@@ -153,7 +182,7 @@ export default {
                 title: 'Осмотр Еще чего-то там..',
                 address: 'Какого-то',
                 description: 'Како-то адр.',
-                complete: false,
+                complete: true,
                 color: 'teal-darken-1'
               }
             ]
@@ -162,6 +191,7 @@ export default {
             this.cardLoading = false;
           })
     }
+
   }
 
 }
@@ -179,14 +209,14 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #D1C4E9;
+  background: #B0BEC5;
   /*box-shadow: inset 0 0 5px #B39DDB;*/
   border-radius: 10px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #3F51B5;
+  background: #546E7A;
   border-radius: 6px;
 }
 </style>
