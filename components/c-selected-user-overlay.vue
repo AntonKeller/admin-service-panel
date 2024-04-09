@@ -73,7 +73,7 @@
               <v-card-text>{{ task.description }}</v-card-text>
             </v-card>
           </v-list-item-title>
-          <v-list-item-action v-show="task.complete">
+          <v-list-item-action v-show="!task.complete">
             <v-btn
                 v-for="action of actions"
                 :key="action.id"
