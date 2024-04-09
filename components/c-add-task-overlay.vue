@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import {teal} from "vuetify/util/colors";
 
 export default {
   name: "c-add-task-overlay",
