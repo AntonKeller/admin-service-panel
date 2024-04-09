@@ -64,11 +64,14 @@
     <v-card-text>
       <v-list max-height="85vh" lines="two" rounded variant="text" bg-color="transparent">
 
-        <v-list-item>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquam blanditiis dolorum esse expedita id illo,
-          laborum sapiente sint vel. Alias, amet beatae culpa dolore dolores ducimus incidunt molestias nisi omnis
-          perspiciatis, praesentium provident quasi repellat similique velit? Ad aperiam cum ducimus fugiat iste, odit
-          officiis quia similique vel voluptas?
+        <v-list-item v-if="usersLoading">
+          <v-skeleton-loader
+              v-for="n of 3"
+              width="full"
+              color="transparent"
+              elevation="0"
+              type="list-item-three-line"
+          />
         </v-list-item>
 
         <v-list-item
@@ -144,6 +147,8 @@ export default {
   data() {
     return {
 
+      usersLoading: true,
+
       // user overlay
       overlay: false,
       selectedUserName: null,
@@ -153,17 +158,7 @@ export default {
       rail: true,
       sorted: false,
 
-      users: [
-        {
-          color: 'blue',
-          id: '',
-          icon: 'mdi-account-network',
-          firstName: 'Vacation itinerary',
-          lastName: '',
-          phoneNumber: '',
-          email: '',
-        },
-      ],
+      users: [],
 
       menuItems: [
         {index: 1, title: 'По производительности'},
@@ -231,7 +226,7 @@ export default {
             })
           })
           .finally(() => {
-            this.isLoading = false;
+            this.usersLoading = false;
           });
     },
   },
