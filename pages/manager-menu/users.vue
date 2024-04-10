@@ -43,26 +43,17 @@
           </v-list>
         </v-menu>
 
-        <v-chip density="comfortable" size="small" variant="flat" color="indigo">
-          Активные
-        </v-chip>
-
         <v-chip density="comfortable" size="small" variant="flat" color="teal">
-          Закрытые
+          На обьекте 5 чел
         </v-chip>
-
-        <v-chip density="comfortable" size="small" variant="flat" color="lime">
-          Ожидающие
+        <v-chip density="comfortable" size="small" variant="flat" color="blue">
+          Ожидающие 3 чел
         </v-chip>
-        <v-chip prepend-icon="mdi-checkbox-marked-circle" density="comfortable" size="small" variant="flat" color="red">
-          Отклоненные
-        </v-chip>
-
       </div>
     </v-card-subtitle>
 
     <v-card-text>
-      <v-list max-height="85vh" lines="two" rounded variant="text" bg-color="transparent">
+        <v-list max-height="85vh" rounded variant="text" bg-color="transparent">
 
         <v-list-item v-if="usersLoading">
           <v-skeleton-loader
@@ -78,53 +69,14 @@
             v-for="user in users"
             :key="user.firstName + user.lastName"
         >
-
-          <template v-slot:title>
-            {{ user.firstName + ' ' + user.lastName }}
-            <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 12px"/>
-          </template>
-
-          <template v-slot:subtitle>
-            <div class="d-flex flex-row ga-2">
-              <div class="d-inline-block">
-                {{ user.email }}
-              </div>
-              <v-chip prepend-icon="mdi-phone-outgoing-outline" rounded="md" size="x-small" variant="flat" label
-                      color="blue">
-                {{ user.phoneNumber }}
-              </v-chip>
-              <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat"
-                      label color="teal">
-                {{ user.email }}
-              </v-chip>
-              <v-chip prepend-icon="mdi-email-arrow-left-outline" rounded="md" size="x-small" variant="flat"
-                      label color="indigo">
-                {{ user.email }}
-              </v-chip>
-            </div>
-          </template>
-
-          <template v-slot:prepend>
-            <v-avatar :color="user.color">
-              <v-icon color="white">{{ user.icon }}</v-icon>
-            </v-avatar>
-          </template>
-
-          <template v-slot:default>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Consectetur deserunt esse minus nesciunt
-            nulla vel!
-            <v-divider color="indigo" style="margin-top: 4px"></v-divider>
-          </template>
-
-          <template v-slot:append>
-            <v-btn
-                color="grey"
-                icon="mdi-open-in-new"
-                variant="text"
-                @click="showOverlay(user.firstName + ' ' + user.lastName)"
-            />
-          </template>
+          <c-card-user
+              icon="mdi-email-arrow-left-outline"
+              :title="user.firstName + ' ' + user.lastName"
+              :number="user.phoneNumber"
+              :email="user.email"
+              description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, consectetur."
+              :card-click="showOverlay"
+          />
         </v-list-item>
       </v-list>
     </v-card-text>
@@ -198,7 +150,7 @@ export default {
     },
 
     fetchUsers() {
-      axios.get(serverURL + '/users', {timeout: 2000})
+      axios.get(serverURL + '/users', {timeout: 1000})
           .then((response) => {
             console.log('Пользователи успешно получены', response?.data);
             this.users = response?.data.map(e => ({
