@@ -130,7 +130,7 @@
     </v-card-text>
 
     <v-overlay v-model="overlay" class="d-flex justify-center align-center">
-      <c-selected-user-overlay :user-name="selectedUserName"/>
+      <c-user-tasks-menu-overlay :user-name="selectedUserName"/>
     </v-overlay>
   </v-card>
 </template>

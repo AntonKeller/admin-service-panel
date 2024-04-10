@@ -89,7 +89,7 @@
       </v-list>
     </v-card-text>
 
-    <v-overlay v-model="addTaskOverlay" class="d-flex justify-center align-center">
+    <v-overlay @addNewTask="addNewTask" v-model="addTaskOverlay" class="d-flex justify-center align-center">
       <c-add-task-overlay/>
     </v-overlay>
 
@@ -130,6 +130,11 @@ export default {
   },
 
   methods: {
+
+    addNewTask(task) {
+      this.tasks.push(task);
+      this.overlay = false;
+    },
 
     addTask() {
       this.addTaskOverlay = true;
@@ -198,25 +203,25 @@ export default {
 </script>
 
 <style scoped>
-.scroll-hidden::-webkit-scrollbar {
-  width: 0;
-}
+  .scroll-hidden::-webkit-scrollbar {
+    width: 0;
+  }
 
-/* width */
-::-webkit-scrollbar {
-  width: 4px;
-}
+  /* width */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #B0BEC5;
-  /*box-shadow: inset 0 0 5px #B39DDB;*/
-  border-radius: 10px;
-}
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #B0BEC5;
+    /*box-shadow: inset 0 0 5px #B39DDB;*/
+    border-radius: 10px;
+  }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #546E7A;
-  border-radius: 6px;
-}
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #546E7A;
+    border-radius: 6px;
+  }
 </style>
