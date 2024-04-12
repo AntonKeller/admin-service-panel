@@ -49,7 +49,7 @@
 
 <script>
 import axios from "axios";
-import {serverURL} from '../constants/constants'
+import {serverURL} from '../constants/constants';
 
 export default {
   name: "c-registration-form",

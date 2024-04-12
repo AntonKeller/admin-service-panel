@@ -37,7 +37,7 @@ import axios from "axios";
 import {serverURL} from "@/constants/constants";
 
 export default {
-  name: "c-add-task-overlay",
+  name: "c-user-task-add-overlay",
 
   props: ['addNewTask'],
 

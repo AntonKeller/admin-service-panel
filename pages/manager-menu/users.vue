@@ -53,7 +53,7 @@
     </v-card-subtitle>
 
     <v-card-text>
-        <v-list max-height="85vh" rounded variant="text" bg-color="transparent">
+      <v-list max-height="85vh" rounded variant="text" bg-color="transparent">
 
         <v-list-item v-if="usersLoading">
           <v-skeleton-loader
@@ -71,10 +71,7 @@
         >
           <c-card-user
               icon="mdi-email-arrow-left-outline"
-              :title="user.firstName + ' ' + user.lastName"
-              :number="user.phoneNumber"
-              :email="user.email"
-              description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, consectetur."
+              :user="user"
               :card-click="showOverlay"
           />
         </v-list-item>
@@ -82,7 +79,7 @@
     </v-card-text>
 
     <v-overlay v-model="overlay" class="d-flex justify-center align-center">
-      <c-user-tasks-menu-overlay :user-name="selectedUserName"/>
+      <c-user-tasks-overlay :user="selectedUser"/>
     </v-overlay>
   </v-card>
 </template>
@@ -99,38 +96,22 @@ export default {
   data() {
     return {
 
+      // other
       usersLoading: true,
+      sorted: false,
 
       // user overlay
       overlay: false,
-      selectedUserName: null,
+      selectedUser: null,
 
-      tab: 'option-1',
-      drawer: true,
-      rail: true,
-      sorted: false,
-
+      // data
       users: [],
 
+      // constants
       menuItems: [
         {index: 1, title: 'По производительности'},
         {index: 2, title: 'По загруженности'},
         {index: 3, title: 'По загруженности'},
-      ],
-
-      folders: [
-        {
-          subtitle: 'Jan 9, 2014',
-          title: 'Photos',
-        },
-        {
-          subtitle: 'Jan 17, 2014',
-          title: 'Recipes',
-        },
-        {
-          subtitle: 'Jan 28, 2014',
-          title: 'Work',
-        },
       ],
 
     }
@@ -138,14 +119,14 @@ export default {
 
   mounted() {
     this.fetchUsers();
-    // setInterval(() => this.fetchUsers(), 5 * 60 * 1000);
+    setInterval(() => this.fetchUsers(), 5 * 60 * 1000);
   },
 
   // https://jsonplaceholder.typicode.com/users
   methods: {
 
-    showOverlay(userName) {
-      this.selectedUserName = userName;
+    showOverlay(user) {
+      this.selectedUser = user;
       this.overlay = true;
     },
 
@@ -160,7 +141,8 @@ export default {
               firstName: e.firstName,
               lastName: e.lastName,
               phoneNumber: e.phoneNumber,
-              email: e.email
+              email: e.email,
+              description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, consectetur."
             }));
           })
           .catch((err) => {
@@ -173,7 +155,8 @@ export default {
                 firstName: 'Игорь',
                 lastName: 'Иванов',
                 phoneNumber: '+7-(951)-689-35-35',
-                email: 'Ivanov@gmail.com'
+                email: 'Ivanov@gmail.com',
+                description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, consectetur."
               }
             })
           })

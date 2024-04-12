@@ -4,21 +4,17 @@
       density="compact"
       color="indigo"
       variant="text"
-      @click="cardClick(title)"
+      @click="cardClick(user)"
   >
-
     <v-card-title>
       <v-avatar color="indigo" rounded="lg">
         <v-icon size="small" color="white">mdi-account-network</v-icon>
       </v-avatar>
-      {{title}}
+      {{user.firstName + ' ' + user.lastName}}
       <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 16px" />
     </v-card-title>
 
-    <v-card-subtitle >
-      {{description}}
-
-    </v-card-subtitle>
+    <v-card-subtitle>{{user.description}}</v-card-subtitle>
 
     <v-card-text class="d-flex ga-2">
       <v-chip
@@ -30,7 +26,7 @@
           color="blue"
           label
       >
-        {{number}}
+        {{user.phoneNumber}}
       </v-chip>
       <v-chip
           :prepend-icon="icon"
@@ -40,7 +36,7 @@
           color="teal"
           label
       >
-        {{email}}
+        {{user.email}}
       </v-chip>
     </v-card-text>
   </v-card>
@@ -51,10 +47,7 @@
     name: "c-card-user",
     props: {
       icon: String,
-      title: String,
-      number: String,
-      email: String,
-      description: String,
+      user: Object,
       cardClick: Function,
     }
   }

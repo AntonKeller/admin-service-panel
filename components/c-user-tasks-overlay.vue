@@ -1,17 +1,11 @@
 <template>
   <v-card class="mx-auto" variant="flat" color="indigo-lighten-5" :loading="cardLoading">
 
-    <v-card-title>
-      <div>
-        Список задач
-      </div>
-    </v-card-title>
+    <v-card-title>Список задач</v-card-title>
 
     <v-card-subtitle>
       <div class="d-flex ga-2">
-        <span class="d-inline-block">
-          {{ userName }}
-        </span>
+        {{ userName }}
         <span
             v-for="chip of chips"
             :key="chip.id"
@@ -41,9 +35,7 @@
 
     <v-card-text>
 
-      <span v-show="tasks?.length === 0">
-        Список задач пуст
-      </span>
+      <span v-show="tasks?.length === 0">Список задач пуст</span>
 
       <v-skeleton-loader
           width="full"
@@ -51,7 +43,7 @@
           elevation="0"
           v-if="cardLoading"
           type="list-item-three-line"
-      ></v-skeleton-loader>
+      />
 
       <v-list
           width="512"
@@ -64,33 +56,18 @@
         <v-list-item
             v-for="task of tasks"
             :key="task.id"
-            prepend-icon="mdi-map-search-outline"
         >
-          <v-list-item-title>
-            <v-card density="compact" :color="task.color" rounded="0" variant="elevated">
-              <v-card-title>{{ task.title }}</v-card-title>
-              <v-card-subtitle>{{ task.address }}</v-card-subtitle>
-              <v-card-text>{{ task.description }}</v-card-text>
-            </v-card>
-          </v-list-item-title>
-          <v-list-item-action v-show="!task.complete">
-            <v-btn
-                v-for="action of actions"
-                :key="action.id"
-                rounded="0"
-                :color="task.color"
-                variant="elevated"
-                density="comfortable"
-                size="small"
-                :icon="action.icon"
-            />
-          </v-list-item-action>
+          <c-card-user-task
+              :title="task.title"
+              :customer-label="task.address"
+              :comments="task.description"
+          />
         </v-list-item>
       </v-list>
     </v-card-text>
 
     <v-overlay @addNewTask="addNewTask" v-model="addTaskOverlay" class="d-flex justify-center align-center">
-      <c-add-task-overlay/>
+      <c-user-task-add-overlay />
     </v-overlay>
 
   </v-card>
@@ -102,8 +79,11 @@ import axios from "axios";
 import {serverURL} from "@/constants/constants";
 
 export default {
-  name: "c-selected-user-overlay",
-  props: ['userName'],
+  name: "c-user-tasks-overlay",
+  // components: {CCardUserTask},
+  props: {
+    user: Object
+  },
 
   data: () => ({
 
