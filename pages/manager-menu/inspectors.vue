@@ -91,7 +91,7 @@ import {serverURL} from "@/constants/constants";
 
 export default {
 
-  name: "users-page",
+  name: "inspectors-page",
 
   data() {
     return {
@@ -119,7 +119,7 @@ export default {
 
   mounted() {
     this.fetchUsers();
-    setInterval(() => this.fetchUsers(), 5 * 60 * 1000);
+    setInterval(() => this.fetchUsers(), 30 * 1000);
   },
 
   // https://jsonplaceholder.typicode.com/users
@@ -131,7 +131,7 @@ export default {
     },
 
     fetchUsers() {
-      axios.get(serverURL + '/users', {timeout: 1000})
+      axios.get(serverURL + '/inspectors', {timeout: 1000})
           .then((response) => {
             console.log('Пользователи успешно получены', response?.data);
             this.users = response?.data.map(e => ({
@@ -174,9 +174,6 @@ export default {
 </script>
 
 <style scoped>
-.scroll-hidden::-webkit-scrollbar {
-  width: 0;
-}
 
 /* width */
 ::-webkit-scrollbar {
@@ -196,23 +193,4 @@ export default {
   border-radius: 6px;
 }
 
-.c-card {
-  height: 100vh;
-  padding-top: 1.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.c-layout {
-  /*max-width: 768px;*/
-  max-width: 1024px;
-}
-
-.au-panel-wrap {
-  min-width: 400px;
-  max-width: 400px;
-  align-self: center;
-  justify-self: self-end;
-}
 </style>
