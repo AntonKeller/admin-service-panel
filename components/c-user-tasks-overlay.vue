@@ -1,11 +1,11 @@
 <template>
-  <v-card class="mx-auto" variant="flat" color="indigo-lighten-5" :loading="cardLoading">
+  <v-card class="mx-auto" variant="flat" color="indigo-lighten-5" :loading="cardLoading" rounded="lg">
 
     <v-card-title>Список задач</v-card-title>
 
     <v-card-subtitle>
       <div class="d-flex ga-2">
-        {{ userName }}
+        {{ user.firstName + ' ' + user.lastName }}
         <span
             v-for="chip of chips"
             :key="chip.id"

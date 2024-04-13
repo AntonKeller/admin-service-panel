@@ -1,12 +1,12 @@
-import type TNavItem from '@/utils/types/TNavItem';
+import type TNavItem from '../utils/types/TNavItem';
 
 export const navigateItems: Array<TNavItem> = [
     {
-        title: 'Пользователи',
-        route: '/manager-menu/users',
-        prependIcon: 'mdi-account-group-outline',
+        title: 'Инспекторы',
+        route: '/manager-menu/inspectors',
+        prependIcon: 'mdi-account-hard-hat-outline',
         color: 'indigo-accent-4',
-        value: 'users',
+        value: 'inspectors',
         active: false,
         badge: {
             show: true,
@@ -28,11 +28,11 @@ export const navigateItems: Array<TNavItem> = [
         },
     },
     {
-        title: 'Отчеты',
-        route: '/manager-menu/reports',
-        prependIcon: 'mdi-file-chart-outline',
+        title: 'Организации',
+        route: '/manager-menu/customers',
+        prependIcon: 'mdi-home-city-outline',
         color: 'indigo-accent-4',
-        value: 'reports',
+        value: 'customers',
         active: false,
         badge: {
             show: true,
