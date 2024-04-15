@@ -3,8 +3,8 @@ import {serverURL} from "@/constants/constants";
 import type TAssignment from "@/utils/types/TAssignment";
 
 
-export const addAssignment = async (assignment: TAssignment) =>
-    await axios.post(serverURL + '/assignments/add', assignment);
+export const addAssignment = async (assignment: TAssignment, delay: number) =>
+    await axios.post(serverURL + '/assignments/add', assignment, {timeout: delay});
 
 export const fetchAssignment = async (id: number, delay: number) =>
     await axios.get(serverURL + '/assignments/' + id, {timeout: delay});
