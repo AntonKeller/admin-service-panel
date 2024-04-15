@@ -1,7 +1,8 @@
 export default interface TCustomer {
-    name: String,
-    inn: String,
-    phoneNumber: String,
-    emailAddress: String,
-    address: String,
+    id: number,
+    name: string,
+    inn: string,
+    phoneNumber: string,
+    emailAddress: string,
+    address: string,
 }
