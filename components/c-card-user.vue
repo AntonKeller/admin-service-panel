@@ -1,16 +1,16 @@
 <template>
   <v-card
-      rounded="lg"
+      rounded
       density="compact"
       color="indigo"
-      variant="text"
+      variant="tonal"
       @click="cardClick(user)"
   >
     <v-card-title>
-      <v-avatar color="indigo" rounded="lg">
-        <v-icon size="small" color="white">mdi-account-network</v-icon>
+      <v-avatar density="comfortable" color="indigo" rounded="lg">
+        <v-icon size="x-small" color="white">mdi-account-network</v-icon>
       </v-avatar>
-      {{user.firstName + ' ' + user.lastName}}
+      <span class="d-inline-block ml-2">{{user.firstName + ' ' + user.lastName}}</span>
       <v-badge :color="Math.random() > 0.5 ? 'error' : 'success'" dot style="width: 8px; height: 16px" />
     </v-card-title>
 
@@ -20,7 +20,7 @@
       <v-chip
           density="default"
           prepend-icon="mdi-phone-outgoing-outline"
-          rounded="sm"
+          rounded="lg"
           size="small"
           variant="tonal"
           color="blue"
@@ -30,7 +30,7 @@
       </v-chip>
       <v-chip
           :prepend-icon="icon"
-          rounded="sm"
+          rounded="lg"
           size="small"
           variant="tonal"
           color="teal"

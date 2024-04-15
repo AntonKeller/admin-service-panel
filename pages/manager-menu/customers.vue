@@ -5,7 +5,7 @@
     <v-card-item>
       <div class="d-flex ga-2">
         <v-btn
-            rounded="sm"
+            rounded
             color="indigo-darken-1"
             variant="elevated"
             density="default"
@@ -29,7 +29,7 @@
     </v-card-item>
 
     <v-card-text>
-      <v-list bg-color="transparent" max-height="91vh">
+      <v-list bg-color="transparent" max-height="85vh">
         <v-list-item v-for="customer of customersFiltered" :key="customer.inn">
           <c-card-customer :customer="customer"/>
         </v-list-item>

@@ -43,10 +43,10 @@
           </v-list>
         </v-menu>
 
-        <v-chip density="comfortable" size="small" variant="flat" color="teal">
+        <v-chip rounded="lg" density="comfortable" size="small" variant="flat" color="teal">
           На обьекте 5 чел
         </v-chip>
-        <v-chip density="comfortable" size="small" variant="flat" color="blue">
+        <v-chip rounded="lg" density="comfortable" size="small" variant="flat" color="blue">
           Ожидающие 3 чел
         </v-chip>
       </div>

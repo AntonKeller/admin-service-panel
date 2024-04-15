@@ -16,10 +16,10 @@ export const navigateItems: Array<TNavItem> = [
     },
     {
         title: 'Список задач',
-        route: '/manager-menu/tasks',
+        route: '/manager-menu/assignments',
         prependIcon: 'mdi-format-list-text',
         color: 'indigo-accent-4',
-        value: 'tasks',
+        value: 'assignments',
         active: false,
         badge: {
             show: false,
