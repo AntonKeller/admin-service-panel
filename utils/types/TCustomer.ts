@@ -1,5 +1,5 @@
 export default interface TCustomer {
-    id: number,
+    id?: number,
     name: string,
     inn: string,
     phoneNumber: string,

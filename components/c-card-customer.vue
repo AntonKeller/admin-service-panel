@@ -1,11 +1,9 @@
 <template>
   <v-card
-      @click="console.log('card click')"
       color="indigo"
       variant='tonal'
       density="compact"
       rounded
-      v-bind="props"
   >
     <v-card-title>
       {{(customer?.name || 'name error') + ' / ' + (customer?.inn || 'inn error')}}

@@ -1,5 +1,5 @@
 <template>
-  <div class="index-background">
+  <div class="index-background" v-motion-fade>
     <div class="au-panel-wrap">
       <v-card variant="tonal" class="o-v-card">
 

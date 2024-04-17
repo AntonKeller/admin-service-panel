@@ -38,7 +38,7 @@
 
 <script>
 
-import {testDataAssignments} from '@/configs/testDataAssignments'
+import {testDataAssignments} from '@/configs/testDataAssignments';
 
 export default {
   name: "assignments-page",
