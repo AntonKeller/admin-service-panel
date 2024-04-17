@@ -37,7 +37,7 @@
     </v-card-text>
 
     <v-overlay v-model="overlay" class="d-flex justify-center align-center">
-      <c-customer-execute-overlay :active-customer="activeCustomer"/>
+      <c-customer-execute-overlay :activeCustomer="activeCustomer"/>
     </v-overlay>
 
 <!--    <v-overlay v-model="overlay" class="d-flex justify-center align-center">-->
