@@ -25,7 +25,7 @@
 
       <v-label :text="loginErrMsg" class="text-red-accent-4"/>
 
-      <v-btn :loading="isLoading" @click="request" class="mt-2" block>Войти</v-btn>
+      <v-btn :loading="isLoading" @click="requestTest" class="mt-2" block>Войти</v-btn>
     </v-form>
   </div>
 
@@ -63,6 +63,13 @@ export default {
   }),
 
   methods: {
+
+    requestTest() {
+      axios.get('/api/test').then(resp => console.log('data', resp?.data));
+      // const { data } = await useFetch('/api/test')
+      // console.log('data', data);
+    },
+
 
     request() {
 
