@@ -15,7 +15,7 @@ export const navigateItems: Array<TNavItem> = [
         }
     },
     {
-        title: 'Список задач',
+        title: 'Задания',
         route: '/manager-menu/assignments',
         prependIcon: 'mdi-format-list-text',
         color: 'indigo-accent-4',

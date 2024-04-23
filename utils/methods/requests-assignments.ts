@@ -12,5 +12,5 @@ export const fetchAssignment = async (id: number, delay: number) =>
 export const fetchAssignments = async (delay: number) =>
     await axios.get(serverURL + '/assignments', {timeout: delay});
 
-export const putAssignment = async (assignment: TAssignment, id: number, delay: number) =>
-    await axios.put(serverURL + '/assignments/' + id, assignment, {timeout: delay});
+export const putAssignment = async (assignment: TAssignment, delay: number) =>
+    await axios.put(serverURL + '/assignments/', assignment, {timeout: delay});
