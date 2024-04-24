@@ -98,38 +98,23 @@ export default {
 </script>
 
 <style scoped>
-.scroll-hidden::-webkit-scrollbar {
-  width: 0;
-}
-
-.index-background {
-  background: no-repeat center/cover url("/assets/bg-index-page.png");
-  height: 100vh;
-  max-height: 100vh;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.au-panel-wrap {
-  min-width: 400px;
-  max-width: 400px;
-  align-self: center;
-  justify-self: self-end;
-}
-
-.hide {
-  transition-delay: 2000ms;
-  display: none;
-  transform: translateX(-30px);
-  opacity: 0;
-}
-
-.show {
-  transition-delay: 2000ms;
-  opacity: 1;
-}
-
+  .scroll-hidden::-webkit-scrollbar {
+    width: 0;
+  }
+  .index-background {
+    background: no-repeat center/cover url("/assets/bg-index-page.png");
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .au-panel-wrap {
+    min-width: 400px;
+    max-width: 400px;
+    align-self: center;
+    justify-self: self-end;
+  }
 </style>
