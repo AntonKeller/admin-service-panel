@@ -6,7 +6,7 @@
       rounded
   >
     <v-card-title>
-      {{(customer?.name || 'name error') + ' / ' + (customer?.inn || 'inn error')}}
+      {{(customer?.shortName || 'name error') + ' / ' + (customer?.inn || 'inn error')}}
     </v-card-title>
     <v-card-subtitle>
       {{customer.address}}
@@ -20,8 +20,9 @@
             variant="tonal"
             color="indigo"
             label
+            @click.stop="console.log('click')"
         >
-          {{customer.emailAddress}}
+          {{customer.email}}
         </v-chip>
         <v-chip
             prepend-icon="mdi-email"
@@ -30,6 +31,7 @@
             variant="tonal"
             color="indigo"
             label
+            @click.stop="console.log('click')"
         >
           {{customer.phoneNumber}}
         </v-chip>
@@ -41,7 +43,7 @@
 <script>
 
 export default {
-  name: "c-card-customer",
+  name: "c-customer-card",
   props: {
     customer: Object,
   }

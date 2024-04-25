@@ -10,14 +10,14 @@
             density="default"
             size="small"
             icon="mdi-plus"
-            @click="overlay = true"
+            @click="addOverlay = true; changeOverlay = false"
         />
         <v-text-field
             color="indigo-darken-1"
             :loading="true"
             append-inner-icon="mdi-magnify"
             density="compact"
-            label="Поиск юзеров"
+            label="Поиск по задачам"
             variant="outlined"
             hide-details
             single-line
@@ -28,40 +28,62 @@
     </v-card-item>
     <v-card-text>
       <v-list bg-color="transparent" max-height="85vh">
-        <v-list-item v-for="assignment of _assignments" :key="assignment.id">
-          <c-card-assignment :assignment="assignment"/>
+        <v-list-item v-for="assignment of testDataAssignments" :key="assignment.id">
+          <c-assignment-card @click="setActive(assignment)" :assignment="assignment"/>
         </v-list-item>
       </v-list>
+      <v-overlay v-model="addOverlay" class="d-flex justify-center align-center">
+        <c-assignment-card-add :overlayHide="overlayAddHide"/>
+        <!--        <c-customer-card-change :hide-overlay="hideOverlays" :activeCustomer="activeCustomer"/>-->
+      </v-overlay>
+      <v-overlay v-model="changeOverlay" class="d-flex justify-center align-center">
+        <c-assignment-card-change :overlayHide="overlayChangeHide" :activeAssignment="activeAssignment"/>
+      </v-overlay>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
 
-import {testDataAssignments} from '@/configs/testDataAssignments';
+import {testDataAssignments} from '@/configs/testData';
 
 export default {
   name: "assignments-page",
   data: () => ({
-    _assignments: testDataAssignments,
-  })
+    addOverlay: false,
+    changeOverlay: false,
+    activeAssignment: null,
+    testDataAssignments,
+  }),
+  methods: {
+    overlayAddHide() {
+      this.addOverlay = false;
+    },
+    overlayChangeHide() {
+      this.changeOverlay = false;
+    },
+    setActive(newActiveAssignment) {
+      this.activeAssignment = ({...newActiveAssignment});
+      this.changeOverlay = true;
+    }
+  }
 }
 </script>
 
 <style scoped>
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
+::-webkit-scrollbar {
+  width: 4px;
+}
 
-  ::-webkit-scrollbar-track {
-    background: #D1C4E9;
-    border-radius: 10px;
-  }
+::-webkit-scrollbar-track {
+  background: #D1C4E9;
+  border-radius: 10px;
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: #7E57C2;
-    border-radius: 6px;
-  }
+::-webkit-scrollbar-thumb {
+  background: #7E57C2;
+  border-radius: 6px;
+}
 
 </style>

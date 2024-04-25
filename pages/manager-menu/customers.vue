@@ -18,7 +18,7 @@
             :loading="true"
             append-inner-icon="mdi-magnify"
             density="compact"
-            label="Поиск юзеров"
+            label="Поиск организаций"
             variant="outlined"
             hide-details
             single-line
@@ -31,24 +31,24 @@
     <v-card-text>
       <v-list bg-color="transparent" max-height="85vh">
         <v-list-item v-for="customer of customersFiltered" :key="customer.inn">
-          <c-card-customer :customer="customer" @click="showChangeOverlay(customer)"/>
+          <c-customer-card :customer="customer" @click="showChangeOverlay(customer)"/>
         </v-list-item>
       </v-list>
     </v-card-text>
 
     <v-overlay v-model="addOverlay" class="d-flex justify-center align-center">
-      <c-customer-add-overlay :hide-overlay="hideOverlays"/>
+      <c-customer-card-add :hide-overlay="hideOverlays"/>
     </v-overlay>
 
     <v-overlay v-model="changeOverlay" class="d-flex justify-center align-center">
-      <c-customer-change-overlay :hide-overlay="hideOverlays" :activeCustomer="activeCustomer"/>
+      <c-customer-card-change :hide-overlay="hideOverlays" :activeCustomer="activeCustomer"/>
     </v-overlay>
 
   </v-card>
 </template>
 
 <script>
-import {testDataCustomers} from '../../configs/testDataCustomers';
+import {testDataCustomers} from '../../configs/testData';
 import {fetchCustomers} from '../../utils/methods/requests';
 
 export default {

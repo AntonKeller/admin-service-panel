@@ -5,9 +5,18 @@
     <v-card-item>
       <v-text-field
           density="comfortable"
-          v-model="customer.name"
+          v-model="customer.shortName"
           hide-details="auto"
-          label="Наименование организации"
+          label="Наименование заказчика"
+          clearable
+      />
+    </v-card-item>
+    <v-card-item>
+      <v-text-field
+          density="comfortable"
+          v-model="customer.fullName"
+          hide-details="auto"
+          label="Полное наименование заказчика"
           clearable
       />
     </v-card-item>
@@ -32,7 +41,7 @@
     <v-card-item>
       <v-text-field
           density="comfortable"
-          v-model="customer.emailAddress"
+          v-model="customer.email"
           hide-details="auto"
           label="Почта"
           clearable
@@ -58,7 +67,7 @@
 import {putCustomer} from "../utils/methods/requests";
 
 export default {
-  name: "c-customer-change-overlay",
+  name: "c-customer-card-change",
 
   props: {
     activeCustomer: Object,
@@ -98,10 +107,11 @@ export default {
 
   data: () => ({
     customer: {
-      name: '',
+      shortName: '',
+      fullName: '',
       inn: '',
       phoneNumber: '',
-      emailAddress: '',
+      email: '',
       address: '',
     },
   })
