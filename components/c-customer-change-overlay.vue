@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {putCustomer} from "@/utils/methods/requests-customers";
+import {putCustomer} from "../utils/methods/requests";
 
 export default {
   name: "c-customer-change-overlay",

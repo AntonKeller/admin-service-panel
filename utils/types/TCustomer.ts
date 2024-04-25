@@ -1,8 +1,13 @@
+import TCustomerContract from "@/utils/types/TCustomerContract";
+
+
 export default interface TCustomer {
-    id?: string,
-    name: string,
+    id: string,
+    shortName: string,
+    fullName: string,
     inn: string,
     phoneNumber: string,
-    emailAddress: string,
+    email: string,
     address: string,
+    contracts?: Array<TCustomerContract>,
 }

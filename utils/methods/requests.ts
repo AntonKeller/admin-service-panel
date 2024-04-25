@@ -1,7 +1,7 @@
-import TAssignment from "@/utils/types/TAssignment";
-import TRegistration from "@/utils/types/TRegistration";
-import TAuthorization from "@/utils/types/TAuthorization";
-import TCustomer from "@/utils/types/TCustomer";
+import type TAssignment from "@/utils/types/TAssignment";
+import type TRegistration from "@/utils/types/TRegistration";
+import type TAuthorization from "@/utils/types/TAuthorization";
+import type TCustomer from "@/utils/types/TCustomer";
 import {serverURL} from "@/constants/constants";
 import axios from "axios";
 

@@ -1,11 +1,7 @@
 import type TAssignmentBlock from "@/utils/types/TAssignmentBlock";
 
 export default interface TAssignment {
-    id?: string,
-    number: string,
-    signingDate: string,
-    customerId: string,
-    contractNumber: string,
+    id: string,
     contractDate: string,
-    blockList?: Array<TAssignmentBlock>
+    blocks?: Array<TAssignmentBlock>
 }

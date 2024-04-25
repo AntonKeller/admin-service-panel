@@ -49,7 +49,7 @@
 
 <script>
 import {testDataCustomers} from '../../configs/testDataCustomers';
-import {fetchCustomers} from '../../utils/methods/requests-customers';
+import {fetchCustomers} from '../../utils/methods/requests';
 
 export default {
   name: "customers-page",

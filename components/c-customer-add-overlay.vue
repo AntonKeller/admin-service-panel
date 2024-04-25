@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {addCustomer} from "@/utils/methods/requests-customers";
+import {addCustomer} from "@/utils/methods/requests";
 
 export default {
   name: "c-customer-add-overlay",
