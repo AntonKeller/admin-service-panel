@@ -1,7 +1,10 @@
-import type TAssignmentBlock from "@/utils/types/TAssignmentBlock";
+import type TContract from "@/utils/types/TContract";
+import type TCustomer from "@/utils/types/TCustomer";
 
 export default interface TAssignment {
     id: string,
-    contractDate: string,
-    blocks?: Array<TAssignmentBlock>
+    title: string,
+    description: string,
+    contract?: TContract,
+    customer?: TCustomer
 }
