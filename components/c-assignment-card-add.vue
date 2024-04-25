@@ -61,7 +61,7 @@ export default {
   name: "c-assignment-card-add",
 
   props: {
-    overlayHide: Function,
+    hideSelfFunc: Function,
   },
 
   data: () => ({
@@ -96,7 +96,7 @@ export default {
           .finally(() => {
             console.log('Запрос на добавление задания завершен');
             this.clear();
-            this.overlayHide();
+            this.hideSelfFunc();
           })
     },
 
