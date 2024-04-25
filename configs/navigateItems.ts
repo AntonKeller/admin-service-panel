@@ -41,6 +41,19 @@ export const navigateItems: Array<TNavItem> = [
         },
     },
     {
+        title: 'Договоры',
+        route: '/manager-menu/agreement',
+        prependIcon: 'mdi-file-document-multiple-outline',
+        color: 'indigo-accent-4',
+        value: 'agreement',
+        active: false,
+        badge: {
+            show: true,
+            color: "info",
+            content: "2"
+        },
+    },
+    {
         title: 'Модули',
         route: '/manager-menu/modules',
         prependIcon: 'mdi-view-module',
