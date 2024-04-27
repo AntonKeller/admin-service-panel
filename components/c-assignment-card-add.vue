@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {addAssignment} from '../utils/methods/requests';
+import {addAssignmentEx} from '../utils/methods/assignment-requests';
 
 export default {
   name: "c-assignment-card-add",
@@ -86,7 +86,7 @@ export default {
   methods: {
 
     add() {
-      addAssignment(this.assignment, 100)
+      addAssignmentEx(this.assignment, 100)
           .then(response => {
             console.log('Запрос на добавление завершен успешно');
           })
@@ -123,7 +123,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-
-</style>

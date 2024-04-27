@@ -6,14 +6,14 @@
       min-width="480"
       color="indigo-lighten-4">
 
-    <v-card-title>Новое задание</v-card-title>
+    <v-card-title>Редактор ТЗ</v-card-title>
 
     <v-card-subtitle>Введите информацию о задаче</v-card-subtitle>
 
     <v-card-item>
       <v-text-field
           density="comfortable"
-          v-model="assignmentExtend.title"
+          v-model="assignmentEx.title"
           hide-details="auto"
           label="Заголовок задания"
           clearable
@@ -25,7 +25,7 @@
           style="max-height: 350px"
           maxlength="250"
           density="compact"
-          v-model="assignmentExtend.description"
+          v-model="assignmentEx.description"
           hide-details="auto"
           label="Описание"
           clearable
@@ -37,7 +37,7 @@
         <v-text-field
             disabled
             density="compact"
-            v-model="assignmentExtend.contract.contractNumber"
+            v-model="assignmentEx.contract.contractNumber"
             hide-details="auto"
             label="Договор"
         />
@@ -45,7 +45,7 @@
             icon="mdi-plus-box-multiple-outline"
             rounded="sm"
             variant="text"
-            @click="contractsOverlay = true"
+            @click="overlays.contractListVisible = true"
         />
       </div>
     </v-card-item>
@@ -55,7 +55,7 @@
         <v-text-field
             disabled
             density="compact"
-            v-model="assignmentExtend.customer.fullName"
+            v-model="assignmentEx.customer.fullName"
             hide-details="auto"
             label="Заказчик"
         />
@@ -69,39 +69,23 @@
     </v-card-item>
 
     <v-card-actions>
-      <v-btn rounded="sm" variant="tonal" @click="add">Изменить</v-btn>
+      <v-btn rounded="sm" variant="tonal" @click="change">Изменить</v-btn>
       <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
     </v-card-actions>
 
-    <v-overlay v-model="contractsOverlay" class="d-flex justify-center align-center">
-      <v-card
-          variant="flat"
-          min-width="480"
-          color="indigo-lighten-4"
-          density="comfortable"
-          rounded
-      >
-        <v-card-title>Договоры</v-card-title>
-        <v-card-subtitle>Выберите или создайте новый</v-card-subtitle>
-        <v-card-text>
-          <v-list bg-color="transparent" max-height="360px">
-            <v-list-item v-for="e of testDataContracts">
-              <c-contract-card @click="console.log('')" :contract="e"/>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn rounded="sm" variant="tonal" @click="add">Изменить</v-btn>
-          <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-overlay v-model="overlays.contractListVisible" class="d-flex justify-center align-center">
+      <c-contract-list :selectContract="selectContract"/>
     </v-overlay>
+
+    <v-overlay v-model="overlays.customerListVisible" class="d-flex justify-center align-center">
+
+    </v-overlay>
+
   </v-card>
 </template>
 
 <script>
-import {putAssignment} from '../utils/methods/requests';
-import {testDataContracts} from "@/configs/testData";
+import {changeAssignmentEx} from "../utils/methods/assignment-requests";
 
 export default {
   name: "c-assignment-card-add",
@@ -113,10 +97,12 @@ export default {
 
   data: () => ({
 
-    contractsOverlay: false,
-    testDataContracts,
+    overlays: {
+      contractListVisible: false,
+      customerListVisible: false,
+    },
 
-    assignmentExtend: {
+    assignmentEx: {
       title: '',
       description: '',
 
@@ -134,6 +120,7 @@ export default {
         address: '',
       },
     },
+
   }),
 
   mounted() {
@@ -142,23 +129,24 @@ export default {
 
   methods: {
 
-    setContract(newContract) {
-      this.assignmentExtend.contract = ({...newContract});
+    selectContract(newContract) {
+      this.assignmentEx.contract = ({...newContract});
+      this.overlays.contractListVisible = false;
     },
 
-    setCustomer(newCustomer) {
-      this.assignmentExtend.customer = ({...newCustomer});
+    selectCustomer(newCustomer) {
+      this.assignmentEx.customer = ({...newCustomer});
+      this.overlays.customerListVisible = false;
     },
 
     setDefault() {
-      console.log('this.assignmentProp', this.assignmentProp)
       if (this.assignmentProp) {
-        this.assignmentExtend = ({...this.assignmentProp});
+        this.assignmentEx = ({...this.assignmentProp});
       }
     },
 
-    add() {
-      putAssignment(this.assignmentExtend, 100)
+    change() {
+      changeAssignmentEx(this.assignmentEx, 100)
           .then(response => {
             console.log('Запрос на изменение завершен успешно');
           })
@@ -173,7 +161,7 @@ export default {
     },
 
     clear() {
-      this.assignmentExtend = {
+      this.assignmentEx = {
         title: '',
         description: '',
         contract: {

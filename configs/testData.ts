@@ -1,6 +1,6 @@
 import type TCustomer from '@/utils/types/TCustomer';
-import type TContract from "@/utils/types/TContract";
-import type TAssignment from "@/utils/types/TAssignment";
+import type {TContractEx} from "@/utils/types/TContract";
+import type {TAssignmentEx} from "@/utils/types/TAssignment";
 
 export const testDataCustomers: Array<TCustomer> = [
     {
@@ -51,7 +51,7 @@ export const testDataCustomers: Array<TCustomer> = [
 ]
 
 
-export const testDataContracts: Array<TContract> = [
+export const testDataContracts: Array<TContractEx> = [
     {
         id: '1',
         contractNumber: 'XXXX-XXXX-XXXX-XX-XX',
@@ -167,7 +167,7 @@ export const testDataContracts: Array<TContract> = [
 ]
 
 
-export const testDataAssignments: Array<TAssignment> = [
+export const testDataAssignments: Array<TAssignmentEx> = [
     {
         id: '1',
         title: 'Техническое задание',

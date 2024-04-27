@@ -22,6 +22,20 @@ body::-webkit-scrollbar {
   @apply bg-gray-600/50 rounded-xl;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #b2a1d2;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7E57C2;
+  border-radius: 6px;
+}
+
 body {
 
 }

@@ -1,7 +1,6 @@
 <template>
   <v-card class="mx-auto" variant="text" color="blue-grey-darken-2" max-height="100%">
     <v-card-title>Список заданий</v-card-title>
-
     <v-card-item>
       <div class="d-flex ga-2">
         <v-btn
@@ -23,16 +22,14 @@
             hide-details
             single-line
         />
-<!--        v-model="searchText"-->
-<!--        @input="search"-->
       </div>
     </v-card-item>
 
     <v-card-text>
 
       <v-list bg-color="transparent" max-height="85vh">
-        <v-list-item v-for="assignment of testDataAssignments" :key="assignment.id">
-          <c-assignment-card @click="setActive(assignment)" :assignment="assignment"/>
+        <v-list-item v-for="assignment of assignmentList" :key="assignment.id">
+          <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
         </v-list-item>
       </v-list>
 
@@ -49,17 +46,30 @@
 </template>
 
 <script>
-
-import {testDataAssignments} from '@/configs/testData';
+import {fetchAssignmentsEx} from "../../utils/methods/assignment-requests";
+import {testDataAssignments} from "../../configs/testData";
 
 export default {
   name: "assignments-page",
+
   data: () => ({
+
+    overlays: {
+      add: false,
+      change: false,
+    },
+
     addOverlay: false,
     changeOverlay: false,
     activeAssignment: null,
-    testDataAssignments,
+    dataAssignments: null,
+    assignmentList: null,
   }),
+
+  mounted() {
+    this.updateAssignmentListData();
+  },
+
   methods: {
     overlayAddHide() {
       this.addOverlay = false;
@@ -67,28 +77,25 @@ export default {
     overlayChangeHide() {
       this.changeOverlay = false;
     },
-    setActive(newActiveAssignment) {
+    setActiveAssignment(newActiveAssignment) {
       this.activeAssignment = ({...newActiveAssignment});
       this.changeOverlay = true;
+    },
+    updateAssignmentListData() {
+      fetchAssignmentsEx(500)
+          .then(response => {
+            console.log('Запрос списка задач выполнен успешно', response?.data)
+            this.assignmentList = response?.data;
+          })
+          .catch(err => {
+            console.log('Запрос задач выполнен с ошибкой', err);
+            this.assignmentList = testDataAssignments;
+          })
+          .finally(() => {
+            console.log('Запрос списка задач обработан');
+          });
     }
   }
+
 }
 </script>
-
-<style scoped>
-
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #D1C4E9;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #7E57C2;
-  border-radius: 6px;
-}
-
-</style>

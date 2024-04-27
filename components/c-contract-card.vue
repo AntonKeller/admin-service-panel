@@ -1,7 +1,7 @@
 <template>
   <v-card
       color="indigo"
-      variant='tonal'
+      variant='text'
       density="compact"
       rounded
   >

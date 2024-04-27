@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {navigateItems} from '@/configs/navigateItems.ts';
+import {navigateItems} from '../configs/navigateItems.ts';
 
 export default {
 
