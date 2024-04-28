@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import {addCustomer} from "@/utils/methods/requests";
+import {addCustomer} from "../utils/methods/customer-requests";
 
 export default {
   name: "c-customer-card-add",

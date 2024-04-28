@@ -20,7 +20,7 @@
             append-icon="mdi-open-in-new"
             @click.stop="console.log('Customer show menu')"
         >
-          {{ assignment.customer.shortName }}
+          {{ assignment.contract.customer.shortName }}
         </v-chip>
         <v-chip
             rounded="sm"
@@ -31,7 +31,7 @@
             append-icon="mdi-phone"
             @click.stop="console.log('Customer call')"
         >
-          {{ assignment.customer.phoneNumber }}
+          {{ assignment.contract.customer.phoneNumber }}
         </v-chip>
         <v-chip
             rounded="sm"
@@ -42,7 +42,7 @@
             append-icon="mdi-open-in-new"
             @click.stop="console.log('Contract show menu')"
         >
-          {{ assignment.contract.contractNumber }}
+          {{ assignment.contract.customer.email }}
         </v-chip>
       </div>
     </v-card-item>

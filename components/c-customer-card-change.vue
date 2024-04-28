@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import {putCustomer} from "../utils/methods/requests";
+import {putCustomer} from "../utils/methods/customer-requests";
 
 export default {
   name: "c-customer-card-change",
@@ -117,7 +117,3 @@ export default {
   })
 }
 </script>
-
-<style scoped>
-
-</style>

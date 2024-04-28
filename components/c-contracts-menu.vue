@@ -18,7 +18,7 @@
             density="default"
             size="small"
             icon="mdi-plus"
-            @click="contractAddOverlayVisible = true"
+            @click="contractAddMenuVisible = true"
         />
         <v-text-field
             color="indigo-darken-1"
@@ -34,13 +34,22 @@
     </v-card-item>
     <v-card-text>
       <v-list bg-color="transparent" max-height="360px">
-        <v-list-item v-for="e of contractList" :key="e.id">
-          <c-contract-card @click="selectContract(e)" :contract="e"/>
+        <v-list-item v-if="loadingData">
+          <v-skeleton-loader
+              v-for="n of 3"
+              width="full"
+              color="transparent"
+              elevation="0"
+              type="list-item-three-line"
+          />
+        </v-list-item>
+        <v-list-item v-for="contract of contractList" :key="contract._id">
+          <c-contract-card @click="selectContract(contract)" :contract="contract"/>
         </v-list-item>
       </v-list>
     </v-card-text>
-    <v-overlay v-model="contractAddOverlayVisible" class="d-flex justify-center align-center">
-      <!--      // ...............-->
+    <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
+      <c-contract-card-add-menu :returnContract="setContract"/>
     </v-overlay>
   </v-card>
 </template>
@@ -57,16 +66,26 @@ export default {
   },
 
   data: () => ({
+    loadingData: true,
     contractList: null,
-    contractAddOverlayVisible: false,
+    contractAddMenuVisible: false,
   }),
 
   mounted() {
-    this.updateContractData();
+    this.fetchData();
   },
 
   methods: {
-    updateContractData() {
+
+    setContract(newContract) {
+      if (Array.isArray(this.contractList)) {
+        this.contractList.push(newContract)
+      } else {
+        this.contractList = [newContract];
+      }
+    },
+
+    fetchData() {
       fetchContracts(500)
           .then(response => {
             this.contractList = response?.data;
@@ -78,6 +97,7 @@ export default {
           })
           .finally(() => {
             console.log('Запрос списка договоров завершен');
+            this.loadingData = false;
           });
     }
   }

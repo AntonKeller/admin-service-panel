@@ -10,7 +10,7 @@
             density="default"
             size="small"
             icon="mdi-plus"
-            @click="addOverlay = true; changeOverlay = false"
+            @click="addMenuVisible = true"
         />
         <v-text-field
             color="indigo-darken-1"
@@ -33,12 +33,12 @@
         </v-list-item>
       </v-list>
 
-      <v-overlay v-model="addOverlay" class="d-flex justify-center align-center">
-        <c-assignment-card-add :hideSelfFunc="overlayAddHide"/>
+      <v-overlay v-model="addMenuVisible" class="d-flex justify-center align-center">
+        <c-assignment-card-add-menu :hideMenu="hideAddMenu"/>
       </v-overlay>
 
-      <v-overlay v-model="changeOverlay" class="d-flex justify-center align-center">
-        <c-assignment-card-change :hideSelfFunc="overlayChangeHide" :assignmentProp="activeAssignment"/>
+      <v-overlay v-model="changeMenuVisible" class="d-flex justify-center align-center">
+        <c-assignment-card-change-menu :hideMenu="hideChangeMenu" :assignmentProp="activeAssignment"/>
       </v-overlay>
 
     </v-card-text>
@@ -46,21 +46,16 @@
 </template>
 
 <script>
-import {fetchAssignmentsEx} from "../../utils/methods/assignment-requests";
+import {fetchAssignments} from "../../utils/methods/assignment-requests";
 import {testDataAssignments} from "../../configs/testData";
 
 export default {
   name: "assignments-page",
 
   data: () => ({
+    addMenuVisible: false,
+    changeMenuVisible: false,
 
-    overlays: {
-      add: false,
-      change: false,
-    },
-
-    addOverlay: false,
-    changeOverlay: false,
     activeAssignment: null,
     dataAssignments: null,
     assignmentList: null,
@@ -71,30 +66,33 @@ export default {
   },
 
   methods: {
-    overlayAddHide() {
+
+    hideAddMenu() {
       this.addOverlay = false;
     },
-    overlayChangeHide() {
+
+    hideChangeMenu() {
       this.changeOverlay = false;
     },
+
     setActiveAssignment(newActiveAssignment) {
       this.activeAssignment = ({...newActiveAssignment});
-      this.changeOverlay = true;
+      this.changeMenuVisible = true;
     },
+
     updateAssignmentListData() {
-      fetchAssignmentsEx(500)
+      fetchAssignments(500)
           .then(response => {
-            console.log('Запрос списка задач выполнен успешно', response?.data)
             this.assignmentList = response?.data;
           })
           .catch(err => {
-            console.log('Запрос задач выполнен с ошибкой', err);
             this.assignmentList = testDataAssignments;
           })
           .finally(() => {
-            console.log('Запрос списка задач обработан');
+            console.log('Запрос списка задач обработан', this.assignmentList);
           });
     }
+
   }
 
 }

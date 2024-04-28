@@ -13,7 +13,7 @@
     <v-card-item>
       <v-text-field
           density="comfortable"
-          v-model="assignmentEx.title"
+          v-model="assignment.title"
           hide-details="auto"
           label="Заголовок задания"
           clearable
@@ -25,7 +25,7 @@
           style="max-height: 350px"
           maxlength="250"
           density="compact"
-          v-model="assignmentEx.description"
+          v-model="assignment.description"
           hide-details="auto"
           label="Описание"
           clearable
@@ -37,7 +37,7 @@
         <v-text-field
             disabled
             density="compact"
-            v-model="assignmentEx.contract.contractNumber"
+            v-model="assignment.contract.contractNumber"
             hide-details="auto"
             label="Договор"
         />
@@ -45,7 +45,7 @@
             icon="mdi-plus-box-multiple-outline"
             rounded="sm"
             variant="text"
-            @click="overlays.contractListVisible = true"
+            @click="contractsMenuVisible = true"
         />
       </div>
     </v-card-item>
@@ -55,7 +55,7 @@
         <v-text-field
             disabled
             density="compact"
-            v-model="assignmentEx.customer.fullName"
+            v-model="assignment.contract.customer.fullName"
             hide-details="auto"
             label="Заказчик"
         />
@@ -73,51 +73,43 @@
       <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
     </v-card-actions>
 
-    <v-overlay v-model="overlays.contractListVisible" class="d-flex justify-center align-center">
-      <c-contract-list :selectContract="selectContract"/>
-    </v-overlay>
-
-    <v-overlay v-model="overlays.customerListVisible" class="d-flex justify-center align-center">
-
+    <v-overlay v-model="contractsMenuVisible" class="d-flex justify-center align-center">
+      <c-contracts-menu :selectContract="selectContract"/>
     </v-overlay>
 
   </v-card>
 </template>
 
 <script>
-import {changeAssignmentEx} from "../utils/methods/assignment-requests";
+import {changeAssignment} from "../utils/methods/assignment-requests";
 
 export default {
-  name: "c-assignment-card-add",
+  name: "c-assignment-card-change-menu",
 
   props: {
     assignmentProp: Object,
-    hideSelfFunc: Function,
+    hideMenu: Function,
   },
 
   data: () => ({
-
-    overlays: {
-      contractListVisible: false,
-      customerListVisible: false,
-    },
-
-    assignmentEx: {
+    contractsMenuVisible: false,
+    assignment: {
+      _id: '',
       title: '',
       description: '',
-
       contract: {
+        _id: '',
         contractNumber: '',
         contractDate: '',
-      },
-
-      customer: {
-        shortName: '',
-        fullName: '',
-        inn: '',
-        phoneNumber: '',
-        email: '',
-        address: '',
+        customer: {
+          _id: '',
+          shortName: '',
+          fullName: '',
+          inn: '',
+          phoneNumber: '',
+          email: '',
+          address: '',
+        }
       },
     },
 
@@ -130,23 +122,18 @@ export default {
   methods: {
 
     selectContract(newContract) {
-      this.assignmentEx.contract = ({...newContract});
-      this.overlays.contractListVisible = false;
-    },
-
-    selectCustomer(newCustomer) {
-      this.assignmentEx.customer = ({...newCustomer});
-      this.overlays.customerListVisible = false;
+      this.assignment.contract = ({...newContract});
+      this.contractsMenuVisible = false;
     },
 
     setDefault() {
       if (this.assignmentProp) {
-        this.assignmentEx = ({...this.assignmentProp});
+        this.assignment = ({...this.assignmentProp});
       }
     },
 
     change() {
-      changeAssignmentEx(this.assignmentEx, 100)
+      changeAssignment(this.assignment, 100)
           .then(response => {
             console.log('Запрос на изменение завершен успешно');
           })
@@ -156,25 +143,28 @@ export default {
           .finally(() => {
             console.log('Запрос на изменение задания завершен');
             this.clear();
-            this.hideSelfFunc();
+            this.hideMenu();
           })
     },
 
     clear() {
-      this.assignmentEx = {
+      this.assignment = {
+        _id: '',
         title: '',
         description: '',
         contract: {
+          _id: '',
           contractNumber: '',
           contractDate: '',
-        },
-        customer: {
-          shortName: '',
-          fullName: '',
-          inn: '',
-          phoneNumber: '',
-          email: '',
-          address: '',
+          customer: {
+            _id: '',
+            shortName: '',
+            fullName: '',
+            inn: '',
+            phoneNumber: '',
+            email: '',
+            address: '',
+          }
         },
       }
     }

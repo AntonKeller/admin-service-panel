@@ -6,10 +6,10 @@
       rounded
   >
     <v-card-title>
-      {{(customer?.shortName || 'name error') + ' / ' + (customer?.inn || 'inn error')}}
+      {{(customerProp?.shortName || 'name error') + ' / ' + (customerProp?.inn || 'inn error')}}
     </v-card-title>
     <v-card-subtitle>
-      {{customer.address}}
+      {{customerProp.address}}
     </v-card-subtitle>
     <v-card-item>
       <div class="d-flex ga-2">
@@ -22,7 +22,7 @@
             label
             @click.stop="console.log('click')"
         >
-          {{customer.email}}
+          {{customerProp.email}}
         </v-chip>
         <v-chip
             prepend-icon="mdi-email"
@@ -33,7 +33,7 @@
             label
             @click.stop="console.log('click')"
         >
-          {{customer.phoneNumber}}
+          {{customerProp.phoneNumber}}
         </v-chip>
       </div>
     </v-card-item>
@@ -45,11 +45,7 @@
 export default {
   name: "c-customer-card",
   props: {
-    customer: Object,
+    customerProp: Object,
   }
 }
 </script>
-
-<style scoped>
-
-</style>
