@@ -1,5 +1,5 @@
 export default interface TInspectionObject {
-    id: string,
+    _id: string,
     inventoryNumber: string,
     address: string,
     description: string,

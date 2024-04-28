@@ -1,5 +1,5 @@
 export default interface TPhoto {
-    id: string,
+    _id: string,
     description: string,
     buffer: string,
 }

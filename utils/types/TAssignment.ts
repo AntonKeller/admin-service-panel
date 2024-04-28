@@ -1,13 +1,14 @@
 import type {TContract} from "@/utils/types/TContract";
-import type TCustomer from "@/utils/types/TCustomer";
 
 export interface TAssignment {
-    id: string,
+    _id?: string,
     title: string,
     description: string,
+    contract?: TContract,
 }
 
-export interface TAssignmentEx extends TAssignment {
-    contract?: TContract,
-    customer?: TCustomer
+export interface TAssignmentLow {
+    title: string,
+    description: string,
+    contractId: string,
 }
