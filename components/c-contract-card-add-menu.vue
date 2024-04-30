@@ -25,25 +25,22 @@
           density="comfortable"
           v-model="contract.contractDate"
           hide-details="auto"
-          label="Дата заключения"
+          label="Выбрать дату заключения"
           clearable
+          readonly
+          @focus="datepickerMenuVisible = true"
       />
     </v-card-item>
 
     <v-card-item>
       <div class="d-flex ga-2">
         <v-text-field
-            disabled
-            density="compact"
+            density="comfortable"
             v-model="contract.customer.shortName"
             hide-details="auto"
-            label="Заказчик"
-        />
-        <v-btn
-            icon="mdi-plus-box-multiple-outline"
-            rounded="sm"
-            variant="text"
-            @click="customersMenuVisible = true"
+            label="Выбрать заказчика"
+            readonly
+            @focus="customersMenuVisible = true"
         />
       </div>
     </v-card-item>
@@ -55,6 +52,10 @@
 
     <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">
       <c-customers-menu :returnCustomer="setCustomer"/>
+    </v-overlay>
+
+    <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
+      <c-datepicker-menu />
     </v-overlay>
 
   </v-card>
@@ -72,6 +73,7 @@ export default {
 
   data: () => ({
     customersMenuVisible: false,
+    datepickerMenuVisible: false,
     contract: {
       contractNumber: '',
       contractDate: '',
@@ -88,6 +90,11 @@ export default {
   }),
 
   methods: {
+    filterNum: function() {
+      if (!/^\d+$/.test(this.inputValue)) {
+        this.inputValue = this.inputValue.replace(/[^\d]/g, '');
+      }
+    },
     setCustomer(newCustomer) {
       this.contract.customer = ({...newCustomer});
       this.customersMenuVisible = false;

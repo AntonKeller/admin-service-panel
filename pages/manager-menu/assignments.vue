@@ -15,14 +15,14 @@
         <v-text-field
             color="indigo-darken-1"
             :loading="true"
-            append-inner-icon="mdi-magnify"
+            prepend-inner-icon="mdi-magnify"
             density="compact"
             label="Поиск по задачам"
             variant="outlined"
             hide-details
             single-line
+            clearable
             v-model="searchText"
-            @input="console.log('searchText', searchText)"
         />
       </div>
     </v-card-item>
@@ -30,7 +30,7 @@
     <v-card-text>
 
       <v-list bg-color="transparent" max-height="85vh">
-        <v-list-item v-for="assignment of getTestDataAssignments" :key="assignment.id">
+        <v-list-item v-for="assignment of assignmentsFiltered" :key="assignment.id">
           <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
         </v-list-item>
       </v-list>
@@ -63,22 +63,20 @@ export default {
   }),
 
   computed: {
-    getTestDataAssignments() {
+    assignmentsFiltered() {
       if (this.searchText?.length > 0 && this.assignmentList?.length > 0) {
 
         let expression = new RegExp(this.searchText, 'i');
 
-        let found = this.assignmentList?.filter(assignment => {
-          return expression.test(assignment.title) ||
-              expression.test(assignment?.contract?.contractDate) ||
-              expression.test(assignment?.contract?.customer?.fullName);
-        });
+        let filtered = this.assignmentList?.filter(assignment => [
+          assignment.title,
+          assignment?.contract?.contractDate,
+          assignment?.contract?.customer?.fullName
+        ].find(e => expression.test(e)));
 
-        return found?.length > 0 ? found : null;
+        return filtered?.length > 0 ? filtered : null;
 
-      } else {
-        return this.assignmentList;
-      }
+      } else return this.assignmentList;
     },
   },
 

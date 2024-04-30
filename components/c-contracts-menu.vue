@@ -23,17 +23,19 @@
         <v-text-field
             color="indigo-darken-1"
             :loading="true"
-            append-inner-icon="mdi-magnify"
+            prepend-inner-icon="mdi-magnify"
             density="compact"
             label="Поиск договора"
             variant="outlined"
             hide-details
             single-line
-        ></v-text-field>
+            clearable
+            v-model="searchText"
+        />
       </div>
     </v-card-item>
     <v-card-text>
-      <v-list bg-color="transparent" max-height="360px">
+      <v-list bg-color="transparent" min-height="380" max-height="360">
         <v-list-item v-if="loadingData">
           <v-skeleton-loader
               v-for="n of 3"
@@ -43,7 +45,8 @@
               type="list-item-three-line"
           />
         </v-list-item>
-        <v-list-item v-for="contract of contractList" :key="contract._id">
+        <v-list-item v-if="!contractsFiltered">Договора не найдены</v-list-item>
+        <v-list-item v-for="contract of contractsFiltered" :key="contract._id">
           <c-contract-card @click="selectContract(contract)" :contract="contract"/>
         </v-list-item>
       </v-list>
@@ -66,10 +69,28 @@ export default {
   },
 
   data: () => ({
+    searchText: null,
     loadingData: true,
     contractList: null,
     contractAddMenuVisible: false,
   }),
+
+  computed: {
+    contractsFiltered() {
+      if (this.searchText?.length > 0 && this.contractList?.length > 0) {
+
+        let expression = new RegExp(this.searchText, 'i');
+
+        let filtered = this.contractList?.filter(contract => [
+          contract.contractNumber,
+          contract.contractDate,
+        ].find(e => expression.test(e)));
+
+        return filtered?.length > 0 ? filtered : null;
+
+      } else return this.contractList;
+    }
+  },
 
   mounted() {
     this.fetchData();
