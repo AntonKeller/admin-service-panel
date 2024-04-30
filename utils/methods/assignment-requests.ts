@@ -4,17 +4,17 @@ import type {TAssignment, TAssignmentLow} from "@/utils/types/TAssignment";
 
 
 export async function addAssignment(assignment: TAssignmentLow, delay: number): Promise<TAssignment> {
-    return axios.post(serverURL + '/assignments/add', assignment, {timeout: delay});
+    return await axios.post(serverURL + '/assignments/add', assignment, {timeout: delay});
 }
 
 
-export function changeAssignment(assignment: TAssignment, delay: number): Promise<TAssignment> {
-    return axios.put(serverURL + '/assignments/change', assignment, {timeout: delay});
+export async function changeAssignment(assignment: TAssignment, delay: number): Promise<TAssignment> {
+    return await axios.put(serverURL + '/assignments/change', assignment, {timeout: delay});
 }
 
 
 export async function fetchAssignments(delay: number): Promise<Array<TAssignment>> {
-    return axios.get(serverURL + '/assignments', {timeout: delay});
+    return await axios.get(serverURL + '/assignments', {timeout: delay});
 }
 
 

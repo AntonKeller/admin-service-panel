@@ -21,6 +21,8 @@
             variant="outlined"
             hide-details
             single-line
+            v-model="searchText"
+            @input="console.log('searchText', searchText)"
         />
       </div>
     </v-card-item>
@@ -28,7 +30,7 @@
     <v-card-text>
 
       <v-list bg-color="transparent" max-height="85vh">
-        <v-list-item v-for="assignment of assignmentList" :key="assignment.id">
+        <v-list-item v-for="assignment of getTestDataAssignments" :key="assignment.id">
           <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
         </v-list-item>
       </v-list>
@@ -55,11 +57,30 @@ export default {
   data: () => ({
     addMenuVisible: false,
     changeMenuVisible: false,
-
+    searchText: null,
     activeAssignment: null,
-    dataAssignments: null,
     assignmentList: null,
   }),
+
+  computed: {
+    getTestDataAssignments() {
+      if (this.searchText?.length > 0 && this.assignmentList?.length > 0) {
+
+        let expression = new RegExp(this.searchText, 'i');
+
+        let found = this.assignmentList?.filter(assignment => {
+          return expression.test(assignment.title) ||
+              expression.test(assignment?.contract?.contractDate) ||
+              expression.test(assignment?.contract?.customer?.fullName);
+        });
+
+        return found?.length > 0 ? found : null;
+
+      } else {
+        return this.assignmentList;
+      }
+    },
+  },
 
   mounted() {
     this.updateAssignmentListData();
