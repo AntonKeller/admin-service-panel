@@ -5,11 +5,28 @@
       density="compact"
       rounded
   >
-    <v-card-title>
-      {{(customerProp?.shortName || 'name error') + ' / ' + (customerProp?.inn || 'inn error')}}
+    <v-card-title class="d-flex justify-space-between">
+
+      {{ (customerProp?.shortName || 'name error') + ' / ' + (customerProp?.inn || 'inn error') }}
+      <div class="d-flex ga-2">
+        <v-btn
+            icon="mdi-pencil-box-multiple"
+            density="comfortable"
+            variant="tonal"
+            rounded
+            @click.stop="changeClick(customerProp)"
+        />
+        <v-btn
+            icon="mdi-delete-off"
+            density="comfortable"
+            variant="tonal"
+            rounded
+            @click.stop="removeSelf(customerProp._id)"
+        />
+      </div>
     </v-card-title>
     <v-card-subtitle>
-      {{customerProp.address}}
+      {{ customerProp.address }}
     </v-card-subtitle>
     <v-card-item>
       <div class="d-flex ga-2">
@@ -22,7 +39,7 @@
             label
             @click.stop="console.log('click')"
         >
-          {{customerProp.email}}
+          {{ customerProp.email }}
         </v-chip>
         <v-chip
             prepend-icon="mdi-email"
@@ -33,7 +50,7 @@
             label
             @click.stop="console.log('click')"
         >
-          {{customerProp.phoneNumber}}
+          {{ customerProp.phoneNumber }}
         </v-chip>
       </div>
     </v-card-item>
@@ -41,11 +58,28 @@
 </template>
 
 <script>
+import {removeCustomer} from "../utils/methods/customer-requests";
 
 export default {
   name: "c-customer-card",
+
   props: {
     customerProp: Object,
+    removeClick: Function,
+    changeClick: Function,
+  },
+
+  methods: {
+    removeSelf(_id) {
+      removeCustomer(_id, 250)
+          .then(response => {
+            console.log('Заказчик успешно удален', response);
+            this.removeClick(this.customerProp._id);
+          })
+          .catch(err => {
+            console.log('Удаление заказчика не удалось', err);
+          })
+    }
   }
 }
 </script>

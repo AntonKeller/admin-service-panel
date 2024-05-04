@@ -1,8 +1,8 @@
 <template>
   <v-card
       variant="flat"
-      min-width="600"
-      max-width="600"
+      min-width="700"
+      max-width="700"
       color="indigo-lighten-4"
       density="comfortable"
       rounded
@@ -32,12 +32,13 @@
             variant="outlined"
             hide-details
             single-line
+            v-model="searchText"
         />
       </div>
     </v-card-item>
 
     <v-card-text>
-      <v-list bg-color="transparent" max-height="360px">
+      <v-list bg-color="transparent" max-height="360px" min-height="360px">
         <v-list-item v-if="loadingData">
           <v-skeleton-loader
               v-for="n of 3"
@@ -47,15 +48,26 @@
               type="list-item-three-line"
           />
         </v-list-item>
-        <v-list-item v-for="e of customerList" :key="e.id">
-          <c-customer-card @click="returnCustomer({...e})" :customerProp="e"/>
+        <v-list-item v-for="e of customersFiltered" :key="e.id">
+          <c-customer-card
+              :removeClick="cardRemoveClick"
+              :changeClick="cardChangeClick"
+              :customerProp="e"
+              @click="returnCustomer({...e})"
+          />
         </v-list-item>
       </v-list>
     </v-card-text>
 
     <v-overlay v-model="customerAddMenuVisible" class="d-flex justify-center align-center">
-<!--      <c-contract-card-add-menu :returnContract="setContract"/>-->
-<!--      <c-customer-card-add :customerProp= />-->
+      <c-customer-card-add-menu :returnNewCustomer="setNewCustomer"/>
+    </v-overlay>
+
+    <v-overlay v-model="customerChangeMenuVisible" class="d-flex justify-center align-center">
+      <c-customer-card-change-menu
+          :activeCustomer="activeChangeCustomer"
+          :returnNewCustomer="changeCustomer"
+      />
     </v-overlay>
 
   </v-card>
@@ -74,7 +86,10 @@ export default {
 
   data: () => ({
     loadingData: true,
+    activeChangeCustomer: ({}),
     customerAddMenuVisible: false,
+    customerChangeMenuVisible: false,
+    searchText: null,
     customerList: null,
   }),
 
@@ -82,7 +97,56 @@ export default {
     this.fetchData();
   },
 
+  computed: {
+    customersFiltered() {
+      if (this.customerList?.length > 0 && this.searchText !== null) {
+
+        let expression = new RegExp(this.searchText, "ig");
+
+        return this.customerList.filter(customer => {
+          return expression.test(customer.fullName) ||
+              expression.test(customer.inn) ||
+              expression.test(customer.email) ||
+              expression.test(customer.address);
+        })
+      } else {
+        return this.customerList;
+      }
+    },
+  },
+
   methods: {
+
+    cardRemoveClick(id) {
+      this.customerList = this.customerList.filter(customer => customer._id !== id);
+    },
+
+    cardChangeClick(_customer) {
+      this.activeChangeCustomer = ({..._customer});
+      this.customerChangeMenuVisible = true;
+    },
+
+    changeCustomer(newCustomer) {
+
+      // Ищем, меняем значения заказчика
+      this.customerList.forEach((customer, customerI) => {
+        if (customer._id === newCustomer._id) {
+          this.customerList[customerI] = ({...newCustomer})
+        }
+      })
+
+      // Закрываем меню
+      this.customerChangeMenuVisible = false;
+    },
+
+    setNewCustomer(newCustomer) {
+
+      // Добавляем нового заказчика
+      this.customerList.unshift(newCustomer);
+
+      // Закрываем меню
+      this.customerAddMenuVisible = false;
+    },
 
     setCustomer(newCustomer) {
       if (Array.isArray(this.customerList)) {

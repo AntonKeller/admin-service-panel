@@ -47,10 +47,7 @@
       </div>
     </v-card-item>
     <v-card-text>
-      {{ assignment.description }}
-      {{ assignment.description }}
-      {{ assignment.description }}
-      {{ assignment.description }}
+      {{ assignment.description?.length > 200 ? assignment.description?.slice(0, 200) + ' ....' : assignment.description }}
     </v-card-text>
   </v-card>
 </template>

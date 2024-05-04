@@ -47,13 +47,27 @@
         </v-list-item>
         <v-list-item v-if="!contractsFiltered">Договора не найдены</v-list-item>
         <v-list-item v-for="contract of contractsFiltered" :key="contract._id">
-          <c-contract-card @click="selectContract(contract)" :contract="contract"/>
+          <c-contract-card
+              @click="selectContract(contract)"
+              :contract="contract"
+              :removeClick="cardRemoveClick"
+              :changeClick="cardChangeClick"
+          />
         </v-list-item>
       </v-list>
     </v-card-text>
+
     <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
       <c-contract-card-add-menu :returnContract="setContract"/>
     </v-overlay>
+
+    <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
+      <c-contract-card-change-menu
+          :activeContract="activeContractChange"
+          :returnContract="changeContract"
+      />
+    </v-overlay>
+
   </v-card>
 </template>
 
@@ -69,10 +83,12 @@ export default {
   },
 
   data: () => ({
-    searchText: null,
     loadingData: true,
+    searchText: null,
+    activeContractChange: null,
     contractList: null,
     contractAddMenuVisible: false,
+    contractChangeMenuVisible: false,
   }),
 
   computed: {
@@ -98,6 +114,29 @@ export default {
 
   methods: {
 
+    cardRemoveClick(id) {
+      this.contractList = this.contractList.filter(contract => contract._id !== id);
+    },
+
+    cardChangeClick(_contract) {
+      this.activeContractChange = ({..._contract});
+      this.contractChangeMenuVisible = true;
+    },
+
+    changeContract(newContract) {
+
+      console.log('Новый контракт:', newContract);
+
+      for (let i = 0; i < this.contractList.length; i++) {
+        if (this.contractList[i]?._id === newContract?._id) {
+          this.contractList[i] = {...newContract}
+          break;
+        }
+      }
+
+      this.contractChangeMenuVisible = false;
+    },
+
     setContract(newContract) {
       if (Array.isArray(this.contractList)) {
         this.contractList.push(newContract)
@@ -109,8 +148,7 @@ export default {
     fetchData() {
       fetchContracts(500)
           .then(response => {
-            this.contractList = response?.data;
-            console.log('Запрос списка договоров выполнен успешно');
+            this.contractList = response?.data?.reverse();
           })
           .catch(err => {
             this.contractList = testDataContracts;
@@ -124,7 +162,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

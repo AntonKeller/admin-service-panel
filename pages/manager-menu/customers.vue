@@ -99,7 +99,7 @@ export default {
         customer.name,
         customer.inn,
         customer.phoneNumber,
-        customer.emailAddress,
+        customer.email,
         customer.address
       ].find(e => this.strInclude(e?.toLowerCase(), this.searchText?.toLowerCase())) || null);
     },
@@ -121,22 +121,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #D1C4E9;
-  /*box-shadow: inset 0 0 5px #B39DDB;*/
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #7E57C2;
-  border-radius: 6px;
-}
-
-</style>
