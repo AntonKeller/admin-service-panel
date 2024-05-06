@@ -50,24 +50,6 @@
       </div>
     </v-card-item>
 
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-text-field
-            disabled
-            density="compact"
-            v-model="assignment.contract.customer.fullName"
-            hide-details="auto"
-            label="Заказчик"
-        />
-        <v-btn
-            icon="mdi-plus-box-multiple-outline"
-            rounded="sm"
-            variant="text"
-            @click="console.log('Выбрать')"
-        />
-      </div>
-    </v-card-item>
-
     <v-card-actions>
       <v-btn rounded="sm" variant="tonal" @click="change">Изменить</v-btn>
       <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
@@ -93,6 +75,7 @@ export default {
 
   data: () => ({
     contractsMenuVisible: false,
+
     assignment: {
       _id: '',
       title: '',
@@ -117,6 +100,7 @@ export default {
 
   mounted() {
     this.setDefault();
+    console.log(this.assignment)
   },
 
   methods: {

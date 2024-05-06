@@ -1,74 +1,81 @@
 <template>
-  <v-card
-      variant="flat"
-      min-width="600"
-      max-width="600"
-      color="indigo-lighten-4"
-      density="comfortable"
-      rounded
-  >
-    <v-card-title>Договоры</v-card-title>
-    <v-card-subtitle>Выберите или создайте новый</v-card-subtitle>
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-btn
-            rounded
-            color="indigo-darken-1"
-            variant="elevated"
-            density="default"
-            size="small"
-            icon="mdi-plus"
-            @click="contractAddMenuVisible = true"
-        />
-        <v-text-field
-            color="indigo-darken-1"
-            :loading="true"
-            prepend-inner-icon="mdi-magnify"
-            density="compact"
-            label="Поиск договора"
-            variant="outlined"
-            hide-details
-            single-line
-            clearable
-            v-model="searchText"
-        />
-      </div>
-    </v-card-item>
-    <v-card-text>
-      <v-list bg-color="transparent" min-height="380" max-height="360">
-        <v-list-item v-if="loadingData">
-          <v-skeleton-loader
-              v-for="n of 3"
-              width="full"
-              color="transparent"
-              elevation="0"
-              type="list-item-three-line"
+  <v-container class="bg-indigo-lighten-4 rounded">
+    <v-card
+        variant="flat"
+        min-width="600"
+        max-width="600"
+        color="indigo-lighten-4"
+        density="comfortable"
+        rounded
+    >
+      <v-card-title>Договоры</v-card-title>
+      <v-card-subtitle>Выберите или создайте новый</v-card-subtitle>
+      <v-card-item>
+        <div class="d-flex ga-2">
+          <v-btn
+              rounded
+              color="indigo-darken-1"
+              variant="elevated"
+              density="default"
+              size="small"
+              icon="mdi-plus"
+              @click="contractAddMenuVisible = true"
           />
-        </v-list-item>
-        <v-list-item v-if="!contractsFiltered">Договора не найдены</v-list-item>
-        <v-list-item v-for="contract of contractsFiltered" :key="contract._id">
-          <c-contract-card
-              @click="selectContract(contract)"
-              :contract="contract"
-              :removeClick="cardRemoveClick"
-              :changeClick="cardChangeClick"
+          <v-text-field
+              color="indigo-darken-1"
+              :loading="true"
+              prepend-inner-icon="mdi-magnify"
+              density="compact"
+              label="Поиск договора"
+              variant="outlined"
+              hide-details
+              single-line
+              clearable
+              v-model="searchText"
           />
-        </v-list-item>
-      </v-list>
-    </v-card-text>
+        </div>
+      </v-card-item>
 
-    <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
-      <c-contract-card-add-menu :returnContract="setContract"/>
-    </v-overlay>
+      <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
+        <c-contract-card-add-menu :returnContract="setContract"/>
+      </v-overlay>
 
-    <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
-      <c-contract-card-change-menu
-          :activeContract="activeContractChange"
-          :returnContract="changeContract"
-      />
-    </v-overlay>
+      <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
+        <c-contract-card-change-menu
+            :activeContract="activeContractChange"
+            :returnContract="changeContract"
+        />
+      </v-overlay>
 
-  </v-card>
+    </v-card>
+
+    <v-list bg-color="transparent" min-height="380" max-height="360">
+
+      <v-list-item v-if="loadingData">
+        <v-skeleton-loader
+            v-for="n of 3"
+            width="full"
+            color="transparent"
+            elevation="0"
+            type="list-item-three-line"
+        />
+      </v-list-item>
+
+      <v-list-item v-if="!contractsFiltered">Договора не найдены</v-list-item>
+
+      <v-list-item
+          v-for="contract of contractsFiltered"
+          :key="contract._id"
+      >
+        <c-contract-card
+            @click="selectContract(contract)"
+            :contract="contract"
+            :removeClick="cardRemoveClick"
+            :changeClick="cardChangeClick"
+        />
+      </v-list-item>
+    </v-list>
+  </v-container>
 </template>
 
 <script>

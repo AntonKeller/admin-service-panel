@@ -1,39 +1,32 @@
 <template>
-  <v-card class="mx-auto" variant="text" color="blue-grey-darken-2" max-height="100%">
-    <v-card-title>Список заданий</v-card-title>
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-btn
-            rounded
-            color="indigo-darken-1"
-            variant="elevated"
-            density="default"
-            size="small"
-            icon="mdi-plus"
-            @click="addMenuVisible = true"
-        />
-        <v-text-field
-            color="indigo-darken-1"
-            :loading="true"
-            prepend-inner-icon="mdi-magnify"
-            density="compact"
-            label="Поиск по задачам"
-            variant="outlined"
-            hide-details
-            single-line
-            clearable
-            v-model="searchText"
-        />
-      </div>
-    </v-card-item>
-
-    <v-card-text>
-
-      <v-list bg-color="transparent" max-height="85vh">
-        <v-list-item v-for="assignment of assignmentsFiltered" :key="assignment.id">
-          <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
-        </v-list-item>
-      </v-list>
+  <div>
+    <v-card class="mx-auto" variant="text" color="blue-grey-darken-2" max-height="100%">
+      <v-card-title>Список заданий</v-card-title>
+      <v-card-item>
+        <div class="d-flex ga-2">
+          <v-btn
+              rounded
+              color="indigo-darken-1"
+              variant="elevated"
+              density="default"
+              size="small"
+              icon="mdi-plus"
+              @click="addMenuVisible = true"
+          />
+          <v-text-field
+              color="indigo-darken-1"
+              :loading="true"
+              prepend-inner-icon="mdi-magnify"
+              density="compact"
+              label="Поиск по задачам"
+              variant="outlined"
+              hide-details
+              single-line
+              clearable
+              v-model="searchText"
+          />
+        </div>
+      </v-card-item>
 
       <v-overlay v-model="addMenuVisible" class="d-flex justify-center align-center">
         <c-assignment-card-add-menu :hideMenu="hideAddMenu"/>
@@ -42,9 +35,15 @@
       <v-overlay v-model="changeMenuVisible" class="d-flex justify-center align-center">
         <c-assignment-card-change-menu :hideMenu="hideChangeMenu" :assignmentProp="activeAssignment"/>
       </v-overlay>
+    </v-card>
 
-    </v-card-text>
-  </v-card>
+    <v-list bg-color="transparent" max-height="85vh">
+      <v-list-item v-for="assignment of assignmentsFiltered" :key="assignment.id">
+        <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
+      </v-list-item>
+    </v-list>
+
+  </div>
 </template>
 
 <script>
