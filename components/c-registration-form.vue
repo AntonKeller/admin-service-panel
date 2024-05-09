@@ -144,7 +144,7 @@ export default {
         login: this.login.value,
         password: this.password.value,
         email: this.email.value,
-      }, 100)
+      }, 0)
           .then((response) => {
             console.log('Регистрация прошла успешно', response);
             this.$emit('updateTab', "verify-tab");
@@ -155,26 +155,6 @@ export default {
           .finally(() => {
             this.isLoading = false;
           });
-
-      // axios.post(serverURL + '/registration', {
-      //   email: this.emailField.value,
-      //   phoneNumber: this.phoneNumberField.value,
-      //   login: this.loginField.value,
-      //   password: this.passwordField.value
-      // }, {
-      //   headers: {
-      //     'Access-Control-Allow-Origin': '*',
-      //     'Access-Control-Allow-Methods': '*',
-      //     'Access-Control-Allow-Headers': '*'
-      //   }
-      // }).then((response) => {
-      //   console.log('Регистрация прошла успешно', response);
-      //   this.$emit('updateTab', "verify-tab");
-      // }).catch((err) => {
-      //   console.log('Ошибка регистрации', err);
-      // }).finally(() => {
-      //   this.isLoading = false;
-      // })
 
     }
   },

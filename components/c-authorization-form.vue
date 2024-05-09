@@ -61,6 +61,11 @@ export default {
 
   methods: {
 
+    setStorage(tokenBlock) {
+      localStorage.setItem("token", JSON.stringify(tokenBlock));
+      console.log(localStorage.getItem("token"));
+    },
+
     request() {
 
       this.isLoading = true;
@@ -69,11 +74,21 @@ export default {
       authorization({
         login: this.login.value,
         password: this.password.value,
-      }, 100)
+      }, 1500)
           .then((response) => {
+            this.setStorage(response.data);
             console.log('Успешная авторизация', response);
             this.loginErrMsg = '';
-            router.push("/manager-menu");
+            router.push({
+              path: "/manager-menu",
+              pageId: 'pass-some-id'
+            });
+            // router.push({
+            //   path: "/manager-menu",
+            //   params: {
+            //     pageId: 'pass-some-id'
+            //   },
+            // });
           })
           .catch((err) => {
             console.log('Ошибка авторизации', err);
