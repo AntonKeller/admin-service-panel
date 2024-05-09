@@ -6,55 +6,52 @@
           @input="loginErrMsg=''"
           :disabled="isLoading"
           label="Логин"
-          v-model="loginField.value"
-          :rules="loginField.rules"
+          v-model="login.value"
+          :rules="login.rules"
       ></v-text-field>
 
       <v-text-field
           @input="loginErrMsg=''"
           :disabled="isLoading"
           label="Пароль"
-          v-model="passwordField.value"
-          :rules="passwordField.rules"
-          :type="passwordField.isPassword ? 'password' : 'text'"
-          :append-icon="!passwordField.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          v-model="password.value"
+          :rules="password.rules"
+          :type="password.isPassword ? 'password' : 'text'"
+          :append-icon="!password.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
           name="input-10-1"
           counter
-          @click:append="passwordField.isPassword = !passwordField.isPassword"
+          @click:append="password.isPassword = !password.isPassword"
       />
 
       <v-label :text="loginErrMsg" class="text-red-accent-4"/>
 
-      <v-btn :loading="isLoading" @click="requestTest" class="mt-2" block>Войти</v-btn>
+      <v-btn :loading="isLoading" @click="request" class="mt-2" block>Войти</v-btn>
     </v-form>
   </div>
 
 </template>
 
 <script>
-
-import axios from 'axios'
-import {serverURL} from "../constants/constants";
+import {authorization} from "../utils/methods/requests";
 
 export default {
   name: "c-authorization-form",
 
   data: () => ({
-
     loginErrMsg: '',
     isLoading: false,
 
-    loginField: {
-      value: "lgonlogon123",
+    login: {
+      value: "voroncov123",
       rules: [
         value => value?.length > 3 ? true : 'Логин введен неверно',
       ],
     },
 
-    passwordField: {
+    password: {
       showIcon: false,
       isPassword: true,
-      value: "1233219872167324fdgdfg",
+      value: "voroncov123",
       rules: [
         value => value?.length > 3 ? true : 'Пароль введен неверно',
       ],
@@ -64,49 +61,29 @@ export default {
 
   methods: {
 
-    requestTest() {
-      axios.get('/api/test').then(resp => console.log('data', resp?.data));
-      // const { data } = await useFetch('/api/test')
-      // console.log('data', data);
-    },
-
-
     request() {
 
       this.isLoading = true;
+      const router = useRouter()
 
-      axios.post(serverURL + '/login', {
-        loginOrEmail: this.loginField.value,
-        password: this.passwordField.value
-      }, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': '*',
-          'Access-Control-Allow-Headers': '*'
-        }
-      }).then((response) => {
-        this.loginErrMsg = '';
-        console.dir('Успешная авторизация', response);
-        this.openUserMenu();
-      }).catch((err) => {
-        console.log('Ошибка авторизации', err);
-        this.loginErrMsg = 'Ошибка авторизации';
-      }).finally(() => {
-        this.isLoading = false;
-      });
+      authorization({
+        login: this.login.value,
+        password: this.password.value,
+      }, 100)
+          .then((response) => {
+            console.log('Успешная авторизация', response);
+            this.loginErrMsg = '';
+            router.push("/manager-menu");
+          })
+          .catch((err) => {
+            console.log('Ошибка авторизации', err);
+            this.loginErrMsg = 'Ошибка авторизации';
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
 
     },
-
-    openUserMenu() {
-      this.isLoading = true;
-      // const router = useRouter()
-      // router.push("/user-manager-menu");
-      let timeout = setTimeout(() => {
-        const router = useRouter()
-        router.push("/user-manager-menu");
-        clearTimeout(timeout);
-      }, 2500);
-    }
   }
 
 }

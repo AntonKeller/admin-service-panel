@@ -39,12 +39,8 @@ import CRegistrationForm from "@/components/c-registration-form.vue";
 export default {
 
   name: 'IndexPage',
-  components: {CRegistrationForm},
-
-  watch: {
-    currentTab(v) {
-      console.log("tab: ", `<${v}>`)
-    }
+  components: {
+    CRegistrationForm
   },
 
   data: () => ({

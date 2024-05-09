@@ -1,9 +1,8 @@
 export default interface TRegistration {
-    login: string
-    firstName: string
-    lastName: string
-    password: string
+    fullName: string
     organization: string
-    email: string
     phoneNumber: string
+    login: string
+    password: string
+    email: string
 }

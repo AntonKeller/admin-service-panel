@@ -2,37 +2,58 @@
   <v-form fast-fail @submit.prevent>
 
     <v-text-field
+        density="comfortable"
+        v-model="fullName.value"
+        :rules="fullName.rules"
+        :label="fullName.label"
         :disabled="isLoading"
-        v-model="emailField.value"
-        :rules="emailField.rules"
-        label="Почта"
-    ></v-text-field>
+    />
 
     <v-text-field
+        density="comfortable"
+        v-model="organization.value"
+        :rules="organization.rules"
+        :label="organization.label"
         :disabled="isLoading"
-        v-model="phoneNumberField.value"
-        :rules="phoneNumberField.rules"
-        label="Телефон"
-    ></v-text-field>
+    />
 
     <v-text-field
+        density="comfortable"
+        v-model="phoneNumber.value"
+        :rules="phoneNumber.rules"
+        :label="phoneNumber.label"
         :disabled="isLoading"
-        v-model="loginField.value"
-        :rules="loginField.rules"
-        label="Логин"
-    ></v-text-field>
+    />
 
     <v-text-field
+        density="comfortable"
+        v-model="login.value"
+        :rules="login.rules"
+        :label="login.label"
         :disabled="isLoading"
-        v-model="passwordField.value"
-        :append-icon="passwordField.show ? 'mdi-eye' : 'mdi-eye-off'"
-        :rules="passwordField.rules"
-        :type="passwordField.show ? 'text' : 'password'"
-        label="Пароль"
+
+    />
+
+    <v-text-field
+        density="comfortable"
+        v-model="password.value"
+        :disabled="isLoading"
+        :append-icon="password.show ? 'mdi-eye' : 'mdi-eye-off'"
+        :rules="password.rules"
+        :type="password.show ? 'text' : 'password'"
+        :label="password.label"
         name="input-10-1"
         counter
-        @click:append="passwordField.show = !passwordField.show"
-    ></v-text-field>
+        @click:append="password.show = !password.show"
+    />
+
+    <v-text-field
+        density="comfortable"
+        v-model="email.value"
+        :rules="email.rules"
+        :label="email.label"
+        :disabled="isLoading"
+    />
 
     <v-btn
         :loading="isLoading"
@@ -41,15 +62,15 @@
         type="submit"
         block
         @click="request"
-    >Зарегистрировать
+    >
+      Зарегистрировать
     </v-btn>
 
   </v-form>
 </template>
 
 <script>
-import axios from "axios";
-import {serverURL} from '../constants/constants';
+import {registration} from "../utils/methods/requests";
 
 export default {
   name: "c-registration-form",
@@ -58,34 +79,53 @@ export default {
 
     isLoading: false,
 
-    emailField: {
-      label: 'Почта',
-      value: '123@mail.ru',
+    fullName: {
+      label: 'ФИО',
+      value: 'Воронцов Георгий Глебович',
       rules: [
-        value => value?.length > 3 || 'Почта введена некорректно'
+        value => value?.length > 3 || 'ФИО введено некорректно'
       ]
     },
-    phoneNumberField: {
+
+    organization: {
+      label: 'Организация',
+      value: 'ИП Воронцов',
+      rules: [
+        value => value?.length > 3 || 'Организация введена некорректно'
+      ]
+    },
+
+    phoneNumber: {
       label: 'Телефон',
-      value: '123',
+      value: '8 499 521 21 32',
       rules: [
         value => value?.length > 3 || 'Телефон введен некорректно'
       ]
     },
-    loginField: {
+
+    login: {
       label: 'Логин',
-      value: '123',
+      value: 'voroncov123',
       rules: [
         value => value?.length > 3 || 'Логин введен некорректно'
       ]
     },
-    passwordField: {
+
+    password: {
       label: 'Пароль',
-      value: '123',
+      value: 'voroncov123',
       rules: [
         value => value?.length > 3 || 'Пароль введен некорректно'
       ],
       show: false,
+    },
+
+    email: {
+      label: 'Почта',
+      value: 'voroncov@mail.ru',
+      rules: [
+        value => value?.length > 3 || 'Почта введена некорректно'
+      ]
     },
   }),
 
@@ -97,25 +137,44 @@ export default {
 
       this.isLoading = true;
 
-      axios.post(serverURL + '/registration', {
-        email: this.emailField.value,
-        phoneNumber: this.phoneNumberField.value,
-        login: this.loginField.value,
-        password: this.passwordField.value
-      }, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': '*',
-          'Access-Control-Allow-Headers': '*'
-        }
-      }).then((response) => {
-        console.log('Регистрация прошла успешно', response);
-        this.$emit('updateTab', "verify-tab");
-      }).catch((err) => {
-        console.log('Ошибка регистрации', err);
-      }).finally(() => {
-        this.isLoading = false;
-      })
+      registration({
+        fullName: this.fullName.value,
+        organization: this.organization.value,
+        phoneNumber: this.phoneNumber.value,
+        login: this.login.value,
+        password: this.password.value,
+        email: this.email.value,
+      }, 100)
+          .then((response) => {
+            console.log('Регистрация прошла успешно', response);
+            this.$emit('updateTab', "verify-tab");
+          })
+          .catch((err) => {
+            console.log('Ошибка регистрации', err);
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+
+      // axios.post(serverURL + '/registration', {
+      //   email: this.emailField.value,
+      //   phoneNumber: this.phoneNumberField.value,
+      //   login: this.loginField.value,
+      //   password: this.passwordField.value
+      // }, {
+      //   headers: {
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Methods': '*',
+      //     'Access-Control-Allow-Headers': '*'
+      //   }
+      // }).then((response) => {
+      //   console.log('Регистрация прошла успешно', response);
+      //   this.$emit('updateTab', "verify-tab");
+      // }).catch((err) => {
+      //   console.log('Ошибка регистрации', err);
+      // }).finally(() => {
+      //   this.isLoading = false;
+      // })
 
     }
   },
