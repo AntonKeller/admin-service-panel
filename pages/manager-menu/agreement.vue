@@ -20,7 +20,3 @@ export default {
   name: "agreement-page"
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -4,19 +4,20 @@
       <v-layout class="c-layout" full-height>
         <v-navigation-drawer permanent rounded>
           <v-list density="default" nav rounded>
+
             <v-list-item prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg">
               <span>Аккаунт</span>
               <template v-slot:append>
                 <v-btn
                     icon="mdi-location-exit"
                     size="small"
-                    variant="text"
-                    color="indigo-lighten-1"
+                    variant="tonal"
+                    color="indigo-lighten-2"
                 />
               </template>
             </v-list-item>
 
-            <v-divider></v-divider>
+            <v-divider />
 
             <v-list-item
                 v-for="item of navItems"
@@ -35,9 +36,10 @@
                     :color="item.badge.color"
                     :content="item.badge.content"
                     inline
-                ></v-badge>
+                />
               </template>
             </v-list-item>
+
           </v-list>
         </v-navigation-drawer>
 
@@ -48,13 +50,6 @@
       </v-layout>
     </v-card>
   </div>
-  <!--  <div>-->
-  <!--    Lorem ipsum dolor sit amet, consectetur adipisicing elit. At aut, debitis delectus dolores dolorum eos est illo in,-->
-  <!--    itaque iure, laudantium maxime minima molestiae mollitia nesciunt odio omnis perferendis quidem sunt tempore?-->
-  <!--    Consequuntur, ducimus enim laboriosam perspiciatis sapiente sunt vel! Ad amet dolores doloribus iure labore maiores-->
-  <!--    nam omnis voluptates.-->
-  <!--    <slot/>-->
-  <!--  </div>-->
 </template>
 
 <script>

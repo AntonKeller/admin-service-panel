@@ -2,8 +2,8 @@
   <v-container class="bg-indigo-lighten-4 rounded">
     <v-card
         variant="flat"
-        min-width="600"
-        max-width="600"
+        min-width="800"
+        max-width="800"
         color="indigo-lighten-4"
         density="comfortable"
         rounded
@@ -23,7 +23,6 @@
           />
           <v-text-field
               color="indigo-darken-1"
-              :loading="true"
               prepend-inner-icon="mdi-magnify"
               density="compact"
               label="Поиск договора"
@@ -35,18 +34,6 @@
           />
         </div>
       </v-card-item>
-
-      <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
-        <c-contract-card-add-menu :returnContract="setContract"/>
-      </v-overlay>
-
-      <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
-        <c-contract-card-change-menu
-            :activeContract="activeContractChange"
-            :returnContract="changeContract"
-        />
-      </v-overlay>
-
     </v-card>
 
     <v-list bg-color="transparent" min-height="380" max-height="360">
@@ -75,6 +62,15 @@
         />
       </v-list-item>
     </v-list>
+
+    <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
+      <c-contract-card-add-menu :returnContract="setContract"/>
+    </v-overlay>
+
+    <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
+      <c-contract-card-change-menu :activeContract="activeContractChange" :returnContract="changeContract"/>
+    </v-overlay>
+
   </v-container>
 </template>
 
@@ -158,7 +154,7 @@ export default {
             this.contractList = response?.data?.reverse();
           })
           .catch(err => {
-            this.contractList = testDataContracts;
+            this.contractList = testDataContracts?.reverse();
             console.log('Запрос списка договоров выполнен с ошибкой', err);
           })
           .finally(() => {

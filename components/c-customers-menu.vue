@@ -1,8 +1,8 @@
 <template>
   <v-card
       variant="flat"
-      min-width="700"
-      max-width="700"
+      min-width="800"
+      max-width="800"
       color="indigo-lighten-4"
       density="comfortable"
       rounded
@@ -25,7 +25,6 @@
         />
         <v-text-field
             color="indigo-darken-1"
-            :loading="true"
             append-inner-icon="mdi-magnify"
             density="compact"
             label="Поиск заказчика"
@@ -159,17 +158,15 @@ export default {
     fetchData() {
       fetchCustomers(500)
           .then(response => {
-            this.customerList = response?.data;
+            this.customerList = response?.data?.reverse();
             console.log('Запрос списка заказчиков выполнен успешно');
           })
           .catch(err => {
-            this.customerList = testDataCustomers;
+            this.customerList = testDataCustomers?.reverse();
             console.log('Запрос списка заказчиков выполнен с ошибкой', err);
           })
           .finally(() => {
             this.loadingData = false;
-            console.log('Запрос списка заказчиков завершен');
-            console.log('customerList', this.customerList)
           });
     }
   }

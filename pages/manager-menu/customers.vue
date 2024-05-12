@@ -49,7 +49,7 @@
 
 <script>
 import {testDataCustomers} from '../../configs/testData';
-import {fetchCustomers} from '../../utils/methods/requests';
+// import {fetchCustomers} from '../../utils/methods/requests';
 
 export default {
   name: "customers-page",
@@ -61,7 +61,7 @@ export default {
     searchText: '',
     customersFiltered: [],
     customers: [],
-    fetchCustomers: fetchCustomers,
+    // fetchCustomers: fetchCustomers,
   }),
 
   mounted() {
@@ -105,17 +105,17 @@ export default {
     },
 
     fetchCustomersData() {
-      fetchCustomers(1500)
-          .then(data => {
-            this.customers = data;
-          })
-          .catch(err => {
-            console.log('Ошибка получения заказчиков/организаций\n', err);
-            this.customers = testDataCustomers;
-          })
-          .finally(() => {
-            this.search()
-          })
+      // fetchCustomers(1500)
+      //     .then(data => {
+      //       this.customers = data;
+      //     })
+      //     .catch(err => {
+      //       console.log('Ошибка получения заказчиков/организаций\n', err);
+      //       this.customers = testDataCustomers;
+      //     })
+      //     .finally(() => {
+      //       this.search()
+      //     })
     },
 
   }
