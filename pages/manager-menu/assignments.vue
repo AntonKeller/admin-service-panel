@@ -15,7 +15,6 @@
           />
           <v-text-field
               color="indigo-darken-1"
-              :loading="true"
               prepend-inner-icon="mdi-magnify"
               density="compact"
               label="Поиск по задачам"
@@ -25,6 +24,24 @@
               clearable
               v-model="searchText"
           />
+        </div>
+      </v-card-item>
+
+      <v-card-item>
+        <div class="d-flex ga-1">
+          <v-chip
+              v-for="e of statusVariant"
+              :key="e.id"
+              prepend-icon="mdi-filter-check-outline"
+              density="comfortable"
+              :variant="activeStatusId===e.id ? 'tonal' : 'text'"
+              size="small"
+              rounded="xl"
+              :color="e.color"
+              @click="setActiveChip(e.id)"
+          >
+            {{ e.title }}
+          </v-chip>
         </div>
       </v-card-item>
 
@@ -54,6 +71,24 @@ export default {
   name: "assignments-page",
 
   data: () => ({
+    activeStatusId: null,
+    statusVariant: [
+      {
+        id: 1,
+        title: 'Выполнены',
+        color: 'teal',
+      },
+      {
+        id: 2,
+        title: 'Выполняются',
+        color: 'lime-darken-3',
+      },
+      {
+        id: 3,
+        title: 'В ожидании',
+        color: 'indigo',
+      }
+    ],
     addMenuVisible: false,
     changeMenuVisible: false,
     searchText: null,
@@ -65,15 +100,11 @@ export default {
     assignmentsFiltered() {
       if (this.searchText?.length > 0 && this.assignmentList?.length > 0) {
 
-        let expression = new RegExp(this.searchText, 'i');
-
-        let filtered = this.assignmentList?.filter(assignment => [
+        return this.assignmentList?.filter(assignment => [
           assignment.title,
           assignment?.contract?.contractDate,
           assignment?.contract?.customer?.fullName
-        ].find(e => expression.test(e)));
-
-        return filtered?.length > 0 ? filtered : null;
+        ].find(e => (new RegExp(this.searchText, 'i')).test(e)));
 
       } else return this.assignmentList;
     },
@@ -84,6 +115,10 @@ export default {
   },
 
   methods: {
+
+    setActiveChip(id) {
+      this.activeStatusId = this.activeStatusId === id ? null : id;
+    },
 
     hideAddMenu() {
       this.addOverlay = false;
@@ -101,13 +136,10 @@ export default {
     updateAssignmentListData() {
       fetchAssignments(500)
           .then(response => {
-            this.assignmentList = response?.data;
+            this.assignmentList = response?.data?.reverse();
           })
           .catch(err => {
-            this.assignmentList = testDataAssignments;
-          })
-          .finally(() => {
-            console.log('Запрос списка задач обработан', this.assignmentList);
+            this.assignmentList = testDataAssignments?.reverse();
           });
     }
 
