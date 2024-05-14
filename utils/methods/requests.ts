@@ -14,7 +14,7 @@ export const authorization = async (element: TAuthorization) => await axios.post
 export const accessTest = async (token: String) => await axios.post(serverURL + '/auth/access-test', ({}), {
     timeout: 10000,
     headers: {
-        'Access-Token': token,
+        'Authorization': token,
         'Content-type': '*/*'
     }
 });
