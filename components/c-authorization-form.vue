@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import {authorization} from "../utils/methods/requests";
+import axios from "axios";
+import {serverURL} from "../constants/constants";
 
 export default {
   name: "c-authorization-form",
@@ -59,51 +60,44 @@ export default {
 
   }),
 
+  created() {
+    this.readTokenInStorage();
+  },
+
   methods: {
 
-    setStorage(tokenBlock) {
-      localStorage.setItem("token", JSON.stringify(tokenBlock));
-      console.log(localStorage.getItem("token"));
+    readTokenInStorage() {
+      if (localStorage.getItem("accessToken")) {
+        // JSON.parse(localStorage.getItem("accessToken"))
+        navigateTo('/manager-menu/assignments')
+      }
+    },
+
+    writeTokenInStorage(tokenBlock) {
+      localStorage.setItem("accessToken", JSON.stringify(tokenBlock));
     },
 
     request() {
 
       this.isLoading = true;
-      const router = useRouter()
 
-      authorization({
+      axios.post(serverURL + '/auth/login', {
         login: this.login.value,
         password: this.password.value,
-      }, 1500)
-          .then((response) => {
-            this.setStorage(response.data);
-            console.log('Успешная авторизация', response);
-            this.loginErrMsg = '';
-            router.push({
-              path: "/manager-menu",
-              pageId: 'pass-some-id'
-            });
-            // router.push({
-            //   path: "/manager-menu",
-            //   params: {
-            //     pageId: 'pass-some-id'
-            //   },
-            // });
-          })
-          .catch((err) => {
-            console.log('Ошибка авторизации', err);
-            this.loginErrMsg = 'Ошибка авторизации';
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+      }).then(async (response) => {
+        this.loginErrMsg = '';
+        this.writeTokenInStorage(response.data);
+        console.log('Успешная авторизация', response);
+        // await navigateTo('/manager-menu/assignments');
+      }).catch((err) => {
+        console.log('Ошибка авторизации', err);
+        this.loginErrMsg = 'Ошибка авторизации';
+      }).finally(() => {
+        this.isLoading = false;
+      });
 
     },
   }
 
 }
 </script>
-
-<style scoped>
-
-</style>

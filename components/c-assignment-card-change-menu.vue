@@ -119,15 +119,12 @@ export default {
     change() {
       changeAssignment(this.assignment, 100)
           .then(response => {
-            console.log('Запрос на изменение завершен успешно');
+            console.log('Задание успешно изменено');
+            this.hideMenu(this.assignment);
+            this.clear();
           })
           .catch(err => {
-            console.log('Ошибка запроса на изменение задания', err);
-          })
-          .finally(() => {
-            console.log('Запрос на изменение задания завершен');
-            this.clear();
-            this.hideMenu();
+            console.log('Ошибка удаления ', err);
           })
     },
 
@@ -157,7 +154,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-
-</style>

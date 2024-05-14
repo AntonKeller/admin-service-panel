@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mx-auto" variant="text" color="blue-grey-darken-2" max-height="100%">
+    <v-card class="mx-auto" variant="text" color="blue-grey-darken-2">
       <v-card-title>Список заданий</v-card-title>
       <v-card-item>
         <div class="d-flex ga-2">
@@ -44,21 +44,25 @@
           </v-chip>
         </div>
       </v-card-item>
-
-      <v-overlay v-model="addMenuVisible" class="d-flex justify-center align-center">
-        <c-assignment-card-add-menu :hideMenu="hideAddMenu"/>
-      </v-overlay>
-
-      <v-overlay v-model="changeMenuVisible" class="d-flex justify-center align-center">
-        <c-assignment-card-change-menu :hideMenu="hideChangeMenu" :assignmentProp="activeAssignment"/>
-      </v-overlay>
     </v-card>
 
-    <v-list bg-color="transparent" max-height="85vh">
+    <v-list bg-color="transparent" max-height="80vh">
       <v-list-item v-for="assignment of assignmentsFiltered" :key="assignment.id">
-        <c-assignment-card :assignment="assignment" @click="setActiveAssignment(assignment)"/>
+        <c-assignment-card
+            :removeClick="removeAssignmentCard"
+            :changeClick="showMenuAssignmentCardChange"
+            :assignment="assignment"
+        />
       </v-list-item>
     </v-list>
+
+    <v-overlay v-model="addMenuVisible" class="d-flex justify-center align-center">
+      <c-assignment-card-add-menu :hideMenu="hideAddMenu"/>
+    </v-overlay>
+
+    <v-overlay v-model="changeMenuVisible" class="d-flex justify-center align-center">
+      <c-assignment-card-change-menu :hideMenu="changeAssignment" :assignmentProp="activeAssignment"/>
+    </v-overlay>
 
   </div>
 </template>
@@ -116,6 +120,10 @@ export default {
 
   methods: {
 
+    removeAssignmentCard(id) {
+      this.assignmentList = this.assignmentList.filter(assignment => assignment._id !== id)
+    },
+
     setActiveChip(id) {
       this.activeStatusId = this.activeStatusId === id ? null : id;
     },
@@ -124,11 +132,18 @@ export default {
       this.addOverlay = false;
     },
 
-    hideChangeMenu() {
-      this.changeOverlay = false;
+    changeAssignment(newAssignment) {
+      for (let i = 0; i < this.assignmentList.length; i++) {
+        if (this.assignmentList[i]?._id === newAssignment?._id) {
+          this.assignmentList[i] = {...newAssignment}
+          break;
+        }
+      }
+
+      this.changeMenuVisible = false;
     },
 
-    setActiveAssignment(newActiveAssignment) {
+    showMenuAssignmentCardChange(newActiveAssignment) {
       this.activeAssignment = ({...newActiveAssignment});
       this.changeMenuVisible = true;
     },

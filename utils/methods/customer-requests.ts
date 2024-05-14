@@ -18,5 +18,5 @@ export const fetchCustomers = async (delay: number) =>
 export const putCustomer = async (customer: TCustomer, delay: number) =>
     await axios.put(serverURL + '/customers/change', customer, {timeout: delay});
 
-export const removeCustomer = async (id: number, delay: number) =>
+export const removeCustomer = async (id: string, delay: number) =>
     await axios.delete(serverURL + '/customers/' + id, {timeout: delay});

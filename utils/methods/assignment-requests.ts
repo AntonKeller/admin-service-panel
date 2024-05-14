@@ -18,6 +18,6 @@ export async function fetchAssignments(delay: number): Promise<Array<TAssignment
 }
 
 
-export async function fetchAssignment(id: number, delay: number): Promise<TAssignment> {
-    return await axios.get(serverURL + '/assignments/' + id, {timeout: delay});
+export async function removeAssignment(id: string, delay: number): Promise<TAssignment> {
+    return await axios.delete(serverURL + '/assignments/' + id, {timeout: delay});
 }

@@ -10,16 +10,16 @@
       {{ (customerProp?.shortName || 'name error') + ' / ' + (customerProp?.inn || 'inn error') }}
       <div class="d-flex ga-2">
         <v-btn
-            icon="mdi-pencil-box-multiple"
+            icon="mdi-pencil"
             density="comfortable"
-            variant="tonal"
+            variant="text"
             rounded
             @click.stop="changeClick(customerProp)"
         />
         <v-btn
-            icon="mdi-delete-off"
+            icon="mdi-close"
             density="comfortable"
-            variant="tonal"
+            variant="text"
             rounded
             @click.stop="removeSelf(customerProp._id)"
         />

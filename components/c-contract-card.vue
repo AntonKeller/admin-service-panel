@@ -9,14 +9,14 @@
       {{ contract.contractNumber }}
       <div class="d-flex ga-2">
         <v-btn
-            icon="mdi-pencil-box-multiple"
+            icon="mdi-pencil"
             density="comfortable"
             variant="text"
             rounded
             @click.stop="changeClick(contract)"
         />
         <v-btn
-            icon="mdi-delete-off"
+            icon="mdi-close"
             density="comfortable"
             variant="text"
             rounded
