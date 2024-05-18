@@ -5,6 +5,7 @@ interface TNavItemBadge {
 }
 
 export default interface TNavItem {
+    _id: number,
     title: String,
     route: String,
     prependIcon: String,

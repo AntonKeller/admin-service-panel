@@ -15,6 +15,7 @@ export const navigateItems: Array<TNavItem> = [
     //     }
     // },
     {
+        _id: 1,
         title: 'Задания',
         route: '/manager-menu/assignments',
         prependIcon: 'mdi-format-list-text',
@@ -54,6 +55,7 @@ export const navigateItems: Array<TNavItem> = [
     //     },
     // },
     {
+        _id: 2,
         title: 'Модули',
         route: '/manager-menu/modules',
         prependIcon: 'mdi-view-module',
@@ -67,6 +69,7 @@ export const navigateItems: Array<TNavItem> = [
         },
     },
     {
+        _id: 3,
         title: 'Подписка',
         route: '/manager-menu/subscribe',
         prependIcon: 'mdi-card-account-details-star-outline',

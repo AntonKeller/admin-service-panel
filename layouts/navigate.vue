@@ -17,17 +17,17 @@
               </template>
             </v-list-item>
 
-            <v-divider />
+            <v-divider/>
 
             <v-list-item
                 v-for="item of navItems"
-                :key="item.title"
+                :key="item._id"
                 :to="item.route"
                 :prepend-icon="item.prependIcon"
-                :active="item.active"
+                :active="item._id === activeItem"
                 :color="item.color"
                 :value="item.value"
-                @click="clickItem(item.title)"
+                @click="activeItem = item._id"
             >
               <span>{{ item.title }}</span>
               <template v-slot:append>
@@ -60,20 +60,18 @@ export default {
   name: "navMenu",
 
   data: () => ({
+    activeItem: null,
     navItems: navigateItems,
   }),
 
+  mounted() {
+    this.activeItem = this.whichRouteIsActive() || null;
+    console.log('activeItem:', this.activeItem)
+  },
+
   methods: {
-    clickItem(title) {
-      this.navItems.forEach(e => {
-        if (e.title === title) {
-          e.active = true;
-          console.log(e.title, "включен")
-        } else if (e.title !== title && e.active) {
-          e.active = false;
-          console.log(e.title, "отключен")
-        }
-      });
+    whichRouteIsActive() {
+      return this.navItems?.find(item => this.$route.fullPath.indexOf(item.route) !== -1)?._id;
     }
   }
 
@@ -82,16 +80,16 @@ export default {
 
 <style scoped>
 
-  .c-card {
-    height: 100vh;
-    padding-top: 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.c-card {
+  height: 100vh;
+  padding-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .c-layout {
-    max-width: 1024px;
-  }
+.c-layout {
+  max-width: 1024px;
+}
 
 </style>
