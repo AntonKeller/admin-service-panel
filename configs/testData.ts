@@ -1,6 +1,50 @@
 import type TCustomer from '@/utils/types/TCustomer';
 import type {TContract} from "@/utils/types/TContract";
 import type {TAssignment} from "@/utils/types/TAssignment";
+import type TAssignmentBlock from "@/utils/types/TAssignmentBlock";
+
+export const testDataAssignmentBlocks: Array<TAssignmentBlock> = [
+    {
+        _id: '1',
+        plegeAgreement: '1445-2222-3333-4444-5555', // Номер договора залогодателя
+        plegerName: 'ООО Иван-Строй-Сервис', // Наименование залогодателя
+        // assignment: {
+        //     _id: '1',
+        //     title: 'Осмотр гаражей',
+        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+        // },
+    },
+    {
+        _id: '2',
+        plegeAgreement: '5454-5454-5454-5454-5454', // Номер договора залогодателя
+        plegerName: 'ООО Чистые-Поляны', // Наименование залогодателя
+        // assignment: {
+        //     _id: '1',
+        //     title: 'Осмотр гаражей',
+        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+        // },
+    },
+    {
+        _id: '3',
+        plegeAgreement: '9874-9874-9874-9874-9874', // Номер договора залогодателя
+        plegerName: 'ООО Гром-Пром', // Наименование залогодателя
+        // assignment: {
+        //     _id: '1',
+        //     title: 'Осмотр гаражей',
+        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+        // },
+    },
+    {
+        _id: '4',
+        plegeAgreement: '5454-5454-5454-5454-5454', // Номер договора залогодателя
+        plegerName: 'ООО Копыта и рога', // Наименование залогодателя
+        // assignment: {
+        //     _id: '1',
+        //     title: 'Осмотр гаражей',
+        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+        // },
+    },
+]
 
 export const testDataCustomers: Array<TCustomer> = [
     {

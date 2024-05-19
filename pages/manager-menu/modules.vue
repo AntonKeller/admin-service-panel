@@ -7,8 +7,7 @@
           label="File input"
           multiple
           v-model="files"
-          @input="console.log('files', files)"
-      ></v-file-input>
+      />
 
     </v-card-item>
     <v-card-item>
@@ -44,10 +43,17 @@ export default {
 
     async getFile() {
 
+      let url = URL.createObjectURL(this.files[0]);
+      let link = document.createElement('a');
+      link.href = url;
+      link.download = "file.jpg";
+      document.body.append(link);
+      link.click();
 
-      let responseData = await axios.get('http://192.168.1.30/photos').then(e => e?.data);
+      // let responseData = await axios.get('http://192.168.1.30/photos').then(e => e?.data);
 
-      console.log(Buffer.from(responseData[0].buffer))
+
+      // console.log(Buffer.from(responseData[0].buffer))
 
       //
       // let blob = new Blob([responseData[0].buffer], {type: 'image/png'})

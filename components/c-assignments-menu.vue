@@ -30,7 +30,7 @@
       <v-card-item>
         <div class="d-flex ga-1">
           <v-chip
-              v-for="e of statusVariant"
+              v-for="e of statuses"
               :key="e.id"
               prepend-icon="mdi-filter-check-outline"
               density="comfortable"
@@ -47,8 +47,18 @@
     </v-card>
 
     <v-list bg-color="transparent" max-height="80vh">
+      <v-list-item v-if="loadingData">
+        <v-skeleton-loader
+            v-for="n of 3"
+            width="full"
+            color="transparent"
+            elevation="0"
+            type="list-item-three-line"
+        />
+      </v-list-item>
       <v-list-item v-for="assignment of assignmentsFiltered" :key="assignment.id">
         <c-assignment-card
+            @click="assignmentClick(assignment)"
             :removeClick="removeAssignmentCard"
             :changeClick="showMenuAssignmentCardChange"
             :assignment="assignment"
@@ -72,44 +82,62 @@ import {fetchAssignments} from "../utils/methods/assignment-requests";
 import {testDataAssignments} from "../configs/testData";
 export default {
   name: "c-assignments-menu",
+  props: {
+    assignmentClick: Function
+  },
 
   data: () => ({
     activeStatusId: null,
-    statusVariant: [
+    statuses: [
       {
         id: 1,
-        title: 'Выполнены',
-        color: 'teal',
+        title: 'В работе',
+        color: 'indigo',
       },
       {
         id: 2,
-        title: 'Выполняются',
+        title: 'Согласование',
         color: 'lime-darken-3',
       },
       {
         id: 3,
-        title: 'В ожидании',
-        color: 'indigo',
-      }
+        title: 'Акт, оплата',
+        color: 'teal',
+      },
+      {
+        id: 4,
+        title: 'Закрыт',
+        color: 'blue-gray',
+      },
+      {
+        id: 5,
+        title: 'КП',
+        color: 'blue-gray',
+      },
+      {
+        id: 6,
+        title: 'Договор',
+        color: 'blue-gray',
+      },
     ],
     addMenuVisible: false,
     changeMenuVisible: false,
     searchText: null,
     activeAssignment: null,
     assignmentList: null,
+    loadingData: true,
   }),
 
   computed: {
     assignmentsFiltered() {
-      if (this.searchText?.length > 0 && this.assignmentList?.length > 0) {
 
-        return this.assignmentList?.filter(assignment => [
-          assignment.title,
-          assignment?.contract?.contractDate,
-          assignment?.contract?.customer?.fullName
-        ].find(e => (new RegExp(this.searchText, 'i')).test(e)));
+      const _so = (this.searchText?.length > 0 && this.assignmentList?.length > 0);
 
-      } else return this.assignmentList;
+      return _so ? this.assignmentList?.filter(assignment => [
+        assignment.title,
+        assignment?.contract?.contractDate,
+        assignment?.contract?.customer?.fullName
+      ].find(e => (new RegExp(this.searchText, 'i')).test(e))) : this.assignmentList;
     },
   },
 
@@ -154,7 +182,10 @@ export default {
           })
           .catch(err => {
             this.assignmentList = testDataAssignments?.reverse();
-          });
+          })
+          .finally(() => {
+            this.loadingData = false;
+          })
     }
 
   }
