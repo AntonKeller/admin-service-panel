@@ -3,7 +3,7 @@
       rounded
       density="compact"
       class="mx-auto"
-      variant="tonal"
+      variant="text"
       color="indigo"
       max-height="100%"
   >
@@ -33,8 +33,8 @@
             rounded="sm"
             density="comfortable"
             size="small"
-            variant="tonal"
-            color="blue"
+            variant="text"
+            color="indigo"
             append-icon="mdi-open-in-new"
             @click.stop="console.log('Customer show menu')"
         >
@@ -44,8 +44,8 @@
             rounded="sm"
             density="comfortable"
             size="small"
-            variant="tonal"
-            color="blue"
+            variant="text"
+            color="indigo"
             append-icon="mdi-phone"
             @click.stop="console.log('Customer call')"
         >
@@ -55,8 +55,8 @@
             rounded="sm"
             density="comfortable"
             size="small"
-            variant="tonal"
-            color="blue"
+            variant="text"
+            color="indigo"
             append-icon="mdi-open-in-new"
             @click.stop="console.log('Contract show menu')"
         >

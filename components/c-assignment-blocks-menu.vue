@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-card class="mx-auto" variant="text">
       <v-card-title class="d-flex ga-4">
         <v-btn
@@ -40,7 +39,11 @@
       </v-card-item>
     </v-card>
 
-    <v-list bg-color="transparent" max-height="85vh">
+    <v-list
+        bg-color="transparent"
+        max-height="85vh"
+        class="d-flex flex-wrap"
+    >
       <v-list-item v-if="loadingData">
         <v-skeleton-loader
             v-for="n of 3"
@@ -53,6 +56,8 @@
       <v-list-item
           v-for="block of searchBlocks"
           :key="block._id"
+          min-width="30%"
+          max-width="50%"
       >
         <v-card
             @click="showObjects(block._id)"
@@ -65,12 +70,18 @@
           <v-card-title>{{ block.plegerName }}</v-card-title>
           <v-card-subtitle>{{ block.plegeAgreement }}</v-card-subtitle>
           <v-card-item>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, repudiandae!</v-card-item>
-          <v-card-text v-if="activeBlockID === block._id">
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque!</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque!</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque!</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque!</div>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, itaque!</div>
+          <v-divider />
+          <v-card-text v-if="activeBlockID === block._id" class="d-flex ga-2 flex-wrap">
+            <v-chip
+                v-for="i of 15"
+                rounded="sm"
+                density="comfortable"
+                size="small"
+                variant="tonal"
+                color="indigo"
+                append-icon="mdi-phone"
+                @click.stop="console.log('Customer call')"
+            >lorem</v-chip>
           </v-card-text>
         </v-card>
       </v-list-item>

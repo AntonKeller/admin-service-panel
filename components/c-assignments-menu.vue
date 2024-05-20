@@ -44,9 +44,13 @@
           </v-chip>
         </div>
       </v-card-item>
+
+      <v-card-item>
+        <v-divider />
+      </v-card-item>
     </v-card>
 
-    <v-list bg-color="transparent" max-height="80vh">
+    <v-list bg-color="transparent" max-height="79vh">
       <v-list-item v-if="loadingData">
         <v-skeleton-loader
             v-for="n of 3"
@@ -63,6 +67,7 @@
             :changeClick="showMenuAssignmentCardChange"
             :assignment="assignment"
         />
+        <v-divider />
       </v-list-item>
     </v-list>
 
