@@ -8,41 +8,33 @@ export const testDataAssignmentBlocks: Array<TAssignmentBlock> = [
         _id: '1',
         plegeAgreement: '1445-2222-3333-4444-5555', // Номер договора залогодателя
         plegerName: 'ООО Иван-Строй-Сервис', // Наименование залогодателя
-        // assignment: {
-        //     _id: '1',
-        //     title: 'Осмотр гаражей',
-        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-        // },
+        objectCount: '10',
+        status: 'КП',
+        photosCount: '0',
     },
     {
         _id: '2',
         plegeAgreement: '5454-5454-5454-5454-5454', // Номер договора залогодателя
         plegerName: 'ООО Чистые-Поляны', // Наименование залогодателя
-        // assignment: {
-        //     _id: '1',
-        //     title: 'Осмотр гаражей',
-        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-        // },
+        objectCount: '20',
+        status: 'Выполняется',
+        photosCount: '25',
     },
     {
         _id: '3',
         plegeAgreement: '9874-9874-9874-9874-9874', // Номер договора залогодателя
         plegerName: 'ООО Гром-Пром', // Наименование залогодателя
-        // assignment: {
-        //     _id: '1',
-        //     title: 'Осмотр гаражей',
-        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-        // },
+        objectCount: '25',
+        status: 'Выполнен',
+        photosCount: '50',
     },
     {
         _id: '4',
         plegeAgreement: '5454-5454-5454-5454-5454', // Номер договора залогодателя
         plegerName: 'ООО Копыта и рога', // Наименование залогодателя
-        // assignment: {
-        //     _id: '1',
-        //     title: 'Осмотр гаражей',
-        //     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-        // },
+        objectCount: '100',
+        status: 'Выполняется',
+        photosCount: '13',
     },
 ]
 
