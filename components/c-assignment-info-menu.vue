@@ -1,13 +1,14 @@
 <template>
-  <v-sheet rounded="sm" min-height="80vh" height="80vh">
-    <v-card height="100%" variant="tonal" color="blue-darken-4">
+  <v-sheet rounded="lg" min-height="80vh" height="80vh" elevation="24" color="white">
+    <v-card height="100%" variant="tonal">
       <v-card-title class="d-flex ga-2">
         <div>
           <div v-if="!changeStatus">
-            {{ assignment?.title + ' / ' + assignment?.customer?.shortName || '' + '/' || 'Безымянная задача' }}
+            {{ assignment?.title + ' | ' + assignment?.contract?.customer?.shortName + ' | ' + assignment?.contract?.customer?.inn }}
           </div>
           <div v-if="changeStatus">
-            <v-text-field density="comfortable" style="width: 250px" label="Label" v-model="assignment.title"></v-text-field>
+            <v-text-field density="comfortable" style="width: 250px" label="Label"
+                          v-model="assignment.title"></v-text-field>
           </div>
         </div>
         <div>
@@ -26,40 +27,30 @@
           {{ assignment?.description || fish_description }}
         </div>
         <div v-if="changeStatus">
-          <v-textarea v-model="assignment.description" />
+          <v-textarea v-model="assignment.description"/>
         </div>
       </v-card-text>
       <v-card-item>
         <v-table>
           <thead>
           <tr>
-            <th class="text-left">
-              plegeAgreement
-            </th>
-            <th class="text-left">
-              plegerName
-            </th>
-            <th class="text-left">
-              ........
-            </th>
-            <th class="text-left">
-              ........
-            </th>
-            <th class="text-left">
-              ........
-            </th>
+            <th class="text-left">Залогодатель</th>
+            <th class="text-left">Договор залога</th>
+            <th class="text-left">Объектов, шт.</th>
+            <th class="text-left">Статус</th>
+            <th class="text-left">Объем фотографий</th>
           </tr>
           </thead>
           <tbody>
           <tr
-              v-for="item in desserts"
-              :key="item.name"
+              v-for="item in testDataAssignmentBlocks"
+              :key="item._id"
           >
-            <td>{{ item.name }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.name }}</td>
+            <td>{{ item.plegerName }}</td>
+            <td>{{ item.plegeAgreement }}</td>
+            <td>{{ item.objectCount }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.photosCount }}</td>
           </tr>
           </tbody>
         </v-table>
@@ -69,6 +60,9 @@
 </template>
 
 <script>
+import {testDataAssignmentBlocks} from "../configs/testData.ts";
+
+
 export default {
   name: "c-assignment-info-menu",
   props: {
@@ -82,25 +76,7 @@ export default {
         '          facilis harum in ipsam, laboriosam magni nihil temporibus totam. Aspernatur at commodi cupiditate deleniti\n' +
         '          distinctio dolorum est ex facilis illum ipsa ipsam maiores minima minus modi natus nemo nobis, odio praesentium\n' +
         '          ratione, repellat reprehenderit veniam voluptate.',
-    desserts: [
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-      {name: 'Lorem ipsum dolor sit'},
-    ]
+    testDataAssignmentBlocks,
   }),
   mounted() {
     this.init();
@@ -108,6 +84,7 @@ export default {
   methods: {
     init() {
       this.assignment = this._assignment;
+      console.log('info menu  this._assignment', this._assignment)
     }
   }
 }

@@ -2,6 +2,9 @@
   <v-card class="mx-auto" variant="text">
     <v-card-title>MODULES MENU</v-card-title>
     <v-card-item>
+      <img width="50px" height="50px" :src=img alt="err">
+    </v-card-item>
+    <v-card-item>
 
       <v-file-input
           label="File input"
@@ -11,8 +14,10 @@
 
     </v-card-item>
     <v-card-item>
-      <v-btn @click="getFile">Показать</v-btn>
-      <v-btn @click="sendFile">Отправить</v-btn>
+      <div class="d-flex ga-2">
+        <v-btn variant="tonal" color="blue-darken-4" @click="getFile">Скачать</v-btn>
+        <v-btn variant="tonal" color="blue-darken-4" @click="sendFile">Отправить</v-btn>
+      </div>
     </v-card-item>
     <v-card-text>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem praesentium, voluptatum. Aspernatur
@@ -37,74 +42,88 @@ export default {
     files: [],
     aUrl: null,
     imagePreview: null,
+    img: null,
   }),
 
   methods: {
 
-    async getFile() {
-
-      // let url = URL.createObjectURL(this.files[0]);
-      // let link = document.createElement('a');
-      // link.href = url;
-      // link.download = "file.jpg";
-      // document.body.append(link);
-      // link.click();
-      let _id = "535e30b7-e771-4b02-824b-2d3fc9035778\n";
-      let responseData = await axios.get('http://192.168.1.30/download/' + _id).then(r => r?.data)
-      console.log('responseData', responseData)
-
-      // new File()
-      // let blb = new Blob([responseData[0]?.files]);
-      // let url = URL.createObjectURL(responseData[0]?.files);
-      // let link = document.createElement('a')
-      // link.href = url;
-      // link.download = "file.jpg"
-      // document.body.append(link)
-      // link.click();
+    base64ToArrayBuffer(base64) {
+      let binaryString = atob(base64);
+      let bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
     },
 
-    async sendFile() {
+    download(link, name, blob) {
+      link.href = URL.createObjectURL(blob);
+      link.download = name;
+      document.body.append(link);
+      link.click();
+    },
 
-      let txt_buffer = await this.files[0].text();
-      console.log('array_buffer', txt_buffer)
-      axios.post(serverURL + '/photos/add', txt_buffer)
+    async getFile() {
+
+      const response = await fetch(serverURL + '/photos');
+      console.log('response', await response.json())
+
+
+      //
+      // const reader = response.body.getReader();
+      //
+      // let data = []
+      // let allBytes = 0
+      //
+      // // бесконечный цикл, пока идёт загрузка
+      // while (true) {
+      //   const {done, value} = await reader.read();
+      //
+      //   if (done) {
+      //     console.log('break');
+      //     break;
+      //   }
+      //
+      //   data = data.concat(value);
+      //   allBytes += value.length
+      //   console.log(`Получено ${value.length} байт`)
+      // }
+      //
+      // let consolidate = ""
+      // let decoder = new TextDecoder("utf-8")
+      //
+      // data.forEach(arr => {
+      //   consolidate += decoder.decode(arr);
+      // })
+      //
+      // let fin = data.map(e => decoder.decode(e)).toString()
+      // console.log(fin)
+      //
+      // let jsonArray = JSON.parse(consolidate);
+      //
+      // // console.log('bytes:', allBytes / (1024 ^ 2), "Mb")
+      // // console.log('data', data)
+      // // console.log('consolidate', consolidate)
+      // // console.log('type consolidate', typeof consolidate)
+      // // console.log('json', jsonArray)
+      //
+      // let link = document.createElement('a');
+      //
+      // for (let i = 0; i < jsonArray.length; i++) {
+      //   const file = jsonArray[i].files;
+      //   const arrayBuffer = this.base64ToArrayBuffer(file.data);
+      //   this.download(link, file.name, new Blob([arrayBuffer]));
+      // }
+    },
+
+
+    async sendFile() {
+      let fd = new FormData();
+      fd.append('image', this.files[0])
+
+      axios.post(serverURL + '/photos/add', fd)
           .then(resp => console.log('Файл добавлен успешно', resp))
           .catch(err => console.log('Ошибка добавления файла', err))
-
-
-      // let blb = new Blob([binBuff])
-      // let blb_txt = await blb.text();
-      // // let blb2 = new Blob([blb_txt])
-      // let enc = new TextEncoder();
-
-      // console.log('binBuff', enc.encode(blb_txt))
-      // console.log('bytes', binBuff)
-      // let url = URL.createObjectURL(blb);
-      // let link = document.createElement('a')
-      // link.href = url;
-      // link.download = "file.jpg"
-      // document.body.append(link)
-      // link.click();
-
-      // let formData = new FormData();
-      // formData.append('image', this.files[0]);
-      //
-      // console.log('_file:', this.files[0])
-      // console.log('_formData:', formData)
-      //
-      // axios.post(serverURL + '/photos/add',
-      //     formData,
-      //     {
-      //       headers: {
-      //         'Content-Type': 'multipart/form-data'
-      //       }
-      //     }
-      // ).then(response => {
-      //   console.log('response', response)
-      // }).catch(err => {
-      //   console.log('err', err)
-      // })
-
     }
   }
 }

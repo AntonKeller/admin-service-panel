@@ -35,3 +35,9 @@ body::-webkit-scrollbar {
   background: rgba(121, 134, 203, 0.7);
   border-radius: 6px;
 }
+
+.tr_hover:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #00897B;
+}
