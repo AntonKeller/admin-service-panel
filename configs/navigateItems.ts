@@ -1,11 +1,11 @@
 import type TNavItem from '../utils/types/TNavItem';
 
-export const navigateItems: Array<TNavItem> = [
+export const navItems: Array<TNavItem> = [
     // {
     //     title: 'Инспекторы',
     //     route: '/manager-menu/inspectors',
     //     prependIcon: 'mdi-account-hard-hat-outline',
-    //     color: 'indigo-accent-4',
+    //     color: 'teal-accent-4',
     //     value: 'inspectors',
     //     active: false,
     //     badge: {
@@ -19,7 +19,7 @@ export const navigateItems: Array<TNavItem> = [
         title: 'Задания',
         route: '/manager-menu/assignments',
         prependIcon: 'mdi-format-list-text',
-        color: 'indigo-accent-4',
+        color: 'teal-darken-1',
         value: 'assignments',
         active: false,
         badge: {
@@ -32,7 +32,7 @@ export const navigateItems: Array<TNavItem> = [
     //     title: 'Организации',
     //     route: '/manager-menu/customers',
     //     prependIcon: 'mdi-home-city-outline',
-    //     color: 'indigo-accent-4',
+    //     color: 'teal-accent-4',
     //     value: 'customers',
     //     active: false,
     //     badge: {
@@ -45,7 +45,7 @@ export const navigateItems: Array<TNavItem> = [
     //     title: 'Договоры',
     //     route: '/manager-menu/agreement',
     //     prependIcon: 'mdi-file-document-multiple-outline',
-    //     color: 'indigo-accent-4',
+    //     color: 'teal-accent-4',
     //     value: 'agreement',
     //     active: false,
     //     badge: {
@@ -59,7 +59,7 @@ export const navigateItems: Array<TNavItem> = [
         title: 'Модули',
         route: '/manager-menu/modules',
         prependIcon: 'mdi-view-module',
-        color: 'indigo-accent-4',
+        color: 'teal-darken-1',
         value: 'modules',
         active: false,
         badge: {
@@ -73,7 +73,7 @@ export const navigateItems: Array<TNavItem> = [
         title: 'Подписка',
         route: '/manager-menu/subscribe',
         prependIcon: 'mdi-card-account-details-star-outline',
-        color: 'indigo-accent-4',
+        color: 'teal-darken-1',
         value: 'subscribe',
         active: false,
         badge: {
