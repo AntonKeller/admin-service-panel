@@ -66,48 +66,21 @@ export default {
     async getFile() {
 
       const response = await fetch(serverURL + '/photos');
-      console.log('response', await response.json())
+      const data = await response.json();
 
+      console.log('element', data[0]?._id);
 
-      //
-      // const reader = response.body.getReader();
-      //
-      // let data = []
-      // let allBytes = 0
-      //
-      // // бесконечный цикл, пока идёт загрузка
-      // while (true) {
-      //   const {done, value} = await reader.read();
-      //
-      //   if (done) {
-      //     console.log('break');
-      //     break;
-      //   }
-      //
-      //   data = data.concat(value);
-      //   allBytes += value.length
-      //   console.log(`Получено ${value.length} байт`)
-      // }
-      //
-      // let consolidate = ""
-      // let decoder = new TextDecoder("utf-8")
-      //
-      // data.forEach(arr => {
-      //   consolidate += decoder.decode(arr);
-      // })
-      //
-      // let fin = data.map(e => decoder.decode(e)).toString()
-      // console.log(fin)
-      //
-      // let jsonArray = JSON.parse(consolidate);
-      //
-      // // console.log('bytes:', allBytes / (1024 ^ 2), "Mb")
-      // // console.log('data', data)
-      // // console.log('consolidate', consolidate)
-      // // console.log('type consolidate', typeof consolidate)
-      // // console.log('json', jsonArray)
-      //
-      // let link = document.createElement('a');
+      // const response2 = await fetch(serverURL + '/photos/download/' + data[0]?._id);
+      // console.log('response2', response2);
+      let name = data[0]?._id + ".jpeg";
+      console.log('name', name)
+
+      let link = document.createElement('a');
+      link.href = serverURL + '/photos/download/' + data[0]?._id;
+      link.download = name;
+      document.body.append(link);
+      link.click();
+
       //
       // for (let i = 0; i < jsonArray.length; i++) {
       //   const file = jsonArray[i].files;

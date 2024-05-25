@@ -8,6 +8,7 @@ export interface TAssignment {
 }
 
 export interface TAssignmentLow {
+    _id?: string,
     title: string,
     description: string,
     contractId: string,
