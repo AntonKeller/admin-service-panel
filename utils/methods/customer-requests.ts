@@ -2,6 +2,7 @@ import {serverURL} from "@/constants/constants";
 import axios from "axios";
 import type TCustomer from "@/utils/types/TCustomer";
 
+const delay = 1500;
 
 export const addCustomer = async (customer: TCustomer, delay: number) =>
     await axios.post(serverURL + '/customers/add', customer, {timeout: delay});
@@ -18,5 +19,5 @@ export const fetchCustomers = async (delay: number) =>
 export const putCustomer = async (customer: TCustomer, delay: number) =>
     await axios.put(serverURL + '/customers/change', customer, {timeout: delay});
 
-export const removeCustomer = async (id: string, delay: number) =>
+export const removeCustomer = async (id: string) =>
     await axios.delete(serverURL + '/customers/' + id, {timeout: delay});

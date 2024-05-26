@@ -10,15 +10,13 @@
           elevation="0"
       >
 
-        <v-list variant="text" density="comfortable" nav rounded>
+        <v-list variant="text" density="default" nav rounded>
 
-          <v-list>
-            <v-list-item
-                prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
-                subtitle="ivan_ivanov@gmail.com"
-                title="Аккаунт"
-            />
-          </v-list>
+          <v-list-item
+              prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
+              subtitle="ivan_ivanov@gmail.com"
+              title="Project Manager"
+          />
 
           <v-divider/>
 

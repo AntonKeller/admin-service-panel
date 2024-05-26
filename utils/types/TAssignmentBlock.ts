@@ -1,11 +1,15 @@
-import type {TAssignment} from "@/utils/types/TAssignment";
+import type TAssignment from "@/utils/types/TAssignment";
 
 export default interface TAssignmentBlock {
     _id?: string,
-    plegeAgreement: string, // Номер договора залогодателя
-    plegerName: string, // Наименование залогодателя
-    objectCount: string,
-    status: string,
-    photosCount: string,
+    loanAgreement: string// Кредитный договор
+    loanAgreementDate: string // Дата
+    plegeAgreement: string, // Договор залога
+    plegeAgreementDate: string, // Дата договора залога
+    startDate: string, // Дата начала
+    endDate: string, // Дата окончания
+    objectCount: string, // Кол-во объектов на осмотр
+    status: string, // Статус
+    photosCount: string, // Статус
     assignment?: TAssignment,
 }

@@ -68,7 +68,7 @@
     </v-overlay>
 
     <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
-      <c-contract-card-change-menu :activeContract="activeContractChange" :returnContract="changeContract"/>
+      <c-contract-card-change-menu :_contract="activeContractChange" :returnContract="changeContract"/>
     </v-overlay>
 
   </v-container>

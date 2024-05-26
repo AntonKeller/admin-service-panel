@@ -65,6 +65,13 @@
         </tr>
         </thead>
         <tbody>
+        <v-skeleton-loader
+            v-if="fetchingAssignments"
+            width="full"
+            color="transparent"
+            elevation="0"
+            type="list-item-three-line"
+        />
         <tr
             v-for="assignment of assignmentsFiltered"
             :key="assignment.id"
@@ -104,8 +111,6 @@
     <v-overlay
         v-model="changeMenuVisible"
         class="d-flex justify-center align-center"
-        width="75%"
-        max-width="80%"
         transition="scroll-y-transition"
     >
       <c-assignment-card-change-menu
@@ -119,8 +124,8 @@
 
 <script>
 import {fetchAssignments} from "../../utils/methods/assignment-requests";
-import {testDataAssignments} from "../../configs/testData";
-import {statuses} from "../../configs/assignmentStatuses";
+import dataAssignments from "../../configs/data-test/data-test-assignments";
+import statuses from "../../configs/assignmentStatuses";
 
 export default {
   name: "assignments-page",
@@ -134,7 +139,7 @@ export default {
     changeMenuVisible: false,
     selectedAssignment: null,
     //
-    loadingData: true,
+    fetchingAssignments: true,
     searchText: null,
     assignmentList: null,
   }),
@@ -184,13 +189,15 @@ export default {
       this.changeMenuVisible = true;
     },
 
-    async updateAssignmentListData() {
+    updateAssignmentListData() {
 
-      this.assignmentList = await fetchAssignments(500)
+      fetchAssignments()
           .then(r => r?.data?.reverse())
-          .catch(e => testDataAssignments?.reverse());
-
-      this.loadingData = false;
+          .catch(() => dataAssignments?.reverse())
+          .then((r) => {
+            this.fetchingAssignments = false;
+            this.assignmentList = r;
+          })
     }
 
   }

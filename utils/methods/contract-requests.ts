@@ -1,20 +1,21 @@
 import {serverURL} from "@/constants/constants";
-import type {TContract, TContractLow} from "@/utils/types/TContract";
+import type TContract from "@/utils/types/TContract";
 import axios from "axios";
 
+const delay = 1500;
 
 export async function fetchContracts(delay: number): Promise<Array<TContract>> {
     return await axios.get(serverURL + '/contracts', {timeout: delay});
 }
 
 
-export async function addContract(contract: TContractLow, delay: number): Promise<TContract> {
+export async function addContract(contract: TContract): Promise<TContract> {
     return await axios.post(serverURL + '/contracts/add', contract, {timeout: delay});
 }
 
 
-export async function changeContract(id: string, contract: TContract, delay: number): Promise<TContract> {
-    return await axios.put(serverURL + '/contracts/' + id, contract, {timeout: delay});
+export async function changeContract(contract: TContract): Promise<TContract> {
+    return await axios.put(serverURL + '/contracts/' + contract._id, contract, {timeout: delay});
 }
 
 

@@ -1,15 +1,10 @@
-import type {TContract} from "@/utils/types/TContract";
+import type TContract from "@/utils/types/TContract";
+import type TCustomer from "@/utils/types/TCustomer";
 
-export interface TAssignment {
+export default interface TAssignment {
     _id?: string,
     title: string,
     description: string,
     contract?: TContract,
-}
-
-export interface TAssignmentLow {
-    _id?: string,
-    title: string,
-    description: string,
-    contractId: string,
+    customer?: TCustomer
 }

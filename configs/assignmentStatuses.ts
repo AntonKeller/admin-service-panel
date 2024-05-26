@@ -1,4 +1,4 @@
-export const statuses = [
+const statuses = [
     {
         id: 1,
         title: 'В работе',
@@ -30,3 +30,5 @@ export const statuses = [
         color: 'blue-gray',
     },
 ]
+
+export default statuses;

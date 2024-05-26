@@ -1,9 +1,9 @@
 <template>
   <v-card
-      color="indigo"
-      variant='tonal'
+      variant='text'
       density="compact"
       rounded
+      color="teal-darken-4"
   >
     <v-card-title class="d-flex justify-space-between">
 
@@ -32,10 +32,10 @@
       <div class="d-flex ga-2">
         <v-chip
             prepend-icon="mdi-email"
-            rounded="sm"
+            rounded="xl"
             size="small"
             variant="tonal"
-            color="indigo"
+            color="teal-darken-3"
             label
             @click.stop="console.log('click')"
         >
@@ -43,10 +43,10 @@
         </v-chip>
         <v-chip
             prepend-icon="mdi-email"
-            rounded="sm"
+            rounded="xl"
             size="small"
             variant="tonal"
-            color="indigo"
+            color="teal-darken-3"
             label
             @click.stop="console.log('click')"
         >
@@ -71,7 +71,7 @@ export default {
 
   methods: {
     removeSelf(_id) {
-      removeCustomer(_id, 250)
+      removeCustomer(_id)
           .then(response => {
             console.log('Заказчик успешно удален', response);
             this.removeClick(this.customerProp._id);

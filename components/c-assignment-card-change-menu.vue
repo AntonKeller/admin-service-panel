@@ -1,174 +1,244 @@
 <template>
-  <v-sheet rounded="lg" min-height="80vh" height="80vh" elevation="24" color="white">
-    <v-card height="100%" variant="tonal">
-      <v-card-title class="d-flex ga-2">
-        <div>
-          <div v-if="!changeStatus">{{ title }}</div>
-          <div v-if="changeStatus">
-            <v-text-field
-                density="comfortable"
-                style="width: 460px"
-                label="Наименование ТЗ"
-                v-model="assignment.title"
-            />
-          </div>
-        </div>
-        <div>
+  <v-sheet
+      rounded="lg"
+      height="65vh"
+      width="60vw"
+      elevation="24"
+      color="white"
+  >
+    <v-card
+        height="100%"
+        :disabled="changeLoading"
+    >
+      <v-card-title>
+        <v-sheet class="d-flex ga-2">
           <v-btn
+              :loading="changeLoading"
               @click="changeRequest()"
-              :variant="changeStatus ? 'outlined' : 'text'"
-              rounded="sm"
-              density="compact"
+              :variant="changeMode ? 'outlined' : 'text'"
+              rounded="lg"
+              density="comfortable"
               icon="mdi-pencil-outline"
           />
-        </div>
-        <v-btn density="default" variant="tonal">
-          Договор: {{
-            assignment?.contract?.contractNumber + ' / ' +
-            assignment?.contract?.contractDate || 'Нет даты договора'
-          }}
-        </v-btn>
+          <div v-if="!changeMode">
+            {{ assignment?.title }}
+          </div>
+          <v-text-field
+              rounded="lg"
+              v-if="changeMode"
+              label="Наименование ТЗ"
+              density="default"
+              v-model="assignment.title"
+          />
+        </v-sheet>
       </v-card-title>
-      <v-card-subtitle>
 
-      </v-card-subtitle>
-      <v-card-text>
-        <div v-if="!changeStatus">
+      <v-card-text class="d-flex flex-column ga-2">
+
+        <div v-if="!changeMode">
           {{ assignment?.description }}
         </div>
-        <div v-if="changeStatus">
-          <v-textarea label="Описание" v-model="assignment.description"/>
+
+        <div v-if="changeMode">
+          <v-textarea rounded="lg" label="Описание" v-model="assignment.description"/>
         </div>
+
+        <v-divider color="teal-darken-4"/>
+
+        <div class="d-flex ga-2">
+          <v-chip
+              @click="showContractMenu"
+              prepend-icon="mdi-open-in-new"
+              density="comfortable"
+              size="small"
+              variant="flat"
+              color="teal-lighten-5"
+          >
+            {{ getContractTitle }}
+          </v-chip>
+          <v-chip
+              @click="showCustomerMenu"
+              prepend-icon="mdi-open-in-new"
+              density="comfortable"
+              size="small"
+              variant="flat"
+              color="teal-lighten-5"
+          >
+            {{ getCustomerTitle }}
+          </v-chip>
+        </div>
+
+        <v-divider color="teal-darken-4"/>
+
       </v-card-text>
+
       <v-card-item>
-        <v-table>
+        <v-table theme="dark" height="450px" fixed-header density="default">
           <thead>
-          <tr>
-            <th class="text-left">Залогодатель</th>
-            <th class="text-left">Договор залога</th>
-            <th class="text-left">Объектов, шт.</th>
-            <th class="text-left">Статус</th>
-            <th class="text-left">Объем фотографий</th>
-          </tr>
+            <tr>
+              <th class="text-left">Кредитный договор</th>
+              <th class="text-left">Дата кд.</th>
+              <th class="text-left">Договор залога</th>
+              <th class="text-left">Дата д. залога</th>
+              <th class="text-left">Начало</th>
+              <th class="text-left">Окончание</th>
+              <th class="text-left">Объектов, шт.</th>
+              <th class="text-left">Статус</th>
+              <th class="text-left">Фотографий, шт.</th>
+            </tr>
           </thead>
           <tbody>
-          <tr
-              v-for="item in testDataAssignmentBlocks"
-              :key="item._id"
-          >
-            <td>{{ item.plegerName }}</td>
-            <td>{{ item.plegeAgreement }}</td>
-            <td>{{ item.objectCount }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ item.photosCount }}</td>
-          </tr>
+            <v-skeleton-loader
+                v-if="fetchBlocksLoading"
+                width="full"
+                color="transparent"
+                elevation="0"
+                type="list-item-three-line"
+            />
+            <tr
+                v-for="item in assignmentBlockList"
+                :key="item._id"
+            >
+              <td>{{ item.loanAgreement.length > 10 ? item.loanAgreement.slice(0,10) + '...' : item.loanAgreement }}</td>
+              <td>{{ item.loanAgreementDate.length > 10 ? item.loanAgreementDate.slice(0,10) + '...' : item.loanAgreementDate }}</td>
+              <td>{{ item.plegeAgreement.length > 10 ? item.plegeAgreement.slice(0,10) + '...' : item.plegeAgreement }}</td>
+              <td>{{ item.plegeAgreementDate.length > 10 ? item.plegeAgreementDate.slice(0,10) + '...' : item.plegeAgreementDate }}</td>
+              <td>{{ item.startDate.length > 10 ? item.startDate.slice(0,10) + '...' : item.startDate }}</td>
+              <td>{{ item.endDate.length > 10 ? item.endDate.slice(0,10) + '...' : item.endDate }}</td>
+              <td>{{ item.objectCount.length > 10 ? item.objectCount.slice(0,10) + '...' : item.objectCount }}</td>
+              <td>{{ item.status.length > 10 ? item.status.slice(0,10) + '...' : item.status }}</td>
+              <td>{{ item.photosCount.length > 10 ? item.photosCount.slice(0,10) + '...' : item.photosCount }}</td>
+            </tr>
           </tbody>
         </v-table>
       </v-card-item>
     </v-card>
 
     <v-overlay v-model="contractsMenuVisible" class="d-flex justify-center align-center">
-      <c-contracts-menu :selectContract="selectContract"/>
+      <c-contracts-menu :selectContract="setContract"/>
+    </v-overlay>
+
+    <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">
+      <c-customers-menu :selectCustomer="setCustomer"/>
     </v-overlay>
 
   </v-sheet>
 </template>
 
 <script>
-import {testDataAssignmentBlocks} from "../configs/testData.ts";
-import {requestChangeAssignment} from "../utils/methods/assignment-requests.ts";
+import testDataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
+import {requestChangeAssignment} from "../utils/methods/assignment-requests";
+import {fetchAssignmentBlocks} from "@/utils/methods/assignment-block-requests";
 
 
 export default {
   name: "c-assignment-card-change-menu",
+
   props: {
     _assignment: Object,
     _returnAssignment: Function,
   },
+
   data: () => ({
 
     contractsMenuVisible: false,
+    customersMenuVisible: false,
 
-    changeStatus: false,
+    changeMode: false,
+    changeLoading: false,
+    fetchBlocksLoading: true,
 
     assignment: {
       _id: '',
       title: '',
       description: '',
-      contract: {
-        _id: '',
-        contractNumber: '',
-        contractDate: '',
-        customer: {
-          _id: '',
-          shortName: '',
-          fullName: '',
-          inn: '',
-          phoneNumber: '',
-          email: '',
-          address: '',
-        }
-      },
+      contract: null,
+      customer: null
     },
 
-    assignmentBuffer: ({}),
-
-    testDataAssignmentBlocks,
-
+    assignmentBlockList: [],
   }),
-
-  computed: {
-
-    title() {
-      let a = this.assignment?.title || 'Пустой заголовок';
-      let hasCustomer = this.assignment?.contract?.customer?.shortName &&
-          this.assignment?.contract?.customer?.inn;
-      return a + ' | ' + hasCustomer ? this.assignment?.contract?.customer?.shortName + ' | ' +
-          this.assignment?.contract?.customer?.inn : 'Отсутствует заказчик';
-    }
-
-  },
 
   mounted() {
     this.setDefault();
+    this.fetchAssignmentBlocksData();
+  },
+
+  computed: {
+
+    getContractTitle() {
+      return this.assignment?.contract ? 'Договор: ' + this.assignment?.contract?.contractNumber : 'Добавить договор';
+    },
+
+    getCustomerTitle() {
+      return this.assignment?.customer ? 'Заказчик: ' + this.assignment?.customer?.shortName : 'Добавить заказчика';
+    }
+
   },
 
   methods: {
 
     setDefault() {
-      this.assignment = this._assignment;
+      this.assignment = ({...this._assignment});
     },
 
-    selectContract(newContract) {
+    setContract(newContract) {
       this.assignment.contract = ({...newContract});
       this.contractsMenuVisible = false;
     },
 
+    setCustomer(newCustomer) {
+      this.assignment.customer = ({...newCustomer});
+      this.customersMenuVisible = false;
+    },
+
+    showContractMenu() {
+      this.contractsMenuVisible = true;
+    },
+
+    showCustomerMenu() {
+      this.customersMenuVisible = true;
+    },
+
     changeRequest() {
-      if (this.changeStatus) {
-        requestChangeAssignment({
-          _id: this.assignmentBuffer?._id,
-          title: this.assignmentBuffer?.title,
-          description: this.assignmentBuffer?.description
-        }).then(r => {
-          console.log('Успешно изменен');
-          this.assignment.title = this.assignmentBuffer.title;
-          this.assignment.description = this.assignmentBuffer.title;
-          this._returnAssignment(({...this.assignmentBuffer}));
-        }).catch(e => {
-          console.log('Ошибка при изменении');
-        }).finally(() => {
-          this.changeStatus = false;
-        })
+      if (this.changeMode) {
+
+        this.changeLoading = true;
+
+        requestChangeAssignment(this.assignment)
+            .then(() => {
+              this._returnAssignment({...this.assignment});
+            })
+            .catch(err => {
+              console.log('Ошибка при изменении', err);
+              this.setDefault();
+              this.changeMode = false;
+              this.changeLoading = false;
+              this._returnAssignment({...this._assignment});
+            })
+
       } else {
-        console.log('this.assignment._id', this.assignment._id)
-        this.assignmentBuffer._id = this.assignment._id;
-        this.assignmentBuffer.title = this.assignment.title;
-        this.assignmentBuffer.description = this.assignment.description;
-        this.changeStatus = true;
+        this.changeMode = true;
       }
 
     },
+
+    fetchAssignmentBlocksData() {
+      this.fetchBlocksLoading = true;
+      fetchAssignmentBlocks(this.assignment._id)
+          .then(r => {
+            console.log('Блоки ТЗ получены');
+            return r?.data;
+          })
+          .catch(err => {
+            console.log('Ошибка получения блоков ТЗ', err);
+            return testDataAssignmentBlocks;
+          })
+          .then(blockList => {
+            this.fetchBlocksLoading = false;
+            this.assignmentBlockList = blockList;
+          })
+    }
 
   }
 }

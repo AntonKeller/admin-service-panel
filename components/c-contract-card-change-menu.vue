@@ -32,27 +32,23 @@
       />
     </v-card-item>
 
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-text-field
-            density="comfortable"
-            v-model="contract.customer.shortName"
-            hide-details="auto"
-            label="Выбрать заказчика"
-            readonly
-            @focus="customersMenuVisible = true"
-        />
-      </div>
-    </v-card-item>
+<!--    <v-card-item>-->
+<!--      <div class="d-flex ga-2">-->
+<!--        <v-text-field-->
+<!--            density="comfortable"-->
+<!--            v-model="contract.customer.shortName"-->
+<!--            hide-details="auto"-->
+<!--            label="Выбрать заказчика"-->
+<!--            readonly-->
+<!--            @focus="customersMenuVisible = true"-->
+<!--        />-->
+<!--      </div>-->
+<!--    </v-card-item>-->
 
     <v-card-actions>
       <v-btn rounded="sm" variant="tonal" @click="send">Изменить</v-btn>
       <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
     </v-card-actions>
-
-    <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">
-      <c-customers-menu :returnCustomer="setCustomer"/>
-    </v-overlay>
 
     <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
       <c-datepicker-menu/>
@@ -69,25 +65,16 @@ export default {
 
   props: {
     returnContract: Function,
-    activeContract: Object,
+    _contract: Object,
   },
 
   data: () => ({
-    customersMenuVisible: false,
+    // customersMenuVisible: false,
     datepickerMenuVisible: false,
     contract: {
       _id: '',
       contractNumber: '',
       contractDate: '',
-      customer: {
-        _id: '',
-        shortName: '',
-        fullName: '',
-        inn: '',
-        phoneNumber: '',
-        email: '',
-        address: '',
-      }
     }
   }),
 
@@ -98,22 +85,18 @@ export default {
   methods: {
 
     setDefault() {
-      if (this.activeContract) {
-        this.contract = ({...this.activeContract});
+      if (this._contract) {
+        this.contract = ({...this._contract});
       }
     },
 
-    setCustomer(newCustomer) {
-      this.contract.customer = ({...newCustomer});
-      this.customersMenuVisible = false;
-    },
+    // setCustomer(newCustomer) {
+    //   this.contract.customer = ({...newCustomer});
+    //   this.customersMenuVisible = false;
+    // },
 
     send() {
-      changeContract(this.contract._id, {
-        contractNumber: this.contract.contractNumber,
-        contractDate: this.contract.contractDate,
-        customerId: this.contract.customer._id
-      }, 500)
+      changeContract(this.contract)
           .then(response => {
             console.log('Договор успешно изменен', response);
             this.returnContract(response?.data);
@@ -125,18 +108,18 @@ export default {
 
     clear() {
       this.contract = {
-        _id: this.contract._id,
+        _id: this._contract._id,
         contractNumber: '',
         contractDate: '',
-        customer: {
-          _id: '',
-          shortName: '',
-          fullName: '',
-          inn: '',
-          phoneNumber: '',
-          email: '',
-          address: '',
-        }
+        // customer: {
+        //   _id: '',
+        //   shortName: '',
+        //   fullName: '',
+        //   inn: '',
+        //   phoneNumber: '',
+        //   email: '',
+        //   address: '',
+        // }
       }
     }
   }

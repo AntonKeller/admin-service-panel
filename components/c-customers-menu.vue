@@ -1,75 +1,72 @@
 <template>
-  <v-card
-      variant="flat"
-      min-width="800"
-      max-width="800"
-      color="indigo-lighten-4"
-      density="comfortable"
-      rounded
-  >
+  <v-sheet>
+    <v-card
+        variant="text"
+        min-width="800"
+        max-width="800"
+        density="comfortable"
+        rounded
+    >
 
-    <v-card-title>Заказчики</v-card-title>
+      <v-card-title>Заказчики</v-card-title>
 
-    <v-card-subtitle>Выберите из списка</v-card-subtitle>
+      <v-card-subtitle>Выберите из списка</v-card-subtitle>
 
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-btn
-            rounded
-            color="indigo-darken-1"
-            variant="elevated"
-            density="default"
-            size="small"
-            icon="mdi-plus"
-            @click="customerAddMenuVisible = true"
-        />
-        <v-text-field
-            color="indigo-darken-1"
-            append-inner-icon="mdi-magnify"
-            density="compact"
-            label="Поиск заказчика"
-            variant="outlined"
-            hide-details
-            single-line
-            v-model="searchText"
-        />
-      </div>
-    </v-card-item>
-
-    <v-card-text>
-      <v-list bg-color="transparent" max-height="360px" min-height="360px">
-        <v-list-item v-if="loadingData">
-          <v-skeleton-loader
-              v-for="n of 3"
-              width="full"
-              color="transparent"
-              elevation="0"
-              type="list-item-three-line"
+      <v-card-item>
+        <div class="d-flex ga-2">
+          <v-btn
+              rounded
+              color="teal-darken-2"
+              variant="elevated"
+              density="default"
+              size="small"
+              icon="mdi-plus"
+              @click="customerAddMenuVisible = true"
           />
-        </v-list-item>
-        <v-list-item v-for="e of customersFiltered" :key="e.id">
-          <c-customer-card
-              :removeClick="cardRemoveClick"
-              :changeClick="cardChangeClick"
-              :customerProp="e"
-              @click="returnCustomer({...e})"
+          <v-text-field
+              color="teal-darken-2"
+              append-inner-icon="mdi-magnify"
+              density="compact"
+              label="Поиск заказчика"
+              variant="outlined"
+              hide-details
+              single-line
+              v-model="searchText"
           />
-        </v-list-item>
-      </v-list>
-    </v-card-text>
+        </div>
+      </v-card-item>
 
-    <v-overlay v-model="customerAddMenuVisible" class="d-flex justify-center align-center">
-      <c-customer-card-add-menu :returnNewCustomer="setNewCustomer"/>
-    </v-overlay>
+      <v-overlay v-model="customerAddMenuVisible" class="d-flex justify-center align-center">
+        <c-customer-card-add-menu :returnNewCustomer="setNewCustomer"/>
+      </v-overlay>
 
-    <v-overlay v-model="customerChangeMenuVisible" class="d-flex justify-center align-center">
-      <c-customer-card-change-menu
-          :activeCustomer="activeChangeCustomer"
-          :returnNewCustomer="changeCustomer"
-      />
-    </v-overlay>
+      <v-overlay v-model="customerChangeMenuVisible" class="d-flex justify-center align-center">
+        <c-customer-card-change-menu
+            :activeCustomer="activeChangeCustomer"
+            :returnNewCustomer="changeCustomer"
+        />
+      </v-overlay>
+    </v-card>
 
-  </v-card>
+    <v-list bg-color="transparent" max-height="360px" min-height="360px">
+      <v-list-item v-if="loadingData">
+        <v-skeleton-loader
+            width="full"
+            color="transparent"
+            elevation="0"
+            type="list-item-three-line"
+        />
+      </v-list-item>
+      <v-list-item v-for="e of customersFiltered" :key="e.id">
+        <c-customer-card
+            :removeClick="cardRemoveClick"
+            :changeClick="cardChangeClick"
+            :customerProp="e"
+            @click="selectCustomer({...e})"
+        />
+      </v-list-item>
+    </v-list>
+  </v-sheet>
 </template>
 
 <script>
@@ -80,7 +77,7 @@ export default {
   name: "c-customers-menu",
 
   props: {
-    returnCustomer: Function,
+    selectCustomer: Function,
   },
 
   data: () => ({

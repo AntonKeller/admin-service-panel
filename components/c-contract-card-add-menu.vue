@@ -32,27 +32,27 @@
       />
     </v-card-item>
 
-    <v-card-item>
-      <div class="d-flex ga-2">
-        <v-text-field
-            density="comfortable"
-            v-model="contract.customer.shortName"
-            hide-details="auto"
-            label="Выбрать заказчика"
-            readonly
-            @focus="customersMenuVisible = true"
-        />
-      </div>
-    </v-card-item>
+<!--    <v-card-item>-->
+<!--      <div class="d-flex ga-2">-->
+<!--        <v-text-field-->
+<!--            density="comfortable"-->
+<!--            v-model="contract.customer.shortName"-->
+<!--            hide-details="auto"-->
+<!--            label="Выбрать заказчика"-->
+<!--            readonly-->
+<!--            @focus="customersMenuVisible = true"-->
+<!--        />-->
+<!--      </div>-->
+<!--    </v-card-item>-->
 
     <v-card-actions>
       <v-btn rounded="sm" variant="tonal" @click="send">Добавить</v-btn>
-      <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
+      <v-btn rounded="sm" variant="tonal" @click="this.contract = clear()">Очистить</v-btn>
     </v-card-actions>
 
-    <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">
-      <c-customers-menu :returnCustomer="setCustomer"/>
-    </v-overlay>
+<!--    <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">-->
+<!--      <c-customers-menu :returnCustomer="setCustomer"/>-->
+<!--    </v-overlay>-->
 
     <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
       <c-datepicker-menu />
@@ -72,67 +72,47 @@ export default {
   },
 
   data: () => ({
-    customersMenuVisible: false,
+    // customersMenuVisible: false,
     datepickerMenuVisible: false,
     contract: {
       contractNumber: '',
       contractDate: '',
-      customer: {
-        _id: '',
-        shortName: '',
-        fullName: '',
-        inn: '',
-        phoneNumber: '',
-        email: '',
-        address: '',
-      }
+      // customer: {
+      //   _id: '',
+      //   shortName: '',
+      //   fullName: '',
+      //   inn: '',
+      //   phoneNumber: '',
+      //   email: '',
+      //   address: '',
+      // }
     }
   }),
 
   methods: {
-    filterNum: function() {
-      if (!/^\d+$/.test(this.inputValue)) {
-        this.inputValue = this.inputValue.replace(/[^\d]/g, '');
-      }
-    },
-    setCustomer(newCustomer) {
-      this.contract.customer = ({...newCustomer});
-      this.customersMenuVisible = false;
-    },
+
+    // setCustomer(newCustomer) {
+    //   this.contract.customer = ({...newCustomer});
+    //   this.customersMenuVisible = false;
+    // },
+
     send() {
-      addContract({
-        contractNumber: this.contract.contractNumber,
-        contractDate: this.contract.contractDate,
-        customerId: this.contract.customer._id
-      }, 500)
+      addContract(this.contract)
           .then(response => {
-            console.log('Запроса на добавление успешно завершен');
             this.returnContract(response?.data);
+            this.clear();
+            console.log('Контракт добавлен');
           })
           .catch(err => {
-            console.log('Ошибка запроса на добавление контракта');
-            console.log('Вернул договор', {_id: '565145', ...this.contract})
-            this.returnContract({_id: '565145', ...this.contract});
-          })
-          .finally(() => {
-            console.log('Запрос на добавление контракта завершен');
+            console.log('Ошибка добавления контракта', err);
           })
     },
-    clear() {
-      this.contract = {
-        contractNumber: '',
-        contractDate: '',
-        customer: {
-          _id: '',
-          shortName: '',
-          fullName: '',
-          inn: '',
-          phoneNumber: '',
-          email: '',
-          address: '',
-        }
-      }
-    }
+
+    clear: () => ({
+      contractNumber: '',
+      contractDate: '',
+    }),
+
   }
 }
 </script>
