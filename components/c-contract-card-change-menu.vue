@@ -32,19 +32,6 @@
       />
     </v-card-item>
 
-<!--    <v-card-item>-->
-<!--      <div class="d-flex ga-2">-->
-<!--        <v-text-field-->
-<!--            density="comfortable"-->
-<!--            v-model="contract.customer.shortName"-->
-<!--            hide-details="auto"-->
-<!--            label="Выбрать заказчика"-->
-<!--            readonly-->
-<!--            @focus="customersMenuVisible = true"-->
-<!--        />-->
-<!--      </div>-->
-<!--    </v-card-item>-->
-
     <v-card-actions>
       <v-btn rounded="sm" variant="tonal" @click="send">Изменить</v-btn>
       <v-btn rounded="sm" variant="tonal" @click="clear">Очистить</v-btn>
@@ -59,6 +46,7 @@
 
 <script>
 import {changeContract} from "../utils/methods/contract-requests";
+import contractConfig from "@/configs/contract-config";
 
 export default {
   name: "c-contract-card-menu-add",
@@ -69,13 +57,9 @@ export default {
   },
 
   data: () => ({
-    // customersMenuVisible: false,
+    config: contractConfig,
+    contract: ({}),
     datepickerMenuVisible: false,
-    contract: {
-      _id: '',
-      contractNumber: '',
-      contractDate: '',
-    }
   }),
 
   mounted() {
@@ -89,11 +73,6 @@ export default {
         this.contract = ({...this._contract});
       }
     },
-
-    // setCustomer(newCustomer) {
-    //   this.contract.customer = ({...newCustomer});
-    //   this.customersMenuVisible = false;
-    // },
 
     send() {
       changeContract(this.contract)
@@ -111,15 +90,6 @@ export default {
         _id: this._contract._id,
         contractNumber: '',
         contractDate: '',
-        // customer: {
-        //   _id: '',
-        //   shortName: '',
-        //   fullName: '',
-        //   inn: '',
-        //   phoneNumber: '',
-        //   email: '',
-        //   address: '',
-        // }
       }
     }
   }

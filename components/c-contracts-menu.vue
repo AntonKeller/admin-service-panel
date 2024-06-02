@@ -1,10 +1,9 @@
 <template>
-  <v-container class="bg-indigo-lighten-4 rounded">
+  <v-sheet class="rounded">
     <v-card
         variant="flat"
         min-width="800"
         max-width="800"
-        color="indigo-lighten-4"
         density="comfortable"
         rounded
     >
@@ -14,15 +13,15 @@
         <div class="d-flex ga-2">
           <v-btn
               rounded
-              color="indigo-darken-1"
+              color="teal-darken-2"
               variant="elevated"
               density="default"
               size="small"
               icon="mdi-plus"
-              @click="contractAddMenuVisible = true"
+              @click="showContractAddMenu = true"
           />
           <v-text-field
-              color="indigo-darken-1"
+              color="teal-darken-2"
               prepend-inner-icon="mdi-magnify"
               density="compact"
               label="Поиск договора"
@@ -36,11 +35,10 @@
       </v-card-item>
     </v-card>
 
-    <v-list bg-color="transparent" min-height="380" max-height="360">
+    <v-list min-height="380" max-height="360">
 
       <v-list-item v-if="loadingData">
         <v-skeleton-loader
-            v-for="n of 3"
             width="full"
             color="transparent"
             elevation="0"
@@ -63,19 +61,19 @@
       </v-list-item>
     </v-list>
 
-    <v-overlay v-model="contractAddMenuVisible" class="d-flex justify-center align-center">
-      <c-contract-card-add-menu :returnContract="setContract"/>
+    <v-overlay v-model="showContractAddMenu" class="d-flex justify-center align-center">
+      <c-contract-card-add-menu :returnContract="addNewContract"/>
     </v-overlay>
 
     <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
       <c-contract-card-change-menu :_contract="activeContractChange" :returnContract="changeContract"/>
     </v-overlay>
 
-  </v-container>
+  </v-sheet>
 </template>
 
 <script>
-import {testDataContracts} from "../configs/testData";
+import testDataContracts from "../configs/data-test/data-test-contracts";
 import {fetchContracts} from "../utils/methods/contract-requests";
 
 export default {
@@ -90,7 +88,7 @@ export default {
     searchText: null,
     activeContractChange: null,
     contractList: null,
-    contractAddMenuVisible: false,
+    showContractAddMenu: false,
     contractChangeMenuVisible: false,
   }),
 
@@ -140,7 +138,7 @@ export default {
       this.contractChangeMenuVisible = false;
     },
 
-    setContract(newContract) {
+    addNewContract(newContract) {
       if (Array.isArray(this.contractList)) {
         this.contractList.push(newContract)
       } else {

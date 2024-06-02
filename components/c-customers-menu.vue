@@ -35,17 +35,6 @@
           />
         </div>
       </v-card-item>
-
-      <v-overlay v-model="customerAddMenuVisible" class="d-flex justify-center align-center">
-        <c-customer-card-add-menu :returnNewCustomer="setNewCustomer"/>
-      </v-overlay>
-
-      <v-overlay v-model="customerChangeMenuVisible" class="d-flex justify-center align-center">
-        <c-customer-card-change-menu
-            :activeCustomer="activeChangeCustomer"
-            :returnNewCustomer="changeCustomer"
-        />
-      </v-overlay>
     </v-card>
 
     <v-list bg-color="transparent" max-height="360px" min-height="360px">
@@ -66,11 +55,38 @@
         />
       </v-list-item>
     </v-list>
+
+    <v-overlay
+        v-model="customerAddMenuVisible"
+        class="d-flex justify-center align-center"
+    >
+      <c-customer-card-add-menu
+          :returnNewCustomer="setCustomer"
+          :requestCompleteEvent = "showSnackBar"
+      />
+    </v-overlay>
+
+    <v-overlay
+        v-model="customerChangeMenuVisible"
+        class="d-flex justify-center align-center"
+    >
+      <c-customer-card-change-menu
+          :activeCustomer="activeChangeCustomer"
+          :returnNewCustomer="setCustomer"
+          :requestCompleteEvent = "showSnackBar"
+      />
+    </v-overlay>
+
+    <v-snackbar :color="snackBarType" v-model="snackBarShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBarMsg }}
+    </v-snackbar>
+
   </v-sheet>
 </template>
 
 <script>
-import {testDataCustomers} from "../configs/testData";
+import testDataCustomers from "../configs/data-test/data-test-customers";
 import {fetchCustomers} from "../utils/methods/customer-requests";
 
 export default {
@@ -87,6 +103,10 @@ export default {
     customerChangeMenuVisible: false,
     searchText: null,
     customerList: null,
+    //------------------
+    snackBarShow: false,
+    snackBarType: '',
+    snackBarMsg: '',
   }),
 
   mounted() {
@@ -113,6 +133,12 @@ export default {
 
   methods: {
 
+    showSnackBar(type, msg) {
+      this.snackBarType = type;
+      this.snackBarMsg = msg;
+      this.snackBarShow = true;
+    },
+
     cardRemoveClick(id) {
       this.customerList = this.customerList.filter(customer => customer._id !== id);
     },
@@ -122,34 +148,23 @@ export default {
       this.customerChangeMenuVisible = true;
     },
 
-    changeCustomer(newCustomer) {
+    setCustomer(_customer, isNew) {
 
-      // Ищем, меняем значения заказчика
-      this.customerList.forEach((customer, customerI) => {
-        if (customer._id === newCustomer._id) {
-          this.customerList[customerI] = ({...newCustomer})
-        }
-      })
+      _customer = {_id: 'sdfsdfgsdg', ..._customer}
 
-      // Закрываем меню
-      this.customerChangeMenuVisible = false;
-    },
-
-    setNewCustomer(newCustomer) {
-
-      // Добавляем нового заказчика
-      this.customerList.unshift(newCustomer);
-
-      // Закрываем меню
-      this.customerAddMenuVisible = false;
-    },
-
-    setCustomer(newCustomer) {
-      if (Array.isArray(this.customerList)) {
-        this.customerList.push(newCustomer)
+      if (isNew) {
+        this.customerList.unshift(_customer);
       } else {
-        this.customerList = [newCustomer];
+        for (let i = 0; i < this.customerList.length; i++) {
+          if (this.customerList[i]._id === _customer._id) {
+            this.customerList[i] = {..._customer};
+            break;
+          }
+        }
       }
+
+      this.customerChangeMenuVisible = false;
+      this.customerAddMenuVisible = false;
     },
 
     fetchData() {

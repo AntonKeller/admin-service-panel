@@ -70,7 +70,7 @@
           <v-card-title>{{ block.plegerName }}</v-card-title>
           <v-card-subtitle>{{ block.plegeAgreement }}</v-card-subtitle>
           <v-card-item>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, repudiandae!</v-card-item>
-          <v-divider />
+          <v-divider/>
           <v-card-text v-if="activeBlockID === block._id" class="d-flex ga-2 flex-wrap">
             <v-chip
                 v-for="i of 15"
@@ -81,7 +81,8 @@
                 color="indigo"
                 append-icon="mdi-phone"
                 @click.stop="console.log('Customer call')"
-            >lorem</v-chip>
+            >lorem
+            </v-chip>
           </v-card-text>
         </v-card>
       </v-list-item>
@@ -92,7 +93,7 @@
 
 <script>
 import {fetchAssignmentBlocks} from "@/utils/methods/assignment-block-requests";
-import {testDataAssignmentBlocks} from "@/configs/testData";
+import dataAssignmentBlocks from "@/configs/data-test/data-test-assignment-blocks";
 
 export default {
   name: "c-assignment-blocks-menu",
@@ -130,11 +131,19 @@ export default {
       }
     },
 
-    async fetchData() {
-      if (this.assignment?._id) {
-        this.blocks = await fetchAssignmentBlocks(this.assignment._id);
-        this.loadingData = false;
-      }
+    fetchData() {
+      fetchAssignmentBlocks(this.assignment._id)
+          .then(response => {
+            console.log('Блоки успешно получены');
+            this.blocks = ({...response?.data});
+          })
+          .catch(err => {
+            console.log('Ошибка получения блоков', err);
+            this.blocks = ({...dataAssignmentBlocks});
+          })
+          .finally(() => {
+            this.loadingData = false;
+          })
     }
 
   }

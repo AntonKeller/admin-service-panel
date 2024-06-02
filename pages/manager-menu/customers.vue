@@ -48,8 +48,7 @@
 </template>
 
 <script>
-import {testDataCustomers} from '../../configs/testData';
-// import {fetchCustomers} from '../../utils/methods/requests';
+import testDataCustomers from '../../configs/data-test/data-test-customers';
 
 export default {
   name: "customers-page",

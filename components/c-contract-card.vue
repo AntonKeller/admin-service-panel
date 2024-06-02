@@ -1,6 +1,6 @@
 <template>
   <v-card
-      color="indigo"
+      color="blue-grey-darken-2"
       variant='text'
       density="compact"
       rounded

@@ -73,18 +73,18 @@
       </v-card-text>
 
       <v-card-item>
-        <v-table theme="dark" height="450px" fixed-header density="default">
+        <v-table height="450px" fixed-header density="default">
           <thead>
             <tr>
               <th class="text-left">Кредитный договор</th>
-              <th class="text-left">Дата кд.</th>
+              <th class="text-left">Дата кд</th>
               <th class="text-left">Договор залога</th>
-              <th class="text-left">Дата д. залога</th>
+              <th class="text-left">Дата дз</th>
               <th class="text-left">Начало</th>
               <th class="text-left">Окончание</th>
-              <th class="text-left">Объектов, шт.</th>
+              <th class="text-left">Объектов</th>
               <th class="text-left">Статус</th>
-              <th class="text-left">Фотографий, шт.</th>
+              <th class="text-left">Фотографий</th>
             </tr>
           </thead>
           <tbody>

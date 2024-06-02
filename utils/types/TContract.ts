@@ -4,5 +4,10 @@ export default interface TContract {
     _id?: string,
     contractNumber: string,
     contractDate: string,
-    customer?: TCustomer,
 }
+
+export interface TContractCustomer {
+    contract: TContract,
+    customer: TCustomer,
+}
+

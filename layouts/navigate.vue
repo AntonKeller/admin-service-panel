@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import {navItems} from '../configs/navigateItems.ts';
+import {navItems} from '../configs/./navigate-items';
 
 export default {
 

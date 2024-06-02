@@ -4,7 +4,7 @@ import type TCustomer from "@/utils/types/TCustomer";
 
 const delay = 1500;
 
-export const addCustomer = async (customer: TCustomer, delay: number) =>
+export const addCustomer = async (customer: TCustomer) =>
     await axios.post(serverURL + '/customers/add', customer, {timeout: delay});
 
 
@@ -16,7 +16,7 @@ export const fetchCustomers = async (delay: number) =>
     await axios.get(serverURL + '/customers', {timeout: delay});
 
 
-export const putCustomer = async (customer: TCustomer, delay: number) =>
+export const putCustomer = async (customer: TCustomer) =>
     await axios.put(serverURL + '/customers/change', customer, {timeout: delay});
 
 export const removeCustomer = async (id: string) =>

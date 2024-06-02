@@ -125,7 +125,7 @@
 <script>
 import {fetchAssignments} from "../../utils/methods/assignment-requests";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
-import statuses from "../../configs/assignmentStatuses";
+import statuses from "../../configs/assignment-statuses";
 
 export default {
   name: "assignments-page",
