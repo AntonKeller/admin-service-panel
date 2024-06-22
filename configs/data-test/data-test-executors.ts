@@ -1,4 +1,4 @@
-import type TExecutor from "@/utils/types/TExecutor";
+import type {TExecutor} from "@/utils/types/TExecutor";
 
 const dataAssignments: Array<TExecutor> = [
     {

@@ -75,40 +75,36 @@
       <v-card-item>
         <v-table height="450px" fixed-header density="default">
           <thead>
-            <tr>
-              <th class="text-left">Кредитный договор</th>
-              <th class="text-left">Дата кд</th>
-              <th class="text-left">Договор залога</th>
-              <th class="text-left">Дата дз</th>
-              <th class="text-left">Начало</th>
-              <th class="text-left">Окончание</th>
-              <th class="text-left">Объектов</th>
-              <th class="text-left">Статус</th>
-              <th class="text-left">Фотографий</th>
-            </tr>
+          <tr>
+            <th class="text-left">Кредитный договор</th>
+            <th class="text-left">Дата кд</th>
+            <th class="text-left">Договор залога</th>
+            <th class="text-left">Дата дз</th>
+            <th class="text-left">Начало</th>
+            <th class="text-left">Окончание</th>
+            <th class="text-left">Статус</th>
+          </tr>
           </thead>
           <tbody>
-            <v-skeleton-loader
-                v-if="fetchBlocksLoading"
-                width="full"
-                color="transparent"
-                elevation="0"
-                type="list-item-three-line"
-            />
-            <tr
-                v-for="item in assignmentBlockList"
-                :key="item._id"
-            >
-              <td>{{ item.loanAgreement.length > 10 ? item.loanAgreement.slice(0,10) + '...' : item.loanAgreement }}</td>
-              <td>{{ item.loanAgreementDate.length > 10 ? item.loanAgreementDate.slice(0,10) + '...' : item.loanAgreementDate }}</td>
-              <td>{{ item.plegeAgreement.length > 10 ? item.plegeAgreement.slice(0,10) + '...' : item.plegeAgreement }}</td>
-              <td>{{ item.plegeAgreementDate.length > 10 ? item.plegeAgreementDate.slice(0,10) + '...' : item.plegeAgreementDate }}</td>
-              <td>{{ item.startDate.length > 10 ? item.startDate.slice(0,10) + '...' : item.startDate }}</td>
-              <td>{{ item.endDate.length > 10 ? item.endDate.slice(0,10) + '...' : item.endDate }}</td>
-              <td>{{ item.objectCount.length > 10 ? item.objectCount.slice(0,10) + '...' : item.objectCount }}</td>
-              <td>{{ item.status.length > 10 ? item.status.slice(0,10) + '...' : item.status }}</td>
-              <td>{{ item.photosCount.length > 10 ? item.photosCount.slice(0,10) + '...' : item.photosCount }}</td>
-            </tr>
+          <v-skeleton-loader
+              v-if="fetchBlocksLoading"
+              width="full"
+              color="transparent"
+              elevation="0"
+              type="list-item-three-line"
+          />
+          <tr
+              v-for="item in assignmentBlockList"
+              :key="item._id"
+          >
+            <td>{{ textSlicer(item.assignmentBlock.loanAgreement, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.loanAgreementDate, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.plegeAgreement, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.plegeAgreementDate, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.startDate, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.endDate, 20) }}</td>
+            <td>{{ textSlicer(item.assignmentBlock.status, 20) }}</td>
+          </tr>
           </tbody>
         </v-table>
       </v-card-item>
@@ -177,6 +173,10 @@ export default {
   },
 
   methods: {
+
+    textSlicer(txt, size) {
+      return txt?.length > size ? txt.slice(0, 10) + '...' : txt;
+    },
 
     setDefault() {
       this.assignment = ({...this._assignment});

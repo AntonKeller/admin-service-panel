@@ -1,6 +1,6 @@
 import type TCustomer from "@/utils/types/TCustomer";
 import type TContract from "@/utils/types/TContract";
-import type TExecutor from "@/utils/types/TExecutor";
+import type {TExecutor} from "@/utils/types/TExecutor";
 
 export default interface TAssignmentBlock {
     _id?: string,

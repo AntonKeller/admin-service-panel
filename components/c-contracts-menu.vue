@@ -37,27 +37,46 @@
 
     <v-list min-height="380" max-height="360">
 
-      <v-list-item v-if="loadingData">
-        <v-skeleton-loader
-            width="full"
-            color="transparent"
-            elevation="0"
-            type="list-item-three-line"
-        />
-      </v-list-item>
+      <v-list-item v-if="!loadingData && !contractsFiltered">Договора не найдены</v-list-item>
 
-      <v-list-item v-if="!contractsFiltered">Договора не найдены</v-list-item>
-
-      <v-list-item
-          v-for="contract of contractsFiltered"
-          :key="contract._id"
-      >
-        <c-contract-card
-            @click="selectContract(contract)"
-            :contract="contract"
-            :removeClick="cardRemoveClick"
-            :changeClick="cardChangeClick"
-        />
+      <v-list-item>
+        <v-table height="450px" fixed-header density="comfortable">
+          <thead>
+          <tr>
+            <th class="text-left">Номер договора</th>
+            <th class="text-left">Дата договора</th>
+            <th class="text-left"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <v-skeleton-loader
+              v-if="loadingData"
+              width="full"
+              color="transparent"
+              elevation="0"
+              type="list-item-three-line"
+          />
+          <tr
+              class="tr_hover"
+              v-for="item in contractsFiltered"
+              :key="item._id"
+              @click="selectContract({...item})"
+          >
+            <td>{{ item.contractNumber }}</td>
+            <td>{{ item.contractDate }}</td>
+            <td>
+              <v-btn
+                  :loading="removeBtnLoadingId === item._id"
+                  @click.stop="requestRemoveContract(item._id)"
+                  color="teal-darken-4"
+                  icon="mdi-close"
+                  variant="text"
+                  density="compact"
+              />
+            </td>
+          </tr>
+          </tbody>
+        </v-table>
       </v-list-item>
     </v-list>
 
@@ -65,16 +84,12 @@
       <c-contract-card-add-menu :returnContract="addNewContract"/>
     </v-overlay>
 
-    <v-overlay v-model="contractChangeMenuVisible" class="d-flex justify-center align-center">
-      <c-contract-card-change-menu :_contract="activeContractChange" :returnContract="changeContract"/>
-    </v-overlay>
-
   </v-sheet>
 </template>
 
 <script>
-import testDataContracts from "../configs/data-test/data-test-contracts";
-import {fetchContracts} from "../utils/methods/contract-requests";
+import {testDataContracts} from "../configs/data-test/data-test-contracts";
+import {fetchContracts, removeContract} from "../utils/methods/contract-requests";
 
 export default {
   name: "c-contract-list",
@@ -84,9 +99,9 @@ export default {
   },
 
   data: () => ({
+    removeBtnLoadingId: null,
     loadingData: true,
     searchText: null,
-    activeContractChange: null,
     contractList: null,
     showContractAddMenu: false,
     contractChangeMenuVisible: false,
@@ -103,6 +118,8 @@ export default {
           contract.contractDate,
         ].find(e => expression.test(e)));
 
+        console.log('filtered', filtered)
+
         return filtered?.length > 0 ? filtered : null;
 
       } else return this.contractList;
@@ -115,27 +132,21 @@ export default {
 
   methods: {
 
-    cardRemoveClick(id) {
-      this.contractList = this.contractList.filter(contract => contract._id !== id);
-    },
+    requestRemoveContract(id) {
 
-    cardChangeClick(_contract) {
-      this.activeContractChange = ({..._contract});
-      this.contractChangeMenuVisible = true;
-    },
+      this.removeBtnLoadingId = id;
 
-    changeContract(newContract) {
-
-      console.log('Новый контракт:', newContract);
-
-      for (let i = 0; i < this.contractList.length; i++) {
-        if (this.contractList[i]?._id === newContract?._id) {
-          this.contractList[i] = {...newContract}
-          break;
-        }
-      }
-
-      this.contractChangeMenuVisible = false;
+      removeContract(id)
+          .then(response => {
+            this.contractList = this.contractList.filter(contract => contract._id !== id);
+            console.log('Договор успешно удален', response);
+          })
+          .catch(err => {
+            console.log('Не удалось удалить договор', err);
+          })
+          .then(() => {
+            this.removeBtnLoadingId = null;
+          })
     },
 
     addNewContract(newContract) {
@@ -147,16 +158,17 @@ export default {
     },
 
     fetchData() {
-      fetchContracts(500)
+      fetchContracts()
           .then(response => {
-            this.contractList = response?.data?.reverse();
+            return response?.data?.reverse();
           })
           .catch(err => {
-            this.contractList = testDataContracts?.reverse();
             console.log('Запрос списка договоров выполнен с ошибкой', err);
+            return testDataContracts?.reverse();
           })
-          .finally(() => {
+          .then((_contracts) => {
             console.log('Запрос списка договоров завершен');
+            this.contractList = _contracts;
             this.loadingData = false;
           });
     }

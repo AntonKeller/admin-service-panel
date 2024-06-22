@@ -1,6 +1,16 @@
-export default interface TExecutor {
+export interface TExecutorOutput {
+    _id: string,
+    login: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+}
+
+export interface TExecutor {
     _id: string,
     fullName: string,
-    phoneNumber: string,
     email: string,
+    phoneNumber: string,
 }

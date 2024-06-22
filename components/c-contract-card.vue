@@ -5,6 +5,9 @@
       density="compact"
       rounded
   >
+    <v-card-text>
+      {{ contract.contractNumber }}
+    </v-card-text>
     <v-card-title class="d-flex align-center justify-space-between">
       {{ contract.contractNumber }}
       <div class="d-flex ga-2">
@@ -25,9 +28,6 @@
       </div>
     </v-card-title>
     <v-card-subtitle>
-      {{ contract.customer.shortName }} /
-      {{ contract.customer.inn }} /
-      {{ contract.customer.phoneNumber }}
     </v-card-subtitle>
     <v-card-item>
       {{ contract.contractDate }}
@@ -49,7 +49,7 @@ export default {
 
   methods: {
     remove(id) {
-      removeContract(id, 250)
+      removeContract(id)
           .then(response => {
             console.log('Договор успешно удален', response);
             this.removeClick(id);
