@@ -1,7 +1,6 @@
-import type TAssignmentBlock from "@/utils/types/TAssignmentBlock";
-
 export default interface TInspectionObject {
     _id?: string,
+    name: string,
     inventoryNumber: string,
     address: string,
     description: string,

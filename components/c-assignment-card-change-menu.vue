@@ -56,6 +56,7 @@
           >
             {{ getContractTitle }}
           </v-chip>
+
           <v-chip
               @click="showCustomerMenu"
               prepend-icon="mdi-open-in-new"
@@ -66,6 +67,7 @@
           >
             {{ getCustomerTitle }}
           </v-chip>
+
         </div>
 
         <v-divider color="teal-darken-4"/>
@@ -96,6 +98,7 @@
           <tr
               v-for="item in assignmentBlockList"
               :key="item._id"
+              @click="aBlockClick(item)"
           >
             <td>{{ textSlicer(item.assignmentBlock.loanAgreement, 20) }}</td>
             <td>{{ textSlicer(item.assignmentBlock.loanAgreementDate, 20) }}</td>
@@ -118,6 +121,19 @@
       <c-customers-menu :selectCustomer="setCustomer"/>
     </v-overlay>
 
+    <v-overlay
+        v-model="selectedBlock"
+        class="d-flex justify-center align-center"
+        transition="scroll-y-transition"
+    >
+      <c-inspection-objects-menu/>
+    </v-overlay>
+
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
+
   </v-sheet>
 </template>
 
@@ -136,6 +152,14 @@ export default {
   },
 
   data: () => ({
+
+    snackBar: {
+      isShow: false,
+      type: '', // error, success, info
+      msg: '' // ...
+    },
+
+    selectedBlock: null,
 
     contractsMenuVisible: false,
     customersMenuVisible: false,
@@ -174,6 +198,11 @@ export default {
 
   methods: {
 
+    aBlockClick(_block) {
+      this.selectedBlock = ({..._block});
+      console.log('this.selectedBlock', this.selectedBlock);
+    },
+
     textSlicer(txt, size) {
       return txt?.length > size ? txt.slice(0, 10) + '...' : txt;
     },
@@ -208,6 +237,8 @@ export default {
         requestChangeAssignment(this.assignment)
             .then(() => {
               this._returnAssignment({...this.assignment});
+              this.snackBar.msg = 'Данные обновлены'
+              this.snackBar.type = 'teal';
             })
             .catch(err => {
               console.log('Ошибка при изменении', err);
@@ -215,6 +246,11 @@ export default {
               this.changeMode = false;
               this.changeLoading = false;
               this._returnAssignment({...this._assignment});
+              this.snackBar.msg = 'Ошибка обновления данных!'
+              this.snackBar.type = 'red-darken-2';
+            })
+            .finally(() => {
+              this.snackBar.isShow = true;
             })
 
       } else {
@@ -226,20 +262,30 @@ export default {
     fetchAssignmentBlocksData() {
       this.fetchBlocksLoading = true;
       fetchAssignmentBlocks(this.assignment._id)
-          .then(r => {
-            console.log('Блоки ТЗ получены');
-            return r?.data;
+          .then(resp => {
+            this.assignmentBlockList = resp?.data;
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);
-            return testDataAssignmentBlocks;
+            this.snackBar.msg = 'Используются тестовые данные!'
+            this.snackBar.type = 'yellow';
+            this.snackBar.isShow = true;
+            this.assignmentBlockList = testDataAssignmentBlocks;
           })
-          .then(blockList => {
+          .finally(() => {
             this.fetchBlocksLoading = false;
-            this.assignmentBlockList = blockList;
           })
     }
 
   }
 }
 </script>
+
+<style>
+
+tr:hover > td {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+</style>
