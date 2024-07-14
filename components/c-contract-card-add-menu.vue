@@ -1,47 +1,61 @@
 <template>
-  <v-card
-      variant="flat"
-      min-width="500"
-      max-width="500"
-      color="indigo-lighten-4"
-      density="comfortable"
-      rounded
-  >
-    <v-card-title>Новый договор</v-card-title>
-    <v-card-subtitle>Заполните поля договора</v-card-subtitle>
+  <v-sheet>
+    <v-card
+        variant="text"
+        min-width="500"
+        max-width="500"
+        color="teal-darken-4"
+        density="comfortable"
+        rounded
+    >
+      <v-card-title>Новый договор</v-card-title>
+      <v-card-subtitle>Заполните поля договора</v-card-subtitle>
 
-    <v-card-item>
-      <v-text-field
-          density="comfortable"
-          v-model="contract.contractNumber"
-          hide-details="auto"
-          label="Номер договора"
-          clearable
-      />
-    </v-card-item>
+      <v-card-item>
+        <v-text-field
+            variant="underlined"
+            v-model="contract.contractNumber"
+            hide-details="auto"
+            label="Номер договора"
+            clearable
+        />
+      </v-card-item>
 
-    <v-card-item>
-      <v-text-field
-          density="comfortable"
-          v-model="contract.contractDate"
-          hide-details="auto"
-          label="Выбрать дату заключения"
-          clearable
-          readonly
-          @focus="datepickerMenuVisible = true"
-      />
-    </v-card-item>
+      <v-card-item>
+        <v-text-field
+            variant="underlined"
+            v-model="contract.contractDate"
+            hide-details="auto"
+            label="Выбрать дату заключения"
+            clearable
+            readonly
+            @focus="datepickerMenuVisible = true"
+        />
+      </v-card-item>
 
-    <v-card-actions>
-      <v-btn rounded="sm" variant="tonal" @click="send">Добавить</v-btn>
-      <v-btn rounded="sm" variant="tonal" @click="this.contract = clear()">Очистить</v-btn>
-    </v-card-actions>
+      <v-card-actions>
+        <v-btn
+            @click="send"
+            rounded="sm"
+            variant="outlined"
+        >
+          Добавить
+        </v-btn>
+        <v-btn
+            @click="this.contract = clear()"
+            rounded="sm"
+            variant="outlined"
+        >
+          Очистить
+        </v-btn>
+      </v-card-actions>
 
-    <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
-      <c-datepicker-menu />
-    </v-overlay>
+      <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
+        <c-datepicker-menu/>
+      </v-overlay>
 
-  </v-card>
+    </v-card>
+  </v-sheet>
 </template>
 
 <script>
