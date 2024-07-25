@@ -5,10 +5,18 @@
       <v-card-subtitle>Введите информацию о задаче</v-card-subtitle>
 
       <v-card-item>
-        <div class="d-flex flex-column ga-4">
-          <c-my-form-input v-model="assignment.title" label="Заголовок задания"/>
-          <c-my-form-input v-model="assignment.description" label="Описание"/>
+        <div>
+          <div class="d-flex ga-4">
+            <my-text-field
+                v-model="assignment.title"
+                label="Заголовок задания"
+            />
 
+            <my-text-field
+                v-model="assignment.description"
+                label="Описание"
+            />
+          </div>
           <div class="d-flex ga-1">
             <v-autocomplete
                 v-model="selectContract"
