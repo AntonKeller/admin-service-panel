@@ -1,144 +1,110 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-card class="mx-auto" variant="text" color="blue-grey-darken-2">
+
       <v-card-title>Список заданий</v-card-title>
+
       <v-card-item>
-        <div class="d-flex ga-2">
-          <v-btn
-              rounded
-              color="teal-darken-2"
-              variant="elevated"
-              density="default"
-              size="small"
-              icon="mdi-plus"
-              @click="addMenuVisible = true"
-          />
-          <v-text-field
-              color="teal-darken-1"
-              prepend-inner-icon="mdi-magnify"
-              density="compact"
-              label="Поиск по задачам"
-              variant="outlined"
-              hide-details
-              single-line
-              clearable
+        <div class="d-flex ga-4 align-center">
+          <my-search-bar
               v-model="searchText"
+              label="Поиск по задачам"
+              style="min-width: 400px"
+              @btn:click="addMenuVisible = true"
           />
+          <div class="d-flex ga-1">
+            <v-chip
+                v-for="e of statuses"
+                :key="e.id"
+                prepend-icon="mdi-filter-check-outline"
+                density="comfortable"
+                :variant="activeStatus===e.id ? 'tonal' : 'text'"
+                size="small"
+                rounded="xl"
+                :color="e.color"
+                @click="setActiveChip(e.id)"
+            >
+              {{ e.title }}
+            </v-chip>
+          </div>
         </div>
       </v-card-item>
-
-      <v-card-item>
-        <div class="d-flex ga-1">
-          <v-chip
-              v-for="e of statuses"
-              :key="e.id"
-              prepend-icon="mdi-filter-check-outline"
-              density="comfortable"
-              :variant="activeStatus===e.id ? 'tonal' : 'text'"
-              size="small"
-              rounded="xl"
-              :color="e.color"
-              @click="setActiveChip(e.id)"
-          >
-            {{ e.title }}
-          </v-chip>
-        </div>
-      </v-card-item>
-
-      <v-card-item>
-        <v-divider/>
-      </v-card-item>
+      <v-card-text>
+        <v-list max-height="70vh">
+          <v-table density="default" fixed-header>
+            <thead>
+            <tr>
+              <th class="text-left">ТЗ</th>
+              <th class="text-left">Описание</th>
+              <th class="text-left">Договор</th>
+              <th class="text-left">Дата договора</th>
+              <th class="text-left">Заказчик</th>
+              <th class="text-left">Тел.</th>
+              <th class="text-left">Почта</th>
+              <th class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <v-skeleton-loader
+                v-if="fetchingAssignments"
+                width="full"
+                color="transparent"
+                elevation="0"
+                type="list-item-three-line"
+            />
+            <tr
+                v-for="assignment of assignmentsFiltered"
+                :key="assignment.id"
+                class="tr_hover"
+                @click="assignmentCardChangeOpen(assignment)"
+            >
+              <td>{{ assignment?.title }}</td>
+              <td>{{ assignment?.description?.slice(0, 50) }}...</td>
+              <td>{{ assignment?.contract?.contractNumber }}</td>
+              <td>{{ assignment?.contract?.contractDate }}</td>
+              <td>{{ assignment?.contract?.customer?.fullName || '-' }}</td>
+              <td>{{ assignment?.contract?.customer?.phoneNumber || '-' }}</td>
+              <td>{{ assignment?.contract?.customer?.email || '-' }}</td>
+              <td>
+                <v-btn
+                    @click.stop="removeAssignmentCard(assignment.id)"
+                    density="compact"
+                    variant="text"
+                    color="red-darken-4"
+                    icon="mdi-progress-close"
+                />
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-list>
+      </v-card-text>
     </v-card>
 
-    <v-list max-height="70vh">
-      <v-table density="default" fixed-header>
-        <thead>
-        <tr>
-          <th class="text-left">ТЗ</th>
-          <th class="text-left">Описание</th>
-          <th class="text-left">Договор</th>
-          <th class="text-left">Дата договора</th>
-          <th class="text-left">Заказчик</th>
-          <th class="text-left">Тел.</th>
-          <th class="text-left">Почта</th>
-          <th class="text-left"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <v-skeleton-loader
-            v-if="fetchingAssignments"
-            width="full"
-            color="transparent"
-            elevation="0"
-            type="list-item-three-line"
-        />
-        <tr
-            v-for="assignment of assignmentsFiltered"
-            :key="assignment.id"
-            class="tr_hover"
-            @click="assignmentCardChangeOpen(assignment)"
-        >
-          <td>{{ assignment?.title }}</td>
-          <td>{{ assignment?.description?.slice(0, 50) }}...</td>
-          <td>{{ assignment?.contract?.contractNumber }}</td>
-          <td>{{ assignment?.contract?.contractDate }}</td>
-          <td>{{ assignment?.contract?.customer?.fullName || '-' }}</td>
-          <td>{{ assignment?.contract?.customer?.phoneNumber || '-' }}</td>
-          <td>{{ assignment?.contract?.customer?.email || '-' }}</td>
-          <td>
-            <v-btn
-                @click.stop="removeAssignmentCard(assignment.id)"
-                rounded="0"
-                density="compact"
-                variant="text"
-                color="red-darken-4"
-                icon="mdi-progress-close"
-            />
-          </td>
-        </tr>
-        </tbody>
-      </v-table>
-    </v-list>
-
-    <v-overlay
-        v-model="addMenuVisible"
-        class="d-flex justify-center align-center"
-        transition="scroll-y-transition"
-    >
+    <my-overlay v-model="addMenuVisible">
       <c-assignment-card-add-menu :hideMenu="hideAddMenu"/>
-    </v-overlay>
+    </my-overlay>
 
-    <v-overlay
-        v-model="changeMenuVisible"
-        class="d-flex justify-center align-center"
-        transition="scroll-y-transition"
-    >
-      <c-assignment-card-change-menu
-          :_returnAssignment="changeAssignment"
-          :_assignment="selectedAssignment"
-      />
-    </v-overlay>
-
-  </div>
+    <my-overlay v-model="changeMenuVisible">
+      <c-assignment-card-change-menu :_returnAssignment="changeAssignment" :_assignment="selectedAssignment"/>
+    </my-overlay>
+  </v-container>
 </template>
 
 <script>
-import {fetchAssignments} from "../../utils/methods/assignment-requests";
-import dataAssignments from "../../configs/data-test/data-test-assignments";
-import statuses from "../../configs/assignment-statuses";
+import {fetchAssignments} from "@/utils/methods/assignment-requests.ts";
+import dataAssignments from "@/configs/data-test/data-test-assignments";
+import statuses from "@/configs/assignment-statuses";
 
 export default {
   name: "assignments-page",
 
   data: () => ({
-    //
     statuses,
     activeStatus: null,
-    //
     addMenuVisible: false,
     changeMenuVisible: false,
     selectedAssignment: null,
-    //
     fetchingAssignments: true,
     searchText: null,
     assignmentList: null,

@@ -10,6 +10,6 @@
 
 <script>
 export default {
-  name: "c-my-form-input",
+  name: "my-text-field",
 }
 </script>
