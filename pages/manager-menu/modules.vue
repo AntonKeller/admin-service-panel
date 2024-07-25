@@ -5,13 +5,11 @@
       <img width="50px" height="50px" :src=img alt="err">
     </v-card-item>
     <v-card-item>
-
       <v-file-input
           label="File input"
           multiple
           v-model="files"
       />
-
     </v-card-item>
     <v-card-item>
       <div class="d-flex ga-2">
@@ -28,6 +26,14 @@
       pariatur
       quia quo, sit, soluta tenetur unde voluptatum.
     </v-card-text>
+    <v-card-item>
+      <my-date-picker
+          v-model="date"
+          label="Дата"
+          :rules="rules"
+          @update:modelValue="_v => console.log('date:', _v)"
+      />
+    </v-card-item>
   </v-card>
 </template>
 
@@ -39,10 +45,15 @@ export default {
   name: "modules-page",
 
   data: () => ({
+    // date: '1112227200000',
+    date: null,
     files: [],
     aUrl: null,
     imagePreview: null,
     img: null,
+    rules: [
+        value => /^\d\d\.\d\d\.\d\d\d\d$/i.test(value) ? true : 'Неподходящий формат даты',
+    ]
   }),
 
   methods: {

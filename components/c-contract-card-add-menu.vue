@@ -1,59 +1,31 @@
 <template>
-  <v-sheet>
+  <v-sheet width="600px">
     <v-card
         variant="text"
-        min-width="500"
-        max-width="500"
-        color="teal-darken-4"
         density="comfortable"
-        rounded
+        rounded="lg"
     >
       <v-card-title>Новый договор</v-card-title>
       <v-card-subtitle>Заполните поля договора</v-card-subtitle>
-
-      <v-card-item>
-        <v-text-field
-            variant="underlined"
-            v-model="contract.contractNumber"
-            hide-details="auto"
-            label="Номер договора"
-            clearable
-        />
-      </v-card-item>
-
-      <v-card-item>
-        <v-text-field
-            variant="underlined"
-            v-model="contract.contractDate"
-            hide-details="auto"
-            label="Выбрать дату заключения"
-            clearable
-            readonly
-            @focus="datepickerMenuVisible = true"
-        />
-      </v-card-item>
-
+      <v-card-text>
+        <v-form v-model="isValid">
+          <c-my-form-input
+              v-model="contract.contractNumber"
+              :rules="rules.contractNumber"
+              label="Номер договора"
+              placeholder="xxxx/xxx"
+          />
+          <my-date-picker
+              v-model="contract.contractDate"
+              :rules="rules.contractDate"
+              label="Дата заключения"
+          />
+        </v-form>
+      </v-card-text>
       <v-card-actions>
-        <v-btn
-            @click="send"
-            rounded="sm"
-            variant="outlined"
-        >
-          Добавить
-        </v-btn>
-        <v-btn
-            @click="this.contract = clear()"
-            rounded="sm"
-            variant="outlined"
-        >
-          Очистить
-        </v-btn>
+        <my-btn-submit text="Добавить" :loading="loading" @click="submit"/>
+        <my-btn-clear text="Очистить" @click="clear"/>
       </v-card-actions>
-
-      <v-overlay v-model="datepickerMenuVisible" class="d-flex justify-center align-center">
-        <c-datepicker-menu/>
-      </v-overlay>
-
     </v-card>
   </v-sheet>
 </template>
@@ -69,31 +41,43 @@ export default {
   },
 
   data: () => ({
-    datepickerMenuVisible: false,
-    contract: {
-      contractNumber: '',
-      contractDate: '',
+    isValid: null,
+    loading: false,
+    contract: {},
+    rules: {
+      contractNumber: [
+        value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
+      ],
+      contractDate: [
+        value => /^\d\d\.\d\d\.\d\d\d\d$/i.test(value) ? true : 'Неподходящий формат даты',
+      ],
     }
   }),
 
   methods: {
 
-    send() {
-      addContract(this.contract)
-          .then(response => {
-            this.returnContract(response?.data);
-            this.clear();
-            console.log('Контракт добавлен');
-          })
-          .catch(err => {
-            console.log('Ошибка добавления контракта', err);
-          })
+    submit() {
+      if (this.isValid) {
+        this.loading = true;
+        addContract(this.contract)
+            .then(response => {
+              this.returnContract(response?.data);
+              this.clear();
+            })
+            .catch(err => {
+              console.log('Ошибка запроса', err);
+            })
+            .finally(() => {
+              this.loading = false;
+            })
+      } else {
+        console.log('Поля не заполнены')
+      }
     },
 
-    clear: () => ({
-      contractNumber: '',
-      contractDate: '',
-    }),
+    clear() {
+      this.contract = {}
+    }
 
   }
 }

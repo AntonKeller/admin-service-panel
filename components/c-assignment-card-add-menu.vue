@@ -1,32 +1,20 @@
 <template>
   <v-sheet color="grey-lighten-4">
-    <v-card variant="text" width="600" color="teal-darken-4">
+    <v-card variant="text" width="600" color="blue-grey-darken-4">
       <v-card-title>Новое задание</v-card-title>
       <v-card-subtitle>Введите информацию о задаче</v-card-subtitle>
 
       <v-card-item>
         <div class="d-flex flex-column ga-4">
-          <v-text-field
-              variant="underlined"
-              v-model="assignment.title"
-              hide-details="auto"
-              label="Заголовок задания"
-              clearable
-          />
-
-          <v-text-field
-              variant="underlined"
-              v-model="assignment.description"
-              hide-details="auto"
-              label="Описание"
-              clearable
-          />
+          <c-my-form-input v-model="assignment.title" label="Заголовок задания"/>
+          <c-my-form-input v-model="assignment.description" label="Описание"/>
 
           <div class="d-flex ga-1">
             <v-autocomplete
-                variant="underlined"
                 v-model="selectContract"
                 :items="contracts"
+                density="comfortable"
+                variant="filled"
                 color="blue-grey-lighten-2"
                 item-title="contractNumber"
                 item-value="_id"
