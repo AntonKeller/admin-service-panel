@@ -5,7 +5,7 @@ import type TAssignment from "@/utils/types/TAssignment";
 const delay = 1500;
 
 
-export async function addAssignment(assignment: TAssignment, delay: number): Promise<TAssignment> {
+export async function addNewAssignment(assignment: TAssignment): Promise<TAssignment> {
     return await axios.post(serverURL + '/assignments/add', assignment, {timeout: delay});
 }
 
@@ -19,6 +19,6 @@ export async function fetchAssignments(): Promise<Array<TAssignment>> {
 }
 
 
-export async function removeAssignment(id: string, delay: number): Promise<TAssignment> {
+export async function removeAssignment(id: string): Promise<TAssignment> {
     return await axios.delete(serverURL + '/assignments/' + id, {timeout: delay});
 }

@@ -11,7 +11,6 @@
       <v-card-subtitle>Заполните поля договора</v-card-subtitle>
 
       <v-card-text>
-
         <v-form v-model="isValid" class="d-flex ga-2">
           <my-text-field
               v-model="contract.contractNumber"
@@ -50,10 +49,6 @@ import {showAlert} from "@/utils/service/serverAPI.js";
 export default {
   name: "c-contract-card-menu-add",
 
-  props: {
-    returnContract: Function
-  },
-
   data: () => ({
 
     isValid: null,
@@ -80,7 +75,7 @@ export default {
         addContract(this.contract)
             .then(response => {
               this.snackBar = showAlert('Добавлен новый договор!').success();
-              this.returnContract(response?.data);
+              this.$emit('add:success');
             })
             .catch(err => {
               this.snackBar = showAlert('Не удалось добавить договор!').error();
