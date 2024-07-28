@@ -5,93 +5,77 @@
       <v-card-subtitle>Введите информацию о задаче</v-card-subtitle>
 
       <v-card-item>
-        <div>
-          <div class="d-flex ga-4">
-            <my-text-field
-                v-model="assignment.title"
-                label="Заголовок задания"
-            />
+        <my-text-field
+            v-model="assignment.title"
+            label="Заголовок задания"
+        />
+        <div class="d-flex ga-1">
+          <v-autocomplete
+              v-model="selectContract"
+              :items="contracts"
+              density="comfortable"
+              variant="filled"
+              color="blue-grey-lighten-2"
+              item-title="contractNumber"
+              item-value="_id"
+              label="Договор"
+              chips
+              closable-chips
+          >
+            <template v-slot:chip="{ props, item }">
+              <v-chip
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  v-bind="props"
+                  prepend-icon="mdi-file-document-edit"
+                  :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate}`"
+              />
+            </template>
 
-            <my-text-field
-                v-model="assignment.description"
-                label="Описание"
-            />
-          </div>
-          <div class="d-flex ga-1">
-            <v-autocomplete
-                v-model="selectContract"
-                :items="contracts"
-                density="comfortable"
-                variant="filled"
-                color="blue-grey-lighten-2"
-                item-title="contractNumber"
-                item-value="_id"
-                label="Договор"
-                chips
-                closable-chips
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    color="teal-darken-3"
-                    density="comfortable"
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate}`"
-                />
-              </template>
-
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.contractNumber"
-                    :subtitle="item.raw.contractDate"
-                />
-              </template>
-            </v-autocomplete>
-            <v-btn
-                @click="contractAddMenuShow = true"
-                variant="tonal"
-                icon="mdi-plus"
-                rounded="sm"
-            />
-          </div>
+            <template v-slot:item="{ props, item }">
+              <v-list-item
+                  v-bind="props"
+                  prepend-icon="mdi-file-document-edit"
+                  :title="item.raw.contractNumber"
+                  :subtitle="item.raw.contractDate"
+              />
+            </template>
+          </v-autocomplete>
+          <v-btn
+              @click="contractAddMenuShow = true"
+              variant="tonal"
+              icon="mdi-plus"
+              rounded="sm"
+          />
         </div>
+        <v-textarea v-model="assignment.description" auto-grow />
       </v-card-item>
 
       <v-card-actions>
-        <v-btn
-            rounded="sm"
-            color="teal-darken-3"
-            variant="outlined"
-            @click="add"
-        >
-          Добавить
-        </v-btn>
-        <v-btn
-            rounded="sm"
-            color="teal-darken-3"
-            variant="outlined"
-            @click="clear"
-        >
-          Очистить
-        </v-btn>
+        <my-btn-submit text="Добавить" @click="add"/>
+        <my-btn-clear text="Очистить" @click="clear" />
       </v-card-actions>
 
     </v-card>
 
-    <v-overlay v-model="contractAddMenuShow" class="d-flex justify-center align-center">
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
+
+    <my-overlay v-model="contractAddMenuShow">
       <c-contract-card-add-menu :returnContract="fetchContractsData"/>
-    </v-overlay>
+    </my-overlay>
 
   </v-sheet>
 </template>
 
 <script>
+import _ from "lodash";
+import {showAlert} from "@/utils/service/serverAPI.js";
 import {addAssignment} from '../utils/methods/assignment-requests';
 import {fetchContracts} from "@/utils/methods/contract-requests";
 import {testDataContracts} from "@/configs/data-test/data-test-contracts";
-import _ from "lodash";
 
 export default {
   name: "c-assignment-card-add-menu",
@@ -103,11 +87,10 @@ export default {
   data: () => ({
 
     assignment: {
-      _id: '',
-      title: '',
-      description: '',
-      contract: ({})
+      contract: {}
     },
+
+    snackBar: {},
 
     contracts: [],
     selectedContract: null,
@@ -146,19 +129,13 @@ export default {
         contractId: this.assignment.contract._id,
       };
 
-      console.log('data', data)
-
       addAssignment(data, 0)
-          .then(response => {
-            console.log('Запрос на добавление завершен успешно', response);
+          .then(() => {
+            this.snackBar = showAlert('Добавлена новая задача!').success();
           })
           .catch(err => {
-            console.log('Ошибка запроса на добавление задания', err);
-          })
-          .finally(() => {
-            console.log('Запрос на добавление задания завершен');
-            this.clear();
-            this.hideMenu();
+            this.snackBar = showAlert('Не удалось добавить задачу!').error();
+            console.log('Не удалось добавить задачу', err)
           })
     },
 
@@ -178,10 +155,7 @@ export default {
 
     clear() {
       this.assignment = {
-        _id: '',
-        title: '',
-        description: '',
-        contract: ({}),
+        contract: {},
       }
     }
 
