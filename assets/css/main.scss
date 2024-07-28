@@ -27,17 +27,17 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-track {
-  background: #C5CAE9;
+  background: #ECEFF1;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(121, 134, 203, 0.7);
+  background: #546E7A;
   border-radius: 6px;
 }
 
 .tr_hover:hover {
   cursor: pointer;
   text-decoration: underline;
-  color: #00897B;
+  color: #37474F;
 }

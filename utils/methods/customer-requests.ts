@@ -8,11 +8,11 @@ export const addCustomer = async (customer: TCustomer) =>
     await axios.post(serverURL + '/customers/add', customer, {timeout: delay});
 
 
-export const fetchCustomer = async (id: string, delay: number) =>
+export const fetchCustomer = async (id: string) =>
     await axios.get(serverURL + '/customers/' + id, {timeout: delay});
 
 
-export const fetchCustomers = async (delay: number) =>
+export const fetchCustomers = async () =>
     await axios.get(serverURL + '/customers', {timeout: delay});
 
 
