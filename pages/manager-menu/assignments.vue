@@ -13,21 +13,6 @@
                 style="min-width: 400px"
                 @btn:click="addMenuVisible = true"
             />
-            <div class="d-flex ga-1">
-              <v-chip
-                  v-for="e of statuses"
-                  :key="e.id"
-                  prepend-icon="mdi-filter-check-outline"
-                  density="comfortable"
-                  :variant="activeStatus===e.id ? 'tonal' : 'text'"
-                  size="small"
-                  rounded="xl"
-                  :color="e.color"
-                  @click="setActiveChip(e.id)"
-              >
-                {{ e.title }}
-              </v-chip>
-            </div>
           </div>
         </v-card-item>
         <v-card-text>
@@ -96,14 +81,11 @@
 <script>
 import {fetchAssignments} from "@/utils/methods/assignment-requests.ts";
 import dataAssignments from "@/configs/data-test/data-test-assignments";
-import statuses from "@/configs/assignment-statuses";
 
 export default {
   name: "assignments-page",
 
   data: () => ({
-    statuses,
-    activeStatus: null,
     addMenuVisible: false,
     changeMenuVisible: false,
     selectedAssignment: null,
@@ -133,10 +115,6 @@ export default {
 
     removeAssignmentCard(id) {
       this.assignmentList = this.assignmentList.filter(assignment => assignment._id !== id)
-    },
-
-    setActiveChip(id) {
-      this.activeStatus = this.activeStatus === id ? null : id;
     },
 
     hideAddMenu() {

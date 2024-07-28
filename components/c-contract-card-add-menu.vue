@@ -61,7 +61,7 @@ export default {
         value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
       ],
       contractDate: [
-        value => /^\d\d\.\d\d\.\d\d\d\d$/i.test(value) ? true : 'Неподходящий формат даты',
+        value => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты',
       ],
     }
 

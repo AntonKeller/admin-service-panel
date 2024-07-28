@@ -69,13 +69,29 @@
           </v-chip>
 
         </div>
-
-        <v-divider color="teal-darken-4"/>
-
       </v-card-text>
 
       <v-card-item>
-        <v-table height="450px" fixed-header density="default">
+        <div class="d-flex ga-1">
+          <v-chip
+              v-for="e of statuses"
+              :key="e.id"
+              prepend-icon="mdi-filter-check-outline"
+              density="comfortable"
+              :variant="activeStatus===e.id ? 'tonal' : 'text'"
+              size="small"
+              rounded="xl"
+              :color="e.color"
+              @click="activeStatus = activeStatus === e.id ? null : e.id"
+          >
+            {{ e.title }}
+          </v-chip>
+        </div>
+        <v-divider class="my-2" color="teal-darken-4"/>
+      </v-card-item>
+
+      <v-card-item>
+        <v-table height="320px" fixed-header density="comfortable">
           <thead>
           <tr>
             <th class="text-left">Кредитный договор</th>
@@ -111,6 +127,32 @@
           </tbody>
         </v-table>
       </v-card-item>
+      <v-card variant="text">
+        <v-card-item>
+          <div class="d-flex align-center">
+            <v-text-field
+                v-model="currentPage"
+                variant="outlined"
+                density="compact"
+                hide-details
+                label="Страница"
+                type="number"
+                style="min-width: 80px; width: 80px; max-width: 80px"
+                :clearable="false"
+                @update:modelValue="fetchAssignmentBlocksDataDebounce"
+            />
+            <v-pagination
+                style="max-width: 800px"
+                show-first-last-page
+                density="default"
+                v-model="currentPage"
+                :length="totalPages"
+                rounded="circle"
+                @update:modelValue="fetchAssignmentBlocksData"
+            />
+          </div>
+        </v-card-item>
+      </v-card>
     </v-card>
 
     <v-overlay v-model="contractsMenuVisible" class="d-flex justify-center align-center">
@@ -138,10 +180,11 @@
 </template>
 
 <script>
+import statuses from "@/configs/assignment-statuses";
 import testDataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
-import {requestChangeAssignment} from "../utils/methods/assignment-requests";
 import {fetchAssignmentBlocks} from "@/utils/methods/assignment-block-requests";
-
+import {requestChangeAssignment} from "../utils/methods/assignment-requests";
+import _ from "lodash";
 
 export default {
   name: "c-assignment-card-change-menu",
@@ -152,6 +195,13 @@ export default {
   },
 
   data: () => ({
+
+    statuses,
+    activeStatus: null,
+
+    currentPage: 1,
+    totalPages: null,
+    totalItems: 0,
 
     snackBar: {
       isShow: false,
@@ -197,6 +247,10 @@ export default {
   },
 
   methods: {
+
+    fetchAssignmentBlocksDataDebounce: _.debounce(function () {
+      this.fetchAssignmentBlocksData();
+    }, 1000),
 
     aBlockClick(_block) {
       this.selectedBlock = ({..._block});
