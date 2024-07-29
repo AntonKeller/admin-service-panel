@@ -20,13 +20,14 @@
               rounded="lg"
               @click="cardChangeMenu = true"
           />
-<!--          @click="changeRequest()"-->
           {{ assignment?.title }}
         </v-sheet>
       </v-card-title>
 
       <v-card-item>
-        {{ assignment?.description }}
+        <div style="height: 120px; overflow-y: scroll">
+          {{ assignment?.description }}
+        </div>
       </v-card-item>
 
       <v-card-subtitle />
@@ -193,6 +194,8 @@ import {fetchContracts} from "@/utils/methods/contract-requests";
 
 export default {
   name: "c-assignment-card-menu",
+  components: {},
+
 
   props: {
     _assignment: Object,
@@ -210,11 +213,7 @@ export default {
 
     cardChangeMenu: false,
 
-    snackBar: {
-      isShow: false,
-      type: '', // error, success, info
-      msg: '' // ...
-    },
+    snackBar: {},
 
     contracts: [],
     customers: [],

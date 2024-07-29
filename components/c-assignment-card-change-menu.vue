@@ -30,7 +30,7 @@
               prepend-inner-icon="mdi-file-sign"
           >
             <template v-slot:chip="{ props, item }">
-              {{ `${item?.raw?.contractNumber} / ${item?.raw?.contractDate}` }}
+              {{ `${item.raw?.contractNumber} / ${item.raw?.contractDate}` }}
             </template>
             <template v-slot:item="{ props, item }">
               <v-list-item
@@ -76,10 +76,12 @@
           />
         </v-form>
       </v-card-text>
+
       <v-card-actions>
         <my-btn-submit :loading="changing" text="Подтвердить" @click="sendChanges"/>
         <my-btn-clear text="Очистить" @click="clear"/>
       </v-card-actions>
+
     </v-card>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
