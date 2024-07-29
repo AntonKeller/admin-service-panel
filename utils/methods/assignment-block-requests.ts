@@ -6,18 +6,21 @@ import type {TAssignmentBlockKanban} from "@/utils/types/TAssignmentBlock";
 const timeDelay = 1500;
 
 
-export async function addAssignmentBlock(assignmentBlock: TAssignmentBlock, delay: number): Promise<TAssignmentBlock> {
-    return await axios.post(serverURL + '/assignment-block/add', assignmentBlock, {timeout: delay});
+export async function addNewAssignmentBlock(assignmentBlock: TAssignmentBlock): Promise<TAssignmentBlock> {
+    return await axios.post(serverURL + '/assignment-block/add', assignmentBlock, {timeout: timeDelay});
 }
 
 
-export async function changeAssignmentBlock(assignmentBlock: TAssignmentBlock, delay: number): Promise<TAssignmentBlock> {
-    return await axios.put(serverURL + '/assignment-block/change', assignmentBlock, {timeout: delay});
+export async function changeAssignmentBlock(assignmentBlock: TAssignmentBlock): Promise<TAssignmentBlock> {
+    return await axios.put(serverURL + '/assignment-block/change', assignmentBlock, {timeout: timeDelay});
 }
 
 
-export async function fetchAssignmentBlocks(assignmentID: string) {
-    return await axios.get(serverURL + '/assignment-blocks?assignmentID=' + assignmentID, {timeout: timeDelay});
+export function fetchAssignmentBlocks(queryParams: string) {
+
+    console.log('request URL:', serverURL + '/assignment-blocks' + queryParams)
+
+    return axios.get(serverURL + '/assignment-blocks' + queryParams, {timeout: timeDelay});
 }
 
 export async function fetchAssignmentBlocksAll(): Promise<TAssignmentBlockKanban> {

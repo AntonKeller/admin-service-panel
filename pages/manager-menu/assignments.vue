@@ -73,7 +73,7 @@
     </my-overlay>
 
     <my-overlay v-model="changeMenuVisible">
-      <c-assignment-card-menu :_returnAssignment="changeAssignment" :_assignment="selectedAssignment"/>
+      <c-assignment-card-menu :_assignment="selectedAssignment"/>
     </my-overlay>
   </v-container>
 </template>

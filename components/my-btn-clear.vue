@@ -2,7 +2,7 @@
   <v-btn
       v-bind="$attrs"
       rounded="lg"
-      variant="tonal"
+      variant="text"
       color="blue-grey-darken-4"
   />
 </template>

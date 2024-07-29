@@ -52,7 +52,7 @@
               item-value="name"
               label="Заказчик по договору"
               rounded="lg"
-              prepend-inner-icon="mdi-account-tie-outline"
+              prepend-inner-icon="mdi-account-tie"
           >
             <template v-slot:chip="{ props, item }">
               {{ `${item?.raw?.shortName} / ${item?.raw?.inn}` }}

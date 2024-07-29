@@ -1,22 +1,19 @@
 <template>
   <v-sheet
       rounded="lg"
-      height="70vh"
-      width="65vw"
+      height="700px"
+      width="70vw"
       elevation="24"
       color="white"
   >
-    <v-card
-        height="100%"
-        :disabled="changeLoading"
-    >
+    <v-card height="100%">
       <v-card-title>
         <v-sheet class="d-flex ga-2">
           <v-btn
-              :loading="changeLoading"
-              :variant="changeMode ? 'outlined' : 'text'"
+              variant="tonal"
               icon="mdi-pencil-outline"
               density="comfortable"
+              color="blue-grey-darken-3"
               rounded="lg"
               @click="cardChangeMenu = true"
           />
@@ -24,153 +21,166 @@
         </v-sheet>
       </v-card-title>
 
-      <v-card-item>
-        <div style="height: 120px; overflow-y: scroll">
-          {{ assignment?.description }}
-        </div>
-      </v-card-item>
-
-      <v-card-subtitle />
-
-      <v-card-text class="d-flex flex-column">
-
-        <div class="d-flex ga-1">
+      <v-card-text class="d-flex flex-column ga-2">
+        <div class="d-flex ga-2">
           <v-chip
-              density="compact"
+              density="comfortable"
               color="blue-grey-darken-3"
-              rounded="sm"
+              rounded="lg"
+              prepend-icon="mdi-file-sign"
           >
             {{
               assignment?.contract?.contractNumber && assignment?.contract?.contractDate ?
-              `Договор: ${assignment?.contract?.contractNumber} / ${assignment?.contract?.contractDate}` :
+                  `Договор: ${assignment?.contract?.contractNumber} / ${assignment?.contract?.contractDate}` :
                   'Отсутствует договор'
             }}
           </v-chip>
 
 
           <v-chip
-              density="compact"
+              density="comfortable"
               color="blue-grey-darken-3"
-              rounded="sm"
+              rounded="lg"
+              prepend-icon="mdi-account-tie"
           >
             {{
               assignment?.customer?.shortName && assignment?.customer?.inn ?
-              `Заказчик: ${assignment?.customer?.shortName} / ${assignment?.customer?.inn}` :
+                  `Заказчик: ${assignment?.customer?.shortName} / ${assignment?.customer?.inn}` :
                   'Отсутствует заказчик'
             }}
           </v-chip>
 
         </div>
-      </v-card-text>
-
-      <v-card-item>
-        <div class="d-flex ga-1 align-center">
+        <div style="height: 140px; overflow-y: scroll">
+          {{ assignment?.description }}
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
+          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
+          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
+          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
+          amet aperiam autem commodi cumque
+          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
+          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
+          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
+          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
+          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
+          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
+          amet aperiam autem commodi cumque
+          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
+          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
+          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
+          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
+          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
+          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
+          amet aperiam autem commodi cumque.
+        </div>
+        <v-divider class="my-1" color="teal-darken-4"/>
+        <div class="d-flex ga-4 align-center py-1">
           <my-search-bar
               style="min-width: 300px"
               label="Поиск"
-              @btn:click="console.log('Добавлена позиция')"
+              persistent-hint
+              :hint="`Найдено: ${totalItems}`"
+              v-model="searchText"
+              @update:modelValue="fetchAssignmentBlocksDebounce"
           />
-          <v-chip
-              v-for="e of statuses"
-              :key="e.id"
-              prepend-icon="mdi-filter-check-outline"
-              density="comfortable"
-              :variant="activeStatus===e.id ? 'tonal' : 'text'"
-              size="small"
-              rounded="xl"
-              :color="e.color"
-              @click="activeStatus = activeStatus === e.id ? null : e.id"
+          <v-autocomplete
+              v-model="activeStatus"
+              :items="statuses"
+              density="compact"
+              variant="outlined"
+              color="blue-grey-lighten-2"
+              item-title="name"
+              item-value="name"
+              placeholder="Статус по умолчанию"
+              rounded="lg"
+              style="min-width: 270px; max-width: 270px"
+              prepend-inner-icon="mdi-filter-cog-outline"
+              @update:modelValue="fetchAssignmentBlocksDebounce"
           >
-            {{ e.title }}
-          </v-chip>
+            <template v-slot:chip="{ props, item }">
+              {{ item.raw.title }}
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item rounded="lg" v-bind="props" :title="item.raw.title"/>
+            </template>
+          </v-autocomplete>
         </div>
-        <v-divider class="my-2" color="teal-darken-4"/>
-      </v-card-item>
-
-      <v-card-item>
-        <v-table height="320px" fixed-header density="comfortable">
-          <thead>
-          <tr>
-            <th class="text-left">Кредитный договор</th>
-            <th class="text-left">Дата кд</th>
-            <th class="text-left">Договор залога</th>
-            <th class="text-left">Дата дз</th>
-            <th class="text-left">Начало</th>
-            <th class="text-left">Окончание</th>
-            <th class="text-left">Статус</th>
-          </tr>
-          </thead>
-          <tbody>
-          <v-skeleton-loader
-              v-if="fetchBlocksLoading"
-              width="full"
-              color="transparent"
-              elevation="0"
-              type="list-item-three-line"
-          />
-          <tr
-              v-for="item in assignmentBlockList"
-              :key="item._id"
-              @click="aBlockClick(item)"
-          >
-            <td>{{ item.assignmentBlock.loanAgreement }}</td>
-            <td>{{ timeStringToDate(item.assignmentBlock.loanAgreementDate, 20).toLocaleDateString() }}</td>
-            <td>{{ item.assignmentBlock.plegeAgreement }}</td>
-            <td>{{ timeStringToDate(item.assignmentBlock.plegeAgreementDate, 20).toLocaleDateString() }}</td>
-            <td>{{ timeStringToDate(item.assignmentBlock.startDate, 20).toLocaleDateString() }}</td>
-            <td>{{ timeStringToDate(item.assignmentBlock.endDate, 20).toLocaleDateString() }}</td>
-            <td>{{ item.assignmentBlock.status }}</td>
-          </tr>
-          </tbody>
-        </v-table>
-      </v-card-item>
-      <v-card variant="text">
-        <v-card-item>
-          <div class="d-flex align-center">
-            <v-text-field
-                v-model="currentPage"
-                variant="outlined"
-                density="compact"
-                hide-details
-                label="Страница"
-                type="number"
-                style="min-width: 80px; width: 80px; max-width: 80px"
-                :clearable="false"
-                @update:modelValue="fetchAssignmentBlocksDataDebounce"
+        <v-sheet height="290px">
+          <v-table height="290px" fixed-header density="comfortable">
+            <thead>
+            <tr>
+              <th class="text-left">Кредитный договор</th>
+              <th class="text-left">Дата кд</th>
+              <th class="text-left">Договор залога</th>
+              <th class="text-left">Дата дз</th>
+              <th class="text-left">Начало</th>
+              <th class="text-left">Окончание</th>
+              <th class="text-left">Статус</th>
+            </tr>
+            </thead>
+            <tbody>
+            <v-skeleton-loader
+                v-if="fetchBlocksLoading"
+                width="full"
+                color="transparent"
+                elevation="0"
+                type="list-item-three-line"
             />
-            <v-pagination
-                style="max-width: 800px"
-                show-first-last-page
-                density="default"
-                v-model="currentPage"
-                :length="totalPages"
-                rounded="circle"
-                @update:modelValue="fetchAssignmentBlocksData"
-            />
-          </div>
-        </v-card-item>
-      </v-card>
+            <tr
+                v-for="item in assignmentBlockList"
+                :key="item._id"
+                @click="aBlockClick(item)"
+            >
+              <td>{{ item.assignmentBlock.loanAgreement }}</td>
+              <td>{{ timeStringToDate(item.assignmentBlock.loanAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ item.assignmentBlock.plegeAgreement }}</td>
+              <td>{{ timeStringToDate(item.assignmentBlock.plegeAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(item.assignmentBlock.startDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(item.assignmentBlock.endDate, 20).toLocaleDateString() }}</td>
+              <td>{{ item.assignmentBlock.status }}</td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-sheet>
+        <v-card variant="text">
+          <v-card-item>
+            <div class="d-flex align-center">
+              <v-text-field
+                  v-model="currentPage"
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  label="Страница"
+                  type="number"
+                  style="min-width: 80px; width: 80px; max-width: 80px"
+                  :clearable="false"
+                  @update:modelValue="fetchAssignmentBlocksDebounce"
+              />
+              <v-pagination
+                  style="max-width: 800px"
+                  show-first-last-page
+                  density="default"
+                  total-visible="5"
+                  v-model="currentPage"
+                  :length="totalPages"
+                  rounded="circle"
+                  @update:modelValue="fetchAssignmentBlocks"
+              />
+            </div>
+          </v-card-item>
+        </v-card>
+      </v-card-text>
     </v-card>
 
     <my-overlay v-model="cardChangeMenu">
-      <c-assignment-card-change-menu :_assignment="assignment" />
+      <c-assignment-card-change-menu :_assignment="assignment"/>
     </my-overlay>
 
-    <v-overlay v-model="contractsMenuVisible" class="d-flex justify-center align-center">
-      <c-contracts-menu :selectContract="setContract"/>
-    </v-overlay>
-
-    <v-overlay v-model="customersMenuVisible" class="d-flex justify-center align-center">
-      <c-customers-menu :selectCustomer="setCustomer"/>
-    </v-overlay>
-
-    <v-overlay
-        v-model="selectedBlock"
-        class="d-flex justify-center align-center"
-        transition="scroll-y-transition"
-    >
+    <my-overlay v-model="selectedBlock">
       <c-inspection-objects-menu/>
-    </v-overlay>
+    </my-overlay>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
       <v-icon>mdi-alert-circle-outline</v-icon>
@@ -183,49 +193,33 @@
 <script>
 import _ from "lodash";
 import statuses from "@/configs/assignment-statuses";
-import testDataCustomers from "@/configs/data-test/data-test-customers";
 import testDataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
-import {testDataContracts} from "@/configs/data-test/data-test-contracts";
-import {fetchAssignmentBlocks} from "@/utils/methods/assignment-block-requests";
-import {requestChangeAssignment} from "../utils/methods/assignment-requests";
-import {timeStringToDate} from "../utils/service/serverAPI";
-import {fetchCustomers} from "@/utils/methods/customer-requests";
-import {fetchContracts} from "@/utils/methods/contract-requests";
+import {fetchAssignmentBlocks} from "../utils/methods/assignment-block-requests";
+import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
 
 export default {
   name: "c-assignment-card-menu",
-  components: {},
-
 
   props: {
     _assignment: Object,
-    _returnAssignment: Function,
   },
 
   data: () => ({
 
     statuses,
     activeStatus: null,
+    searchText: null,
 
     currentPage: 1,
     totalPages: null,
+    limitItems: 20,
     totalItems: 0,
 
     cardChangeMenu: false,
-
     snackBar: {},
-
     contracts: [],
     customers: [],
-    loadingContracts: false,
-    loadingCustomers: false,
-
     selectedBlock: null,
-    contractsMenuVisible: false,
-    customersMenuVisible: false,
-
-    changeMode: false,
-    changeLoading: false,
     fetchBlocksLoading: true,
 
     assignment: {
@@ -241,40 +235,12 @@ export default {
 
   mounted() {
     this.setDefault();
-    this.fetchAssignmentBlocksData();
-  },
-
-  computed: {
-
-    cAssignmentContract: {
-      get() {
-        return this.assignment?.contract;
-      },
-      set(_value) {
-        console.log('_value', _value);
-        this.assignment.contract = _value;
-      }
-    },
-
-    getContractTitle() {
-      return this.assignment?.contract ?
-          'Договор: ' + this.assignment?.contract?.contractNumber : 'Добавить договор';
-    },
-
-    getCustomerTitle() {
-      return this.assignment?.customer ?
-          'Заказчик: ' + this.assignment?.customer?.shortName : 'Добавить заказчика';
-    }
-
+    this.fetchAssignmentBlocks();
   },
 
   methods: {
 
     timeStringToDate,
-
-    fetchAssignmentBlocksDataDebounce: _.debounce(function () {
-      this.fetchAssignmentBlocksData();
-    }, 1000),
 
     aBlockClick(_block) {
       this.selectedBlock = ({..._block});
@@ -289,35 +255,33 @@ export default {
       this.assignment = {...this._assignment};
     },
 
-    setContract(newContract) {
-      this.assignment.contract = ({...newContract});
-      this.contractsMenuVisible = false;
+    fetchAssignmentBlocksDebounce: _.debounce(function () {
+      this.fetchAssignmentBlocks();
+    }, 1000),
+
+    createQueryParams() {
+      let queryParams = [
+        this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
+        this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
+        this.searchText && this.searchText.length > 0 ? `searchText=${this.searchText}` : null,
+        this.activeStatus?.title && this.activeStatus?.title.length > 0 ? `status=${this.activeStatus?.title}` : null,
+        this.assignment?._id ? `assignmentID=${this.assignment?._id}` : null,
+      ].filter(e => !!e).join('&');
+
+      return queryParams && queryParams?.length > 0 ? `?${queryParams}` : '';
     },
 
-    setCustomer(newCustomer) {
-      this.assignment.customer = ({...newCustomer});
-      this.customersMenuVisible = false;
-    },
+    fetchAssignmentBlocks() {
 
-    showContractMenu() {
-      this.contractsMenuVisible = true;
-    },
-
-    showCustomerMenu() {
-      this.customersMenuVisible = true;
-    },
-
-    fetchAssignmentBlocksData() {
       this.fetchBlocksLoading = true;
-      fetchAssignmentBlocks(this.assignment._id)
+
+      fetchAssignmentBlocks(this.createQueryParams())
           .then(resp => {
             this.assignmentBlockList = resp?.data;
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);
-            this.snackBar.msg = 'Используются тестовые данные!'
-            this.snackBar.type = 'yellow';
-            this.snackBar.isShow = true;
+            this.snackBar = showAlert('Используются тестовые данные!').error();
             this.assignmentBlockList = testDataAssignmentBlocks;
           })
           .finally(() => {
