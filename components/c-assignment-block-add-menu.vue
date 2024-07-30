@@ -1,8 +1,3 @@
-@Component({
-template: '#hello-template',
-props: ['name', 'initialEnthusiasm']
-})
-
 <!--<template>-->
 <!--  <div>-->
 <!--    <v-card class="mx-auto" variant="text">-->
@@ -33,10 +28,20 @@ props: ['name', 'initialEnthusiasm']
 import {addNewAssignmentBlock} from "../utils/methods/assignment-block-requests";
 
 export default {
-  name: "c-assignment-blocks-menu",
+  name: "c-assignment-block-menu",
 
   data: () => ({
-    block:String,
+    block: {
+      _id: '',
+      title: '', // Название задачи
+      startDate: '', // Дата начала
+      endDate: '', // Дата окончания
+      loanAgreement: '', // Номер кредитного договора
+      loanAgreementDate: '', // Дата кредитного договора
+      plegeAgreement: string, // Номер договора залога
+      plegeAgreementDate: string, // Дата договора залога
+      status: string, // Статус
+    },
     snackBar: {}
   }),
 
