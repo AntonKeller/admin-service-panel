@@ -2,11 +2,15 @@
   <v-sheet
       rounded="lg"
       height="700px"
-      width="70vw"
+      width="1024px"
       elevation="24"
       color="white"
   >
-    <v-card height="100%">
+    <v-card
+        height="100%"
+        rounded="lg"
+        elevation="0"
+    >
       <v-card-title>
         <v-sheet class="d-flex ga-2">
           <v-btn
@@ -53,27 +57,6 @@
         </div>
         <div style="height: 140px; overflow-y: scroll">
           {{ assignment?.description }}
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
-          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
-          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
-          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-          amet aperiam autem commodi cumque
-          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
-          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
-          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
-          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
-          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
-          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-          amet aperiam autem commodi cumque
-          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
-          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
-          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam amet aperiam autem commodi cumque
-          debitis dolore ea earum eos et eum expedita in inventore iusto maxime molestiae nam nemo obcaecati, odio
-          praesentium quaerat quod, rerum similique soluta tempore vitae voluptates? Quos sequi sint voluptas?
-          Accusantium culpa in itaque magni! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-          amet aperiam autem commodi cumque.
         </div>
         <v-divider class="my-1" color="teal-darken-4"/>
         <div class="d-flex ga-4 align-center py-1">
@@ -108,26 +91,35 @@
           </v-autocomplete>
         </div>
         <v-sheet height="290px">
-          <v-table height="290px" fixed-header density="comfortable">
+          <v-divider />
+          <div v-if="fetchBlocksLoading" class="d-flex align-center justify-center h-100">
+            <v-progress-circular
+                :size="140"
+                :width="3"
+                color="teal"
+                indeterminate
+            >загрузка...</v-progress-circular>
+          </div>
+          <v-table v-if="!fetchBlocksLoading" height="290px" fixed-header density="comfortable">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
+            <col style="min-width: 141px">
             <thead>
             <tr>
-              <th class="text-left">Кредитный договор</th>
-              <th class="text-left">Дата кд</th>
-              <th class="text-left">Договор залога</th>
-              <th class="text-left">Дата дз</th>
-              <th class="text-left">Начало</th>
-              <th class="text-left">Окончание</th>
-              <th class="text-left">Статус</th>
+              <th>Кредитный договор</th>
+              <th>Дата кд</th>
+              <th>Договор залога</th>
+              <th>Дата дз</th>
+              <th>Начало</th>
+              <th>Окончание</th>
+              <th>Статус</th>
             </tr>
             </thead>
             <tbody>
-            <v-skeleton-loader
-                v-if="fetchBlocksLoading"
-                width="full"
-                color="transparent"
-                elevation="0"
-                type="list-item-three-line"
-            />
             <tr
                 v-for="item in assignmentBlockList"
                 :key="item._id"
@@ -143,6 +135,7 @@
             </tr>
             </tbody>
           </v-table>
+          <v-divider />
         </v-sheet>
         <v-card variant="text">
           <v-card-item>
@@ -151,6 +144,7 @@
                   v-model="currentPage"
                   variant="outlined"
                   density="compact"
+                  rounded="lg"
                   hide-details
                   label="Страница"
                   type="number"

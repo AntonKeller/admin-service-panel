@@ -6,7 +6,7 @@ export const navItems: Array<TNavItem> = [
         title: 'Задания',
         route: '/manager-menu/assignments',
         prependIcon: 'mdi-format-list-text',
-        color: 'teal-darken-1',
+        color: 'teal-darken-3',
         value: 'assignments',
         active: false,
         badge: {
@@ -20,7 +20,7 @@ export const navItems: Array<TNavItem> = [
         title: 'Блоки задач',
         route: '/manager-menu/assignment-blocks',
         prependIcon: 'mdi-calendar-check',
-        color: 'teal-darken-1',
+        color: 'teal-darken-3',
         value: 'assignment-blocks',
         active: false,
         badge: {
@@ -34,7 +34,7 @@ export const navItems: Array<TNavItem> = [
         title: 'Модули',
         route: '/manager-menu/modules',
         prependIcon: 'mdi-view-module',
-        color: 'teal-darken-1',
+        color: 'teal-darken-3',
         value: 'modules',
         active: false,
         badge: {
@@ -48,7 +48,7 @@ export const navItems: Array<TNavItem> = [
         title: 'Подписка',
         route: '/manager-menu/subscribe',
         prependIcon: 'mdi-card-account-details-star-outline',
-        color: 'teal-darken-1',
+        color: 'teal-darken-3',
         value: 'subscribe',
         active: false,
         badge: {

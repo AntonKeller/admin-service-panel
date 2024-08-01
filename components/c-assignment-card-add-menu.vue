@@ -1,7 +1,9 @@
 <template>
   <v-sheet color="grey-lighten-4">
-    <v-card variant="text" width="600" color="blue-grey-darken-4">
+    <v-card variant="text" width="700" color="blue-grey-darken-4">
+
       <v-card-title>Новое задание</v-card-title>
+
       <v-card-subtitle>Введите информацию о задаче</v-card-subtitle>
 
       <v-card-item>

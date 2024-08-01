@@ -1,9 +1,3 @@
-import {accessTest} from "@/utils/methods/requests";
-
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export default defineNuxtRouteMiddleware((to, from) => {
 
     if (import.meta.server) return;
@@ -11,6 +5,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
     // console.log('middle ware working...')
 
     if (import.meta.client) {
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        return ;
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if (/^\/$/ig.test(to?.fullPath)) {
 
