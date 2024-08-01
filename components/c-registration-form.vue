@@ -105,7 +105,7 @@ export default {
 
     login: {
       label: 'Логин',
-      value: 'voroncov123',
+      value: '',
       rules: [
         value => value?.length > 3 || 'Логин введен некорректно'
       ]
@@ -113,7 +113,7 @@ export default {
 
     password: {
       label: 'Пароль',
-      value: 'voroncov123',
+      value: '',
       rules: [
         value => value?.length > 3 || 'Пароль введен некорректно'
       ],

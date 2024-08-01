@@ -10,7 +10,7 @@ import axios from "axios";
 export const registration = (element: TRegistration) => axios.post(serverURL + '/auth/registration', element);
 
 export const accessTest = async (token: String) => await axios.post(serverURL + '/auth/access-test', ({}), {
-    timeout: 10000,
+    timeout: 3000,
     headers: {
         'Authorization': token,
         'Content-type': '*/*'

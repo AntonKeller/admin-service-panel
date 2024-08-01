@@ -1,11 +1,15 @@
 <template>
-  <div class="index-background" v-motion-fade>
+  <div class="index-background">
     <div class="au-panel-wrap">
-      <v-card variant="tonal" class="o-v-card">
+      <v-card
+          variant="tonal"
+          class="o-v-card"
+          rounded="lg"
+      >
 
-        <v-tabs v-model="currentTab" bg-color="primary">
-          <v-tab variant="plain" value="authorization-tab" prepend-icon="mdi-account-arrow-left-outline">Вход</v-tab>
-          <v-tab variant="plain" value="registration-tab" prepend-icon="mdi-account-multiple-plus-outline">Регистрация</v-tab>
+        <v-tabs v-model="currentTab" bg-color="teal-darken-2">
+          <v-tab variant="plain" value="authorization-tab" prepend-icon="mdi-login-variant">Вход</v-tab>
+<!--          <v-tab variant="plain" value="registration-tab" prepend-icon="mdi-account-multiple-plus-outline">Регистрация</v-tab>-->
         </v-tabs>
 
         <v-card-text>
@@ -15,9 +19,9 @@
               <c-authorization-form/>
             </v-window-item>
 
-            <v-window-item value="registration-tab">
-              <c-registration-form @updateTab="setTab"/>
-            </v-window-item>
+<!--            <v-window-item value="registration-tab">-->
+<!--              <c-registration-form @updateTab="setTab"/>-->
+<!--            </v-window-item>-->
 
             <v-window-item value="verify-tab">
               <TheVerifyMenu @updateTab="setTab"/>
@@ -94,9 +98,6 @@ export default {
 </script>
 
 <style scoped>
-  .scroll-hidden::-webkit-scrollbar {
-    width: 0;
-  }
   .index-background {
     background: no-repeat center/cover url("/assets/bg-index-page.png");
     height: 100vh;

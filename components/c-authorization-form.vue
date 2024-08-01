@@ -1,49 +1,63 @@
 <template>
-  <div>
-    <!--    action="http://127.0.0.1:3000/produtos"-->
-    <v-form @submit.prevent fast-fail method="POST">
-      <v-text-field
-          @input="loginErrMsg=''"
-          :disabled="isLoading"
-          label="Логин"
-          v-model="login.value"
-          :rules="login.rules"
-      ></v-text-field>
+  <v-form @submit.prevent class="d-flex flex-column ga-2 pt-2">
+    <v-text-field
+        :disabled="isLoading"
+        label="Логин"
+        density="comfortable"
+        variant="outlined"
+        rounded="lg"
+        prepend-inner-icon="mdi-account-outline"
+        v-model="login.value"
+        :rules="login.rules"
+    />
 
-      <v-text-field
-          @input="loginErrMsg=''"
-          :disabled="isLoading"
-          label="Пароль"
-          v-model="password.value"
-          :rules="password.rules"
-          :type="password.isPassword ? 'password' : 'text'"
-          :append-icon="!password.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          name="input-10-1"
-          counter
-          @click:append="password.isPassword = !password.isPassword"
-      />
+    <v-text-field
+        :disabled="isLoading"
+        label="Пароль"
+        density="comfortable"
+        variant="outlined"
+        rounded="lg"
+        v-model="password.value"
+        prepend-inner-icon="mdi-lock-outline"
+        :rules="password.rules"
+        :type="password.isPassword ? 'password' : 'text'"
+        :append-icon="!password.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        name="input-10-1"
+        @click:append="password.isPassword = !password.isPassword"
+    />
 
-      <v-label :text="loginErrMsg" class="text-red-accent-4"/>
+    <v-btn
+        :loading="isLoading"
+        block
+        text="Войти"
+        variant="tonal"
+        rounded="lg"
+        prepend-icon="mdi-login-variant"
+        @click="auth"
+    />
 
-      <v-btn :loading="isLoading" @click="request" class="mt-2" block>Войти</v-btn>
-    </v-form>
-  </div>
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
 
+  </v-form>
 </template>
 
 <script>
 import axios from "axios";
 import {serverURL} from "../constants/constants";
+import {reloadNuxtApp} from "nuxt/app";
 
 export default {
   name: "c-authorization-form",
 
   data: () => ({
-    loginErrMsg: '',
+    snackBar: {},
     isLoading: false,
 
     login: {
-      value: "voroncov123",
+      value: "",
       rules: [
         value => value?.length > 3 ? true : 'Логин введен неверно',
       ],
@@ -52,7 +66,7 @@ export default {
     password: {
       showIcon: false,
       isPassword: true,
-      value: "voroncov123",
+      value: "",
       rules: [
         value => value?.length > 3 ? true : 'Пароль введен неверно',
       ],
@@ -60,24 +74,9 @@ export default {
 
   }),
 
-  created() {
-    this.readTokenInStorage();
-  },
-
   methods: {
 
-    readTokenInStorage() {
-      if (localStorage.getItem("accessToken")) {
-        // JSON.parse(localStorage.getItem("accessToken"))
-        navigateTo('/manager-menu/assignments')
-      }
-    },
-
-    writeTokenInStorage(tokenBlock) {
-      localStorage.setItem("accessToken", JSON.stringify(tokenBlock));
-    },
-
-    request() {
+    auth() {
 
       this.isLoading = true;
 
@@ -85,10 +84,13 @@ export default {
         login: this.login.value,
         password: this.password.value,
       }).then(async (response) => {
-        this.loginErrMsg = '';
-        this.writeTokenInStorage(response.data);
-        console.log('Успешная авторизация', response);
-        // await navigateTo('/manager-menu/assignments');
+
+        localStorage.setItem("accessToken", JSON.stringify({
+          accessToken: response.data.accessToken
+        }));
+
+        reloadNuxtApp();
+
       }).catch((err) => {
         console.log('Ошибка авторизации', err);
         this.loginErrMsg = 'Ошибка авторизации';
