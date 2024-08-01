@@ -5,10 +5,20 @@
       <img width="50px" height="50px" :src=img alt="err">
     </v-card-item>
     <v-card-item>
+      <v-sheet
+          class="d-flex justify-center align-center"
+          height="80px"
+          color="green"
+          @ondrop="dropHandler(event)"
+          @ondragover="dragOverHandler(event)"
+      >
+        drag and drop zone
+      </v-sheet>
       <v-file-input
-          label="File input"
-          multiple
           v-model="files"
+          multiple
+          chips
+          label="File input"
       />
     </v-card-item>
     <v-card-item>
@@ -52,11 +62,40 @@ export default {
     imagePreview: null,
     img: null,
     rules: [
-        value => /^\d\d\.\d\d\.\d\d\d\d$/i.test(value) ? true : 'Неподходящий формат даты',
+      value => /^\d\d\.\d\d\.\d\d\d\d$/i.test(value) ? true : 'Неподходящий формат даты',
     ]
   }),
 
   methods: {
+
+    dragOverHandler(ev) {
+      console.log("File(s) in drop zone");
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+    },
+
+    dropHandler(ev) {
+      console.log("File(s) dropped");
+
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+
+      if (ev.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        [...ev.dataTransfer.items].forEach((item, i) => {
+          // If dropped items aren't files, reject them
+          if (item.kind === "file") {
+            const file = item.getAsFile();
+            console.log(`… file[${i}].name = ${file.name}`);
+          }
+        });
+      } else {
+        // Use DataTransfer interface to access the file(s)
+        [...ev.dataTransfer.files].forEach((file, i) => {
+          console.log(`… file[${i}].name = ${file.name}`);
+        });
+      }
+    },
 
     base64ToArrayBuffer(base64) {
       let binaryString = atob(base64);
