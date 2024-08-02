@@ -1,8 +1,10 @@
 <template>
   <v-text-field
       v-bind="$attrs"
+      rounded="lg"
+      color="blue-grey-darken-3"
+      variant="outlined"
       density="comfortable"
-      variant="filled"
       label="Заголовок задания"
       clearable
   />

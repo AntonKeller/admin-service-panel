@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (import.meta.client) {
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        return ;
+        // return ;
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if (/^\/$/ig.test(to?.fullPath)) {

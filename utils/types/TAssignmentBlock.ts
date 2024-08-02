@@ -1,6 +1,6 @@
-import type TCustomer from "@/utils/types/TCustomer";
 import type TContract from "@/utils/types/TContract";
 import type {TExecutor} from "@/utils/types/TExecutor";
+import type TCustomer from "@/utils/types/TCustomer";
 
 export default interface TAssignmentBlock {
     _id?: string,
@@ -12,12 +12,12 @@ export default interface TAssignmentBlock {
     plegeAgreement: string, // Номер договора залога
     plegeAgreementDate: string, // Дата договора залога
     status: string, // Статус
+    executor?: TExecutor,
 }
 
 // Для представления в канбан таблице на отдельной странице
 export interface TAssignmentBlockKanban {
     assignmentBlock: TAssignmentBlock,
-    customer?: TCustomer,
     contract?: TContract,
-    executor?: TExecutor,
+    customer?: TCustomer,
 }

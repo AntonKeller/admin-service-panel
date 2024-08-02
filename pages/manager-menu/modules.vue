@@ -8,11 +8,15 @@
       <v-sheet
           class="d-flex justify-center align-center"
           height="80px"
-          color="green"
-          @ondrop="dropHandler(event)"
-          @ondragover="dragOverHandler(event)"
+          :class="{'border-dashed':isDragging}"
+          :border="isDragging ? 'lg' : ''"
+          color="blue-grey-lighten-4"
+          @dragover="onDragover"
+          @dragleave="onDragleave"
+          @drop="onDrop"
       >
-        drag and drop zone
+        {{ isDragging ? '-> Добавить файлы <-' : files.map(e => e.name).join(', ') }}
+
       </v-sheet>
       <v-file-input
           v-model="files"
@@ -20,6 +24,11 @@
           chips
           label="File input"
       />
+      <div class="text-center">
+        <v-progress-circular :model-value="progress" :rotate="360" :size="100" :width="15" color="teal">
+          <template v-slot:default> {{ progress }} % </template>
+        </v-progress-circular>
+      </div>
     </v-card-item>
     <v-card-item>
       <div class="d-flex ga-2">
@@ -55,7 +64,8 @@ export default {
   name: "modules-page",
 
   data: () => ({
-    // date: '1112227200000',
+    progress: 0,
+    isDragging: false,
     date: null,
     files: [],
     aUrl: null,
@@ -68,43 +78,25 @@ export default {
 
   methods: {
 
-    dragOverHandler(ev) {
-      console.log("File(s) in drop zone");
-      // Prevent default behavior (Prevent file from being opened)
-      ev.preventDefault();
+    onDragover(e) {
+      e.preventDefault();
+      this.isDragging = true;
     },
 
-    dropHandler(ev) {
-      console.log("File(s) dropped");
-
-      // Prevent default behavior (Prevent file from being opened)
-      ev.preventDefault();
-
-      if (ev.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
-        [...ev.dataTransfer.items].forEach((item, i) => {
-          // If dropped items aren't files, reject them
-          if (item.kind === "file") {
-            const file = item.getAsFile();
-            console.log(`… file[${i}].name = ${file.name}`);
-          }
-        });
-      } else {
-        // Use DataTransfer interface to access the file(s)
-        [...ev.dataTransfer.files].forEach((file, i) => {
-          console.log(`… file[${i}].name = ${file.name}`);
-        });
-      }
+    onDragleave() {
+      this.isDragging = false;
     },
 
-    base64ToArrayBuffer(base64) {
-      let binaryString = atob(base64);
-      let bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      return bytes.buffer;
+    onDrop(e) {
+
+      console.log(e.dataTransfer.files)
+      e.preventDefault();
+      this.files.push(...e.dataTransfer.files);
+      // this.$refs.file.files = e.dataTransfer.files;
+      // this.onChange();
+      this.isDragging = false;
     },
+
 
     download(link, name, blob) {
       link.href = URL.createObjectURL(blob);
@@ -130,23 +122,37 @@ export default {
       link.download = name;
       document.body.append(link);
       link.click();
-
-      //
-      // for (let i = 0; i < jsonArray.length; i++) {
-      //   const file = jsonArray[i].files;
-      //   const arrayBuffer = this.base64ToArrayBuffer(file.data);
-      //   this.download(link, file.name, new Blob([arrayBuffer]));
-      // }
     },
 
 
     async sendFile() {
-      let fd = new FormData();
-      fd.append('image', this.files[0])
+      if (this.files && this.files.length > 0) {
 
-      axios.post(serverURL + '/photos/add', fd)
-          .then(resp => console.log('Файл добавлен успешно', resp))
-          .catch(err => console.log('Ошибка добавления файла', err))
+        let formData = new FormData();
+        let errors = [];
+        let success = []
+        let step = 100 / this.files.length;
+
+        for (let i = 0; i < this.files.length; i++) {
+
+          formData.append('image', this.files[i])
+
+          await axios.post(serverURL + '/photos/add', formData)
+              .then(response => {
+                success.push('Успешно для', this.files[i]?.name);
+              })
+              .catch(err => {
+                errors.push('Ошибка для', this.files[i]?.name, err)
+              })
+
+          this.progress += Math.floor(step);
+        }
+
+        this.progress = 0;
+        console.log('Данные по отправке файлов: [ошибка/успешно]', errors.length, '/', success.length, '\n')
+        console.log('success', success);
+        console.log('errors', errors);
+      }
     }
   }
 }

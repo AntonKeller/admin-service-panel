@@ -91,20 +91,21 @@
           </v-autocomplete>
         </div>
         <v-sheet height="290px">
-          <v-divider />
+          <v-divider/>
           <div v-if="fetchBlocksLoading" class="d-flex align-center justify-center h-100">
             <v-progress-circular
                 :size="140"
                 :width="3"
                 color="teal"
                 indeterminate
-            >загрузка...</v-progress-circular>
+            >загрузка...
+            </v-progress-circular>
           </div>
           <v-table v-if="!fetchBlocksLoading" height="290px" fixed-header density="comfortable">
+            <col style="min-width: 181px">
+            <col style="min-width: 121px">
             <col style="min-width: 141px">
-            <col style="min-width: 141px">
-            <col style="min-width: 141px">
-            <col style="min-width: 141px">
+            <col style="min-width: 121px">
             <col style="min-width: 141px">
             <col style="min-width: 141px">
             <col style="min-width: 141px">
@@ -121,21 +122,21 @@
             </thead>
             <tbody>
             <tr
-                v-for="item in assignmentBlockList"
+                v-for="item in assignmentBlocks"
                 :key="item._id"
                 @click="aBlockClick(item)"
             >
-              <td>{{ item.assignmentBlock.loanAgreement }}</td>
-              <td>{{ timeStringToDate(item.assignmentBlock.loanAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ item.assignmentBlock.plegeAgreement }}</td>
-              <td>{{ timeStringToDate(item.assignmentBlock.plegeAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(item.assignmentBlock.startDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(item.assignmentBlock.endDate, 20).toLocaleDateString() }}</td>
-              <td>{{ item.assignmentBlock.status }}</td>
+              <td>{{ item.loanAgreement }}</td>
+              <td>{{ timeStringToDate(item.loanAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ item.plegeAgreement }}</td>
+              <td>{{ timeStringToDate(item.plegeAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(item.startDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(item.endDate, 20).toLocaleDateString() }}</td>
+              <td>{{ item.status }}</td>
             </tr>
             </tbody>
           </v-table>
-          <v-divider />
+          <v-divider/>
         </v-sheet>
         <v-card variant="text">
           <v-card-item>
@@ -186,8 +187,8 @@
 
 <script>
 import _ from "lodash";
-import statuses from "@/configs/assignment-statuses";
-import testDataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
+import statuses from "../configs/assignment-statuses";
+import dataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
 import {fetchAssignmentBlocks} from "../utils/methods/assignment-block-requests";
 import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
 
@@ -204,10 +205,11 @@ export default {
     activeStatus: null,
     searchText: null,
 
+    assignmentBlocks: [],
     currentPage: 1,
-    totalPages: null,
-    limitItems: 20,
+    limitItems: 3,
     totalItems: 0,
+    totalPages: 1,
 
     cardChangeMenu: false,
     snackBar: {},
@@ -223,12 +225,10 @@ export default {
       contract: null,
       customer: null
     },
-
-    assignmentBlockList: [],
   }),
 
   mounted() {
-    this.setDefault();
+    this.assignment = _.cloneDeep(this._assignment);
     this.fetchAssignmentBlocks();
   },
 
@@ -241,19 +241,12 @@ export default {
       console.log('this.selectedBlock', this.selectedBlock);
     },
 
-    textSlicer(txt, size) {
-      return txt?.length > size ? txt.slice(0, 10) + '...' : txt;
-    },
-
-    setDefault() {
-      this.assignment = {...this._assignment};
-    },
-
     fetchAssignmentBlocksDebounce: _.debounce(function () {
       this.fetchAssignmentBlocks();
     }, 1000),
 
     createQueryParams() {
+
       let queryParams = [
         this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
         this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
@@ -271,12 +264,17 @@ export default {
 
       fetchAssignmentBlocks(this.createQueryParams())
           .then(resp => {
-            this.assignmentBlockList = resp?.data;
+            this.assignmentBlocks = resp?.data?.data
+            this.currentPage = resp?.data?.currentPage;
+            this.limitItems = resp?.data?.pageSize;
+            this.totalItems = resp?.data?.totalItems;
+            this.totalPages = resp?.data?.totalPages;
+            console.log('this.assignmentBlocks', this.assignmentBlocks)
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);
             this.snackBar = showAlert('Используются тестовые данные!').error();
-            this.assignmentBlockList = testDataAssignmentBlocks;
+            this.assignmentBlocks = dataAssignmentBlocks;
           })
           .finally(() => {
             this.fetchBlocksLoading = false;

@@ -8,6 +8,10 @@ export async function fetchContracts(): Promise<Array<TContract>> {
     return await axios.get(serverURL + '/contracts', {timeout: delay});
 }
 
+export async function fetchContractsAll(): Promise<Array<TContract>> {
+    return await axios.get(serverURL + '/contracts/all', {timeout: delay});
+}
+
 export async function fetchContractsWithCustomers(): Promise<Array<TContract>> {
     return await axios.get(serverURL + '/contracts-with-customers', {timeout: delay});
 }

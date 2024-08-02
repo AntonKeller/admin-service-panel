@@ -1,23 +1,17 @@
 <template>
   <div class="d-flex ga-2">
-    <v-btn
-        rounded="lg"
-        color="blue-grey-darken-4"
-        variant="tonal"
-        size="small"
-        icon="mdi-plus"
-        @click="$emit('btn:click')"
-    />
     <v-text-field
         v-bind="$attrs"
         color="blue-grey-lighten-1"
         prepend-inner-icon="mdi-magnify"
+        :append-inner-icon="!hideButton ? 'mdi-plus-box-multiple' : ''"
+        @click:appendInner="$emit('btn:click')"
+        persistent-hint
         rounded="lg"
         density="compact"
-        label="Поиск по задачам"
+        label="Поиск"
         variant="outlined"
         single-line
-        clearable
     />
   </div>
 </template>
@@ -26,5 +20,8 @@
 export default {
   inheritAttrs: false,
   name: "my-search-bar",
+  props: {
+    hideButton: Boolean,
+  }
 }
 </script>

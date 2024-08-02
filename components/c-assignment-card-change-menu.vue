@@ -16,8 +16,9 @@
               color="blue-grey-darken-3"
               prepend-inner-icon="mdi-label-variant-outline"
           />
+
           <v-autocomplete
-              v-model="assignment.contract"
+              v-model="cContract"
               :disabled="loadingContracts"
               :loading="loadingContracts"
               :items="contracts"
@@ -40,8 +41,9 @@
               />
             </template>
           </v-autocomplete>
+
           <v-autocomplete
-              v-model="assignment.customer"
+              v-model="cCustomer"
               :disabled="loadingCustomers"
               :loading="loadingCustomers"
               :items="customers"
@@ -72,13 +74,17 @@
               rounded="lg"
               label="Описание"
               variant="filled"
-              color="blue-grey-darken-1"
+              color="blue-grey-darken-3"
           />
         </v-form>
       </v-card-text>
 
       <v-card-actions>
-        <my-btn-submit :loading="changing" text="Подтвердить" @click="sendChanges"/>
+        <my-btn-submit
+            text="Подтвердить"
+            :loading="changing"
+            @click="sendChanges"
+        />
         <my-btn-clear text="Очистить" @click="clear"/>
       </v-card-actions>
 
@@ -94,12 +100,12 @@
 
 <script>
 import _ from "lodash";
-import {showAlert} from "@/utils/service/serverAPI";
-import {fetchContracts} from "@/utils/methods/contract-requests";
-import {fetchCustomers} from "@/utils/methods/customer-requests";
-import {requestChangeAssignment} from "@/utils/methods/assignment-requests";
-import {testDataContracts} from "@/configs/data-test/data-test-contracts";
-import testDataCustomers from "@/configs/data-test/data-test-customers";
+import {showAlert} from "../utils/service/serverAPI";
+import {fetchContractsAll} from "../utils/methods/contract-requests";
+import {fetchCustomersAll} from "../utils/methods/customer-requests";
+import {changeAssignment} from "../utils/methods/assignment-requests";
+import {testDataContracts} from "../configs/data-test/data-test-contracts";
+import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
   name: "c-assignment-card-change-menu",
@@ -110,8 +116,6 @@ export default {
 
   beforeMount() {
     this.assignment = _.cloneDeep(this._assignment);
-    this.contract = _.cloneDeep(this._assignment?.contract);
-    this.customer = _.cloneDeep(this._assignment?.customer);
     this.fetchContracts();
     this.fetchCustomers();
   },
@@ -119,8 +123,6 @@ export default {
   data: () => ({
     formIsValid: false,
     assignment: null,
-    contract: null,
-    customer: null,
     contracts: [],
     customers: [],
     changing: false,
@@ -133,6 +135,27 @@ export default {
       ],
     }
   }),
+
+  computed: {
+
+    cContract: {
+      set(_id) {
+        this.assignment.contract = _id ? _.cloneDeep(this.contracts.find(e => e._id === _id)) : null;
+      },
+      get() {
+        return this.assignment.contract?._id;
+      },
+    },
+
+    cCustomer: {
+      set(_id) {
+        this.assignment.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
+      },
+      get() {
+        return this.assignment.customer?._id;
+      },
+    },
+  },
 
   methods: {
 
@@ -156,7 +179,7 @@ export default {
           }
         }
 
-        requestChangeAssignment(data)
+        changeAssignment(data)
             .then(() => {
               this.snackBar = showAlert('Изменено успешно!').success();
               this.$emit('update:success');
@@ -173,7 +196,7 @@ export default {
 
     fetchContracts() {
       this.loadingContracts = true;
-      fetchContracts()
+      fetchContractsAll()
           .then(response => {
             this.contracts = response?.data?.reverse();
           })
@@ -188,7 +211,7 @@ export default {
 
     fetchCustomers() {
       this.loadingCustomers = true;
-      fetchCustomers()
+      fetchCustomersAll()
           .then(data => {
             this.customers = data;
           })

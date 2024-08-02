@@ -3,7 +3,7 @@
       v-bind="$attrs"
       rounded="lg"
       variant="tonal"
-      color="blue-grey-darken-2"
+      color="blue-grey-darken-3"
   />
 </template>
 

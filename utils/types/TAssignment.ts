@@ -6,5 +6,5 @@ export default interface TAssignment {
     title: string,
     description: string,
     contract?: TContract,
-    customer?: TCustomer
+    customer?: TCustomer,
 }
