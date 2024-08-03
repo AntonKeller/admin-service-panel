@@ -1,9 +1,14 @@
 <template>
-  <v-sheet width="600px">
+  <v-sheet
+      rounded="lg"
+      elevation="24"
+      color="grey-lighten-4"
+  >
     <v-card
-        variant="text"
-        density="comfortable"
         rounded="lg"
+        variant="text"
+        width="600px"
+        color="blue-grey-darken-3"
     >
 
       <v-card-title>Новый договор</v-card-title>
@@ -11,25 +16,74 @@
       <v-card-subtitle>Заполните поля договора</v-card-subtitle>
 
       <v-card-text>
-        <v-form v-model="isValid" class="d-flex ga-2">
+        <v-form v-model="isValid" class="d-flex flex-column ga-2">
           <my-text-field
               v-model="contract.contractNumber"
-              :rules="rules.contractNumber"
-              style="min-width: 350px; max-width: 350px"
+              :rules="contractNumberRules"
+
               label="Номер договора"
               placeholder="xxxx/xxx"
           />
           <my-date-picker
               v-model="contract.contractDate"
-              :rules="rules.contractDate"
+              :rules="contractDateRules"
               label="Дата заключения"
           />
+          <div class="d-flex ga-2">
+            <v-autocomplete
+                v-model="cCustomer"
+                :items="customers"
+                :rules="customersRules"
+                density="comfortable"
+                rounded="lg"
+                variant="outlined"
+                color="blue-grey-darken-3"
+                item-title="fullName"
+                item-value="_id"
+                label="Заказчик"
+                prepend-inner-icon="mdi-account-tie"
+                chips
+                closable-chips
+            >
+              <template v-slot:chip="{ props, item }">
+                <v-chip
+                    color="blue-grey-darken-3"
+                    density="comfortable"
+                    v-bind="props"
+                    prepend-icon="mdi-file-document-edit"
+                    :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
+                />
+              </template>
+
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                    v-bind="props"
+                    prepend-icon="mdi-file-document-edit"
+                    :title="item.raw.shortName"
+                    :subtitle="item.raw.inn"
+                />
+              </template>
+            </v-autocomplete>
+            <v-btn
+                rounded="lg"
+                variant="tonal"
+                icon="mdi-plus"
+                @click="customerAddMenuShow = true"
+            />
+          </div>
         </v-form>
       </v-card-text>
 
       <v-card-actions>
-        <my-btn-submit text="Добавить" :loading="loading" @click="submit"/>
-        <my-btn-clear text="Очистить" @click="clear"/>
+        <my-btn-submit
+            text="Добавить"
+            :loading="loading"
+            @click="submit"
+        />
+        <my-btn-clear
+            text="Очистить"
+            @click="clear"
+        />
       </v-card-actions>
 
     </v-card>
@@ -39,12 +93,20 @@
       {{ snackBar.msg }}
     </v-snackbar>
 
+
+    <my-overlay v-model="customerAddMenuShow">
+      <c-customer-card-add-menu @add:success="fetchCustomersAll"/>
+    </my-overlay>
+
   </v-sheet>
 </template>
 
 <script>
+import _ from "lodash";
+import {showAlert} from "../utils/service/serverAPI";
 import {addContract} from "../utils/methods/contract-requests";
-import {showAlert} from "@/utils/service/serverAPI.js";
+import {fetchCustomersAll} from "../utils/methods/customer-requests";
+import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
   name: "c-contract-card-menu-add",
@@ -55,17 +117,36 @@ export default {
     loading: false,
     contract: {},
     snackBar: {},
+    customers: [],
+    customerAddMenuShow: false,
 
-    rules: {
-      contractNumber: [
-        value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
-      ],
-      contractDate: [
-        value => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты',
-      ],
-    }
+    contractNumberRules: [
+      value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
+    ],
+    contractDateRules: [
+      value => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты',
+    ],
+    customersRules: [
+      value => value?.length > 0 ? true : 'Не выбран заказчика'
+    ],
 
   }),
+
+  mounted() {
+    this.fetchCustomersAll();
+  },
+
+  computed: {
+
+    cCustomer: {
+      set(_id) {
+        this.contract.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
+      },
+      get() {
+        return this.contract.customer?._id;
+      },
+    },
+  },
 
   methods: {
 
@@ -87,6 +168,22 @@ export default {
       } else {
         console.log('Поля не заполнены')
       }
+    },
+
+    fetchCustomersAll() {
+      this.fetchingCustomers = true;
+      fetchCustomersAll()
+          .then(response => {
+            this.customers = response?.data;
+          })
+          .catch(err => {
+            this.customers = testDataCustomers;
+            console.log('Запрос списка договоров выполнен с ошибкой', err);
+          })
+          .finally(() => {
+            this.fetchingCustomers = false;
+            console.log('this.customers', this.customers)
+          })
     },
 
     clear() {

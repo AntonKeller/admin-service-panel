@@ -68,49 +68,6 @@
             />
           </div>
 
-          <div class="d-flex ga-2">
-            <v-autocomplete
-                v-model="cCustomer"
-                :items="customers"
-                :rules="customersRules"
-                density="comfortable"
-                rounded="lg"
-                variant="outlined"
-                color="blue-grey-darken-3"
-                item-title="fullName"
-                item-value="_id"
-                label="Заказчик"
-                prepend-inner-icon="mdi-account-tie"
-                chips
-                closable-chips
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    color="blue-grey-darken-3"
-                    density="comfortable"
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
-                />
-              </template>
-
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.shortName"
-                    :subtitle="item.raw.inn"
-                />
-              </template>
-            </v-autocomplete>
-            <v-btn
-                rounded="lg"
-                variant="tonal"
-                icon="mdi-plus"
-                @click="customerAddMenuShow = true"
-            />
-          </div>
-
           <v-textarea
               v-model="assignment.description"
               color="blue-grey-darken-3"
@@ -144,10 +101,6 @@
       <c-contract-card-add-menu @add:success="fetchContractsAll"/>
     </my-overlay>
 
-    <my-overlay v-model="customerAddMenuShow">
-      <c-customer-card-add-menu @add:success="fetchCustomersAll"/>
-    </my-overlay>
-
   </v-sheet>
 </template>
 
@@ -157,8 +110,6 @@ import {showAlert} from "../utils/service/serverAPI";
 import {addNewAssignment} from '../utils/methods/assignment-requests';
 import {fetchContractsAll} from "../utils/methods/contract-requests";
 import {testDataContracts} from "../configs/data-test/data-test-contracts";
-import {fetchCustomersAll} from "../utils/methods/customer-requests";
-import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
   name: "c-assignment-card-add-menu",
@@ -192,9 +143,6 @@ export default {
     contractRules: [
       value => value?.length > 0 ? true : 'Не выбран контракт'
     ],
-    customersRules: [
-      value => value?.length > 0 ? true : 'Не выбран заказчика'
-    ],
     assignmentDescriptionRules: [
       value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
       value => value?.length < 151 ? true : 'Кол-во символов должно быть <= 150',
@@ -204,7 +152,7 @@ export default {
 
   mounted() {
     this.fetchContractsAll();
-    this.fetchCustomersAll();
+    console.log('contracts', this.contracts)
   },
 
   computed: {
@@ -218,14 +166,6 @@ export default {
       },
     },
 
-    cCustomer: {
-      set(_id) {
-        this.assignment.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
-      },
-      get() {
-        return this.assignment.customer?._id;
-      },
-    },
   },
 
   methods: {
@@ -265,23 +205,6 @@ export default {
           })
           .finally(() => {
             this.fetchingContracts = false;
-            console.log('this.contracts', this.contracts)
-          })
-    },
-
-    fetchCustomersAll() {
-      this.fetchingCustomers = true;
-      fetchCustomersAll()
-          .then(response => {
-            this.customers = response?.data;
-          })
-          .catch(err => {
-            this.customers = testDataCustomers;
-            console.log('Запрос списка договоров выполнен с ошибкой', err);
-          })
-          .finally(() => {
-            this.fetchingCustomers = false;
-            console.log('this.customers', this.customers)
           })
     },
 

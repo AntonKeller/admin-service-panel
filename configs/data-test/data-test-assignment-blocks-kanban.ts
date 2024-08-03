@@ -23,15 +23,15 @@ export const dataAssignmentBlocksKanban: Array<TAssignmentBlockKanban> = [
             _id: '1',
             contractNumber: 'xxx-xxx-xxx',
             contractDate: '1739998800000',
-        },
-        customer: {
-            _id: '1',
-            shortName: 'ИП ИВАНОВА',
-            fullName: 'Индивидуальный предприниматель Иванова Ольга Игоревна',
-            inn: '771573056961',
-            phoneNumber: '8-(999)-555-11-22',
-            email: 'testEmail@gmail.ru',
-            address: 'ул, 1-я Дубровская ул., 1А, Москва, 109044',
+            customer: {
+                _id: '1',
+                shortName: 'ИП ИВАНОВА',
+                fullName: 'Индивидуальный предприниматель Иванова Ольга Игоревна',
+                inn: '771573056961',
+                phoneNumber: '8-(999)-555-11-22',
+                email: 'testEmail@gmail.ru',
+                address: 'ул, 1-я Дубровская ул., 1А, Москва, 109044',
+            },
         },
     }
 ]

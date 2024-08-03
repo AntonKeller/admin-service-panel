@@ -187,9 +187,9 @@ export default {
           item?.description?.slice(0, 50) || '-',
           item?.contract?.contractNumber || '-',
           timeStringToDate(item?.contract?.contractDate)?.toLocaleDateString() || '',
-          item?.customer?.fullName || '-',
-          item?.customer?.phoneNumber || '-',
-          item?.customer?.email || '-'
+          item?.contract?.customer?.fullName || '-',
+          item?.contract?.customer?.phoneNumber || '-',
+          item?.contract?.customer?.email || '-'
         ]
       }))
 

@@ -6,7 +6,8 @@
     <template v-slot:activator="{ props }">
       <v-text-field
           v-bind="{...props, ...$attrs}"
-          variant="filled"
+          variant="outlined"
+          rounded="lg"
           density="comfortable"
           color="blue-grey"
           clearable
