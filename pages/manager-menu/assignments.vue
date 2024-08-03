@@ -24,10 +24,10 @@
         </v-card-item>
       </v-card>
 
-      <div style="min-height: 800px" class="mt-4">
+      <div style="min-height: 700px" class="mt-4">
         <v-divider/>
         <v-table
-            style="height: 800px"
+            style="height: 700px"
             density="comfortable"
             fixed-header
         >
@@ -46,8 +46,9 @@
           </thead>
           <tbody v-if="!fetchingData">
           <tr
-              v-for="(item, itemI) of mapData()" :key="item._id"
-              @click="cardMenuShow(item)"
+              v-for="item of mapData()"
+              :key="item._id"
+              @click="cardMenuShow(item._id)"
           >
             <td v-for="value of item.values">{{ value }}</td>
             <td>
@@ -69,17 +70,19 @@
       <div class="d-flex align-center mt-4">
         <v-text-field
             v-model="currentPage"
+            color="blue-grey-darken-3"
             variant="outlined"
             density="compact"
-            color="blue-grey-darken-3"
             type="number"
+            rounded="lg"
             hide-details
             style="width: 80px; max-width: 80px"
             @update:modelValue="fetchData"
         />
         <v-pagination
             v-model="currentPage"
-            density="default"
+            density="comfortable"
+            color="blue-grey-darken-2"
             show-first-last-page
             :length="totalPages"
             :total-visible="8"
@@ -94,7 +97,7 @@
     </my-overlay>
 
     <my-overlay v-model="cardMenuIsVisible">
-      <c-assignment-card-menu :_assignment="selectedItem"/>
+      <c-assignment-card-menu :_assignment="selectedAssignment" @update:success="fetchData"/>
     </my-overlay>
   </v-container>
 </template>
@@ -117,11 +120,20 @@ export default {
     totalItems: 1,
     totalPages: 1,
     searchText: '',
-    selectedItem: {},
+    selectedAssignment: {},
     cardMenuIsVisible: false,
     addMenuVisible: false,
 
   }),
+
+  watch: {
+    data() {
+      if (this.selectedAssignment?._id) {
+        console.log('this.selectedAssignment', this.selectedAssignment)
+        this.selectedAssignment = this.data.find(e => e._id === this.selectedAssignment._id);
+      }
+    },
+  },
 
   mounted() {
     this.fetchData();
@@ -173,13 +185,13 @@ export default {
           })
     },
 
-    cardMenuShow(_item) {
-      this.selectedItem = {..._item};
+    cardMenuShow(_itemId) {
+      this.selectedAssignment = this.data.find(e => e._id === _itemId);
       this.cardMenuIsVisible = true;
     },
 
     mapData() {
-      let result = this.data.map((item, itemI) => ({
+      return this.data.map((item, itemI) => ({
         _id: item._id,
         values: [
           itemI + 1,
@@ -192,9 +204,6 @@ export default {
           item?.contract?.customer?.email || '-'
         ]
       }))
-
-      // console.log('result', result);
-      return result;
     }
   }
 }

@@ -6,6 +6,7 @@
       </v-card-title>
       <v-card-text>
         <v-form v-model="formIsValid" ref="form">
+
           <v-text-field
               v-model="assignment.title"
               :rules="rules.assignmentTitleField"
@@ -22,13 +23,11 @@
               :disabled="loadingContracts"
               :loading="loadingContracts"
               :items="contracts"
+              prepend-inner-icon="mdi-file-sign"
+              color="blue-grey-lighten-2"
               density="comfortable"
               variant="filled"
-              color="blue-grey-lighten-2"
-              item-title="name"
-              item-value="name"
               label="Договор"
-              prepend-inner-icon="mdi-file-sign"
           >
             <template v-slot:chip="{ props, item }">
               {{ `${item.raw?.contractNumber} / ${item.raw?.contractDate}` }}
@@ -42,31 +41,6 @@
             </template>
           </v-autocomplete>
 
-          <v-autocomplete
-              v-model="cCustomer"
-              :disabled="loadingCustomers"
-              :loading="loadingCustomers"
-              :items="customers"
-              density="comfortable"
-              variant="filled"
-              color="blue-grey-lighten-2"
-              item-title="name"
-              item-value="name"
-              label="Заказчик по договору"
-              rounded="lg"
-              prepend-inner-icon="mdi-account-tie"
-          >
-            <template v-slot:chip="{ props, item }">
-              {{ `${item?.raw?.shortName} / ${item?.raw?.inn}` }}
-            </template>
-            <template v-slot:item="{ props, item }">
-              <v-list-item
-                  v-bind="props"
-                  :subtitle="item?.raw?.email"
-                  :title="`${item?.raw?.shortName} / ${item?.raw?.inn}`"
-              />
-            </template>
-          </v-autocomplete>
           <v-textarea
               v-model="assignment.description"
               no-resize
@@ -76,6 +50,7 @@
               variant="filled"
               color="blue-grey-darken-3"
           />
+
         </v-form>
       </v-card-text>
 
@@ -121,7 +96,6 @@ export default {
   },
 
   data: () => ({
-    formIsValid: false,
     assignment: null,
     contracts: [],
     customers: [],
@@ -129,6 +103,7 @@ export default {
     loadingContracts: false,
     loadingCustomers: false,
     snackBar: {},
+    formIsValid: false,
     rules: {
       assignmentTitleField: [
         value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
@@ -139,21 +114,21 @@ export default {
   computed: {
 
     cContract: {
-      set(_id) {
-        this.assignment.contract = _id ? _.cloneDeep(this.contracts.find(e => e._id === _id)) : null;
+      set(_new) {
+        this.assignment.contract = _.cloneDeep(_new);
       },
       get() {
-        return this.assignment.contract?._id;
-      },
+        return this.assignment?.contract;
+      }
     },
 
     cCustomer: {
-      set(_id) {
-        this.assignment.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
+      set(_new) {
+        this.assignment.contract.customer = _.cloneDeep(_new);
       },
       get() {
-        return this.assignment.customer?._id;
-      },
+        return this.assignment?.contract?.customer;
+      }
     },
   },
 
@@ -171,15 +146,7 @@ export default {
 
         this.changing = true;
 
-        const data = {
-          assignment: {
-            ...this.assignment,
-            contract: this.contract,
-            customer: this.customer,
-          }
-        }
-
-        changeAssignment(data)
+        changeAssignment(this.assignment)
             .then(() => {
               this.snackBar = showAlert('Изменено успешно!').success();
               this.$emit('update:success');

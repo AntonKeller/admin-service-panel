@@ -20,7 +20,6 @@
           <my-text-field
               v-model="contract.contractNumber"
               :rules="contractNumberRules"
-
               label="Номер договора"
               placeholder="xxxx/xxx"
           />

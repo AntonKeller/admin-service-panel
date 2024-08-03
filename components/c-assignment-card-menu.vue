@@ -4,13 +4,8 @@
       height="700px"
       width="1024px"
       elevation="24"
-      color="white"
   >
-    <v-card
-        height="100%"
-        rounded="lg"
-        elevation="0"
-    >
+    <v-card rounded="lg">
       <v-card-title>
         <v-sheet class="d-flex ga-2">
           <v-btn
@@ -48,8 +43,8 @@
               prepend-icon="mdi-account-tie"
           >
             {{
-              assignment?.customer?.shortName && assignment?.customer?.inn ?
-                  `Заказчик: ${assignment?.customer?.shortName} / ${assignment?.customer?.inn}` :
+              assignment?.contract?.customer?.shortName && assignment?.contract?.customer?.inn ?
+                  `Заказчик: ${assignment?.contract?.customer?.shortName} / ${assignment?.contract?.customer?.inn}` :
                   'Отсутствует заказчик'
             }}
           </v-chip>
@@ -68,27 +63,6 @@
               v-model="searchText"
               @update:modelValue="fetchAssignmentBlocksDebounce"
           />
-          <v-autocomplete
-              v-model="activeStatus"
-              :items="statuses"
-              density="compact"
-              variant="outlined"
-              color="blue-grey-lighten-2"
-              item-title="name"
-              item-value="name"
-              placeholder="Статус по умолчанию"
-              rounded="lg"
-              style="min-width: 270px; max-width: 270px"
-              prepend-inner-icon="mdi-filter-cog-outline"
-              @update:modelValue="fetchAssignmentBlocksDebounce"
-          >
-            <template v-slot:chip="{ props, item }">
-              {{ item.raw.title }}
-            </template>
-            <template v-slot:item="{ props, item }">
-              <v-list-item rounded="lg" v-bind="props" :title="item.raw.title"/>
-            </template>
-          </v-autocomplete>
         </div>
         <v-sheet height="290px">
           <v-divider/>
@@ -122,17 +96,11 @@
             </thead>
             <tbody>
             <tr
-                v-for="item in assignmentBlocks"
+                v-for="item in blocksMap()"
                 :key="item._id"
-                @click="aBlockClick(item)"
+                @click="blockSelect(item._id)"
             >
-              <td>{{ item.loanAgreement }}</td>
-              <td>{{ timeStringToDate(item.loanAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ item.plegeAgreement }}</td>
-              <td>{{ timeStringToDate(item.plegeAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(item.startDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(item.endDate, 20).toLocaleDateString() }}</td>
-              <td>{{ item.status }}</td>
+              <td v-for="v of item.values">{{v}}</td>
             </tr>
             </tbody>
           </v-table>
@@ -140,27 +108,25 @@
         </v-sheet>
         <v-card variant="text">
           <v-card-item>
-            <div class="d-flex align-center">
+            <div class="d-flex align-center mt-2">
               <v-text-field
                   v-model="currentPage"
+                  color="blue-grey-darken-3"
                   variant="outlined"
                   density="compact"
+                  type="number"
                   rounded="lg"
                   hide-details
-                  label="Страница"
-                  type="number"
-                  style="min-width: 80px; width: 80px; max-width: 80px"
-                  :clearable="false"
+                  style="width: 80px; max-width: 80px"
                   @update:modelValue="fetchAssignmentBlocksDebounce"
               />
               <v-pagination
-                  style="max-width: 800px"
-                  show-first-last-page
-                  density="default"
-                  total-visible="5"
                   v-model="currentPage"
+                  density="comfortable"
+                  color="blue-grey-darken-2"
+                  show-first-last-page
                   :length="totalPages"
-                  rounded="circle"
+                  :total-visible="8"
                   @update:modelValue="fetchAssignmentBlocks"
               />
             </div>
@@ -170,11 +136,11 @@
     </v-card>
 
     <my-overlay v-model="cardChangeMenu">
-      <c-assignment-card-change-menu :_assignment="assignment"/>
+      <c-assignment-card-change-menu :_assignment="assignment" @update:success="$emit('update:success')"/>
     </my-overlay>
 
-    <my-overlay v-model="selectedBlock">
-      <c-inspection-objects-menu/>
+    <my-overlay v-model="inspectionObjectsMenuIsShow">
+      <c-inspection-objects-menu :_assignmentBlock="selectedBlock"/>
     </my-overlay>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
@@ -187,7 +153,6 @@
 
 <script>
 import _ from "lodash";
-import statuses from "../configs/assignment-statuses";
 import dataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
 import {fetchAssignmentBlocks} from "../utils/methods/assignment-block-requests";
 import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
@@ -200,9 +165,6 @@ export default {
   },
 
   data: () => ({
-
-    statuses,
-    activeStatus: null,
     searchText: null,
 
     assignmentBlocks: [],
@@ -213,9 +175,8 @@ export default {
 
     cardChangeMenu: false,
     snackBar: {},
-    contracts: [],
-    customers: [],
     selectedBlock: null,
+    inspectionObjectsMenuIsShow: false,
     fetchBlocksLoading: true,
 
     assignment: {
@@ -223,22 +184,51 @@ export default {
       title: '',
       description: '',
       contract: null,
-      customer: null
     },
+
+
   }),
 
   mounted() {
-    this.assignment = _.cloneDeep(this._assignment);
+    this.propsClone();
     this.fetchAssignmentBlocks();
+  },
+
+  watch: {
+    _assignment() {
+      this.propsClone();
+    },
+    assignmentBlocks() {
+      if (this.selectedBlock?._id) {
+        this.selectedBlock = this.assignmentBlocks.find(e => e._id === this.selectedBlock?._id);
+      }
+    }
   },
 
   methods: {
 
-    timeStringToDate,
+    propsClone() {
+      this.assignment = _.cloneDeep(this._assignment);
+    },
 
-    aBlockClick(_block) {
-      this.selectedBlock = ({..._block});
-      console.log('this.selectedBlock', this.selectedBlock);
+    blockSelect(_id) {
+      this.selectedBlock = this.assignmentBlocks.find(e => e._id === _id);
+      this.inspectionObjectsMenuIsShow = true;
+    },
+
+    blocksMap() {
+      return this.assignmentBlocks.map(item => ({
+        _id: item._id,
+        values: [
+          item.loanAgreement,
+          timeStringToDate(item.loanAgreementDate, 20).toLocaleDateString(),
+          item.pledgeAgreement,
+          timeStringToDate(item.plegeAgreementDate, 20).toLocaleDateString(),
+          timeStringToDate(item.startDate, 20).toLocaleDateString(),
+          timeStringToDate(item.endDate, 20).toLocaleDateString(),
+          item.status
+        ]
+      }))
     },
 
     fetchAssignmentBlocksDebounce: _.debounce(function () {
@@ -251,8 +241,7 @@ export default {
         this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
         this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
         this.searchText && this.searchText.length > 0 ? `searchText=${this.searchText}` : null,
-        this.activeStatus?.title && this.activeStatus?.title.length > 0 ? `status=${this.activeStatus?.title}` : null,
-        this.assignment?._id ? `assignmentID=${this.assignment?._id}` : null,
+        this.assignment?._id ? `assignmentId=${this.assignment?._id}` : null,
       ].filter(e => !!e).join('&');
 
       return queryParams && queryParams?.length > 0 ? `?${queryParams}` : '';
@@ -269,7 +258,6 @@ export default {
             this.limitItems = resp?.data?.pageSize;
             this.totalItems = resp?.data?.totalItems;
             this.totalPages = resp?.data?.totalPages;
-            console.log('this.assignmentBlocks', this.assignmentBlocks)
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);

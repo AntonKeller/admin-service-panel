@@ -13,7 +13,7 @@ export function addNewAssignment(assignment: TAssignment) {
 }
 
 export function changeAssignment(assignment: TAssignment) {
-    return axios.put(serverURL + '/assignments/change', assignment, {timeout: delay});
+    return axios.put(serverURL + '/assignments/' + assignment._id, assignment, {timeout: delay});
 }
 
 export function removeAssignment(id: string) {
