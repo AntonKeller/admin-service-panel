@@ -7,9 +7,7 @@
           :loading="fetchingData"
       >
 
-        <v-card-title>
-          Список заданий
-        </v-card-title>
+        <v-card-title>Список заданий</v-card-title>
 
         <v-card-item>
           <div class="d-flex ga-4 align-center">
@@ -52,13 +50,7 @@
           >
             <td v-for="value of item.values">{{ value }}</td>
             <td>
-              <v-btn
-                  @click.stop="removeDataItem(item._id)"
-                  density="compact"
-                  variant="text"
-                  color="red-darken-4"
-                  icon="mdi-progress-close"
-              />
+              <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(item._id)"/>
             </td>
           </tr>
           </tbody>
@@ -99,17 +91,20 @@
     <my-overlay v-model="cardMenuIsVisible">
       <c-assignment-card-menu :_assignment="selectedAssignment" @update:success="fetchData"/>
     </my-overlay>
+
   </v-container>
 </template>
 
 <script>
 import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
-import {timeStringToDate} from "../../utils/service/serverAPI.js";
-import {fetchAssignments, removeAssignment} from "../../utils/methods/assignment-requests.ts";
+import {timeStringToDate} from "../../utils/service/serverAPI";
+import {fetchAssignments, removeAssignment} from "../../utils/methods/assignment-requests";
 
 export default {
   name: "assignments-page",
+  components: {},
+
 
   data: () => ({
 

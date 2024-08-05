@@ -2,14 +2,15 @@
   <v-sheet
       rounded="lg"
       width="900px"
-      elevation="24"
+      elevation="12"
       color="white"
   >
     <v-card rounded="lg">
 
-      <v-card-title>Объекты на осмотр</v-card-title>
+      <!--      <v-card-title>Объекты на осмотр</v-card-title>-->
+      <v-card-title>Песочница тест</v-card-title>
 
-      <v-card-subtitle>{{_assignmentBlock.title}}</v-card-subtitle>
+      <v-card-subtitle>{{ _assignmentBlock.title }}</v-card-subtitle>
 
       <v-card-text>
         <div class="d-flex ga-4 align-center py-1">
@@ -22,37 +23,39 @@
               @update:modelValue="fetchObjectsDebounce"
           />
         </div>
-<!--        <div v-for="item in inspectionObjects[0].photos">-->
-<!--          <img :src="'http://192.168.1.18/' + item.route" alt="no img">-->
-<!--          {{'http://192.168.1.18/' + item.route}}-->
-<!--        </div>-->
         <v-sheet height="400px">
           <v-divider/>
-          <v-table height="520px" fixed-header density="comfortable">
+          <v-table height="520px" fixed-header density="compact">
             <thead>
             <tr>
               <th class="text-left">Наименование</th>
               <th class="text-left">Инвентарный номер</th>
               <th class="text-left">Адрес</th>
               <th class="text-left">Описание</th>
-              <th class="text-left">Скачать</th>
+              <th class="text-left"></th>
             </tr>
             </thead>
             <tbody>
+
             <tr
-                v-for="item in inspectionObjects"
-                :key="item._id"
-                :class="{'border-dashed':isDragging}"
-                :border="isDragging ? 'lg' : ''"
-                @dragover="onDragover"
+                v-for="inspectionObject in inspectionObjects"
+                :key="inspectionObject._id"
+                class="text-caption"
+                :class="{'bg-yellow-lighten-3':draggingId===inspectionObject._id}"
+                @click.stop="selectObject(inspectionObject)"
+                @dragover="(e) => onDragover(e, inspectionObject._id)"
                 @dragleave="onDragleave"
-                @drop="onDrop"
+                @drop="(e) => onDrop(e, inspectionObject._id)"
             >
-              <td>{{ textSlicer(item.name, 25) }}</td>
-              <td>{{ textSlicer(item.inventoryNumber, 25) }}</td>
-              <td>{{ textSlicer(item.address, 50) }}</td>
-              <td>{{ textSlicer(item.description, 80) }}</td>
-              <td>{{ 'aphoto' }}</td>
+              <td>
+                {{ textSlicer(inspectionObject.name, 25) }}
+              </td>
+              <td>{{ textSlicer(inspectionObject.inventoryNumber, 25) }}</td>
+              <td>{{ textSlicer(inspectionObject.address, 50) }}</td>
+              <td>{{ textSlicer(inspectionObject.description, 80) }}</td>
+              <td>
+                <c-remove-btn :prompt="'Удалить'" @click.stop=""/>
+              </td>
             </tr>
             </tbody>
           </v-table>
@@ -86,6 +89,11 @@
         </div>
       </v-card-item>
     </v-card>
+
+    <my-overlay v-model="inspectionObjectCardShow">
+      <c-inspection-object-card :inspection_object="objectSelected"/>
+    </my-overlay>
+
   </v-sheet>
 </template>
 
@@ -110,7 +118,9 @@ export default {
     searchText: '',
     fetchingData: false,
     files: [],
-    isDragging: false,
+    draggingId: false,
+    inspectionObjectCardShow: false,
+    objectSelected: null,
   }),
 
   mounted() {
@@ -125,16 +135,22 @@ export default {
 
   methods: {
 
-    onDragover(e) {
+    selectObject(_obj) {
+      this.objectSelected = _obj;
+      this.inspectionObjectCardShow = true;
+    },
+
+    onDragover(e, _id) {
       e.preventDefault();
-      this.isDragging = true;
+      this.draggingId = _id;
     },
 
     onDragleave() {
       this.isDragging = false;
+      this.draggingId = null;
     },
 
-    onDrop(e) {
+    onDrop(e, _id) {
 
       console.log(e.dataTransfer.files)
       e.preventDefault();

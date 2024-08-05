@@ -26,7 +26,7 @@
       />
       <div class="text-center">
         <v-progress-circular :model-value="progress" :rotate="360" :size="100" :width="15" color="teal">
-          <template v-slot:default> {{ progress }} % </template>
+          <template v-slot:default> {{ progress }} %</template>
         </v-progress-circular>
       </div>
     </v-card-item>
@@ -52,6 +52,13 @@
           :rules="rules"
           @update:modelValue="_v => console.log('date:', _v)"
       />
+      <v-btn @click="req5">
+          download
+      </v-btn>
+    </v-card-item>
+    <v-card-item class="py-15">
+      <v-label>Camera</v-label>
+      <input type="file" accept="image/*" capture="camera">
     </v-card-item>
   </v-card>
 </template>
@@ -77,6 +84,12 @@ export default {
   }),
 
   methods: {
+
+    async req5() {
+      const response = await axios.get('http://192.168.1.18/photos/026a450d-bdd7-431c-8924-54fcb1d565ee/downloadAllPhotos');
+      // const data = await response.json();
+      console.log('data', response.data)
+    },
 
     onDragover(e) {
       e.preventDefault();

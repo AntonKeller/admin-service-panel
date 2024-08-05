@@ -3,7 +3,8 @@
       rounded="lg"
       height="700px"
       width="1024px"
-      elevation="24"
+      elevation="12"
+      color="white"
   >
     <v-card rounded="lg">
       <v-card-title>
@@ -76,13 +77,14 @@
             </v-progress-circular>
           </div>
           <v-table v-if="!fetchBlocksLoading" height="290px" fixed-header density="comfortable">
-            <col style="min-width: 181px">
-            <col style="min-width: 121px">
-            <col style="min-width: 141px">
-            <col style="min-width: 121px">
-            <col style="min-width: 141px">
-            <col style="min-width: 141px">
-            <col style="min-width: 141px">
+            <col style="min-width: 171px">
+            <col style="min-width: 111px">
+            <col style="min-width: 161px">
+            <col style="min-width: 111px">
+            <col style="min-width: 111px">
+            <col style="min-width: 111px">
+            <col style="min-width: 131px">
+            <col style="min-width: 80px">
             <thead>
             <tr>
               <th>Кредитный договор</th>
@@ -92,6 +94,7 @@
               <th>Начало</th>
               <th>Окончание</th>
               <th>Статус</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>
@@ -101,6 +104,9 @@
                 @click="blockSelect(item._id)"
             >
               <td v-for="v of item.values">{{v}}</td>
+              <td>
+                <c-remove-btn :prompt="'Удалить'" @click.stop="" />
+              </td>
             </tr>
             </tbody>
           </v-table>
@@ -185,7 +191,6 @@ export default {
       description: '',
       contract: null,
     },
-
 
   }),
 
@@ -272,12 +277,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-tr:hover > td {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-</style>

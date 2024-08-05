@@ -36,8 +36,7 @@ body::-webkit-scrollbar {
   border-radius: 6px;
 }
 
-.tr_hover:hover {
-  cursor: pointer;
+tr:hover > td:not(:last-child) {
   text-decoration: underline;
-  color: #37474F;
+  cursor: pointer;
 }
