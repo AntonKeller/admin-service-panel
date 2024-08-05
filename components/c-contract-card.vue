@@ -27,8 +27,7 @@
         />
       </div>
     </v-card-title>
-    <v-card-subtitle>
-    </v-card-subtitle>
+    <v-card-subtitle />
     <v-card-item>
       {{ contract.contractDate }}
     </v-card-item>

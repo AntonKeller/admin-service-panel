@@ -24,6 +24,7 @@
       <v-card-text class="d-flex flex-column ga-2">
         <div class="d-flex ga-2">
           <v-chip
+              border="sm"
               density="comfortable"
               color="blue-grey-darken-3"
               rounded="lg"
@@ -38,6 +39,7 @@
 
 
           <v-chip
+              border="sm"
               density="comfortable"
               color="blue-grey-darken-3"
               rounded="lg"
@@ -51,9 +53,9 @@
           </v-chip>
 
         </div>
-        <div style="height: 140px; overflow-y: scroll">
+        <v-sheet border="sm" class="rounded-lg bg-blue-grey-lighten-5 px-2 py-2" style="height: 140px; overflow-y: scroll">
           {{ assignment?.description }}
-        </div>
+        </v-sheet>
         <v-divider class="my-1" color="teal-darken-4"/>
         <div class="d-flex ga-4 align-center py-1">
           <my-search-bar
