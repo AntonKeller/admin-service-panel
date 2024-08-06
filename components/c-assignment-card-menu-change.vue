@@ -1,18 +1,17 @@
 <template>
   <v-sheet rounded="lg" width="700px">
-    <v-card rounded="lg" density="compact">
+    <v-card rounded="lg">
       <v-card-title>
         Редактирование
       </v-card-title>
       <v-card-text>
         <v-form v-model="formIsValid" ref="form">
-
           <v-text-field
               v-model="assignment.title"
               :rules="rules.assignmentTitleField"
               label="Заголовок тех. задания"
               rounded="lg"
-              variant="filled"
+              variant="outlined"
               density="comfortable"
               color="blue-grey-darken-3"
               prepend-inner-icon="mdi-label-variant-outline"
@@ -24,9 +23,10 @@
               :loading="loadingContracts"
               :items="contracts"
               prepend-inner-icon="mdi-file-sign"
-              color="blue-grey-lighten-2"
+              color="blue-grey-lighten-3"
               density="comfortable"
-              variant="filled"
+              rounded="lg"
+              variant="outlined"
               label="Договор"
           >
             <template v-slot:chip="{ props, item }">
@@ -47,7 +47,7 @@
               rows="10"
               rounded="lg"
               label="Описание"
-              variant="filled"
+              variant="outlined"
               color="blue-grey-darken-3"
           />
 
