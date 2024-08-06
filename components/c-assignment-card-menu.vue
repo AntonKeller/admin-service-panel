@@ -13,7 +13,8 @@
               variant="tonal"
               icon="mdi-pencil-outline"
               density="comfortable"
-              color="blue-grey-darken-3"
+              border="sm"
+              color="blue-grey-darken-2"
               rounded="lg"
               @click="cardChangeMenu = true"
           />
@@ -26,7 +27,7 @@
           <v-chip
               border="sm"
               density="comfortable"
-              color="blue-grey-darken-3"
+              color="blue-grey-darken-2"
               rounded="lg"
               prepend-icon="mdi-file-sign"
           >
@@ -41,7 +42,7 @@
           <v-chip
               border="sm"
               density="comfortable"
-              color="blue-grey-darken-3"
+              color="blue-grey-darken-2"
               rounded="lg"
               prepend-icon="mdi-account-tie"
           >
@@ -53,10 +54,10 @@
           </v-chip>
 
         </div>
-        <v-sheet border="sm" class="rounded-lg bg-blue-grey-lighten-5 px-2 py-2" style="height: 140px; overflow-y: scroll">
+        <v-sheet class="rounded-lg  px-2 py-2" style="height: 140px; overflow-y: scroll">
           {{ assignment?.description }}
         </v-sheet>
-        <v-divider class="my-1" color="teal-darken-4"/>
+        <v-divider class="my-1"/>
         <div class="d-flex ga-4 align-center py-1">
           <my-search-bar
               style="min-width: 300px"
@@ -65,6 +66,7 @@
               :hint="`Найдено: ${totalItems}`"
               v-model="searchText"
               @update:modelValue="fetchAssignmentBlocksDebounce"
+              @btn:click="blockMenuAddIsShow = true"
           />
         </div>
         <v-sheet height="290px">
@@ -105,9 +107,9 @@
                 :key="item._id"
                 @click="blockSelect(item._id)"
             >
-              <td v-for="v of item.values">{{v}}</td>
+              <td v-for="v of item.values">{{ v }}</td>
               <td>
-                <c-remove-btn :prompt="'Удалить'" @click.stop="" />
+                <c-remove-btn :prompt="'Удалить'" @click.stop=""/>
               </td>
             </tr>
             </tbody>
@@ -151,6 +153,10 @@
       <c-inspection-objects-menu :_assignmentBlock="selectedBlock"/>
     </my-overlay>
 
+    <my-overlay v-model="blockMenuAddIsShow">
+      <c-assignment-block-menu-add :_assignmentId="_assignment._id" @add:success="$emit('update:success')"/>
+    </my-overlay>
+
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
       <v-icon>mdi-alert-circle-outline</v-icon>
       {{ snackBar.msg }}
@@ -162,7 +168,7 @@
 <script>
 import _ from "lodash";
 import dataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
-import {fetchAssignmentBlocks} from "../utils/methods/assignment-block-requests";
+import {fetchAssignmentBlocks} from "../utils/service/server.ts";
 import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
 
 export default {
@@ -184,6 +190,7 @@ export default {
     cardChangeMenu: false,
     snackBar: {},
     selectedBlock: null,
+    blockMenuAddIsShow: false,
     inspectionObjectsMenuIsShow: false,
     fetchBlocksLoading: true,
 
@@ -204,6 +211,7 @@ export default {
   watch: {
     _assignment() {
       this.propsClone();
+      this.fetchAssignmentBlocks();
     },
     assignmentBlocks() {
       if (this.selectedBlock?._id) {

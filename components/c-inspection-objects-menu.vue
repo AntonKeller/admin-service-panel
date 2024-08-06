@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {fetchInspectionObjects} from "../utils/methods/inspection-objects-requests";
+import {fetchInspectionObjects} from "../utils/service/server.ts";
 import {dataInspectionObjects} from "../configs/data-test/data-test-inspection-object";
 import _ from "lodash";
 

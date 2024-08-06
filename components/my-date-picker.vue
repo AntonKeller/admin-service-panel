@@ -1,11 +1,9 @@
 <template>
-  <v-menu
-      v-model="isVisible"
-      transition="scale-transition"
-  >
+  <v-menu v-model="isVisible">
     <template v-slot:activator="{ props }">
       <v-text-field
           v-bind="{...props, ...$attrs}"
+          :style="fieldWidth ? `width: ${fieldWidth}px` : '' "
           variant="outlined"
           rounded="lg"
           density="comfortable"
@@ -32,12 +30,16 @@
 <script>
 export default {
   name: "my-date-picker",
-  props: ['modelValue'],
+
+  props: ['modelValue', 'fieldWidth'],
+
   emits: ['update:modelValue'],
+
   data: () => ({
     isVisible: false,
     nowDate: new Date(Date.now())
   }),
+
   methods: {
     updateMode(_value) {
       this.$emit('update:modelValue', String(Date.parse(_value)))

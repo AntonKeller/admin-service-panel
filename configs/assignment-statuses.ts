@@ -1,4 +1,13 @@
-const statuses = [
+export const assignment_block_statuses = [
+    'КП',
+    'В ожидании',
+    'В работе',
+    'Согласование',
+    'Закрытие',
+    'Завершен',
+]
+
+export const assignment_block_statuses_config = [
     {
         id: 1,
         title: 'В работе',
@@ -31,4 +40,4 @@ const statuses = [
     },
 ]
 
-export default statuses;
+export default assignment_block_statuses;

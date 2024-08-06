@@ -1,21 +1,17 @@
 <template>
   <v-sheet>
-    <v-card color="teal-darken-1" class="mx-auto" variant="text">
+    <v-card class="mx-auto" variant="text">
 
       <v-card-title>Блоки задач</v-card-title>
 
       <v-card-item>
-        <div class="d-flex ga-2">
-          <v-text-field
-              color="teal-darken-1"
-              prepend-inner-icon="mdi-magnify"
-              density="compact"
-              label="Поиск по задачам"
-              variant="outlined"
-              hide-details
-              single-line
-              clearable
+        <div class="d-flex ga-4 align-center">
+          <my-search-bar
               v-model="searchText"
+              :hint="`Найдено: ${0}`"
+              @update:modelValue="fetchAssignmentBlocks"
+              style="min-width: 500px"
+              hideButton
           />
         </div>
       </v-card-item>
@@ -24,36 +20,33 @@
     <v-container fluid>
 
       <v-row dense>
-        <v-col lg="3" v-for="status of statuses" class="d-flex flex-column ga-2">
+        <v-col v-for="status of statuses" class="d-flex flex-column ga-2">
 
-          <v-card
-              density="compact"
-              elevation="2"
-              variant="elevated"
+          <v-sheet
               :color="status.color"
+              variant="outlined"
+              elevation="4"
+              class="d-flex justify-space-between px-3 rounded"
           >
-            <v-card-item>
-              <div class="d-flex justify-space-between">
-                <div>{{ status.value }}</div>
-                <div>{{ blocksCount(status.value) }}</div>
-              </div>
-            </v-card-item>
-          </v-card>
+            <div>{{ status.value }}</div>
+            <div>{{ blocksCount(status.value) }}</div>
+          </v-sheet>
 
           <v-card
-              @click="console.log('Click on block')"
-              v-for="block of getBlocksByStatus(status.value)"
-              :key="block.assignmentBlock._id"
-              :color="Date.now() > block.assignmentBlock.endDate ? 'red-lighten-4' : ''"
+              v-for="block of blocksByStatus(status.value)"
+              :key="block._id"
+              variant="tonal"
+              color="blue-grey-darken-2"
+              :color="Date.now() > block.endDate ? 'red-lighten-4' : ''"
           >
             <v-card-item>
-              {{ block.assignmentBlock.title }}
+              {{ block.title }}
             </v-card-item>
 
             <v-card-subtitle>
-              <div>Дедлайн: <b>{{ getDateTime(block.assignmentBlock.endDate) }}</b></div>
-              <div>Номер договора: <b>{{ block.contract.contractNumber }}</b></div>
-              <div>Исполнитель: <b>{{ block.executor.fullName }}</b></div>
+              <div><b>Дедлайн:</b> {{ timeStringToDate(block?.endDate).toLocaleDateString() }}</div>
+              <div><b>Номер договора:</b> {{ block?.contract?.contractNumber }}</div>
+              <div><b>Исполнитель:</b> {{ block?.inspector?.fullName }}</div>
             </v-card-subtitle>
 
             <v-card-actions>
@@ -87,35 +80,64 @@
 </template>
 
 <script>
-import testDataAssignmentBlocks from "@/configs/data-test/data-test-assignment-blocks";
-import {fetchAssignmentBlocksAll} from "@/utils/methods/assignment-block-requests";
-import getDateTime from "@/utils/methods/getTime";
+import testDataAssignmentBlocks from "../../configs/data-test/data-test-assignment-blocks.ts";
+import {fetchAssignmentBlocksKanban} from "../../utils/service/server.ts";
+import {timeStringToDate} from "../../utils/service/serverAPI";
 
 export default {
   name: "assignment-blocks-page",
 
   data: () => ({
 
-    blocksData: [],
+    data: [],
 
-    statusMap: {
-      ['Выполнено']: 'В ожидании',
-      ['В ожидании']: 'В работе',
-      ['В работе']: 'Выполнено',
-    },
+    searchText: '',
+    currentPage: 1,
+    limitItems: 20,
 
-    statuses: [
+    statusesInspector: [
       {
-        color: 'blue-grey-lighten-4',
+        color: 'yellow-darken-2',
         value: 'В ожидании',
       },
       {
-        color: 'orange-lighten-2',
+        color: 'blue-darken-2',
         value: 'В работе',
       },
       {
         color: 'teal-lighten-1',
-        value: 'Выполнено',
+        value: 'Согласование',
+      },
+      {
+        color: 'teal-darken-3',
+        value: 'Завершено',
+      },
+    ],
+
+    statuses: [
+      {
+        color: 'blue-grey-darken-2',
+        value: 'КП',
+      },
+      {
+        color: 'yellow-darken-2',
+        value: 'В ожидании',
+      },
+      {
+        color: 'blue-darken-2',
+        value: 'В работе',
+      },
+      {
+        color: 'teal-lighten-1',
+        value: 'Согласование',
+      },
+      {
+        color: 'teal-darken-1',
+        value: 'Закрытие',
+      },
+      {
+        color: 'teal-darken-3',
+        value: 'Завершено',
       },
     ]
   }),
@@ -126,18 +148,29 @@ export default {
 
   methods: {
 
-    getDateTime: getDateTime,
+    timeStringToDate,
 
-    getBlocksByStatus(status) {
-      return this.blocksData.filter(e => e.assignmentBlock.status === status);
+    createQueryParams() {
+
+      let queryParams = [
+        this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
+        this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
+        this.searchText && this.searchText.length > 0 ? `searchText=${this.searchText}` : null,
+      ].filter(e => !!e).join('&');
+
+      return queryParams && queryParams?.length > 0 ? `?${queryParams}` : '';
+    },
+
+    blocksByStatus(status) {
+      return this.data?.filter(item => item.status === status);
     },
 
     blocksCount(status) {
-      return this.blocksData.filter(e => e.assignmentBlock.status === status)?.length;
+      return this.data?.filter(item => item?.status === status)?.length;
     },
 
     updateStatus(id, status) {
-      this.blocksData = this.blocksData.map(e => {
+      this.data = this.data?.map(e => {
         if (e._id === id) {
           return {...e, status: status}
         } else {
@@ -148,17 +181,13 @@ export default {
     },
 
     fetchAssignmentBlocks() {
-      fetchAssignmentBlocksAll()
+      fetchAssignmentBlocksKanban(this.createQueryParams())
           .then(response => {
-            console.log('Блоки успешно получены');
-            return response?.data;
+            this.data = response.data?.data;
           })
           .catch(err => {
+            this.data = testDataAssignmentBlocks;
             console.log('Ошибка получения блоков', err);
-            return testDataAssignmentBlocks;
-          })
-          .then(data => {
-            this.blocksData = data;
           })
     },
 

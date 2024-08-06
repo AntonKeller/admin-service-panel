@@ -9,12 +9,14 @@ export const dataAssignmentBlocksKanban: Array<TAssignmentBlockKanban> = [
             endDate: '1720990800000', // Дата окончания
             loanAgreement: 'xxxx-xxxx-xxxx', // Номер кредитного договора
             loanAgreementDate: '1710882000000', // Дата кредитного договора
-            plegeAgreement: 'tttt-tttt-tttt', // Номер договора залога
-            plegeAgreementDate: '1609448400000', // Дата договора залога
+            pledgeAgreement: 'tttt-tttt-tttt', // Номер договора залога
+            pledgeAgreementDate: '1609448400000', // Дата договора залога
             status: 'Выполнено', // Статус
-            executor: {
+            inspector: {
                 _id: '1',
-                fullName: 'Иванов О.И',
+                firstName: 'Иванов',
+                surName: 'Олег',
+                lastName: 'Игоревич',
                 phoneNumber: '8-999-888-777-66-44',
                 email: 'Ivanov@mail.ru',
             },

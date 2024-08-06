@@ -8,19 +8,19 @@ export default defineNuxtRouteMiddleware((to, from) => {
         // return ;
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        // if (/^\/$/ig.test(to?.fullPath)) {
-        //
-        //     const access_token_test = useState('access_token_test')?.value;
-        //     if (access_token_test) return navigateTo('/manager-menu');
-        //
-        // }
-        //
-        // if (/^\/manager-menu/ig.test(to?.fullPath)) {
-        //
-        //     const access_token_test = useState('access_token_test')?.value;
-        //     if (!access_token_test) return navigateTo('/');
-        //
-        // }
+        if (/^\/$/ig.test(to?.fullPath)) {
+
+            const access_token_test = useState('access_token_test')?.value;
+            if (access_token_test) return navigateTo('/manager-menu');
+
+        }
+
+        if (/^\/manager-menu/ig.test(to?.fullPath)) {
+
+            const access_token_test = useState('access_token_test')?.value;
+            if (!access_token_test) return navigateTo('/');
+
+        }
 
     }
 

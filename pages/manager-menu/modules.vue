@@ -16,7 +16,6 @@
           @drop="onDrop"
       >
         {{ isDragging ? '-> Добавить файлы <-' : files.map(e => e.name).join(', ') }}
-
       </v-sheet>
       <v-file-input
           v-model="files"
