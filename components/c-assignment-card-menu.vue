@@ -144,7 +144,7 @@
     </v-card>
 
     <my-overlay v-model="cardChangeMenu">
-      <c-assignment-card-change-menu :_assignment="assignment" @update:success="$emit('update:success')"/>
+      <c-assignment-card-menu-change :_assignment="assignment" @update:success="$emit('update:success')"/>
     </my-overlay>
 
     <my-overlay v-model="inspectionObjectsMenuIsShow">

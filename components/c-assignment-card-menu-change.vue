@@ -83,7 +83,7 @@ import {testDataContracts} from "../configs/data-test/data-test-contracts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
-  name: "c-assignment-card-change-menu",
+  name: "c-assignment-card-menu-change",
 
   props: {
     _assignment: Object

@@ -112,7 +112,7 @@ import {fetchContractsAll} from "../utils/methods/contract-requests";
 import {testDataContracts} from "../configs/data-test/data-test-contracts";
 
 export default {
-  name: "c-assignment-card-add-menu",
+  name: "c-assignment-card-menu-add",
   components: {},
 
 

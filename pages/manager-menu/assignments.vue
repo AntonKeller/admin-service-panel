@@ -85,7 +85,7 @@
     </v-sheet>
 
     <my-overlay v-model="addMenuVisible">
-      <c-assignment-card-add-menu @add:success="fetchData"/>
+      <c-assignment-card-menu-add @add:success="fetchData"/>
     </my-overlay>
 
     <my-overlay v-model="cardMenuIsVisible">
