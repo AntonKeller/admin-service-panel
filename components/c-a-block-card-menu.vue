@@ -7,10 +7,23 @@
   >
     <v-card rounded="lg">
 
-      <!--      <v-card-title>Объекты на осмотр</v-card-title>-->
-      <v-card-title>Песочница тест</v-card-title>
+      <v-card-title>
+        <v-sheet class="d-flex ga-2">
+          <c-btn-change prompt="Редактировать"/>
+          {{_assignmentBlock.title}}
+        </v-sheet>
+      </v-card-title>
 
-      <v-card-subtitle>{{ _assignmentBlock.title }}</v-card-subtitle>
+      <v-card-subtitle class="d-flex flex-column ga-1">
+        <div>
+          <b>Статус:</b> {{_assignmentBlock.status}}
+        </div>
+        <div>
+          <b>Начало-Окончание:</b>
+          {{timeStringToDate(_assignmentBlock.startDate).toLocaleDateString()}} -
+          {{timeStringToDate(_assignmentBlock.endDate).toLocaleDateString()}}
+        </div>
+      </v-card-subtitle>
 
       <v-card-text>
         <div class="d-flex ga-4 align-center py-1">
@@ -90,7 +103,7 @@
       </v-card-item>
     </v-card>
 
-    <my-overlay v-model="inspectionObjectCardShow">
+    <my-overlay v-model="inspectionObjectCardIsShow">
       <c-inspection-object-card :inspection_object="objectSelected"/>
     </my-overlay>
 
@@ -98,12 +111,13 @@
 </template>
 
 <script>
-import {fetchInspectionObjects} from "../utils/service/server.ts";
-import {dataInspectionObjects} from "../configs/data-test/data-test-inspection-object";
 import _ from "lodash";
+import {fetchInspectionObjects} from "../utils/service/server";
+import {dataInspectionObjects} from "../configs/data-test/data-test-inspection-object";
+import {timeStringToDate} from "../utils/service/serverAPI.js";
 
 export default {
-  name: "c-inspection-objects-menu",
+  name: "c-a-block-card-menu",
 
   props: {
     _assignmentBlock: Object,
@@ -119,12 +133,13 @@ export default {
     fetchingData: false,
     files: [],
     draggingId: false,
-    inspectionObjectCardShow: false,
+    inspectionObjectCardIsShow: false,
     objectSelected: null,
   }),
 
   mounted() {
     this.fetchObjects(this._assignmentBlock);
+    console.log(this._assignmentBlock)
   },
 
   watch: {
@@ -135,9 +150,11 @@ export default {
 
   methods: {
 
+    timeStringToDate,
+
     selectObject(_obj) {
       this.objectSelected = _obj;
-      this.inspectionObjectCardShow = true;
+      this.inspectionObjectCardIsShow = true;
     },
 
     onDragover(e, _id) {

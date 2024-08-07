@@ -22,7 +22,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-              @click="complete"
+              @click="onclickYes"
               variant="tonal"
               rounded="lg"
           >
@@ -53,7 +53,8 @@ export default {
   }),
 
   methods: {
-    complete() {
+    onclickYes(e) {
+      e.preventDefault;
       this.questionIsVisible = false;
       this.$emit('click:yes');
     }

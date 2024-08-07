@@ -66,7 +66,6 @@ export default {
 
   mounted() {
     this.activeItem = this.whichRouteIsActive() || null;
-    console.log('activeItem:', this.activeItem)
   },
 
   methods: {

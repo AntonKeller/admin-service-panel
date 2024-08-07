@@ -50,7 +50,7 @@ import {serverURL} from "../constants/constants";
 import {reloadNuxtApp} from "nuxt/app";
 
 export default {
-  name: "c-authorization-form",
+  name: "c-auth-form",
 
   data: () => ({
     snackBar: {},

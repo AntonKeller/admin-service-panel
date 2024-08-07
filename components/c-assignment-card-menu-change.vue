@@ -76,9 +76,11 @@
 <script>
 import _ from "lodash";
 import {showAlert} from "../utils/service/serverAPI";
-import {fetchContractsAll} from "../utils/methods/contract-requests";
-import {fetchCustomersAll} from "../utils/methods/customer-requests";
-import {changeAssignment} from "../utils/methods/assignment-requests";
+import {
+  fetchContractsAll,
+  fetchCustomersAll,
+  changeAssignment
+} from "../utils/service/server.ts";
 import {testDataContracts} from "../configs/data-test/data-test-contracts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
 

@@ -70,8 +70,10 @@
 
           <v-textarea
               v-model="assignment.description"
-              color="blue-grey-darken-3"
               :rules="assignmentDescriptionRules"
+              color="blue-grey-darken-3"
+              max-rows="1"
+              variant="outlined"
               auto-grow
           />
         </v-form>
@@ -107,8 +109,7 @@
 <script>
 import _ from "lodash";
 import {showAlert} from "../utils/service/serverAPI";
-import {addNewAssignment} from '../utils/methods/assignment-requests';
-import {fetchContractsAll} from "../utils/methods/contract-requests";
+import {fetchContractsAll, addNewAssignment} from '../utils/service/server.ts';
 import {testDataContracts} from "../configs/data-test/data-test-contracts";
 
 export default {
@@ -138,14 +139,15 @@ export default {
     customerAddMenuShow: false,
 
     assignmentTitleRules: [
-      value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0'
+      value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
+      value => value?.length <= 100 ? true : 'Кол-во символов должно быть <= 100'
     ],
     contractRules: [
-      value => value?.length > 0 ? true : 'Не выбран контракт'
+      value => value?.length > 0 ? true : 'Выберите договор'
     ],
     assignmentDescriptionRules: [
       value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
-      value => value?.length < 151 ? true : 'Кол-во символов должно быть <= 150',
+      value => value?.length <= 1500 ? true : 'Кол-во символов должно быть <= 1500',
     ],
 
   }),

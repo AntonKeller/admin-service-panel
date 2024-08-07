@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {registration} from "../utils/methods/requests";
+import {registration} from "../utils/service/server.ts";
 
 export default {
   name: "c-registration-form",

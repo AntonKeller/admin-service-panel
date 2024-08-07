@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {addCustomer} from "../utils/methods/customer-requests";
+import {addCustomer} from "../utils/service/server.ts";
 import customerConfig from "../configs/customer-config";
 
 export default {

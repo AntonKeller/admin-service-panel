@@ -20,6 +20,7 @@
 export default {
   inheritAttrs: false,
   name: "my-search-bar",
+  emits: ['btn:click'],
   props: {
     hideButton: Boolean,
   }

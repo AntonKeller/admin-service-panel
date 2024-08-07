@@ -20,29 +20,32 @@
           <my-text-field
               v-model="contract.contractNumber"
               :rules="contractNumberRules"
+              prepend-inner-icon="mdi-file-sign"
               label="Номер договора"
-              placeholder="xxxx/xxx"
+              placeholder="..../..."
           />
           <my-date-picker
               v-model="contract.contractDate"
               :rules="contractDateRules"
+              prepend-inner-icon="mdi-calendar-range"
               label="Дата заключения"
+              placeholder="дд:мм:гггг"
           />
           <div class="d-flex ga-2">
             <v-autocomplete
                 v-model="cCustomer"
                 :items="customers"
                 :rules="customersRules"
-                density="comfortable"
-                rounded="lg"
-                variant="outlined"
-                color="blue-grey-darken-3"
-                item-title="fullName"
-                item-value="_id"
-                label="Заказчик"
                 prepend-inner-icon="mdi-account-tie"
-                chips
+                color="blue-grey-darken-3"
+                density="comfortable"
+                variant="outlined"
+                label="Заказчик"
+                rounded="lg"
+                item-value="_id"
+                item-title="fullName"
                 closable-chips
+                chips
             >
               <template v-slot:chip="{ props, item }">
                 <v-chip
@@ -103,8 +106,7 @@
 <script>
 import _ from "lodash";
 import {showAlert} from "../utils/service/serverAPI";
-import {addContract} from "../utils/methods/contract-requests";
-import {fetchCustomersAll} from "../utils/methods/customer-requests";
+import {addContract, fetchCustomersAll} from "../utils/service/server.ts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
@@ -139,6 +141,9 @@ export default {
 
     cCustomer: {
       set(_id) {
+
+        console.log('_id', _id);
+
         this.contract.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
       },
       get() {

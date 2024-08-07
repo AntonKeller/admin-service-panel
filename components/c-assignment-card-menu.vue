@@ -60,7 +60,7 @@
         <v-divider class="my-1"/>
         <div class="d-flex ga-4 align-center py-1">
           <my-search-bar
-              style="min-width: 300px"
+              style="min-width: 360px"
               label="Поиск"
               persistent-hint
               :hint="`Найдено: ${totalItems}`"
@@ -87,8 +87,8 @@
             <col style="min-width: 111px">
             <col style="min-width: 111px">
             <col style="min-width: 111px">
-            <col style="min-width: 131px">
-            <col style="min-width: 80px">
+            <col style="min-width: 111px">
+            <col style="min-width: 70px">
             <thead>
             <tr>
               <th>Кредитный договор</th>
@@ -103,13 +103,19 @@
             </thead>
             <tbody>
             <tr
-                v-for="item in blocksMap()"
-                :key="item._id"
-                @click="blockSelect(item._id)"
+                v-for="block of assignmentBlocks"
+                :key="block._id"
+                @click="blockSelect(block)"
             >
-              <td v-for="v of item.values">{{ v }}</td>
-              <td>
-                <c-remove-btn :prompt="'Удалить'" @click.stop=""/>
+              <td>{{ block.loanAgreement }}</td>
+              <td>{{ timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ block.pledgeAgreement }}</td>
+              <td>{{ timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(block.startDate, 20).toLocaleDateString() }}</td>
+              <td>{{ timeStringToDate(block.endDate, 20).toLocaleDateString() }}</td>
+              <td>{{ block.status }}</td>
+              <td class="d-flex ga-2 align-center">
+                <c-remove-btn :prompt="'Удалить'" @click:yes="removeBlockItem(block._id)"/>
               </td>
             </tr>
             </tbody>
@@ -149,12 +155,12 @@
       <c-assignment-card-menu-change :_assignment="assignment" @update:success="$emit('update:success')"/>
     </my-overlay>
 
-    <my-overlay v-model="inspectionObjectsMenuIsShow">
-      <c-inspection-objects-menu :_assignmentBlock="selectedBlock"/>
+    <my-overlay v-model="aBlockCardMenuIsShow">
+      <c-a-block-card-menu :_assignmentBlock="selectedBlock"/>
     </my-overlay>
 
     <my-overlay v-model="blockMenuAddIsShow">
-      <c-assignment-block-menu-add :_assignmentId="_assignment._id" @add:success="$emit('update:success')"/>
+      <c-a-block-card-menu-add :_assignmentId="_assignment._id" @add:success="$emit('update:success')"/>
     </my-overlay>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
@@ -168,7 +174,7 @@
 <script>
 import _ from "lodash";
 import dataAssignmentBlocks from "../configs/data-test/data-test-assignment-blocks";
-import {fetchAssignmentBlocks} from "../utils/service/server.ts";
+import {fetchAssignmentBlocks, removeAssignmentBlock} from "../utils/service/server.ts";
 import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
 
 export default {
@@ -191,7 +197,7 @@ export default {
     snackBar: {},
     selectedBlock: null,
     blockMenuAddIsShow: false,
-    inspectionObjectsMenuIsShow: false,
+    aBlockCardMenuIsShow: false,
     fetchBlocksLoading: true,
 
     assignment: {
@@ -222,28 +228,25 @@ export default {
 
   methods: {
 
+    timeStringToDate,
+
+    removeBlockItem(_id) {
+      removeAssignmentBlock(_id)
+          .then(() => {
+            this.fetchAssignmentBlocks();
+          })
+          .catch(err => {
+            console.log('Ошибка удаления элемента', err);
+          })
+    },
+
     propsClone() {
       this.assignment = _.cloneDeep(this._assignment);
     },
 
-    blockSelect(_id) {
-      this.selectedBlock = this.assignmentBlocks.find(e => e._id === _id);
-      this.inspectionObjectsMenuIsShow = true;
-    },
-
-    blocksMap() {
-      return this.assignmentBlocks.map(item => ({
-        _id: item._id,
-        values: [
-          item.loanAgreement,
-          timeStringToDate(item.loanAgreementDate, 20).toLocaleDateString(),
-          item.pledgeAgreement,
-          timeStringToDate(item.plegeAgreementDate, 20).toLocaleDateString(),
-          timeStringToDate(item.startDate, 20).toLocaleDateString(),
-          timeStringToDate(item.endDate, 20).toLocaleDateString(),
-          item.status
-        ]
-      }))
+    blockSelect(_block) {
+      this.selectedBlock = _block;
+      this.aBlockCardMenuIsShow = true;
     },
 
     fetchAssignmentBlocksDebounce: _.debounce(function () {

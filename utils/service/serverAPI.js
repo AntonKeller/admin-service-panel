@@ -25,7 +25,7 @@ export function timeStringToDate(_timeString) {
 }
 
 export function dateToTimeString(_date) {
-    return String(Date.parse(_date));
+    return `${Date.parse(_date)}`;
 }
 
 export function showAlert(text) {

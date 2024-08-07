@@ -110,7 +110,7 @@
                 :items="assignment_block_statuses"
                 :rules="blockStatusRules"
                 prepend-inner-icon="mdi-label-variant-outline"
-                label="Номер договора залога"
+                label="Статус"
                 density="comfortable"
                 style="width: 100px"
                 variant="outlined"
@@ -150,7 +150,7 @@ import dataInspectors from "../configs/data-test/data-inspectors";
 import assignment_block_statuses from "../configs/assignment-statuses";
 
 export default {
-  name: "c-assignment-block-menu-add",
+  name: "c-a-block-card-menu-add",
 
   props: {
     _assignmentId: String,

@@ -1,4 +1,4 @@
-import {accessTest} from "@/utils/methods/requests";
+import {accessTest} from "@/utils/service/server";
 import {useState} from "nuxt/app";
 
 export default defineNuxtPlugin(async () => {

@@ -1,11 +1,7 @@
 <template>
   <div class="index-background">
     <div class="au-panel-wrap">
-      <v-card
-          variant="tonal"
-          class="o-v-card"
-          rounded="lg"
-      >
+      <v-card variant="tonal" rounded="lg">
 
         <v-tabs v-model="currentTab" bg-color="teal-darken-2">
           <v-tab variant="plain" value="authorization-tab" prepend-icon="mdi-login-variant">Вход</v-tab>
@@ -16,7 +12,7 @@
           <v-window v-model="currentTab">
 
             <v-window-item value="authorization-tab">
-              <c-authorization-form/>
+              <c-auth-form/>
             </v-window-item>
 
 <!--            <v-window-item value="registration-tab">-->
@@ -50,41 +46,16 @@ export default {
   data: () => ({
 
     currentTab: null,
-
     showVerifyAcc: true,
     show_verify_acc: false,
-
     otp: '',
-
     firstName: '',
-
-    firstNameRules: [
-      value => {
-        if (value?.length > 3) return true
-        return 'Токен введен неверно'
-      },
-    ],
-
     lastName: '',
-
-    lastNameRules: [
-      value => {
-        if (/[^0-9]/.test(value)) return true
-        return 'Пароль введен неверно'
-      },
-    ],
-
-    show1: false,
-
-    show2: true,
-
     password: '',
-
-    rules: {
-      required: value => !!value || 'Required.',
-      min: v => v.length >= 8 || 'Min 8 characters',
-      emailMatch: () => (`The email and password you entered don't match`),
-    },
+    show1: false,
+    show2: true,
+    firstNameRules: [v => v?.length > 3 || 'Токен введен неверно',],
+    lastNameRules: [v => /[^0-9]/.test(v) || 'Пароль введен неверно',],
   }),
 
   methods: {

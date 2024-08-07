@@ -99,7 +99,7 @@
 import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
 import {timeStringToDate} from "../../utils/service/serverAPI";
-import {fetchAssignments, removeAssignment} from "../../utils/methods/assignment-requests";
+import {fetchAssignments, removeAssignment} from "../../utils/service/server.ts";
 
 export default {
   name: "assignments-page",
@@ -172,7 +172,6 @@ export default {
     removeDataItem(_id) {
       removeAssignment(_id)
           .then(() => {
-            console.log('Элемент успешно удален');
             this.fetchData();
           })
           .catch(err => {
