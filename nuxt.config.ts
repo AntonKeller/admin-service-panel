@@ -1,10 +1,16 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify';
 
 export default defineNuxtConfig({
 
-    devtools: {enabled: true},
+    devtools: {
+        enabled: true
+    },
 
     ssr: false,
+
+    // routeRules: {
+        //     '/': { ssr: true, prerender: true },
+    // },
 
     app: {
 
@@ -23,11 +29,6 @@ export default defineNuxtConfig({
                 },
                 {
                     charset: 'utf-8'
-                },
-                {
-                    hid: 'description',
-                    name: 'description',
-                    content: "desriptiojghsdfgkjdhfjgkhdsfjhgkjdshgkdsfdf"
                 },
                 {
                     name: 'format-detection',
@@ -88,7 +89,7 @@ export default defineNuxtConfig({
         (_options, nuxt) => {
             nuxt.hooks.hook('vite:extendConfig', (config) => {
                 // @ts-expect-error
-                config.plugins.push(vuetify({ autoImport: true }))
+                config.plugins.push(vuetify({autoImport: true}))
             })
         },
         '@vueuse/motion/nuxt',

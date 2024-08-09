@@ -27,30 +27,43 @@
         <v-table
             style="height: 700px"
             density="comfortable"
+            class="text-caption"
             fixed-header
         >
           <thead v-if="!fetchingData">
           <tr>
-            <th class="text-left">№</th>
-            <th class="text-left">Заголовок</th>
-            <th class="text-left">Описание</th>
-            <th class="text-left">Номер договора</th>
-            <th class="text-left">Дата договора</th>
-            <th class="text-left">Заказчик</th>
-            <th class="text-left">Тел.</th>
-            <th class="text-left">Email</th>
-            <th class="text-left"></th>
+            <th>№</th>
+            <th>Заголовок</th>
+            <th>Описание</th>
+            <th>Договор</th>
+            <th>Заказчик</th>
+            <th></th>
           </tr>
           </thead>
           <tbody v-if="!fetchingData">
           <tr
-              v-for="item of mapData()"
-              :key="item._id"
-              @click="cardMenuShow(item._id)"
+              v-for="(assignment, i) of data"
+              :key="assignment._id"
+              @click="cardMenuShow(assignment._id)"
           >
-            <td v-for="value of item.values">{{ value }}</td>
+            <td>{{i}}</td>
             <td>
-              <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(item._id)"/>
+              <div>{{assignment.title}}</div>
+              <div><b>Создан: </b>{{assignment.createdAt}}</div>
+            </td>
+            <td>
+              {{assignment.description}}
+            </td>
+            <td>
+              <div><b>Номер: </b>{{assignment.contract.contractNumber}}</div>
+              <div><b>Заключен: </b>{{timeStringToDate(assignment.contract.contractDate).toLocaleDateString()}}</div>
+            </td>
+            <td>
+              <div><b></b>{{assignment.contract.customer.shortName}}</div>
+              <div><b>email: </b>{{assignment.contract.customer.email}}</div>
+            </td>
+            <td>
+              <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(assignment._id)"/>
             </td>
           </tr>
           </tbody>
@@ -136,6 +149,8 @@ export default {
 
   methods: {
 
+    timeStringToDate,
+
     getQuery() {
       let params = [
         this.currentPage ? `page=${this.currentPage}` : null,
@@ -159,6 +174,7 @@ export default {
             this.totalPages = response.data.totalPages;
             this.pageSize = response.data.pageSize;
             this.data = response.data.data;
+            console.log('this.data', this.data);
           })
           .catch(err => {
             console.log('Ошибка получения данных с сервера', err);
@@ -183,22 +199,6 @@ export default {
       this.selectedAssignment = this.data.find(e => e._id === _itemId);
       this.cardMenuIsVisible = true;
     },
-
-    mapData() {
-      return this.data.map((item, itemI) => ({
-        _id: item._id,
-        values: [
-          itemI + 1,
-          item?.title || '-',
-          item?.description?.slice(0, 50) || '-',
-          item?.contract?.contractNumber || '-',
-          timeStringToDate(item?.contract?.contractDate)?.toLocaleDateString() || '',
-          item?.contract?.customer?.fullName || '-',
-          item?.contract?.customer?.phoneNumber || '-',
-          item?.contract?.customer?.email || '-'
-        ]
-      }))
-    }
   }
 }
 </script>

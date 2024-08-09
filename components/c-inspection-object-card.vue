@@ -1,25 +1,46 @@
 <template>
   <v-sheet
       rounded="lg"
-      width="900px"
-      elevation="12"
+      max-width="1024px"
+      elevation="6"
       color="white"
   >
     <v-card rounded="lg" variant="text">
       <v-card-title>{{ inspection_object.name + ' / ' + inspection_object.inventoryNumber }}</v-card-title>
       <v-card-subtitle>
-        {{ inspection_object.description }}
+        <div class="d-flex ga-2">
+          <b>Адрес: </b>{{ inspection_object.address }}
+        </div>
+        <div class="d-flex ga-2">
+          <b>Фотографий: </b>{{ viewsPhotos.length }} шт.
+        </div>
+        <div class="d-flex ga-2">
+          <b>Описание: </b>{{ inspection_object.description }}
+        </div>
       </v-card-subtitle>
       <v-card-item>
-        <div class="d-flex ga-1">
-          <v-chip rounded="lg" color="blue-grey-darken-4" density="compact">
-            {{ 'Адрес: ' + inspection_object.address }}
+        <v-file-input
+            v-model="files"
+            id="inputfile"
+            class="my-1 d-none"
+            variant="outlined"
+            density="compact"
+            type="file"
+            accept="image/*"
+            capture="camera"
+            @change="sendImages"
+        />
+        <v-label for="inputfile">
+          <v-chip
+              class="my-1"
+              rounded="lg"
+              variant="elevated"
+              color="blue-grey-darken-3"
+          >
+            <v-icon>mdi-camera-outline</v-icon>
           </v-chip>
-          <v-chip rounded="lg" color="blue-grey-darken-4" density="compact">
-            {{ 'Фотографий: ' + viewsPhotos.length + ' шт.' }}
-          </v-chip>
-        </div>
-        <v-divider class="mt-4"/>
+        </v-label>
+        <v-divider/>
       </v-card-item>
       <v-card-text>
         <v-sheet
@@ -29,7 +50,9 @@
             max-height="500px"
             height="500px"
             style="overflow-y: scroll"
+            @scroll="onScroll"
         >
+
           <v-sheet
               v-if="dragging"
               height="600px"
@@ -53,12 +76,11 @@
               class="d-flex ga-2 flex-wrap align-center justify-center"
           >
             <v-card
-                v-for="(item, itemI) of viewsPhotos"
+                v-for="(item, itemI) of slicePhotos()"
                 :key="item._id"
                 variant="tonal"
                 rounded="lg"
                 color="blue-grey-darken-1"
-                style="width: 32%"
             >
               <v-card-title></v-card-title>
               <v-card-subtitle>{{ 'Фото: ' + (itemI + 1) }}</v-card-subtitle>
@@ -71,13 +93,7 @@
                     alt="loading..."
                 >
               </v-card-item>
-              <v-card-text>
-                {{ item.description }}
-<!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab adipisci alias, architecto at aut-->
-<!--                doloremque ea eaque eius est et expedita inventore ipsam iure magni maxime natus, nihil numquam officiis-->
-<!--                omnis pariatur provident quas quos reiciendis rem rerum sequi sunt ut velit vero! Dicta eius odit-->
-<!--                quidem. Ea, et.-->
-              </v-card-text>
+              <v-card-text>{{ item.description }}</v-card-text>
             </v-card>
           </v-sheet>
 
@@ -89,8 +105,8 @@
 </template>
 
 <script>
-import _ from "lodash";
-import {serverURL} from "../constants/constants.js";
+import {serverURL} from "../constants/constants";
+import {sendImg} from "../utils/service/server";
 
 export default {
   name: "c-inspection-object-card",
@@ -100,14 +116,19 @@ export default {
   },
 
   mounted() {
-    this.viewsPhotos = this.inspection_object?.photos.map(this.photoMap);
+    console.log('this.inspection_object', this.inspection_object)
+    this.viewsPhotos = this.inspection_object?.photos?.map(this.photoMap);
   },
 
   data: () => ({
     files: [],
+    page: 1,
+    maxPages: null,
+    sliceSize: 6,
     viewsPhotos: [],
     dragging: false,
     counter: 0,
+    progress: 0,
   }),
 
   watch: {
@@ -117,6 +138,40 @@ export default {
   },
 
   methods: {
+
+    slicePhotos() {
+      this.maxPages = Math.ceil(this.viewsPhotos.length / this.sliceSize);
+      // console.log('this.viewsPhotos?.slice(0, this.sliceSize)',this.viewsPhotos?.slice(0, this.sliceSize))
+      // return this.viewsPhotos?.slice((this.page -1) * this.sliceSize, this.page * this.sliceSize);
+      return this.viewsPhotos?.slice(0, this.page * this.sliceSize);
+    },
+
+    onScroll(e) {
+      let scrollPercent = ((e?.target?.scrollTop + e?.target?.clientHeight) / e?.target?.scrollHeight);
+      if (scrollPercent >= 0.99) {
+        this.page += 1;
+        console.log('Прокручен');
+      }
+    },
+
+    sendImages() {
+      if (this.files && this.files.length > 0) {
+        let step = 100 / this.files.length;
+        for (let file of this.files) {
+          let formData = new FormData();
+          formData.append('image', file);
+          sendImg(this.inspection_object._id, formData)
+              .then(response => {
+                this.$emit('update:success');
+              })
+              .catch(err => {
+                console.log('Ошибка', err);
+              })
+          this.progress += Math.floor(step);
+        }
+        this.files = [];
+      }
+    },
 
     photoMap(_photo) {
       return {

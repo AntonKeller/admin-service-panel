@@ -3,21 +3,13 @@
       rounded="lg"
       height="700px"
       width="1024px"
-      elevation="12"
+      elevation="6"
       color="white"
   >
     <v-card rounded="lg">
       <v-card-title>
         <v-sheet class="d-flex ga-2">
-          <v-btn
-              variant="tonal"
-              icon="mdi-pencil-outline"
-              density="comfortable"
-              border="sm"
-              color="blue-grey-darken-2"
-              rounded="lg"
-              @click="cardChangeMenu = true"
-          />
+          <c-btn-change prompt="Редактировать ТЗ" @click="cardChangeMenu = true"/>
           {{ assignment?.title }}
         </v-sheet>
       </v-card-title>
@@ -80,23 +72,12 @@
             >загрузка...
             </v-progress-circular>
           </div>
-          <v-table v-if="!fetchBlocksLoading" height="290px" fixed-header density="comfortable">
-            <col style="min-width: 171px">
-            <col style="min-width: 111px">
-            <col style="min-width: 161px">
-            <col style="min-width: 111px">
-            <col style="min-width: 111px">
-            <col style="min-width: 111px">
-            <col style="min-width: 111px">
-            <col style="min-width: 70px">
+          <v-table v-if="!fetchBlocksLoading" height="290px" fixed-header density="default" class="text-caption">
             <thead>
             <tr>
               <th>Кредитный договор</th>
-              <th>Дата кд</th>
               <th>Договор залога</th>
-              <th>Дата дз</th>
-              <th>Начало</th>
-              <th>Окончание</th>
+              <th>Сроки</th>
               <th>Статус</th>
               <th></th>
             </tr>
@@ -107,14 +88,22 @@
                 :key="block._id"
                 @click="blockSelect(block)"
             >
-              <td>{{ block.loanAgreement }}</td>
-              <td>{{ timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ block.pledgeAgreement }}</td>
-              <td>{{ timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(block.startDate, 20).toLocaleDateString() }}</td>
-              <td>{{ timeStringToDate(block.endDate, 20).toLocaleDateString() }}</td>
-              <td>{{ block.status }}</td>
-              <td class="d-flex ga-2 align-center">
+              <td style="min-width: 280px; max-width: 280px">
+                <div><b>Номер: </b>{{block.loanAgreement}}</div>
+                <div><b>Дата: </b>{{timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString()}}</div>
+              </td>
+              <td style="min-width: 280px; max-width: 280px">
+                <div><b>Номер: </b>{{block.pledgeAgreement}}</div>
+                <div><b>Дата: </b>{{timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString()}}</div>
+              </td>
+              <td style="min-width: 180px; max-width: 180px">
+                <div><b>Начало:</b> {{ timeStringToDate(block.startDate, 20).toLocaleDateString() }}</div>
+                <div><b>Окончание:</b> {{ timeStringToDate(block.endDate, 20).toLocaleDateString() }}</div>
+              </td>
+              <td style="min-width: 147px; max-width: 147px">
+                {{ block.status }}
+              </td>
+              <td style="min-width: 30px; max-width: 30px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeBlockItem(block._id)"/>
               </td>
             </tr>
@@ -156,7 +145,7 @@
     </my-overlay>
 
     <my-overlay v-model="aBlockCardMenuIsShow">
-      <c-a-block-card-menu :_assignmentBlock="selectedBlock"/>
+      <c-a-block-card-menu :_assignmentId="_assignment._id" :_assignmentBlock="selectedBlock"/>
     </my-overlay>
 
     <my-overlay v-model="blockMenuAddIsShow">
@@ -189,7 +178,7 @@ export default {
 
     assignmentBlocks: [],
     currentPage: 1,
-    limitItems: 3,
+    limitItems: 20,
     totalItems: 0,
     totalPages: 1,
 
@@ -276,6 +265,7 @@ export default {
             this.limitItems = resp?.data?.pageSize;
             this.totalItems = resp?.data?.totalItems;
             this.totalPages = resp?.data?.totalPages;
+            console.log('this.assignmentBlocks', this.assignmentBlocks)
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);

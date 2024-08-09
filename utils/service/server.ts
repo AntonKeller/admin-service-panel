@@ -1,10 +1,11 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants.js";
-import type TAssignmentBlock from "@/utils/types/TAssignmentBlock.ts";
+import {serverURL} from "@/constants/constants";
+import type TAssignmentBlock from "@/utils/types/TAssignmentBlock";
 import type TCustomer from "@/utils/types/TCustomer";
 import type TAssignment from "@/utils/types/TAssignment";
 import type TContract from "@/utils/types/TContract";
 import type TRegistration from "@/utils/types/TRegistration";
+import type TInspectionObject from "@/utils/types/TInspectionObject";
 
 
 const config = {
@@ -45,10 +46,24 @@ export async function fetchInspectionObjects(query: string) {
     return axios.get(serverURL + '/inspection-objects' + (query || ''), config);
 }
 
+export async function sendInspectionObject(blockId: string, data: TInspectionObject) {
+    return axios.post(serverURL + '/inspection-objects/add/' + blockId, data, config);
+}
+
+export async function changeInspectionObject(blockId: string, data: TInspectionObject) {
+    return axios.post(serverURL + '/' + blockId, data, config);
+}
+
 
 /**
  * Images
  * */
+export async function sendImg(object_id: string, data: any) {
+    return axios.post(serverURL + '/photos/add/' + object_id, data, config);
+}
+
+// http://192.168.1.18/photos/add/:objectId
+
 export async function get_images(object_id: string) {
     return axios.get(serverURL + '/photos/archive/' + object_id, config);
 }
@@ -157,8 +172,8 @@ export function sendAssignmentBlock(assignmentId: string, block: TAssignmentBloc
     return axios.post(serverURL + '/assignment-blocks/add/' + assignmentId, block, config);
 }
 
-export function changeAssignmentBlock(block: TAssignmentBlock) {
-    return axios.put(serverURL + '/assignment-blocks/change', block, config);
+export function changeAssignmentBlock(assignmentId: string, block: TAssignmentBlock) {
+    return axios.put(serverURL + '/assignment-blocks/' + assignmentId + '/change/' + block._id, block, config);
 }
 
 export function removeAssignmentBlock(blockId: string) {

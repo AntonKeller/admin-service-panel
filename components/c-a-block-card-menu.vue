@@ -1,27 +1,43 @@
 <template>
   <v-sheet
       rounded="lg"
-      width="900px"
-      elevation="12"
+      max-width="1024px"
+      min-width="1024px"
+      elevation="6"
       color="white"
   >
     <v-card rounded="lg">
 
       <v-card-title>
         <v-sheet class="d-flex ga-2">
-          <c-btn-change prompt="Редактировать"/>
-          {{_assignmentBlock.title}}
+          <c-btn-change prompt="Редактировать Блок" @click="aBlockCardMenuChangeIsShow = true"/>
+          {{ _assignmentBlock.title }}
         </v-sheet>
       </v-card-title>
 
-      <v-card-subtitle class="d-flex flex-column ga-1">
-        <div>
-          <b>Статус:</b> {{_assignmentBlock.status}}
+      <v-card-subtitle>
+        <div class="d-flex ga-2">
+          <b>Статус:</b> {{ _assignmentBlock.status }}
         </div>
-        <div>
+        <div class="d-flex ga-2">
           <b>Начало-Окончание:</b>
-          {{timeStringToDate(_assignmentBlock.startDate).toLocaleDateString()}} -
-          {{timeStringToDate(_assignmentBlock.endDate).toLocaleDateString()}}
+          {{ timeStringToDate(_assignmentBlock.startDate).toLocaleDateString() }} -
+          {{ timeStringToDate(_assignmentBlock.endDate).toLocaleDateString() }}
+        </div>
+
+        <div class="d-flex ga-2">
+          <b>Инспектор:</b> {{
+            _assignmentBlock.inspector ?
+                _assignmentBlock.inspector?.lastName + ' ' +
+                _assignmentBlock.inspector?.firstName?.slice(0, 1) + '. ' +
+                _assignmentBlock.inspector?.surName?.slice(0, 1) + '. ' :
+                'Инспектор отсутствует'
+          }}
+        </div>
+        <div class="d-flex ga-2">
+          <b>{{ _assignmentBlock.inspector?.email }}</b>
+          <b>/</b>
+          <b>{{ _assignmentBlock.inspector?.phoneNumber }}</b>
         </div>
       </v-card-subtitle>
 
@@ -34,15 +50,15 @@
               :hint="`Найдено: ${totalItems}`"
               v-model="searchText"
               @update:modelValue="fetchObjectsDebounce"
+              @btn:click="inspObjectCardAddIsShow = true"
           />
         </div>
         <v-sheet height="400px">
           <v-divider/>
-          <v-table height="520px" fixed-header density="compact">
+          <v-table height="520px" fixed-header density="default" class="text-caption">
             <thead>
             <tr>
-              <th class="text-left">Наименование</th>
-              <th class="text-left">Инвентарный номер</th>
+              <th class="text-left">Объект</th>
               <th class="text-left">Адрес</th>
               <th class="text-left">Описание</th>
               <th class="text-left"></th>
@@ -53,20 +69,19 @@
             <tr
                 v-for="inspectionObject in inspectionObjects"
                 :key="inspectionObject._id"
-                class="text-caption"
                 :class="{'bg-yellow-lighten-3':draggingId===inspectionObject._id}"
                 @click.stop="selectObject(inspectionObject)"
                 @dragover="(e) => onDragover(e, inspectionObject._id)"
                 @dragleave="onDragleave"
                 @drop="(e) => onDrop(e, inspectionObject._id)"
             >
-              <td>
-                {{ textSlicer(inspectionObject.name, 25) }}
+              <td style="min-width: 300px; max-width: 300px">
+                <div><b>Наименование: </b>{{ textSlicer(inspectionObject.name, 25) }}</div>
+                <div><b>Инв. номер: </b>{{ textSlicer(inspectionObject.inventoryNumber, 25) }}</div>
               </td>
-              <td>{{ textSlicer(inspectionObject.inventoryNumber, 25) }}</td>
-              <td>{{ textSlicer(inspectionObject.address, 50) }}</td>
-              <td>{{ textSlicer(inspectionObject.description, 80) }}</td>
-              <td>
+              <td style="min-width: 250px; max-width: 250px">{{ textSlicer(inspectionObject.address, 50) }}</td>
+              <td style="min-width: 400px; max-width: 400px">{{ textSlicer(inspectionObject.description, 80) }}</td>
+              <td style="min-width: 30px; max-width: 30px">
                 <c-remove-btn :prompt="'Удалить'" @click.stop=""/>
               </td>
             </tr>
@@ -103,8 +118,20 @@
       </v-card-item>
     </v-card>
 
-    <my-overlay v-model="inspectionObjectCardIsShow">
-      <c-inspection-object-card :inspection_object="objectSelected"/>
+    <my-overlay v-model="inspObjectCardIsShow">
+      <c-inspection-object-card :inspection_object="selectedObject"/>
+    </my-overlay>
+
+    <my-overlay v-model="inspObjectCardAddIsShow">
+      <c-inspection-object-card-add :_blockId="_assignmentBlock._id"/>
+    </my-overlay>
+
+    <my-overlay v-model="aBlockCardMenuChangeIsShow">
+      <c-a-block-card-menu-change
+          :_assignmentId="_assignmentId"
+          :_block="_assignmentBlock"
+          @update:success="this.fetchObjects"
+      />
     </my-overlay>
 
   </v-sheet>
@@ -119,7 +146,10 @@ import {timeStringToDate} from "../utils/service/serverAPI.js";
 export default {
   name: "c-a-block-card-menu",
 
+  components: {},
+
   props: {
+    _assignmentId: String,
     _assignmentBlock: Object,
   },
 
@@ -132,19 +162,21 @@ export default {
     searchText: '',
     fetchingData: false,
     files: [],
+    selectedObject: null,
     draggingId: false,
-    inspectionObjectCardIsShow: false,
-    objectSelected: null,
+    aBlockCardMenuChangeIsShow: false,
+    inspObjectCardIsShow: false,
+    inspObjectCardAddIsShow: false,
   }),
 
   mounted() {
-    this.fetchObjects(this._assignmentBlock);
+    this.fetchObjects();
     console.log(this._assignmentBlock)
   },
 
   watch: {
     _assignmentBlock() {
-      this.fetchObjects(this._assignmentBlock);
+      this.fetchObjects();
     }
   },
 
@@ -152,9 +184,9 @@ export default {
 
     timeStringToDate,
 
-    selectObject(_obj) {
-      this.objectSelected = _obj;
-      this.inspectionObjectCardIsShow = true;
+    selectObject(_object) {
+      this.selectedObject = _object;
+      this.inspObjectCardIsShow = true;
     },
 
     onDragover(e, _id) {
@@ -197,7 +229,7 @@ export default {
       this.fetchObjects();
     }, 1000),
 
-    fetchObjects(_block) {
+    fetchObjects() {
       this.fetchingData = true;
       fetchInspectionObjects(this.createQueryParams())
           .then(resp => {
@@ -206,6 +238,7 @@ export default {
             this.limitItems = resp.data?.pageSize;
             this.totalItems = resp.data?.totalItems;
             this.totalPages = resp.data?.totalPages;
+            console.log('objects: ', this.inspectionObjects);
           })
           .catch(err => {
             this.inspectionObjects = dataInspectionObjects;

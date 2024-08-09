@@ -4,7 +4,7 @@ export const assignment_block_statuses = [
     'В работе',
     'Согласование',
     'Закрытие',
-    'Завершен',
+    'Завершено',
 ]
 
 export const assignment_block_statuses_config = [
