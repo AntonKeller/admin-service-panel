@@ -2,7 +2,6 @@ interface TFile {
     _id: string,
     route: string,
     type: string,
-    description: string,
 }
 
 

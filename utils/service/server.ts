@@ -62,23 +62,14 @@ export async function sendImg(object_id: string, data: any) {
     return axios.post(serverURL + '/photos/add/' + object_id, data, config);
 }
 
-// http://192.168.1.18/photos/add/:objectId
-
-export async function get_images(object_id: string) {
-    return axios.get(serverURL + '/photos/archive/' + object_id, config);
+export async function removeImg(photoId: string) {
+    return axios.delete(serverURL + '/photos/remove/' + photoId, config);
 }
 
-export async function get_image(photo_id: string) {
-    return axios.get(serverURL + '/inspection-objects/images/add/' + photo_id, config);
+export async function fetchImages(object_id: string) {
+    return axios.get(serverURL + '/photos/all/' + object_id, config);
 }
 
-export async function send_image(object_id: string) {
-    return axios.get(serverURL + '/photos/add/' + object_id, config);
-}
-
-export async function remove_images(object_id: string) {
-    return axios.get(serverURL + '/photos/' + object_id + '/deleteAll', config);
-}
 
 
 /**

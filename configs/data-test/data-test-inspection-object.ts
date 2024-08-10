@@ -12,7 +12,6 @@ export const dataInspectionObjects: Array<TInspectionObject> = [
                 _id: '1',
                 route: '/first_img.jpeg',
                 type: '.jpeg',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
             }
         ],
     },
@@ -27,19 +26,16 @@ export const dataInspectionObjects: Array<TInspectionObject> = [
                 _id: '1',
                 route: '/first_img.jpeg',
                 type: '.jpeg',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
             },
             {
                 _id: '2',
                 route: '/first_img.jpeg',
                 type: '.jpeg',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
             },
             {
                 _id: '3',
                 route: '/first_img.jpeg',
                 type: '.jpeg',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
             }
         ],
     }

@@ -119,7 +119,7 @@
     </v-card>
 
     <my-overlay v-model="inspObjectCardIsShow">
-      <c-inspection-object-card :inspection_object="selectedObject"/>
+      <c-inspection-object-card :_object="selectedObject" @update:success="fetchObjects"/>
     </my-overlay>
 
     <my-overlay v-model="inspObjectCardAddIsShow">
