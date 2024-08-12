@@ -171,7 +171,6 @@ export default {
 
   mounted() {
     this.fetchObjects();
-    console.log(this._assignmentBlock)
   },
 
   watch: {
@@ -200,8 +199,6 @@ export default {
     },
 
     onDrop(e, _id) {
-
-      console.log(e.dataTransfer.files)
       e.preventDefault();
       this.files.push(...e.dataTransfer.files);
       // this.$refs.file.files = e.dataTransfer.files;
@@ -238,7 +235,6 @@ export default {
             this.limitItems = resp.data?.pageSize;
             this.totalItems = resp.data?.totalItems;
             this.totalPages = resp.data?.totalPages;
-            console.log('objects: ', this.inspectionObjects);
           })
           .catch(err => {
             this.inspectionObjects = dataInspectionObjects;

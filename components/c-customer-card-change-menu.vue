@@ -80,12 +80,10 @@ export default {
       this.loading = true;
       putCustomer(this.customer)
           .then(response => {
-            console.log('Заказчик успешно изменен', response);
             this.returnNewCustomer(response?.data);
             this.requestCompleteEvent('teal-accent-3', 'Заказчик успешно добавлен');
           })
           .catch(err => {
-            console.log('Не удалось изменить заказчика', err);
             this.requestCompleteEvent('red-accent-3', 'Ошибка добавления заказчика');
           })
           .finally(() => {

@@ -154,7 +154,6 @@ export default {
 
   mounted() {
     this.fetchContractsAll();
-    console.log('contracts', this.contracts)
   },
 
   computed: {

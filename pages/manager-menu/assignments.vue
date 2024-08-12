@@ -137,7 +137,6 @@ export default {
   watch: {
     data() {
       if (this.selectedAssignment?._id) {
-        console.log('this.selectedAssignment', this.selectedAssignment)
         this.selectedAssignment = this.data.find(e => e._id === this.selectedAssignment._id);
       }
     },
@@ -174,7 +173,6 @@ export default {
             this.totalPages = response.data.totalPages;
             this.pageSize = response.data.pageSize;
             this.data = response.data.data;
-            console.log('this.data', this.data);
           })
           .catch(err => {
             console.log('Ошибка получения данных с сервера', err);

@@ -179,7 +179,6 @@ export default {
   mounted() {
     this.fetchInspectors();
     this.block = _.cloneDeep(this._block);
-    console.log('this.block', this.block)
   },
 
   methods: {

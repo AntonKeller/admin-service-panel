@@ -9,7 +9,6 @@ export default defineNuxtPlugin(async () => {
         if (storage?.accessToken?.length > 0) {
             const state_access_token_test = useState('access_token_test');
             state_access_token_test.value = await accessTest(storage?.accessToken).then(r => r.data);
-            // console.log('[plugin] state_access_token_test:', state_access_token_test.value);
         }
 
     } catch (err) {

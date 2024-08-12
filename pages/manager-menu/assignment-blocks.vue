@@ -177,7 +177,6 @@ export default {
           return e;
         }
       })
-      console.log('Статус обновлен')
     },
 
     fetchAssignmentBlocks() {

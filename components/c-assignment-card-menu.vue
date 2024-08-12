@@ -265,7 +265,6 @@ export default {
             this.limitItems = resp?.data?.pageSize;
             this.totalItems = resp?.data?.totalItems;
             this.totalPages = resp?.data?.totalPages;
-            console.log('this.assignmentBlocks', this.assignmentBlocks)
           })
           .catch(err => {
             console.log('Ошибка получения блоков ТЗ', err);

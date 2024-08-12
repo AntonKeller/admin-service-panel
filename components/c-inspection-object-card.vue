@@ -159,7 +159,6 @@ export default {
       fetchImages(_objectId)
           .then(resp => {
             this.photos = resp.data;
-            console.log('resp.data', resp.data)
           })
     },
 
@@ -170,7 +169,7 @@ export default {
           let formData = new FormData();
           formData.append('image', file);
           sendImg(this._object._id, formData)
-              .then(response => {
+              .then(() => {
                 this.fetchImages();
               })
               .catch(err => {

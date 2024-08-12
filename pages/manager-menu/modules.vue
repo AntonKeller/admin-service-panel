@@ -49,7 +49,6 @@
           v-model="date"
           label="Дата"
           :rules="rules"
-          @update:modelValue="_v => console.log('date:', _v)"
       />
       <v-btn @click="req5">
           download
@@ -86,8 +85,6 @@ export default {
 
     async req5() {
       const response = await axios.get('http://192.168.1.18/photos/026a450d-bdd7-431c-8924-54fcb1d565ee/downloadAllPhotos');
-      // const data = await response.json();
-      console.log('data', response.data)
     },
 
     onDragover(e) {
@@ -100,8 +97,6 @@ export default {
     },
 
     onDrop(e) {
-
-      console.log(e.dataTransfer.files)
       e.preventDefault();
       this.files.push(...e.dataTransfer.files);
       // this.$refs.file.files = e.dataTransfer.files;
@@ -122,13 +117,9 @@ export default {
       const response = await fetch(serverURL + '/photos');
       const data = await response.json();
 
-      console.log('element', data[0]?._id);
-
       // const response2 = await fetch(serverURL + '/photos/download/' + data[0]?._id);
       // console.log('response2', response2);
       let name = data[0]?._id + ".jpeg";
-      console.log('name', name)
-
       let link = document.createElement('a');
       link.href = serverURL + '/photos/download/' + data[0]?._id;
       link.download = name;

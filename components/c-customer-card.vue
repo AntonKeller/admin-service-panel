@@ -72,8 +72,7 @@ export default {
   methods: {
     removeSelf(_id) {
       removeCustomer(_id)
-          .then(response => {
-            console.log('Заказчик успешно удален', response);
+          .then(() => {
             this.removeClick(this.customerProp._id);
           })
           .catch(err => {

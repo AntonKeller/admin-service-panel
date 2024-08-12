@@ -145,8 +145,7 @@ export default {
         password: this.password.value,
         email: this.email.value,
       }, 0)
-          .then((response) => {
-            console.log('Регистрация прошла успешно', response);
+          .then(() => {
             this.$emit('updateTab', "verify-tab");
           })
           .catch((err) => {

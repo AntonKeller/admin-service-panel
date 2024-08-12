@@ -141,9 +141,6 @@ export default {
 
     cCustomer: {
       set(_id) {
-
-        console.log('_id', _id);
-
         this.contract.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
       },
       get() {
@@ -170,7 +167,7 @@ export default {
               this.loading = false;
             })
       } else {
-        console.log('Поля не заполнены')
+        this.snackBar = showAlert('Поля не заполнены!').error();
       }
     },
 
@@ -186,7 +183,6 @@ export default {
           })
           .finally(() => {
             this.fetchingCustomers = false;
-            console.log('this.customers', this.customers)
           })
     },
 

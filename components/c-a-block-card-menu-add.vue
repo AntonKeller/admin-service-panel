@@ -203,7 +203,6 @@ export default {
       fetchInspectorsAll()
           .then(response => {
             this.inspectors = response.data;
-            console.log('this.inspectors', this.inspectors);
           })
           .catch((err) => {
             console.log('Ошибка получения инспекторов', err);
