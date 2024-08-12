@@ -89,12 +89,12 @@
                 @click="blockSelect(block)"
             >
               <td style="min-width: 280px; max-width: 280px">
-                <div><b>Номер: </b>{{block.loanAgreement}}</div>
-                <div><b>Дата: </b>{{timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString()}}</div>
+                <div><b>Номер: </b>{{ block.loanAgreement }}</div>
+                <div><b>Дата: </b>{{ timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString() }}</div>
               </td>
               <td style="min-width: 280px; max-width: 280px">
-                <div><b>Номер: </b>{{block.pledgeAgreement}}</div>
-                <div><b>Дата: </b>{{timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString()}}</div>
+                <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
+                <div><b>Дата: </b>{{ timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString() }}</div>
               </td>
               <td style="min-width: 180px; max-width: 180px">
                 <div><b>Начало:</b> {{ timeStringToDate(block.startDate, 20).toLocaleDateString() }}</div>
@@ -141,15 +141,22 @@
     </v-card>
 
     <my-overlay v-model="cardChangeMenu">
-      <c-assignment-card-menu-change :_assignment="assignment" @update:success="$emit('update:success')"/>
+      <c-assignment-card-change :_assignment="assignment" @update:success="$emit('update:success')"/>
     </my-overlay>
 
     <my-overlay v-model="aBlockCardMenuIsShow">
-      <c-a-block-card-menu :_assignmentId="_assignment._id" :_assignmentBlock="selectedBlock"/>
+      <c-a-block-card
+          :_assignmentId="_assignment._id"
+          :_assignmentBlock="selectedBlock"
+          @update:success="fetchAssignmentBlocks"
+      />
     </my-overlay>
 
     <my-overlay v-model="blockMenuAddIsShow">
-      <c-a-block-card-menu-add :_assignmentId="_assignment._id" @add:success="$emit('update:success')"/>
+      <c-a-block-card-add
+          :_assignmentId="_assignment._id"
+          @add:success="fetchAssignmentBlocks"
+      />
     </my-overlay>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
@@ -167,7 +174,7 @@ import {fetchAssignmentBlocks, removeAssignmentBlock} from "../utils/service/ser
 import {showAlert, timeStringToDate} from "../utils/service/serverAPI";
 
 export default {
-  name: "c-assignment-card-menu",
+  name: "c-assignment-card",
 
   props: {
     _assignment: Object,

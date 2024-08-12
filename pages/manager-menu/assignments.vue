@@ -15,7 +15,7 @@
                 v-model="searchText"
                 :hint="`Найдено: ${totalItems}`"
                 style="min-width: 500px"
-                @btn:click="addMenuVisible = true"
+                @btn:click="navigateTo('/manager-menu/assignments/assignment-card-add')"
                 @update:modelValue="fetchDataDebounce900"
             />
           </div>
@@ -34,9 +34,9 @@
           <tr>
             <th>№</th>
             <th>Заголовок</th>
-            <th>Описание</th>
             <th>Договор</th>
             <th>Заказчик</th>
+            <th>Описание</th>
             <th></th>
           </tr>
           </thead>
@@ -46,23 +46,24 @@
               :key="assignment._id"
               @click="cardMenuShow(assignment._id)"
           >
-            <td>{{i}}</td>
-            <td>
-              <div>{{assignment.title}}</div>
-              <div><b>Создан: </b>{{assignment.createdAt}}</div>
+            <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i }}</td>
+            <td style="min-width: 280px; width: 280px; max-width: 280px">
+              <div>{{ assignment.title }}</div>
+              <div><b>Создан: </b>{{ assignment.createdAt }}</div>
             </td>
-            <td>
-              {{assignment.description}}
+
+            <td style="min-width: 240px; width: 240px; max-width: 240px">
+              <div><b>Номер: </b>{{ assignment.contract.contractNumber }}</div>
+              <div><b>Заключен: </b>{{ timeStringToDate(assignment.contract.contractDate).toLocaleDateString() }}</div>
             </td>
-            <td>
-              <div><b>Номер: </b>{{assignment.contract.contractNumber}}</div>
-              <div><b>Заключен: </b>{{timeStringToDate(assignment.contract.contractDate).toLocaleDateString()}}</div>
+            <td style="min-width: 240px; width: 240px;max-width: 240px">
+              <div><b></b>{{ assignment.contract.customer.shortName }}</div>
+              <div><b>email: </b>{{ assignment.contract.customer.email }}</div>
             </td>
-            <td>
-              <div><b></b>{{assignment.contract.customer.shortName}}</div>
-              <div><b>email: </b>{{assignment.contract.customer.email}}</div>
+            <td style="min-width: 600px; width: 600px; max-width: 600px">
+              {{ assignment.description }}
             </td>
-            <td>
+            <td style="min-width: 65px; width: 65px; max-width: 65px">
               <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(assignment._id)"/>
             </td>
           </tr>
@@ -97,13 +98,13 @@
 
     </v-sheet>
 
-    <my-overlay v-model="addMenuVisible">
-      <c-assignment-card-menu-add @add:success="fetchData"/>
-    </my-overlay>
-
     <my-overlay v-model="cardMenuIsVisible">
-      <c-assignment-card-menu :_assignment="selectedAssignment" @update:success="fetchData"/>
+      <c-assignment-card :_assignment="selectedAssignment" @update:success="fetchData"/>
     </my-overlay>
+    <!--    assignment-card    -->
+
+    <!--    assignment-card-add    -->
+    <nuxt-page @add:success="fetchData"/>
 
   </v-container>
 </template>
@@ -112,12 +113,11 @@
 import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
 import {timeStringToDate} from "../../utils/service/serverAPI";
-import {fetchAssignments, removeAssignment} from "../../utils/service/server.ts";
+import {fetchAssignments, removeAssignment} from "../../utils/service/server";
+import {useCounterStore} from '../../stores/counter'
 
 export default {
   name: "assignments-page",
-  components: {},
-
 
   data: () => ({
 
@@ -130,8 +130,6 @@ export default {
     searchText: '',
     selectedAssignment: {},
     cardMenuIsVisible: false,
-    addMenuVisible: false,
-
   }),
 
   watch: {
@@ -149,6 +147,11 @@ export default {
   methods: {
 
     timeStringToDate,
+
+    getCount() {
+      const counter = useCounterStore()
+      counter.increment();
+    },
 
     getQuery() {
       let params = [
@@ -168,11 +171,12 @@ export default {
       this.fetchingData = true;
       fetchAssignments(this.getQuery())
           .then(response => {
-            this.currentPage = response.data.currentPage;
-            this.totalItems = response.data.totalItems;
-            this.totalPages = response.data.totalPages;
-            this.pageSize = response.data.pageSize;
-            this.data = response.data.data;
+            let {currentPage, totalItems, totalPages, pageSize, data} = response.data;
+            this.currentPage = currentPage;
+            this.totalItems = totalItems;
+            this.totalPages = totalPages;
+            this.pageSize = pageSize;
+            this.data = data;
           })
           .catch(err => {
             console.log('Ошибка получения данных с сервера', err);

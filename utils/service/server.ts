@@ -50,8 +50,8 @@ export async function sendInspectionObject(blockId: string, data: TInspectionObj
     return axios.post(serverURL + '/inspection-objects/add/' + blockId, data, config);
 }
 
-export async function changeInspectionObject(blockId: string, data: TInspectionObject) {
-    return axios.post(serverURL + '/' + blockId, data, config);
+export async function changeInspectionObject(_object: TInspectionObject) {
+    return axios.put(serverURL + '/inspection-objects/' + _object._id, _object, config);
 }
 
 

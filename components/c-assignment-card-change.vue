@@ -30,13 +30,19 @@
               label="Договор"
           >
             <template v-slot:chip="{ props, item }">
-              {{ `${item.raw?.contractNumber} / ${item.raw?.contractDate}` }}
+              <v-chip
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  v-bind="props"
+                  prepend-icon="mdi-file-document-edit"
+                  :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate} / ${item.raw?.customer?.shortName}`"
+              />
             </template>
             <template v-slot:item="{ props, item }">
               <v-list-item
                   v-bind="props"
-                  :subtitle="item?.raw?.contractDate"
-                  :title="item?.raw?.contractNumber"
+                  :title="item.raw?.contractNumber"
+                  :subtitle="item.raw?.contractDate  + ' / ' + item.raw?.customer?.shortName"
               />
             </template>
           </v-autocomplete>

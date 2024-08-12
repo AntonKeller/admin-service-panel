@@ -2,7 +2,7 @@
   <v-card
 
       class="py-8 px-6 text-center mx-auto ma-4"
-      elevation="12"
+      elevation="6"
       max-width="400"
   >
     <h3 class="text-h6 mb-4">Верификация аккаунта</h3>

@@ -11,5 +11,4 @@ export default interface TInspectionObject {
     inventoryNumber: string,
     address: string,
     description: string,
-    photos?: Array<TFile>
 }

@@ -1,7 +1,7 @@
 <template>
   <v-sheet
       rounded="lg"
-      elevation="24"
+      elevation="6"
       color="grey-lighten-4"
   >
     <v-card
@@ -42,11 +42,11 @@
             >
               <template v-slot:chip="{ props, item }">
                 <v-chip
-                    color="blue-grey-darken-3"
-                    density="comfortable"
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate}`"
+                    color="blue-grey-darken-3"
+                    density="comfortable"
+                    :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate} / ${item.raw?.customer?.shortName}`"
                 />
               </template>
 
@@ -54,8 +54,8 @@
                 <v-list-item
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.contractNumber"
-                    :subtitle="item.raw.contractDate"
+                    :title="item.raw?.contractNumber"
+                    :subtitle="item.raw?.contractDate  + ' / ' + item.raw?.customer?.shortName"
                 />
               </template>
             </v-autocomplete>

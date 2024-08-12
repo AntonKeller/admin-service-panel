@@ -1,7 +1,7 @@
 <template>
   <v-sheet
       rounded="lg"
-      elevation="24"
+      elevation="6"
       color="grey-lighten-4"
   >
     <v-card
@@ -150,7 +150,7 @@ import dataInspectors from "../configs/data-test/data-inspectors";
 import assignment_block_statuses from "../configs/assignment-statuses";
 
 export default {
-  name: "c-a-block-card-menu-add",
+  name: "c-a-block-card-add",
 
   props: {
     _assignmentId: String,

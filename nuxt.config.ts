@@ -94,6 +94,7 @@ export default defineNuxtConfig({
         },
         '@vueuse/motion/nuxt',
         '@nuxtjs/robots',
+        '@pinia/nuxt',
     ],
 
     robots: {

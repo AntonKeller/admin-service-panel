@@ -6,7 +6,12 @@
       color="white"
   >
     <v-card rounded="lg" variant="text">
-      <v-card-title>{{ _object.name + ' / ' + _object.inventoryNumber }}</v-card-title>
+      <v-card-title>
+        <v-sheet class="d-flex ga-2">
+          <c-btn-change prompt="Редактировать объект" @click="objectCardChangeIsShow = true"/>
+          {{ _object.name + ' / ' + _object.inventoryNumber }}
+        </v-sheet>
+      </v-card-title>
       <v-card-subtitle>
         <div class="d-flex ga-2">
           <b>Адрес: </b>{{ _object.address }}
@@ -102,15 +107,22 @@
         <v-divider class="mt-2"/>
       </v-card-text>
     </v-card>
+
+    <my-overlay v-model="objectCardChangeIsShow">
+      <c-i-object-card-change :_object="_object" @update:success="$emit('update:success')"/>
+    </my-overlay>
+
     <my-overlay v-model="imgFullWindowIsShow">
       <img
-          style="max-height: 90vh; max-width: 80vw;  object-fit: contain"
+          style="max-height: 90vh; max-width: 80vw; object-fit: contain"
           class="rounded-xl d-block"
           loading="lazy"
           :src="selectedImg.route"
           alt="loading..."
       />
     </my-overlay>
+
+
   </v-sheet>
 </template>
 
@@ -124,11 +136,18 @@ export default {
     _object: Object,
   },
 
+  // watch: {
+  //   _object() {
+  //
+  //   }
+  // },
+
   data: () => ({
     files: [],
     photos: [],
     selectedImg: null,
     imgFullWindowIsShow: false,
+    objectCardChangeIsShow: false,
     dragging: false,
     counter: 0,
     progress: 0,
@@ -136,6 +155,7 @@ export default {
 
   mounted() {
     this.fetchImages(this._object._id);
+    console.log('_object', this._object)
   },
 
   methods: {

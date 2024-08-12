@@ -119,7 +119,10 @@
     </v-card>
 
     <my-overlay v-model="inspObjectCardIsShow">
-      <c-inspection-object-card :_object="selectedObject" @update:success="fetchObjects"/>
+      <c-inspection-object-card
+          :_object="selectedObject"
+          @update:success="fetchObjects"
+      />
     </my-overlay>
 
     <my-overlay v-model="inspObjectCardAddIsShow">
@@ -127,10 +130,10 @@
     </my-overlay>
 
     <my-overlay v-model="aBlockCardMenuChangeIsShow">
-      <c-a-block-card-menu-change
+      <c-a-block-card-change
           :_assignmentId="_assignmentId"
           :_block="_assignmentBlock"
-          @update:success="this.fetchObjects"
+          @update:success="$emit('update:success')"
       />
     </my-overlay>
 
@@ -139,12 +142,12 @@
 
 <script>
 import _ from "lodash";
-import {fetchInspectionObjects} from "../utils/service/server";
 import {dataInspectionObjects} from "../configs/data-test/data-test-inspection-object";
+import {fetchInspectionObjects} from "../utils/service/server";
 import {timeStringToDate} from "../utils/service/serverAPI.js";
 
 export default {
-  name: "c-a-block-card-menu",
+  name: "c-a-block-card",
 
   components: {},
 
@@ -176,6 +179,11 @@ export default {
   watch: {
     _assignmentBlock() {
       this.fetchObjects();
+    },
+    inspectionObjects() {
+      if (this.selectedObject?._id) {
+        this.selectedObject = this.inspectionObjects.find(e => e._id === this.selectedObject?._id);
+      }
     }
   },
 

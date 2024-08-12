@@ -49,32 +49,32 @@
       </v-card-item>
       <v-card-actions>
         <my-btn-submit
-            text="Добавить"
+            text="Изменить"
             prepend-icon="mdi-checkbox-multiple-marked-outline"
             :loading="sending"
-            @click="sendValue"
+            @click="changeValue"
         />
-        <my-btn-clear text="Очистить" @click="this.value = null"/>
+        <my-btn-clear text="Очистить" @click="value = null"/>
       </v-card-actions>
     </v-card>
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
   </v-sheet>
 </template>
 
 <script>
-import {sendInspectionObject} from "../utils/service/server";
+import _ from "lodash";
 import {showAlert} from "../utils/service/serverAPI";
+import {changeInspectionObject} from "../utils/service/server";
 
 export default {
-  name: "c-inspection-object-card-add",
+  name: "c-i-object-card-change",
   props: {
-    _blockId: String,
+    _object: Object,
+  },
+  mounted() {
+    this.value = _.cloneDeep(this._object);
   },
   data: () => ({
-    value: null,
+    value: {},
     sending: false,
     formIsValid: false,
     snackBar: {},
@@ -84,18 +84,18 @@ export default {
     descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
   }),
   methods: {
-    async sendValue() {
+    async changeValue() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
         this.sending = true;
-        sendInspectionObject(this._blockId, this.value)
+        changeInspectionObject(this.value)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
-              this.$emit('add:success');
+              this.$emit('update:success');
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка добавления').error();
-              console.log('Ошибка добавления', err);
+              this.snackBar = showAlert('Ошибка').error();
+              console.log('Ошибка изменения', err);
             })
             .finally(() => {
               this.sending = false;
@@ -105,3 +105,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

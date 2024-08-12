@@ -7,13 +7,6 @@ export const dataInspectionObjects: Array<TInspectionObject> = [
         inventoryNumber: 'A123456',
         address: 'ул. Верейская, 29',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photos: [
-            {
-                _id: '1',
-                route: '/first_img.jpeg',
-                type: '.jpeg',
-            }
-        ],
     },
     {
         _id: '2',
@@ -21,22 +14,5 @@ export const dataInspectionObjects: Array<TInspectionObject> = [
         inventoryNumber: 'A123456',
         address: 'ул. Верейская, 29',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-        photos: [
-            {
-                _id: '1',
-                route: '/first_img.jpeg',
-                type: '.jpeg',
-            },
-            {
-                _id: '2',
-                route: '/first_img.jpeg',
-                type: '.jpeg',
-            },
-            {
-                _id: '3',
-                route: '/first_img.jpeg',
-                type: '.jpeg',
-            }
-        ],
     }
 ]

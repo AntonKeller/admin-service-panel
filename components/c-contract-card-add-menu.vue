@@ -1,7 +1,7 @@
 <template>
   <v-sheet
       rounded="lg"
-      elevation="24"
+      elevation="6"
       color="grey-lighten-4"
   >
     <v-card
