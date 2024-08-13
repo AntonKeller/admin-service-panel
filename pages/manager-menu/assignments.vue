@@ -98,7 +98,11 @@
       </div>
     </v-sheet>
 
-    <nuxt-page :_assignment="selectedAssignment" @add:success="fetchData"/>
+    <nuxt-page
+        :_assignment="selectedAssignment"
+        @add:success="fetchData"
+        @update:success="fetchData"
+    />
   </v-container>
 </template>
 

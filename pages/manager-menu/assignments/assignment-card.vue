@@ -10,7 +10,7 @@
         <v-card-title>
           <v-sheet class="d-flex ga-2">
             <c-btn-change prompt="Редактировать ТЗ" @click="cardChangeMenu = true"/>
-            {{ assignment?.title }}
+            {{ _assignment?.title }}
           </v-sheet>
         </v-card-title>
 
@@ -24,8 +24,8 @@
                 prepend-icon="mdi-file-sign"
             >
               {{
-                assignment?.contract?.contractNumber && assignment?.contract?.contractDate ?
-                    `Договор: ${assignment?.contract?.contractNumber} / ${assignment?.contract?.contractDate}` :
+                _assignment?.contract?.contractNumber && _assignment?.contract?.contractDate ?
+                    `Договор: ${_assignment?.contract?.contractNumber} / ${_assignment?.contract?.contractDate}` :
                     'Отсутствует договор'
               }}
             </v-chip>
@@ -39,15 +39,15 @@
                 prepend-icon="mdi-account-tie"
             >
               {{
-                assignment?.contract?.customer?.shortName && assignment?.contract?.customer?.inn ?
-                    `Заказчик: ${assignment?.contract?.customer?.shortName} / ${assignment?.contract?.customer?.inn}` :
+                _assignment?.contract?.customer?.shortName && _assignment?.contract?.customer?.inn ?
+                    `Заказчик: ${_assignment?.contract?.customer?.shortName} / ${_assignment?.contract?.customer?.inn}` :
                     'Отсутствует заказчик'
               }}
             </v-chip>
 
           </div>
           <v-sheet class="rounded-lg  px-2 py-2" style="height: 140px; overflow-y: scroll">
-            {{ assignment?.description }}
+            {{ _assignment?.description }}
           </v-sheet>
           <v-divider class="my-1"/>
           <div class="d-flex ga-4 align-center py-1">
@@ -141,7 +141,10 @@
       </v-card>
 
       <my-overlay v-model="cardChangeMenu">
-        <c-assignment-card-change :_assignment="assignment" @update:success="$emit('update:success')"/>
+        <c-assignment-card-change
+            :_assignment="_assignment"
+            @update:success="$emit('update:success')"
+        />
       </my-overlay>
 
       <my-overlay v-model="aBlockCardMenuIsShow">
@@ -182,43 +185,32 @@ export default {
   },
 
   data: () => ({
-
     searchText: null,
-
     assignmentBlocks: [],
     currentPage: 1,
     limitItems: 20,
     totalItems: 0,
     totalPages: 1,
-
     cardChangeMenu: false,
     snackBar: {},
     selectedBlock: null,
     blockMenuAddIsShow: false,
     aBlockCardMenuIsShow: false,
     fetchBlocksLoading: true,
-
-    assignment: {
-      _id: '',
-      title: '',
-      description: '',
-      contract: null,
-    },
-
   }),
 
-  created() {
-    console.log('this._assignment', this._assignment);
-  },
+  // created() {
+  //   console.log('this._assignment', this._assignment);
+  // },
 
   mounted() {
-    this.propsClone();
+    // this.propsClone();
     this.fetchAssignmentBlocks();
   },
 
   watch: {
     _assignment() {
-      this.propsClone();
+      // this.propsClone();
       this.fetchAssignmentBlocks();
     },
     assignmentBlocks() {
@@ -237,10 +229,10 @@ export default {
           .then(() => this.fetchAssignmentBlocks())
           .catch(err => console.log('Ошибка удаления элемента', err))
     },
-
-    propsClone() {
-      this.assignment = _.cloneDeep(this._assignment);
-    },
+    //
+    // propsClone() {
+    //   this.assignment = _.cloneDeep(this._assignment);
+    // },
 
     blockSelect(_block) {
       this.selectedBlock = _block;
@@ -259,7 +251,7 @@ export default {
         this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
         this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
         this.searchText && this.searchText.length > 0 ? `searchText=${this.searchText}` : null,
-        this.assignment?._id ? `assignmentId=${this.assignment?._id}` : null,
+        this._assignment?._id ? `assignmentId=${this._assignment?._id}` : null,
       ].filter(e => !!e).join('&');
 
       fetchAssignmentBlocks(params && params?.length > 0 ? `?${params}` : '')

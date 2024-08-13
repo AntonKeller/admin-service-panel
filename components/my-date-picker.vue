@@ -11,8 +11,10 @@
       clearable
       @click="show = true"
   >
-
-    <my-overlay v-model="show">
+    <v-overlay
+        v-model="show"
+        class="d-flex justify-center align-center"
+    >
       <v-locale-provider locale="ru">
         <v-date-picker
             border
@@ -21,7 +23,7 @@
             @update:modelValue="_value => this.$emit('update:modelValue', `${Date.parse(_value)}`)"
         />
       </v-locale-provider>
-    </my-overlay>
+    </v-overlay>
   </v-text-field>
 </template>
 
