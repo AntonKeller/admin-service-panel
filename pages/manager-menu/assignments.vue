@@ -107,7 +107,6 @@ import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
 import {slicer, timeStringToDate} from "../../utils/service/serverAPI";
 import {fetchAssignments, removeAssignment} from "../../utils/service/server";
-import nuxtStorage from 'nuxt-storage';
 
 export default {
   name: "assignments-page",
@@ -125,32 +124,44 @@ export default {
     }
   },
 
-  provide() {
-    return {
-      selectedAs: computed(() => this.selectedAssignment),
-    }
-  },
-
   watch: {
     data() {
       if (this.selectedAssignment?._id) {
+
         this.selectedAssignment = this.data.find(e => e._id === this.selectedAssignment._id);
+
+        if (this.selectedAssignment) {
+          sessionStorage.setItem('selectedAssignment', JSON.stringify(this.selectedAssignment));
+        }
       }
     },
   },
 
-  computed: {},
-
   mounted() {
-    // Берем последний выбранный элемент assignment из session storage
-    this.selectedAssignment = JSON.parse(sessionStorage.getItem('selectedAssignment'));
     this.fetchData();
+    this.sessionLoad();
   },
 
   methods: {
 
     timeStringToDate,
     slicer,
+
+    sessionLoad() {
+      // Берем последний выбранный элемент assignment из session storage
+      let selectedAssignment = sessionStorage.getItem('selectedAssignment');
+
+      if (selectedAssignment) {
+
+        let _selectedAssignment = JSON.parse(selectedAssignment);
+
+        // console.log('this.data', this.data)
+
+        // if (this.data.find(e => e._id === _selectedAssignment._id)) {
+        this.selectedAssignment = _selectedAssignment;
+        // }
+      }
+    },
 
     cardMenuShow(_assignment) {
       this.selectedAssignment = _assignment;
@@ -162,7 +173,7 @@ export default {
       this.fetchData();
     }, 900),
 
-    fetchData() {
+    async fetchData() {
 
       this.fetchingData = true;
 

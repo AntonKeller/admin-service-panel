@@ -177,13 +177,12 @@ import {showAlert, timeStringToDate} from "../../../utils/service/serverAPI";
 export default {
   name: "assignment-card-page",
 
-  inject: ['selectedAs'],
-
   props: {
     _assignment: Object,
   },
 
   data: () => ({
+
     searchText: null,
 
     assignmentBlocks: [],
@@ -209,7 +208,7 @@ export default {
   }),
 
   created() {
-    console.log('inject selectedAssignment:', this.selectedAs) // injected value
+    console.log('this._assignment', this._assignment);
   },
 
   mounted() {
@@ -235,12 +234,8 @@ export default {
 
     removeBlockItem(_id) {
       removeAssignmentBlock(_id)
-          .then(() => {
-            this.fetchAssignmentBlocks();
-          })
-          .catch(err => {
-            console.log('Ошибка удаления элемента', err);
-          })
+          .then(() => this.fetchAssignmentBlocks())
+          .catch(err => console.log('Ошибка удаления элемента', err))
     },
 
     propsClone() {
