@@ -98,12 +98,7 @@
       </div>
     </v-sheet>
 
-    <!--    <my-overlay v-model="cardMenuIsVisible">-->
-    <!--      <c-assignment-card :_assignment="selectedAssignment" @update:success="fetchData"/>-->
-    <!--    </my-overlay>-->
-
     <nuxt-page :_assignment="selectedAssignment" @add:success="fetchData"/>
-
   </v-container>
 </template>
 
@@ -144,11 +139,7 @@ export default {
     },
   },
 
-  computed: {
-    getSelected() {
-      return this.selectedAssignment;
-    }
-  },
+  computed: {},
 
   mounted() {
     // Берем последний выбранный элемент assignment из session storage
