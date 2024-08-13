@@ -92,35 +92,5 @@ export default defineNuxtConfig({
                 config.plugins.push(vuetify({autoImport: true}))
             })
         },
-        '@vueuse/motion/nuxt',
-        '@nuxtjs/robots',
-        '@pinia/nuxt',
     ],
-
-    robots: {
-        UserAgent: '*',
-        Disallow: ''
-    },
-
-    runtimeConfig: {
-        public: {
-            motion: {
-                directives: {
-                    'pop-bottom': {
-                        initial: {
-                            scale: 0,
-                            opacity: 0,
-                            y: 100,
-                        },
-                        visible: {
-                            scale: 1,
-                            opacity: 1,
-                            y: 0,
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 })

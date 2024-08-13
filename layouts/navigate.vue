@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100vh" color="white">
+  <v-card height="100vh">
     <v-layout class="c-layout" full-height>
 
       <v-navigation-drawer

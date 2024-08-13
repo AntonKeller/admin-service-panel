@@ -4,7 +4,6 @@
       max-width="1024px"
       min-width="1024px"
       elevation="6"
-      color="white"
   >
     <v-card rounded="lg">
 

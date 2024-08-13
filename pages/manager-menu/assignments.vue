@@ -16,7 +16,7 @@
                 :hint="`Найдено: ${totalItems}`"
                 style="min-width: 500px"
                 @btn:click="navigateTo('/manager-menu/assignments/assignment-card-add')"
-                @update:modelValue="fetchDataDebounce900"
+                @update:modelValue="fetchData"
             />
           </div>
         </v-card-item>
@@ -44,8 +44,9 @@
           <tr
               v-for="(assignment, i) of data"
               :key="assignment._id"
-              @click="cardMenuShow(assignment._id)"
+              @click="cardMenuShow(assignment)"
           >
+            <!--            @click="cardMenuShow(assignment._id)"-->
             <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i }}</td>
             <td style="min-width: 280px; width: 280px; max-width: 280px">
               <div>{{ assignment.title }}</div>
@@ -61,7 +62,7 @@
               <div><b>email: </b>{{ assignment.contract.customer.email }}</div>
             </td>
             <td style="min-width: 600px; width: 600px; max-width: 600px">
-              {{ assignment.description }}
+              {{ slicer(assignment.description, 260) }}
             </td>
             <td style="min-width: 65px; width: 65px; max-width: 65px">
               <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(assignment._id)"/>
@@ -95,16 +96,13 @@
             @update:modelValue="fetchData"
         />
       </div>
-
     </v-sheet>
 
-    <my-overlay v-model="cardMenuIsVisible">
-      <c-assignment-card :_assignment="selectedAssignment" @update:success="fetchData"/>
-    </my-overlay>
-    <!--    assignment-card    -->
+    <!--    <my-overlay v-model="cardMenuIsVisible">-->
+    <!--      <c-assignment-card :_assignment="selectedAssignment" @update:success="fetchData"/>-->
+    <!--    </my-overlay>-->
 
-    <!--    assignment-card-add    -->
-    <nuxt-page @add:success="fetchData"/>
+    <nuxt-page :_assignment="selectedAssignment" @add:success="fetchData"/>
 
   </v-container>
 </template>
@@ -112,25 +110,31 @@
 <script>
 import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
-import {timeStringToDate} from "../../utils/service/serverAPI";
+import {slicer, timeStringToDate} from "../../utils/service/serverAPI";
 import {fetchAssignments, removeAssignment} from "../../utils/service/server";
-import {useCounterStore} from '../../stores/counter'
+import nuxtStorage from 'nuxt-storage';
 
 export default {
   name: "assignments-page",
 
-  data: () => ({
+  data() {
+    return {
+      data: [],
+      fetchingData: false,
+      currentPage: 1,
+      itemsLimit: 50,
+      totalItems: 1,
+      totalPages: 1,
+      searchText: '',
+      selectedAssignment: {},
+    }
+  },
 
-    data: [],
-    fetchingData: false,
-    currentPage: 1,
-    itemsLimit: 50,
-    totalItems: 1,
-    totalPages: 1,
-    searchText: '',
-    selectedAssignment: {},
-    cardMenuIsVisible: false,
-  }),
+  provide() {
+    return {
+      selectedAs: computed(() => this.selectedAssignment),
+    }
+  },
 
   watch: {
     data() {
@@ -140,27 +144,27 @@ export default {
     },
   },
 
+  computed: {
+    getSelected() {
+      return this.selectedAssignment;
+    }
+  },
+
   mounted() {
+    // Берем последний выбранный элемент assignment из session storage
+    this.selectedAssignment = JSON.parse(sessionStorage.getItem('selectedAssignment'));
     this.fetchData();
   },
 
   methods: {
 
     timeStringToDate,
+    slicer,
 
-    getCount() {
-      const counter = useCounterStore()
-      counter.increment();
-    },
-
-    getQuery() {
-      let params = [
-        this.currentPage ? `page=${this.currentPage}` : null,
-        this.itemsLimit ? `limit=${this.itemsLimit}` : null,
-        this.searchText ? `searchText=${this.searchText}` : null,
-      ].filter(e => !!e).join('&')
-
-      return params ? `?${params}` : '';
+    cardMenuShow(_assignment) {
+      this.selectedAssignment = _assignment;
+      sessionStorage.setItem('selectedAssignment', JSON.stringify(_assignment));
+      navigateTo('/manager-menu/assignments/assignment-card');
     },
 
     fetchDataDebounce900: _.debounce(function () {
@@ -168,8 +172,16 @@ export default {
     }, 900),
 
     fetchData() {
+
       this.fetchingData = true;
-      fetchAssignments(this.getQuery())
+
+      let params = [
+        this.currentPage ? `page=${this.currentPage}` : null,
+        this.itemsLimit ? `limit=${this.itemsLimit}` : null,
+        this.searchText ? `searchText=${this.searchText}` : null,
+      ].filter(e => !!e).join('&');
+
+      fetchAssignments(params ? `?${params}` : '')
           .then(response => {
             let {currentPage, totalItems, totalPages, pageSize, data} = response.data;
             this.currentPage = currentPage;
@@ -189,17 +201,8 @@ export default {
 
     removeDataItem(_id) {
       removeAssignment(_id)
-          .then(() => {
-            this.fetchData();
-          })
-          .catch(err => {
-            console.log('Ошибка удаления элемента', err);
-          })
-    },
-
-    cardMenuShow(_itemId) {
-      this.selectedAssignment = this.data.find(e => e._id === _itemId);
-      this.cardMenuIsVisible = true;
+          .then(() => this.fetchData())
+          .catch(err => console.log('Ошибка удаления элемента', err))
     },
   }
 }

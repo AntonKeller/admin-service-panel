@@ -3,7 +3,6 @@
       rounded="lg"
       max-width="1024px"
       elevation="6"
-      color="white"
   >
     <v-card rounded="lg" variant="text">
       <v-card-title>
