@@ -1,11 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-card
-          class="mx-auto"
-          variant="text"
-          :loading="fetchingData"
-      >
+      <v-card class="mx-auto" variant="text" :loading="fetchingData">
 
         <v-card-title>Список заданий</v-card-title>
 

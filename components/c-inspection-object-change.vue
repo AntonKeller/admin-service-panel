@@ -10,7 +10,7 @@
         width="800"
         color="blue-grey-darken-3"
     >
-      <v-card-title>Новый объект</v-card-title>
+      <v-card-title>Редактирование</v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
         <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
@@ -26,20 +26,21 @@
               v-model="value.inventoryNumber"
               :rules="inventoryNumberRules"
               prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
+              label="Инвентарный номер"
           />
 
           <my-text-field
               v-model="value.address"
               :rules="addressRules"
               prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
+              label="Адрес"
           />
 
           <v-textarea
               v-model="value.description"
               :rules="descriptionRules"
               color="blue-grey-darken-3"
+              label="Описание объекта"
               max-rows="1"
               variant="outlined"
               auto-grow
@@ -66,7 +67,7 @@ import {showAlert} from "../utils/service/serverAPI";
 import {changeInspectionObject} from "../utils/service/server";
 
 export default {
-  name: "c-i-object-card-change",
+  name: "c-inspection-object-change",
   props: {
     _object: Object,
   },
@@ -105,7 +106,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -69,7 +69,7 @@ import {sendInspectionObject} from "../utils/service/server";
 import {showAlert} from "../utils/service/serverAPI";
 
 export default {
-  name: "c-inspection-object-card-add",
+  name: "c-inspection-object-add",
   props: {
     _blockId: String,
   },
@@ -94,7 +94,7 @@ export default {
               this.$emit('add:success');
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка добавления').error();
+              this.snackBar = showAlert('Ошибка').error();
               console.log('Ошибка добавления', err);
             })
             .finally(() => {

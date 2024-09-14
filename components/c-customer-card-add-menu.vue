@@ -2,12 +2,10 @@
   <v-card
       :loading="loading"
       :disabled="loading"
-      density="compact"
       variant="elevated"
-      min-width="480"
-      rounded
+      width="800"
+      rounded="lg"
   >
-
     <v-card-title>Новый заказчик</v-card-title>
 
     <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
@@ -16,31 +14,31 @@
       <v-text-field
           v-for="field of config.fields"
           v-model="customer[field.key]"
+          :rules="[v => v?.length > 0 || 'Введите']"
           :key="field.key"
           :label="field.ru"
           density="comfortable"
           hide-details="auto"
+          variant="outlined"
+          rounded="lg"
           clearable
       />
     </v-card-text>
 
     <v-card-actions>
-      <v-btn
-          @click="add"
-          rounded="lg"
-          variant="tonal"
-          :loading="loading"
-      >
-        Добавить
-      </v-btn>
-      <v-btn
-          @click="clear"
-          rounded="lg"
-          variant="tonal"
-      >
-        Очистить
-      </v-btn>
+      <my-btn-submit
+          text="Принять"
+          prepend-icon="mdi-checkbox-multiple-marked-outline"
+          :loading="sending"
+          @click="send"
+      />
+      <my-btn-clear text="Очистить" @click="customer = {}"/>
     </v-card-actions>
+
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
 
   </v-card>
 </template>
@@ -48,44 +46,42 @@
 <script>
 import {addCustomer} from "../utils/service/server.ts";
 import customerConfig from "../configs/customer-config";
+import {showAlert} from "../utils/service/serverAPI.js";
 
 export default {
   name: "c-customer-card-add-menu",
 
   props: {
     returnNewCustomer: Function,
-    requestCompleteEvent: Function
   },
 
   data: () => ({
     config: customerConfig,
-    customer: ({}),
+    snackBar: {},
+    customer: {},
     loading: false,
+    sending: false,
   }),
 
   methods: {
-
-    add() {
+    send() {
       this.loading = true;
+      this.sending = true;
       addCustomer(this.customer)
-          .then(response => {
-            this.clear();
-            this.returnNewCustomer(response?.data);
-            this.requestCompleteEvent('teal-accent-3', 'Заказчик успешно добавлен');
+          .then(() => {
+            this.$emit('update:success');
+            // this.returnNewCustomer(response?.data);
+            this.snackBar = showAlert('Успешно').success();
           })
           .catch(err => {
             console.log('Ошибка добавления заказчика', err);
-            this.requestCompleteEvent('red-accent-3', 'Ошибка добавления заказчика')
+            this.snackBar = showAlert('Ошибка').error();
           })
           .finally(() => {
             this.loading = false;
-            this.snackBarShow = true;
+            this.sending = false;
           })
     },
-
-    clear() {
-      customerConfig.fields.forEach(f => this.customer[f.key] = '');
-    }
   },
 }
 </script>

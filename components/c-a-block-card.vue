@@ -125,7 +125,7 @@
     </my-overlay>
 
     <my-overlay v-model="inspObjectCardAddIsShow">
-      <c-inspection-object-card-add :_blockId="_assignmentBlock._id"/>
+      <c-inspection-object-add :_blockId="_assignmentBlock._id"/>
     </my-overlay>
 
     <my-overlay v-model="aBlockCardMenuChangeIsShow">

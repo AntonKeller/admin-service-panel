@@ -79,26 +79,25 @@
                 class="px-0 py-0"
                 color="blue-grey-darken-1"
             >
-              <img
-                  style="width: 242px; height: 245px; object-fit: cover"
-                  class="rounded-lg d-block"
-                  loading="lazy"
-                  :src="item.route"
-                  alt="loading..."
-                  @click="imageShow(item)"
-              />
-
-              <div class="d-flex align-center justify-space-between mt-1">
-                <div>{{ '№ ' + (itemI + 1) }}</div>
-                <v-btn
-                    density="compact"
-                    variant="tonal"
-                    rounded="lg"
-                    text="Удалить"
-                    @click="removeImg(item._id)"
+              <v-sheet border="sm" rounded class="position-relative">
+                <img
+                    style="width: 242px; height: 245px; object-fit: cover"
+                    class="rounded-lg d-block"
+                    loading="lazy"
+                    :src="item.route"
+                    alt="loading..."
+                    @click="imageShow(item)"
                 />
-              </div>
-
+              </v-sheet>
+              <v-btn
+                  block
+                  density="compact"
+                  variant="tonal"
+                  color="blue-grey"
+                  rounded
+                  text="Удалить"
+                  @click="removeImg(item._id)"
+              />
             </v-list-item>
           </v-list>
 
@@ -108,7 +107,7 @@
     </v-card>
 
     <my-overlay v-model="objectCardChangeIsShow">
-      <c-i-object-card-change :_object="_object" @update:success="$emit('update:success')"/>
+      <c-inspection-object-change :_object="_object" @update:success="$emit('update:success')"/>
     </my-overlay>
 
     <my-overlay v-model="imgFullWindowIsShow">
@@ -134,12 +133,6 @@ export default {
   props: {
     _object: Object,
   },
-
-  // watch: {
-  //   _object() {
-  //
-  //   }
-  // },
 
   data: () => ({
     files: [],

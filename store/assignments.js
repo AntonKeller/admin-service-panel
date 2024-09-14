@@ -4,6 +4,24 @@ import {createStore} from "vuex";
 export const assignmentStore = createStore({
     state() {
         return {
+            inspectionObjects: {
+                items: [],
+                page: '',
+                itemsLimit: 20,
+                totalItems: 0,
+                totalPages: 0,
+                searchText: '',
+            },
+            activeInspectionObject: {},
+            assignmentBlocks: {
+                items: [],
+                page: '',
+                itemsLimit: 20,
+                totalItems: 0,
+                totalPages: 0,
+                searchText: '',
+            },
+            activeBlock: {},
             assignments: {
                 items: [],
                 page: '',
@@ -18,6 +36,9 @@ export const assignmentStore = createStore({
     mutations: {
         //
         // TODO Доделать mutations и actions для <assignments>
+        // ...........
+        //
+        // TODO Доделать mutations и actions для <assignmentBlocks>
         // ...........
         selectAssignment(state, assignment) {
             state.selectedAssignment = _.cloneDeep(assignment);
