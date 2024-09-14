@@ -150,7 +150,7 @@ import dataInspectors from "../configs/data-test/data-inspectors";
 import assignment_block_statuses from "../configs/assignment-statuses";
 
 export default {
-  name: "c-a-block-card-add",
+  name: "c-block-add",
 
   props: {
     _assignmentId: String,

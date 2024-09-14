@@ -15,7 +15,8 @@
     "lodash": "^4.17.21",
     "nuxt": "^3.10.1",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",

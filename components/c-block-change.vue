@@ -149,7 +149,7 @@ import {date_test, empty_test} from "../utils/service/validate";
 import {changeAssignmentBlock, fetchInspectorsAll} from "../utils/service/server";
 
 export default {
-  name: "c-a-block-card-change",
+  name: "c-block-change",
 
   props: {
     _assignmentId: String,

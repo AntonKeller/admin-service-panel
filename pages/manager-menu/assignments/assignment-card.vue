@@ -10,7 +10,7 @@
         <v-card-title>
           <v-sheet class="d-flex ga-2">
             <c-btn-change prompt="Редактировать ТЗ" @click="cardChangeMenu = true"/>
-            {{ _assignment?.title }}
+            {{ activeAssignment?.title }}
           </v-sheet>
         </v-card-title>
 
@@ -24,8 +24,8 @@
                 prepend-icon="mdi-file-sign"
             >
               {{
-                _assignment?.contract?.contractNumber && _assignment?.contract?.contractDate ?
-                    `Договор: ${_assignment?.contract?.contractNumber} / ${_assignment?.contract?.contractDate}` :
+                activeAssignment?.contract?.contractNumber && activeAssignment?.contract?.contractDate ?
+                    `Договор: ${activeAssignment?.contract?.contractNumber} / ${activeAssignment?.contract?.contractDate}` :
                     'Отсутствует договор'
               }}
             </v-chip>
@@ -39,15 +39,15 @@
                 prepend-icon="mdi-account-tie"
             >
               {{
-                _assignment?.contract?.customer?.shortName && _assignment?.contract?.customer?.inn ?
-                    `Заказчик: ${_assignment?.contract?.customer?.shortName} / ${_assignment?.contract?.customer?.inn}` :
+                activeAssignment?.contract?.customer?.shortName && activeAssignment?.contract?.customer?.inn ?
+                    `Заказчик: ${activeAssignment?.contract?.customer?.shortName} / ${activeAssignment?.contract?.customer?.inn}` :
                     'Отсутствует заказчик'
               }}
             </v-chip>
 
           </div>
           <v-sheet class="rounded-lg  px-2 py-2" style="height: 140px; overflow-y: scroll">
-            {{ _assignment?.description }}
+            {{ activeAssignment?.description }}
           </v-sheet>
           <v-divider class="my-1"/>
           <div class="d-flex ga-4 align-center py-1">
@@ -141,23 +141,20 @@
       </v-card>
 
       <my-overlay v-model="cardChangeMenu">
-        <c-assignment-card-change
-            :_assignment="_assignment"
-            @update:success="$emit('update:success')"
-        />
+        <c-assignment-change @update:success="$emit('update:success')"/>
       </my-overlay>
 
       <my-overlay v-model="aBlockCardMenuIsShow">
         <c-a-block-card
-            :_assignmentId="_assignment._id"
+            :_assignmentId="activeAssignment._id"
             :_assignmentBlock="selectedBlock"
             @update:success="fetchAssignmentBlocks"
         />
       </my-overlay>
 
       <my-overlay v-model="blockMenuAddIsShow">
-        <c-a-block-card-add
-            :_assignmentId="_assignment._id"
+        <c-block-add
+            :_assignmentId="activeAssignment._id"
             @add:success="fetchAssignmentBlocks"
         />
       </my-overlay>
@@ -180,10 +177,6 @@ import {showAlert, timeStringToDate} from "../../../utils/service/serverAPI";
 export default {
   name: "assignment-card-page",
 
-  props: {
-    _assignment: Object,
-  },
-
   data: () => ({
     searchText: null,
     assignmentBlocks: [],
@@ -199,18 +192,19 @@ export default {
     fetchBlocksLoading: true,
   }),
 
-  // created() {
-  //   console.log('this._assignment', this._assignment);
-  // },
-
   mounted() {
-    // this.propsClone();
     this.fetchAssignmentBlocks();
   },
 
+  computed: {
+    activeAssignment() {
+      return this.$store.state.selectedAssignment;
+    }
+  },
+
   watch: {
-    _assignment() {
-      // this.propsClone();
+    activeAssignment() {
+      console.log('[watch] activeAssignment')
       this.fetchAssignmentBlocks();
     },
     assignmentBlocks() {
@@ -229,10 +223,6 @@ export default {
           .then(() => this.fetchAssignmentBlocks())
           .catch(err => console.log('Ошибка удаления элемента', err))
     },
-    //
-    // propsClone() {
-    //   this.assignment = _.cloneDeep(this._assignment);
-    // },
 
     blockSelect(_block) {
       this.selectedBlock = _block;
@@ -251,7 +241,7 @@ export default {
         this.currentPage && this.currentPage > 0 ? `page=${this.currentPage}` : null,
         this.limitItems && this.limitItems > 0 ? `limit=${this.limitItems}` : null,
         this.searchText && this.searchText.length > 0 ? `searchText=${this.searchText}` : null,
-        this._assignment?._id ? `assignmentId=${this._assignment?._id}` : null,
+        this.activeAssignment?._id ? `assignmentId=${this.activeAssignment?._id}` : null,
       ].filter(e => !!e).join('&');
 
       fetchAssignmentBlocks(params && params?.length > 0 ? `?${params}` : '')

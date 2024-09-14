@@ -1,48 +1,58 @@
 <template>
   <v-text-field
-      :model-value="modelValue ? new Date(parseInt(modelValue)).toLocaleDateString() : null"
+      v-bind="$attrs"
+      :model-value="modelValue ? new Date(parseInt(modelValue)).toLocaleDateString() : undefined"
+      @update:modelValue="_value => updateMode(_value)"
       :style="fieldWidth ? `width: ${fieldWidth}px` : '' "
-      :label="$attrs.label"
-      placeholder="дд:мм:гггг"
+      prepend-inner-icon="mdi-calendar-range"
+      color="blue-grey-darken-4"
       density="comfortable"
       variant="outlined"
-      color="blue-grey"
+      placeholder="дд.мм.гггг"
       rounded="lg"
       clearable
-      @click="show = true"
+      active
   >
-    <v-overlay
-        v-model="show"
-        class="d-flex justify-center align-center"
-    >
+    <v-menu v-model="isVisible" activator="parent" transition="slide-x-transition">
       <v-locale-provider locale="ru">
         <v-date-picker
+            :model-value="modelValue ? new Date(parseInt(modelValue)) : undefined"
+            rounded="lg"
+            title="Дата регистрации"
+            hide-header
+            @click.stop
             border
-            :title="$attrs.label"
-            :model-value="modelValue ? new Date(parseInt(modelValue)) : null"
-            @update:modelValue="_value => this.$emit('update:modelValue', `${Date.parse(_value)}`)"
+            @update:modelValue="_value => updateMode(_value)"
         />
       </v-locale-provider>
-    </v-overlay>
+    </v-menu>
   </v-text-field>
 </template>
 
 <script>
-
 export default {
-
   inheritAttrs: false,
 
   name: "my-date-picker",
-
+  props: ['modelValue', 'fieldWidth'],
   emits: ['update:modelValue'],
 
-  props: ['modelValue', 'fieldWidth'],
-
   data: () => ({
-    nowDate: new Date(Date.now()),
-    show: false,
+    isVisible: false,
   }),
 
+  methods: {
+    updateMode(_value) {
+      if (_value && !isNaN(Date.parse(_value)) && Date.parse(_value) > 0) {
+        console.log('Date.parse(_value)', Date.parse(_value))
+        this.$emit('update:modelValue', String(Date.parse(_value)))
+        if (this.isVisible) this.isVisible = false;
+      } else if (_value || isNaN(Date.parse(_value))) {
+        this.$emit('update:modelValue', null)
+      } else {
+
+      }
+    }
+  },
 }
 </script>

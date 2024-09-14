@@ -3,13 +3,12 @@
       color="blue-grey-darken-4"
       variant='text'
       density="compact"
-      rounded
   >
     <v-card-title>Отчеты</v-card-title>
     <v-card-subtitle>Отчеты отобразятся в списке по готовности</v-card-subtitle>
     <v-card-text>
       <v-sheet class="d-flex flex-wrap ga-4">
-        <v-card variant="outlined" color="blue-grey-darken-4" v-for="n of 10" class="w-25">
+        <v-card border="sm" variant="tonal" color="blue-darken-3" v-for="n of 7" class="w-25">
           <v-card-title class="d-flex align-center justify-space-between">
             <span>ТЗ: Осмотр объектов недвижимости</span>
             <v-btn density="compact" variant="text" rounded="lg" icon="mdi-open-in-new" />
@@ -29,9 +28,9 @@
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn density="comfortable" variant="elevated" color="teal-darken-2">Скачать</v-btn>
-            <v-btn density="comfortable" variant="tonal" color="yellow-darken-4">Перейти</v-btn>
-            <v-btn density="comfortable" variant="text" color="red-darken-4">Удалить</v-btn>
+            <v-btn density="comfortable" variant="elevated" color="blue-darken-4">Скачать</v-btn>
+            <v-btn density="comfortable" variant="tonal">Перейти</v-btn>
+            <v-btn density="comfortable" variant="text">Удалить</v-btn>
           </v-card-actions>
         </v-card>
       </v-sheet>

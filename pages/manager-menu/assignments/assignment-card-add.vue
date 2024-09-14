@@ -6,13 +6,14 @@
         color="grey-lighten-4"
     >
       <v-card
+          @click="changeTitleAssignment"
           rounded="lg"
           variant="text"
           width="800"
           color="blue-grey-darken-3"
       >
 
-        <v-card-title>Новая задача</v-card-title>
+        <v-card-title>Новая задача Активная: {{ getSAss() }}</v-card-title>
 
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
@@ -113,6 +114,7 @@ import _ from "lodash";
 import {showAlert} from "../../../utils/service/serverAPI";
 import {fetchContractsAll, addNewAssignment} from '../../../utils/service/server.ts';
 import {testDataContracts} from "../../../configs/data-test/data-test-contracts";
+
 export default {
   name: "assignment-card-add-page",
   data: () => ({
@@ -148,11 +150,12 @@ export default {
       value => value?.length <= 1500 ? true : 'Кол-во символов должно быть <= 1500',
     ],
   }),
+
   mounted() {
     this.fetchContractsAll();
   },
-  computed: {
 
+  computed: {
     cContract: {
       set(_id) {
         this.assignment.contract = _id ? _.cloneDeep(this.contracts.find(e => e._id === _id)) : null;
@@ -162,7 +165,16 @@ export default {
       },
     },
   },
+
   methods: {
+
+    getSAss() {
+      return this.$store.state.selectedAssignment?.title;
+    },
+
+    changeTitleAssignment() {
+      this.$store.dispatch('selectAssignment', {title: 'Новый заголовок'});
+    },
 
     async sendAssignment() {
 
@@ -175,7 +187,7 @@ export default {
         addNewAssignment(this.assignment)
             .then(() => {
               this.snackBar = showAlert('Добавлена новая задача!').success();
-              this.$emit('add:success');
+              this.$emit('update:success')
             })
             .catch(err => {
               this.snackBar = showAlert('Не удалось добавить задачу!').error();

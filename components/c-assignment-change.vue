@@ -91,14 +91,10 @@ import {testDataContracts} from "../configs/data-test/data-test-contracts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {
-  name: "c-assignment-card-menu-change",
-
-  props: {
-    _assignment: Object
-  },
+  name: "c-assignment-change",
 
   beforeMount() {
-    this.assignment = _.cloneDeep(this._assignment);
+    this.assignment = _.cloneDeep(this.$store.state.selectedAssignment);
     this.fetchContracts();
     this.fetchCustomers();
   },

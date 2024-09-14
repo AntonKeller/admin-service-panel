@@ -98,11 +98,8 @@
       </div>
     </v-sheet>
 
-    <nuxt-page
-        :_assignment="selectedAssignment"
-        @add:success="fetchData"
-        @update:success="fetchData"
-    />
+    <nuxt-page @update:success="fetchData"/>
+
   </v-container>
 </template>
 
@@ -124,18 +121,25 @@ export default {
       totalItems: 1,
       totalPages: 1,
       searchText: '',
-      selectedAssignment: {},
+    }
+  },
+
+  computed: {
+    selectedAssignment() {
+      return this.$store.state.selectedAssignment;
     }
   },
 
   watch: {
     data() {
-      if (this.selectedAssignment?._id) {
-
-        this.selectedAssignment = this.data.find(e => e._id === this.selectedAssignment._id);
-
-        if (this.selectedAssignment) {
-          sessionStorage.setItem('selectedAssignment', JSON.stringify(this.selectedAssignment));
+      let assignment = this.$store.state.selectedAssignment;
+      if (assignment && assignment?._id) {
+        let foundAssignment = this.data.find(e => e._id === assignment._id);
+        if (foundAssignment) {
+          // Пишем в стор активное ТЗ
+          this.$store.dispatch('selectAssignment', foundAssignment);
+          // Пишем в локальное хранилище активное ТЗ
+          sessionStorage.setItem('selectedAssignment', JSON.stringify(foundAssignment));
         }
       }
     },
@@ -143,7 +147,11 @@ export default {
 
   mounted() {
     this.fetchData();
-    this.sessionLoad();
+    // Загружаем selectedAssignment зи localStorage
+    let assignment = sessionStorage.getItem('selectedAssignment');
+    if (assignment) {
+      this.$store.dispatch('selectAssignment', JSON.parse(assignment));
+    }
   },
 
   methods: {
@@ -151,25 +159,12 @@ export default {
     timeStringToDate,
     slicer,
 
-    sessionLoad() {
-      // Берем последний выбранный элемент assignment из session storage
-      let selectedAssignment = sessionStorage.getItem('selectedAssignment');
-
-      if (selectedAssignment) {
-
-        let _selectedAssignment = JSON.parse(selectedAssignment);
-
-        // console.log('this.data', this.data)
-
-        // if (this.data.find(e => e._id === _selectedAssignment._id)) {
-        this.selectedAssignment = _selectedAssignment;
-        // }
-      }
-    },
-
-    cardMenuShow(_assignment) {
-      this.selectedAssignment = _assignment;
-      sessionStorage.setItem('selectedAssignment', JSON.stringify(_assignment));
+    cardMenuShow(assignment) {
+      // Пишем в стор активное ТЗ
+      this.$store.dispatch('selectAssignment', assignment);
+      // Пишем в локальное хранилище активное ТЗ
+      sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
+      // Переходим на страницу карточки ТЗ
       navigateTo('/manager-menu/assignments/assignment-card');
     },
 

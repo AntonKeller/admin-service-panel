@@ -129,7 +129,7 @@
     </my-overlay>
 
     <my-overlay v-model="aBlockCardMenuChangeIsShow">
-      <c-a-block-card-change
+      <c-block-change
           :_assignmentId="_assignmentId"
           :_block="_assignmentBlock"
           @update:success="$emit('update:success')"

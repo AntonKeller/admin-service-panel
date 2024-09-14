@@ -1,27 +1,24 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+import {accessTest} from "@/utils/service/server";
+
+
+export default defineNuxtRouteMiddleware(async (to, from) => {
+
+    // return
 
     if (import.meta.server) return;
 
     if (import.meta.client) {
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // return ;
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        let tokenTest = await accessTest(localStorage.accessToken).then(r => r.data);
 
-        if (/^\/$/ig.test(to?.fullPath)) {
-
-            const access_token_test = useState('access_token_test')?.value;
-            if (access_token_test) return navigateTo('/manager-menu');
-
+        if (tokenTest && /^\/$/ig.test(to?.fullPath) || /^\/manager-menu$/ig.test(to?.fullPath)) {
+            return navigateTo('/manager-menu/assignments');
         }
 
-        if (/^\/manager-menu/ig.test(to?.fullPath)) {
-
-            const access_token_test = useState('access_token_test')?.value;
-            if (!access_token_test) return navigateTo('/');
-
+        if (!tokenTest && !/^\/$/ig.test(to?.fullPath)) {
+            return navigateTo('/');
         }
-
     }
+
 
 })
