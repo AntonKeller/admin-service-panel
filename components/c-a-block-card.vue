@@ -49,7 +49,7 @@
               :hint="`Найдено: ${totalItems}`"
               v-model="searchText"
               @update:modelValue="fetchObjectsDebounce"
-              @btn:click="inspObjectCardAddIsShow = true"
+              @btn:click="inspectionObjectAddIsShow = true"
           />
         </div>
         <v-sheet height="400px">
@@ -124,7 +124,7 @@
       />
     </my-overlay>
 
-    <my-overlay v-model="inspObjectCardAddIsShow">
+    <my-overlay v-model="inspectionObjectAddIsShow">
       <c-inspection-object-add :_blockId="_assignmentBlock._id"/>
     </my-overlay>
 
@@ -168,7 +168,7 @@ export default {
     draggingId: false,
     aBlockCardMenuChangeIsShow: false,
     inspObjectCardIsShow: false,
-    inspObjectCardAddIsShow: false,
+    inspectionObjectAddIsShow: false,
   }),
 
   mounted() {
