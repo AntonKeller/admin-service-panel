@@ -71,7 +71,6 @@ export async function fetchImages(object_id: string) {
 }
 
 
-
 /**
  * Customers
  * */
@@ -131,8 +130,13 @@ export async function removeContract(id: string) {
 /**
  * Assignments
  * */
-export function fetchAssignments(query: string) {
-    return axios.get(serverURL + '/assignments' + query, config);
+export function fetchAssignments(query: string, token) {
+    return axios.get(serverURL + '/assignments' + query, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
 export function addNewAssignment(assignment: TAssignment) {
@@ -143,8 +147,13 @@ export function changeAssignment(assignment: TAssignment) {
     return axios.put(serverURL + '/assignments/' + assignment._id, assignment, config);
 }
 
-export function removeAssignment(id: string) {
-    return axios.delete(serverURL + '/assignments/' + id, config);
+export function removeAssignment(id: string, token: string) {
+    return axios.delete(serverURL + '/assignments/' + id, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
 

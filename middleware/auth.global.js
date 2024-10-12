@@ -3,7 +3,7 @@ import {accessTest} from "@/utils/service/server";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
-    // return
+    return
 
     if (import.meta.server) return;
 

@@ -1,13 +1,14 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-card class="mx-auto" variant="text" :loading="fetchingData">
+      <v-card class="mx-auto" variant="text" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
 
         <v-card-item>
           <div class="d-flex ga-4 align-center">
             <my-search-bar
+                :modelValue=""
                 v-model="searchText"
                 :hint="`Найдено: ${totalItems}`"
                 style="min-width: 500px"
@@ -26,7 +27,7 @@
             class="text-caption"
             fixed-header
         >
-          <thead v-if="!fetchingData">
+          <thead v-if="!getFetchingDataStatus">
           <tr>
             <th>№</th>
             <th>Заголовок</th>
@@ -36,9 +37,9 @@
             <th></th>
           </tr>
           </thead>
-          <tbody v-if="!fetchingData">
+          <tbody v-if="!getFetchingDataStatus">
           <tr
-              v-for="(assignment, i) of data"
+              v-for="(assignment, i) of getAssignments"
               :key="assignment._id"
               @click="cardMenuShow(assignment)"
           >
@@ -61,7 +62,7 @@
               {{ slicer(assignment.description, 260) }}
             </td>
             <td style="min-width: 65px; width: 65px; max-width: 65px">
-              <c-remove-btn :prompt="'Удалить'" @click:yes="removeDataItem(assignment._id)"/>
+              <c-remove-btn :prompt="'Удалить'" @click:yes="removeAssignment(assignment._id)"/>
             </td>
           </tr>
           </tbody>
@@ -94,7 +95,7 @@
       </div>
     </v-sheet>
 
-    <nuxt-page @update:success="fetchData"/>
+    <nuxt-page/>
 
   </v-container>
 </template>
@@ -103,15 +104,13 @@
 import _ from "lodash";
 import dataAssignments from "../../configs/data-test/data-test-assignments";
 import {slicer, timeStringToDate} from "../../utils/service/serverAPI";
-import {fetchAssignments, removeAssignment} from "../../utils/service/server";
+import {removeAssignment} from "../../utils/service/server";
 
 export default {
   name: "assignments-page",
 
   data() {
     return {
-      data: [],
-      fetchingData: false,
       currentPage: 1,
       itemsLimit: 50,
       totalItems: 1,
@@ -121,33 +120,48 @@ export default {
   },
 
   computed: {
-    selectedAssignment() {
-      return this.$store.state.selectedAssignment;
+    getAssignments() {
+      return this.$store.getters['assignments/GET_ITEMS'];
+    },
+    getFetchingDataStatus() {
+      return this.$store.getters['assignments/GET_FETCHING'];
+    },
+    getSelectedAssignment() {
+      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
+    },
+    getSearchText() {
+      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     }
   },
 
-  watch: {
-    data() {
-      let assignment = this.$store.state.selectedAssignment;
-      if (assignment && assignment?._id) {
-        let foundAssignment = this.data.find(e => e._id === assignment._id);
-        if (foundAssignment) {
-          // Пишем в стор активное ТЗ
-          this.$store.dispatch('selectAssignment', foundAssignment);
-          // Пишем в локальное хранилище активное ТЗ
-          sessionStorage.setItem('selectedAssignment', JSON.stringify(foundAssignment));
-        }
-      }
-    },
-  },
+  // watch: {
+  //   data() {
+  //     let assignment = this.$store.state.selectedAssignment;
+  //     if (assignment && assignment?._id) {
+  //       let foundAssignment = this.data.find(e => e._id === assignment._id);
+  //       if (foundAssignment) {
+  //         // Пишем в стор активное ТЗ
+  //         this.$store.dispatch('selectAssignment', foundAssignment);
+  //         // Пишем в локальное хранилище активное ТЗ
+  //         sessionStorage.setItem('selectedAssignment', JSON.stringify(foundAssignment));
+  //       }
+  //     }
+  //   },
+  // },
 
   mounted() {
-    this.fetchData();
+
+    this.$store.dispatch['assignments/UPDATE_ITEMS'];
+
     // Загружаем selectedAssignment зи localStorage
     let assignment = sessionStorage.getItem('selectedAssignment');
     if (assignment) {
       this.$store.dispatch('selectAssignment', JSON.parse(assignment));
     }
+  },
+
+  unmounted() {
+    this.$store.commit('assignments/RESET_STORE');
   },
 
   methods: {
@@ -156,50 +170,13 @@ export default {
     slicer,
 
     cardMenuShow(assignment) {
-      // Пишем в стор активное ТЗ
-      this.$store.dispatch('selectAssignment', assignment);
-      // Пишем в локальное хранилище активное ТЗ
+      this.$store.commit('assignments/SELECT_ITEM', assignment);
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
-      // Переходим на страницу карточки ТЗ
       navigateTo('/manager-menu/assignments/assignment-card');
     },
 
-    fetchDataDebounce900: _.debounce(function () {
-      this.fetchData();
-    }, 900),
-
-    async fetchData() {
-
-      this.fetchingData = true;
-
-      let params = [
-        this.currentPage ? `page=${this.currentPage}` : null,
-        this.itemsLimit ? `limit=${this.itemsLimit}` : null,
-        this.searchText ? `searchText=${this.searchText}` : null,
-      ].filter(e => !!e).join('&');
-
-      fetchAssignments(params ? `?${params}` : '')
-          .then(response => {
-            let {currentPage, totalItems, totalPages, pageSize, data} = response.data;
-            this.currentPage = currentPage;
-            this.totalItems = totalItems;
-            this.totalPages = totalPages;
-            this.pageSize = pageSize;
-            this.data = data;
-          })
-          .catch(err => {
-            console.log('Ошибка получения данных с сервера', err);
-            this.data = dataAssignments;
-          })
-          .finally(() => {
-            this.fetchingData = false;
-          })
-    },
-
-    removeDataItem(_id) {
-      removeAssignment(_id)
-          .then(() => this.fetchData())
-          .catch(err => console.log('Ошибка удаления элемента', err))
+    removeAssignment(_id) {
+      this.$store.dispatch('assignments/REMOVE_ITEM', _id);
     },
   }
 }
