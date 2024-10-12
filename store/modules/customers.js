@@ -1,23 +1,23 @@
 import {createStore} from "vuex";
 import {initial_page_state} from "@/store/modules/assets-page-store.js";
 
-const customers = () => createStore({
+const customers = {
     namespaced: true,
-    state: () => initial_page_state(),
-    getters: {
+        state: () => initial_page_state(),
+        getters: {
         GET_TOKEN: (state) => state.token,
-        GET_SELECTED_ITEM: (state) => state.selectedItem,
-        GET_ITEMS: (state) => state.items,
-        GET_ITEMS_COUNT: (state) => state.itemsCount,
-        GET_FETCHING: (state) => state.fetching,
-        GET_CURRENT_PAGE: (state) => state.page,
-        GET_ITEMS_LIMIT: (state) => state.itemsLimit,
-        GET_TOTAL_ITEMS: (state) => state.totalItems,
-        GET_TOTAL_PAGES: (state) => state.totalPages,
-        GET_SEARCH_TEXT: (state) => state.searchText,
-        GET_QUERY_PARAMS: (state) => state.queryParams,
-        GET_ALERT: (state) => state.alert,
-        GET_QUERY: (state) => {
+            GET_SELECTED_ITEM: (state) => state.selectedItem,
+            GET_ITEMS: (state) => state.items,
+            GET_ITEMS_COUNT: (state) => state.itemsCount,
+            GET_FETCHING: (state) => state.fetching,
+            GET_CURRENT_PAGE: (state) => state.page,
+            GET_ITEMS_LIMIT: (state) => state.itemsLimit,
+            GET_TOTAL_ITEMS: (state) => state.totalItems,
+            GET_TOTAL_PAGES: (state) => state.totalPages,
+            GET_SEARCH_TEXT: (state) => state.searchText,
+            GET_QUERY_PARAMS: (state) => state.queryParams,
+            GET_ALERT: (state) => state.alert,
+            GET_QUERY: (state) => {
             const buff = [
                 state.page && state.page > 0 ? `page=${state.page}` : null,
                 state.itemsLimit && state.itemsLimit > 0 ? `limit=${state.itemsLimit}` : null,
@@ -81,6 +81,6 @@ const customers = () => createStore({
             }
         }
     },
-});
+}
 
 export default customers;

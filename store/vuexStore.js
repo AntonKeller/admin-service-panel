@@ -2,7 +2,7 @@ import {createStore} from "vuex";
 import assignments from "./modules/assignments.js";
 import inspectionObjects from "./modules/inspectionObjects.js";
 import assignmentBlocks from "./modules/assignmentBlocks.js";
-import contacts from "./modules/contacts.js";
+import contracts from "./modules/contracts.js";
 import customers from "./modules/customers.js";
 
 // Вводный, короткий курс по Vuex
@@ -14,7 +14,7 @@ export const vuexStore = createStore({
         assignments,
         inspectionObjects,
         assignmentBlocks,
-        contacts,
+        contracts,
         customers
     },
 })

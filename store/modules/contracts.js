@@ -1,7 +1,7 @@
-import {createStore} from "vuex";
-import {initial_page_state} from "@/store/modules/assets-page-store.js";
+import {initial_page_state} from "@/store/modules/assets-page-store";
+import {fetchContracts, fetchContractsAll} from "@/utils/service/server";
 
-const contacts = () => createStore({
+const contracts = {
     namespaced: true,
     state: () => initial_page_state(),
     getters: {
@@ -68,12 +68,17 @@ const contacts = () => createStore({
     actions: {
         async UPDATE_ITEMS({commit, getters}) {
 
-            // let answer = await fetchProjects(getters.GET_QUERY, getters.GET_TOKEN);
-            let answer = {}
+            commit('SET_FETCHING', true);
+            let answer = await fetchContracts(getters.GET_QUERY, getters.GET_TOKEN);
+            commit('SET_FETCHING', false);
 
             switch (answer.status) {
                 case 200:
                     commit('SET_ITEMS', answer.data);
+                    console.log('contracts data', answer.data)
+                    break;
+                case 403:
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
                     break;
                 default:
                     commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
@@ -81,6 +86,6 @@ const contacts = () => createStore({
             }
         }
     },
-});
+}
 
-export default contacts;
+export default contracts;

@@ -102,12 +102,22 @@ export async function removeCustomer(id: string) {
 /**
  * Contract
  * */
-export async function fetchContracts() {
-    return axios.get(serverURL + '/contracts', config);
+export async function fetchContracts(query: string, token: string) {
+    return axios.get(serverURL + '/contracts' + query, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
-export async function fetchContractsAll() {
-    return axios.get(serverURL + '/contracts/all', config);
+export async function fetchContractsAll(token: string) {
+    return axios.get(serverURL + '/contracts/all', {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
 export async function fetchContractsWithCustomers() {
@@ -130,7 +140,7 @@ export async function removeContract(id: string) {
 /**
  * Assignments
  * */
-export function fetchAssignments(query: string, token) {
+export function fetchAssignments(query: string, token: string) {
     return axios.get(serverURL + '/assignments' + query, {
         ...config,
         headers: {
@@ -139,8 +149,13 @@ export function fetchAssignments(query: string, token) {
     });
 }
 
-export function addNewAssignment(assignment: TAssignment) {
-    return axios.post(serverURL + '/assignments/add', assignment, config);
+export function addNewAssignment(assignment: TAssignment, token: string) {
+    return axios.post(serverURL + '/assignments/add', assignment, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
 export function changeAssignment(assignment: TAssignment) {
@@ -160,8 +175,22 @@ export function removeAssignment(id: string, token: string) {
 /**
  * Assignment Blocks
  * */
-export function fetchAssignmentBlocks(query: string) {
-    return axios.get(serverURL + '/assignment-blocks' + query, config);
+export function fetchAssignmentBlocks(assignmentID: string, query: string, token: string) {
+    return axios.get(serverURL + '/assignment-blocks/' + assignmentID + query, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
+}
+
+export function removeAssignmentBlock(blockId: string, token: string) {
+    return axios.delete(serverURL + `/assignment-blocks/` + blockId, {
+        ...config,
+        headers: {
+            authorization: token
+        }
+    });
 }
 
 export function fetchAssignmentBlocksKanban(query: string) {
@@ -176,7 +205,5 @@ export function changeAssignmentBlock(assignmentId: string, block: TAssignmentBl
     return axios.put(serverURL + '/assignment-blocks/' + assignmentId + '/change/' + block._id, block, config);
 }
 
-export function removeAssignmentBlock(blockId: string) {
-    return axios.delete(`${serverURL}/assignment-blocks/remove?id=${blockId}`, config);
-}
+
 

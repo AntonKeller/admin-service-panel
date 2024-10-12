@@ -1,7 +1,8 @@
 import {createStore} from "vuex";
 import {initial_page_state} from "@/store/modules/assets-page-store.js";
+import {fetchAssignmentBlocks, removeAssignmentBlock} from "@/utils/service/server";
 
-const assignmentBlocks = () => createStore({
+const assignmentBlocks = {
     namespaced: true,
     state: () => initial_page_state(),
     getters: {
@@ -53,7 +54,8 @@ const assignmentBlocks = () => createStore({
             state.itemsCount = payload.data?.length || initial_page_state().itemsCount;
         },
         REMOVE_ITEM(state, payload) {
-            state.items = state.items.filter(item => item._id !== payload._id);
+            const index = state.items.findIndex(item => item._id === payload);
+            if (index >= 0) state.items.splice(index, 1);
         },
         SHOW_ALERT_SUCCESS(state, payload) {
             state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
@@ -66,21 +68,45 @@ const assignmentBlocks = () => createStore({
         }
     },
     actions: {
-        async UPDATE_ITEMS({commit, getters}) {
+        async UPDATE_ITEMS({commit, getters}, assignmentID) {
 
-            // let answer = await fetchProjects(getters.GET_QUERY, getters.GET_TOKEN);
-            let answer = {}
+            commit('SET_FETCHING', true);
+            let answer = await fetchAssignmentBlocks(assignmentID, getters.GET_QUERY, getters.GET_TOKEN)
+            commit('SET_FETCHING', false);
 
             switch (answer.status) {
                 case 200:
                     commit('SET_ITEMS', answer.data);
+                    break;
+                case 403:
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
+                    break;
+                default:
+                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    break;
+            }
+        },
+
+        async REMOVE_ITEM({commit, getters}, payload) {
+
+            commit('SET_FETCHING', true);
+            let answer = await removeAssignmentBlock(payload, getters.GET_TOKEN);
+            commit('SET_FETCHING', false);
+
+            switch (answer.status) {
+                case 200:
+                    commit('REMOVE_ITEM', payload);
+                    commit('SHOW_ALERT_SUCCESS', 'Успешно удалено' || answer.statusText);
+                    break;
+                case 403:
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
                     break;
                 default:
                     commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
                     break;
             }
         }
-    },
-});
+    }
+}
 
 export default assignmentBlocks;

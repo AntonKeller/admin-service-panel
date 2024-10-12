@@ -1,8 +1,7 @@
-import {createStore} from "vuex";
-import {initial_page_state} from "@/store/modules/assets-page-store.js";
-import {fetchAssignments, removeAssignment} from "@/utils/service/server.js";
+import {initial_page_state} from "@/store/modules/assets-page-store";
+import {addNewAssignment, fetchAssignments, removeAssignment} from "@/utils/service/server";
 
-const assignments = () => createStore({
+const assignments = {
     namespaced: true,
     state: () => initial_page_state(),
     getters: {
@@ -40,6 +39,9 @@ const assignments = () => createStore({
         SET_SEARCH_TEXT(state, payload) {
             state.searchText = payload || initial_page_state().searchText;
         },
+        ADD_ITEM(state, payload) {
+
+        },
         SELECT_ITEM(state, payload) {
             state.selectedItem = payload || initial_page_state().selectedItem;
         },
@@ -47,14 +49,15 @@ const assignments = () => createStore({
             state.fetching = payload || initial_page_state().fetching;
         },
         SET_ITEMS(state, payload) {
-            state.page = payload.page;
+            state.page = payload.currentPage;
             state.totalPages = payload.totalPages;
             state.totalItems = payload.totalItems;
             state.items = payload.data;
             state.itemsCount = payload.data?.length || initial_page_state().itemsCount;
         },
         REMOVE_ITEM(state, payload) {
-            state.items = state.items.filter(item => item._id !== payload._id);
+            const index = state.items.findIndex(item => item._id === payload);
+            if (index >= 0) state.items.splice(index, 1);
         },
         SHOW_ALERT_SUCCESS(state, payload) {
             state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
@@ -77,7 +80,10 @@ const assignments = () => createStore({
             switch (answer.status) {
                 case 200:
                     commit('SET_ITEMS', answer.data);
-                    console.log('assignments answer data:', answer.data);
+                    console.log('[store assignments] answer data:', answer.data);
+                    break;
+                case 403:
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
                     break;
                 default:
                     commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
@@ -85,11 +91,28 @@ const assignments = () => createStore({
             }
         },
 
-        async remove_item({commit, getters, payload}) {
+        async ADD_NEW_ITEM({commit, getters}, payload) {
 
-            commit('SET_FETCHING', true);
+            let answer = await addNewAssignment(payload, getters.GET_TOKEN);
+
+            switch (answer.status) {
+                case 200:
+                    commit('ADD_ITEM', payload);
+
+                    commit('SHOW_ALERT_SUCCESS', 'Успешно добавлено' || answer.statusText);
+                    break;
+                case 403:
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
+                    break;
+                default:
+                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    break;
+            }
+        },
+
+        async REMOVE_ITEM({commit, getters}, payload) {
+
             let answer = await removeAssignment(payload, getters.GET_TOKEN);
-            commit('SET_FETCHING', false);
 
             switch (answer.status) {
                 case 200:
@@ -97,15 +120,14 @@ const assignments = () => createStore({
                     commit('SHOW_ALERT_SUCCESS', 'Успешно удалено' || answer.statusText);
                     break;
                 case 403:
-                    commit('SHOW_ALERT_ERROR', 'Недостаточно прав' || answer.statusText);
+                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
                     break;
                 default:
                     commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
                     break;
             }
-
         }
     },
-});
+}
 
 export default assignments;

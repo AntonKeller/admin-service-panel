@@ -1,20 +1,22 @@
 <template>
-  <my-overlay :model-value="true" @afterLeave="navigateTo('/manager-menu/assignments')">
+  <v-overlay
+      v-model="visibility"
+      class="d-flex justify-center align-center"
+      @click:outside="navigateTo('/manager-menu/assignments')"
+  >
     <v-sheet
         rounded="lg"
         elevation="6"
         color="grey-lighten-4"
     >
       <v-card
-          @click="changeTitleAssignment"
           rounded="lg"
           variant="text"
           width="800"
           color="blue-grey-darken-3"
       >
 
-        <v-card-title>Новая задача Активная: {{ getSAss() }}</v-card-title>
-
+        <v-card-title>Новая задача</v-card-title>
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
@@ -28,8 +30,8 @@
 
             <div class="d-flex ga-2">
               <v-autocomplete
-                  v-model="cContract"
-                  :items="contracts"
+                  v-model="assignment.contract"
+                  :items="getContracts"
                   :rules="contractRules"
                   density="comfortable"
                   item-title="contractNumber"
@@ -66,8 +68,8 @@
                   rounded="lg"
                   variant="tonal"
                   icon="mdi-plus"
-                  @click="contractAddMenuShow = true"
               />
+<!--              @click="contractAddMenuShow = true"-->
             </div>
 
             <v-textarea
@@ -85,58 +87,37 @@
           <my-btn-submit
               text="Добавить"
               prepend-icon="mdi-checkbox-multiple-marked-outline"
-              :loading="sendingData"
               @click="sendAssignment"
           />
           <my-btn-clear
               text="Очистить"
-              @click="clear"
+              @click="assignment = {}"
           />
         </v-card-actions>
 
       </v-card>
 
-      <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-snackbar :color="getAlert.type" v-model="getAlert.isShow">
         <v-icon>mdi-alert-circle-outline</v-icon>
-        {{ snackBar.msg }}
+        {{ getAlert.msg }}
       </v-snackbar>
 
-      <my-overlay v-model="contractAddMenuShow">
-        <c-contract-card-add-menu @add:success="fetchContractsAll"/>
+      <my-overlay>
+        <c-contract-card-add-menu/>
       </my-overlay>
 
     </v-sheet>
-  </my-overlay>
+  </v-overlay>
 </template>
 
 <script>
-import _ from "lodash";
-import {showAlert} from "../../../utils/service/serverAPI";
-import {fetchContractsAll, addNewAssignment} from '../../../utils/service/server.ts';
-import {testDataContracts} from "../../../configs/data-test/data-test-contracts";
-
 export default {
-  name: "assignment-card-add-page",
+  name: "card-add-page",
   data: () => ({
 
-    // data
-    assignment: {},
-
-    // prompt data
-    contracts: [],
-    customers: [],
-
-    // loaders
-    sendingData: false,
-    fetchingContracts: false,
-    fetchingCustomers: false,
-
+    visibility: false,
     formIsValid: false,
-    snackBar: {},
-
-    // menus
-    contractAddMenuShow: false,
-    customerAddMenuShow: false,
+    assignment: {},
 
     assignmentTitleRules: [
       value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
@@ -151,73 +132,39 @@ export default {
     ],
   }),
 
+  beforeMount() {
+    this.$store.dispatch('contracts/UPDATE_ITEMS');
+  },
+
   mounted() {
-    this.fetchContractsAll();
+    const timeoutID = setTimeout(() => {
+      this.visibility = true;
+      clearTimeout(timeoutID);
+    }, 1);
+  },
+
+  watch: {
+    assignment() {
+      console.log('assignment', assignment);
+    }
   },
 
   computed: {
-    cContract: {
-      set(_id) {
-        this.assignment.contract = _id ? _.cloneDeep(this.contracts.find(e => e._id === _id)) : null;
-      },
-      get() {
-        return this.assignment.contract?._id;
-      },
+    getContracts() {
+      return this.$store.getters['contracts/GET_ITEMS'];
     },
+    getAlert() {
+      return this.$store.getters['assignments/GET_ALERT'];
+    }
   },
 
   methods: {
-
-    getSAss() {
-      return this.$store.state.selectedAssignment?.title;
-    },
-
-    changeTitleAssignment() {
-      this.$store.dispatch('selectAssignment', {title: 'Новый заголовок'});
-    },
-
     async sendAssignment() {
-
       await this.$refs.form.validate();
-
       if (this.formIsValid) {
-
-        this.sendingData = true;
-
-        addNewAssignment(this.assignment)
-            .then(() => {
-              this.snackBar = showAlert('Добавлена новая задача!').success();
-              this.$emit('update:success')
-            })
-            .catch(err => {
-              this.snackBar = showAlert('Не удалось добавить задачу!').error();
-              console.log('Не удалось добавить задачу', err);
-            })
-            .finally(() => {
-              this.sendingData = false;
-            })
+        this.$store.dispatch('assignments/ADD_NEW_ITEM', this.assignment);
       }
-    },
-
-    fetchContractsAll() {
-      this.fetchingContracts = true;
-      fetchContractsAll()
-          .then(response => {
-            this.contracts = response?.data;
-          })
-          .catch(err => {
-            this.contracts = testDataContracts;
-            console.log('Запрос списка договоров выполнен с ошибкой', err);
-          })
-          .finally(() => {
-            this.fetchingContracts = false;
-          })
-    },
-
-    clear() {
-      this.assignment = {}
     }
-
-  },
+  }
 }
 </script>

@@ -8,12 +8,11 @@
         <v-card-item>
           <div class="d-flex ga-4 align-center">
             <my-search-bar
-                :modelValue=""
-                v-model="searchText"
-                :hint="`Найдено: ${totalItems}`"
+                :modelValue="getSearchText"
+                @update:modelValue="setSearchText"
+                :hint="`Найдено: ${getTotalAssignments}`"
                 style="min-width: 500px"
-                @btn:click="navigateTo('/manager-menu/assignments/assignment-card-add')"
-                @update:modelValue="fetchData"
+                @btn:click="navigateTo('/manager-menu/assignments/card-add')"
             />
           </div>
         </v-card-item>
@@ -43,7 +42,6 @@
               :key="assignment._id"
               @click="cardMenuShow(assignment)"
           >
-            <!--            @click="cardMenuShow(assignment._id)"-->
             <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i }}</td>
             <td style="min-width: 280px; width: 280px; max-width: 280px">
               <div>{{ assignment.title }}</div>
@@ -73,7 +71,8 @@
 
       <div class="d-flex align-center mt-4">
         <v-text-field
-            v-model="currentPage"
+            :modelValue="getCurrentPage"
+            @update:modelValue="setCurrentPage"
             color="blue-grey-darken-3"
             variant="outlined"
             density="compact"
@@ -81,16 +80,16 @@
             rounded="lg"
             hide-details
             style="width: 80px; max-width: 80px"
-            @update:modelValue="fetchData"
+
         />
         <v-pagination
-            v-model="currentPage"
+            :modelValue="getCurrentPage"
+            @update:modelValue="setCurrentPage"
             density="comfortable"
             color="blue-grey-darken-2"
             show-first-last-page
-            :length="totalPages"
+            :length="getTotalPages"
             :total-visible="8"
-            @update:modelValue="fetchData"
         />
       </div>
     </v-sheet>
@@ -101,37 +100,56 @@
 </template>
 
 <script>
-import _ from "lodash";
-import dataAssignments from "../../configs/data-test/data-test-assignments";
 import {slicer, timeStringToDate} from "../../utils/service/serverAPI";
-import {removeAssignment} from "../../utils/service/server";
 
 export default {
   name: "assignments-page",
 
-  data() {
-    return {
-      currentPage: 1,
-      itemsLimit: 50,
-      totalItems: 1,
-      totalPages: 1,
-      searchText: '',
+  beforeMount() {
+    try {
+      if (sessionStorage?.selectedAssignment) {
+        let assignment = JSON.parse(sessionStorage?.selectedAssignment);
+        console.log('selectedAssignment', assignment);
+        this.$store.commit('assignments/SELECT_ITEM', assignment);
+      }
+    } catch (err) {
+      console.log('Неудалось прочитать выбранный ТЗ из session storage');
     }
   },
 
+  mounted() {
+    this.$store.dispatch('assignments/UPDATE_ITEMS');
+  },
+
+  unmounted() {
+    this.$store.commit('assignments/RESET_STORE');
+  },
+
   computed: {
+
     getAssignments() {
       return this.$store.getters['assignments/GET_ITEMS'];
     },
+
+    getTotalPages() {
+      return this.$store.getters['assignments/GET_TOTAL_PAGES'];
+    },
+
+    getCurrentPage() {
+      return this.$store.getters['assignments/GET_CURRENT_PAGE'];
+    },
+
+    getTotalAssignments() {
+      return this.$store.getters['assignments/GET_TOTAL_ITEMS'];
+    },
+
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },
-    getSelectedAssignment() {
-      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
-    },
+
     getSearchText() {
-      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
-    }
+      return this.$store.getters['assignments/GET_SEARCH_TEXT'];
+    },
   },
 
   // watch: {
@@ -149,30 +167,24 @@ export default {
   //   },
   // },
 
-  mounted() {
-
-    this.$store.dispatch['assignments/UPDATE_ITEMS'];
-
-    // Загружаем selectedAssignment зи localStorage
-    let assignment = sessionStorage.getItem('selectedAssignment');
-    if (assignment) {
-      this.$store.dispatch('selectAssignment', JSON.parse(assignment));
-    }
-  },
-
-  unmounted() {
-    this.$store.commit('assignments/RESET_STORE');
-  },
-
   methods: {
-
-    timeStringToDate,
     slicer,
+    timeStringToDate,
+
+    setSearchText(text) {
+      this.$store.commit('assignments/SET_SEARCH_TEXT', text);
+      this.$store.dispatch('assignments/UPDATE_ITEMS');
+    },
+
+    setCurrentPage(currentPage) {
+      this.$store.commit('assignments/SET_CURRENT_PAGE', currentPage);
+      this.$store.dispatch('assignments/UPDATE_ITEMS');
+    },
 
     cardMenuShow(assignment) {
       this.$store.commit('assignments/SELECT_ITEM', assignment);
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
-      navigateTo('/manager-menu/assignments/assignment-card');
+      navigateTo('/manager-menu/assignments/card');
     },
 
     removeAssignment(_id) {

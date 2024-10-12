@@ -1,7 +1,6 @@
-import { createStore } from "vuex";
-import {assignmentStore} from '../store/assignments'
+import {vuexStore} from '../store/vuexStore'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(assignmentStore);
+    nuxtApp.vueApp.use(vuexStore);
     // Install the store instance as a plugin
 });
