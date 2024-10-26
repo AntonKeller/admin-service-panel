@@ -105,8 +105,9 @@
 
 <script>
 import _ from "lodash";
-import {showAlert} from "../utils/service/serverAPI";
-import {addContract, fetchCustomersAll} from "../utils/service/server.ts";
+import {showAlert} from "../utils/functions.js";
+import {fetchCustomersAll} from "../utils/api/api_customers";
+import {addContract} from "../utils/api/api_contracts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
 
 export default {

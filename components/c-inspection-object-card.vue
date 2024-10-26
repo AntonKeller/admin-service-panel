@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import {sendImg, removeImg, fetchImages} from "../utils/service/server";
+import {sendImg, removeImg, fetchImages} from "../utils/api/api_images";
 
 export default {
   name: "c-inspection-object-card",

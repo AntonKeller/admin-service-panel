@@ -42,7 +42,7 @@
               :key="assignment._id"
               @click="cardMenuShow(assignment)"
           >
-            <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i }}</td>
+            <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
             <td style="min-width: 280px; width: 280px; max-width: 280px">
               <div>{{ assignment.title }}</div>
               <div><b>Создан: </b>{{ assignment.createdAt }}</div>
@@ -70,18 +70,6 @@
       </div>
 
       <div class="d-flex align-center mt-4">
-        <v-text-field
-            :modelValue="getCurrentPage"
-            @update:modelValue="setCurrentPage"
-            color="blue-grey-darken-3"
-            variant="outlined"
-            density="compact"
-            type="number"
-            rounded="lg"
-            hide-details
-            style="width: 80px; max-width: 80px"
-
-        />
         <v-pagination
             :modelValue="getCurrentPage"
             @update:modelValue="setCurrentPage"
@@ -100,7 +88,7 @@
 </template>
 
 <script>
-import {slicer, timeStringToDate} from "../../utils/service/serverAPI";
+import {slicer, timeStringToDate} from "../../utils/functions.js";
 
 export default {
   name: "assignments-page",
@@ -152,24 +140,9 @@ export default {
     },
   },
 
-  // watch: {
-  //   data() {
-  //     let assignment = this.$store.state.selectedAssignment;
-  //     if (assignment && assignment?._id) {
-  //       let foundAssignment = this.data.find(e => e._id === assignment._id);
-  //       if (foundAssignment) {
-  //         // Пишем в стор активное ТЗ
-  //         this.$store.dispatch('selectAssignment', foundAssignment);
-  //         // Пишем в локальное хранилище активное ТЗ
-  //         sessionStorage.setItem('selectedAssignment', JSON.stringify(foundAssignment));
-  //       }
-  //     }
-  //   },
-  // },
-
   methods: {
-    slicer,
-    timeStringToDate,
+
+    slicer, timeStringToDate,
 
     setSearchText(text) {
       this.$store.commit('assignments/SET_SEARCH_TEXT', text);
@@ -190,6 +163,7 @@ export default {
     removeAssignment(_id) {
       this.$store.dispatch('assignments/REMOVE_ITEM', _id);
     },
+
   }
 }
 </script>

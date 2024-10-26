@@ -44,9 +44,9 @@
 </template>
 
 <script>
-import {addCustomer} from "../utils/service/server.ts";
 import customerConfig from "../configs/customer-config";
-import {showAlert} from "../utils/service/serverAPI.js";
+import {addCustomer} from "../utils/api/api_customers";
+import {showAlert} from "../utils/functions";
 
 export default {
   name: "c-customer-card-add-menu",

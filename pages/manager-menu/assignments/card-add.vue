@@ -2,15 +2,15 @@
   <v-overlay
       v-model="visibility"
       class="d-flex justify-center align-center"
-      @click:outside="navigateTo('/manager-menu/assignments')"
+      @click:outside="navigateBack"
   >
     <v-sheet
-        rounded="lg"
+        rounded
         elevation="6"
         color="grey-lighten-4"
     >
       <v-card
-          rounded="lg"
+          rounded
           variant="text"
           width="800"
           color="blue-grey-darken-3"
@@ -23,7 +23,6 @@
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
             <my-text-field
                 v-model="assignment.title"
-                :rules="assignmentTitleRules"
                 label="Заголовок задания"
                 prepend-inner-icon="mdi-label-variant-outline"
             />
@@ -32,17 +31,14 @@
               <v-autocomplete
                   v-model="assignment.contract"
                   :items="getContracts"
-                  :rules="contractRules"
-                  density="comfortable"
-                  item-title="contractNumber"
-                  item-value="_id"
-                  rounded="lg"
-                  variant="outlined"
-                  color="blue-grey-darken-3"
-                  label="Договор"
                   prepend-inner-icon="mdi-file-sign"
-                  chips
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  variant="outlined"
+                  label="Договор"
+                  rounded="lg"
                   closable-chips
+                  chips
               >
                 <template v-slot:chip="{ props, item }">
                   <v-chip
@@ -65,11 +61,11 @@
               </v-autocomplete>
 
               <v-btn
-                  rounded="lg"
                   variant="tonal"
                   icon="mdi-plus"
+                  rounded="lg"
+                  @click="contractAddMenuShow = true"
               />
-<!--              @click="contractAddMenuShow = true"-->
             </div>
 
             <v-textarea
@@ -102,9 +98,13 @@
         {{ getAlert.msg }}
       </v-snackbar>
 
-      <my-overlay>
-        <c-contract-card-add-menu/>
-      </my-overlay>
+
+      <v-overlay
+          v-model="contractAddMenuShow"
+          class="d-flex justify-center align-center"
+      >
+        <c-contract-card-add-menu />
+      </v-overlay>
 
     </v-sheet>
   </v-overlay>
@@ -117,6 +117,7 @@ export default {
 
     visibility: false,
     formIsValid: false,
+    contractAddMenuShow: false,
     assignment: {},
 
     assignmentTitleRules: [
@@ -159,12 +160,19 @@ export default {
   },
 
   methods: {
+
+    navigateBack() {
+      const router = useRouter();
+      router.back();
+    },
+
     async sendAssignment() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
         this.$store.dispatch('assignments/ADD_NEW_ITEM', this.assignment);
       }
     }
+
   }
 }
 </script>

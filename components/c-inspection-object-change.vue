@@ -63,8 +63,8 @@
 
 <script>
 import _ from "lodash";
-import {showAlert} from "../utils/service/serverAPI";
-import {changeInspectionObject} from "../utils/service/server";
+import {showAlert} from "../utils/functions.js";
+import {changeInspectionObject} from "../utils/api/api_inspection_objects";
 
 export default {
   name: "c-inspection-object-change",

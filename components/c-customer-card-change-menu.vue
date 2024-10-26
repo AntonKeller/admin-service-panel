@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import {putCustomer} from "../utils/service/server.ts";
 import customerConfig from "../configs/customer-config";
+import {putCustomer} from "../utils/api/api_customers";
 
 export default {
   name: "c-customer-card-change-menu",

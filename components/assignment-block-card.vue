@@ -142,8 +142,8 @@
 <script>
 import _ from "lodash";
 import {dataInspectionObjects} from "../configs/data-test/data-test-inspection-object";
-import {fetchInspectionObjects} from "../utils/service/server";
-import {timeStringToDate} from "../utils/service/serverAPI.js";
+import {fetchInspectionObjects} from "../utils/api/api_inspection_objects";
+import {timeStringToDate} from "../utils/functions.js";
 
 export default {
   name: "c-a-block-card",

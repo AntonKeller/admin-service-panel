@@ -1,46 +1,118 @@
 <template>
-  <v-card
-      color="blue-grey-darken-4"
-      variant='text'
-      density="compact"
-  >
-    <v-card-title>Отчеты</v-card-title>
-    <v-card-subtitle>Отчеты отобразятся в списке по готовности</v-card-subtitle>
-    <v-card-text>
-      <v-sheet class="d-flex flex-wrap ga-4">
-        <v-card border="sm" variant="tonal" color="blue-darken-3" v-for="n of 7" class="w-25">
-          <v-card-title class="d-flex align-center justify-space-between">
-            <span>ТЗ: Осмотр объектов недвижимости</span>
-            <v-btn density="compact" variant="text" rounded="lg" icon="mdi-open-in-new" />
-          </v-card-title>
-          <v-card-subtitle>Осмотр бань, адрес: ул. 3 Ямского поля 2 к 7</v-card-subtitle>
-          <v-card-text>
-            <v-label class="text-caption" text="Исполнители:" />
-            <div class="d-flex ga-2 flex-wrap">
-              <v-divider class="my-1"/>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Иванов И. И.</v-chip>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Петров А. А.</v-chip>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Сидоров И. А.</v-chip>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Иващенко А. А.</v-chip>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Кузнецов А. А.</v-chip>
-                <v-chip border="sm" variant="tonal" density="compact" size="small">Григоренко А. А.</v-chip>
-              <v-divider class="my-1"/>
-            </div>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn density="comfortable" variant="elevated" color="blue-darken-4">Скачать</v-btn>
-            <v-btn density="comfortable" variant="tonal">Перейти</v-btn>
-            <v-btn density="comfortable" variant="text">Удалить</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-sheet>
-    </v-card-text>
-  </v-card>
-
+  <v-container fluid>
+    <v-sheet>
+      <v-card variant="text" color="blue-darken-4">
+        <v-card-title>Отчеты</v-card-title>
+        <v-card-item>
+          <div class="d-flex ga-4 align-center">
+            <v-text-field
+                color="blue-darken-4"
+                variant="outlined"
+                density="compact"
+                append-inner-icon="mdi-plus-box-multiple"
+                label="Поиск"
+                rounded="lg"
+                single-line
+                persistent-hint
+                style="max-width: 500px"
+                v-model="search"
+                :hint="`Найдено: ${totalItems ?? 0}`"
+                @update:modelValue="console.log('search text:', search)"
+                @click:appendInner=""
+            />
+          </div>
+        </v-card-item>
+      </v-card>
+      <div style="min-height: 700px" class="mt-4">
+        <v-divider/>
+        <v-table
+            style="height: 700px"
+            density="comfortable"
+            class="text-caption"
+            fixed-header
+        >
+          <thead>
+          <tr>
+            <th>Отчет №</th>
+            <th>К техническому заданию</th>
+            <th>Блок</th>
+            <th>Клиент</th>
+            <th>Объектов осмотра</th>
+            <th>Исполнитель</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(report, i) of reports">
+            <td>{{ i + 1 }}</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+            <td>lorem</td>
+          </tr>
+          </tbody>
+        </v-table>
+        <v-divider/>
+      </div>
+      <div class="d-flex align-center mt-4">
+        <v-pagination
+            :model-value="page"
+            :length="totalPages"
+            :total-visible="8"
+            density="comfortable"
+            color="blue-grey-darken-2"
+            show-first-last-page
+            @update:modelValue="changePage"
+        />
+      </div>
+      <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+        <v-icon>mdi-alert-circle-outline</v-icon>
+        {{ snackBar.msg }}
+      </v-snackbar>
+    </v-sheet>
+  </v-container>
 </template>
 
 <script>
+import {fetchReports} from "../../utils/api/api_reports";
+import {showAlert} from "../../utils/functions.js";
+
 export default {
-  name: "reports"
+  name: "reports",
+
+  data() {
+    return {
+      snackBar: {},
+      search: null,
+      page: 1,
+      totalPages: 1,
+      totalItems: null,
+      reports: []
+    }
+  },
+
+  beforeMount() {
+
+  },
+
+  computed: {},
+
+  methods: {
+    changePage() {
+
+      fetchReports()
+          .then(response => {
+            const {currentPage, totalPages, totalItems, data} = response.data;
+            this.page = currentPage;
+            this.totalPages = totalPages;
+            this.totalItems = totalItems;
+            this.reports = data;
+          })
+          .catch(err => {
+            this.snackBar = showAlert('Не удалось изменить!').error();
+            console.log('Ошибка запроса', err)
+          })
+    }
+  }
 }
 </script>

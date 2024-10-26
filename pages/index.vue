@@ -15,10 +15,6 @@
               <c-auth-form/>
             </v-window-item>
 
-<!--            <v-window-item value="registration-tab">-->
-<!--              <c-registration-form @updateTab="setTab"/>-->
-<!--            </v-window-item>-->
-
             <v-window-item value="verify-tab">
               <TheVerifyMenu @updateTab="setTab"/>
             </v-window-item>
@@ -34,14 +30,9 @@
 
 <script>
 
-import CRegistrationForm from "@/components/c-registration-form.vue";
-
 export default {
 
   name: 'IndexPage',
-  components: {
-    CRegistrationForm
-  },
 
   data: () => ({
 

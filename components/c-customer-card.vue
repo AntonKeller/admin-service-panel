@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {removeCustomer} from "../utils/service/server.ts";
+import {removeCustomer} from "../utils/api/api_customers";
 
 export default {
   name: "c-customer-card",

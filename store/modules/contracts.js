@@ -1,5 +1,5 @@
 import {initial_page_state} from "@/store/modules/assets-page-store";
-import {fetchContracts, fetchContractsAll} from "@/utils/service/server";
+import {fetchContracts, fetchContractsAll} from "@/utils/api/api_contracts";
 
 const contracts = {
     namespaced: true,
@@ -69,7 +69,7 @@ const contracts = {
         async UPDATE_ITEMS({commit, getters}) {
 
             commit('SET_FETCHING', true);
-            let answer = await fetchContracts(getters.GET_QUERY, getters.GET_TOKEN);
+            let answer = await fetchContracts(getters.GET_QUERY);
             commit('SET_FETCHING', false);
 
             switch (answer.status) {

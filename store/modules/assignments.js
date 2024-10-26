@@ -1,5 +1,19 @@
-import {initial_page_state} from "@/store/modules/assets-page-store";
-import {addNewAssignment, fetchAssignments, removeAssignment} from "@/utils/service/server";
+import {addNewAssignment, fetchAssignments, removeAssignment} from "@/utils/api/api_assignments";
+
+export const initial_page_state = () => ({
+    token: '',
+    selectedItem: {},
+    items: [],
+    fetching: false,
+    itemsCount: 0,
+    page: '',
+    itemsLimit: 20,
+    totalItems: 0,
+    totalPages: 1,
+    searchText: '',
+    queryParams: '',
+    alert: {},
+});
 
 const assignments = {
     namespaced: true,
@@ -39,9 +53,6 @@ const assignments = {
         SET_SEARCH_TEXT(state, payload) {
             state.searchText = payload || initial_page_state().searchText;
         },
-        ADD_ITEM(state, payload) {
-
-        },
         SELECT_ITEM(state, payload) {
             state.selectedItem = payload || initial_page_state().selectedItem;
         },
@@ -74,7 +85,7 @@ const assignments = {
         async UPDATE_ITEMS({commit, getters}) {
 
             commit('SET_FETCHING', true);
-            let answer = await fetchAssignments(getters.GET_QUERY, getters.GET_TOKEN);
+            let answer = await fetchAssignments(getters.GET_QUERY);
             commit('SET_FETCHING', false);
 
             switch (answer.status) {
@@ -98,7 +109,6 @@ const assignments = {
             switch (answer.status) {
                 case 200:
                     commit('ADD_ITEM', payload);
-
                     commit('SHOW_ALERT_SUCCESS', 'Успешно добавлено' || answer.statusText);
                     break;
                 case 403:

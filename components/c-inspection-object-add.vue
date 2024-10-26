@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import {sendInspectionObject} from "../utils/service/server";
-import {showAlert} from "../utils/service/serverAPI";
+import {sendInspectionObject} from "../utils/api/api_inspection_objects";
+import {showAlert} from "../utils/functions.js";
 
 export default {
   name: "c-inspection-object-add",

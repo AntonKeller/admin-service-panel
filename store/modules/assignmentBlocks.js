@@ -1,30 +1,38 @@
-import {createStore} from "vuex";
-import {initial_page_state} from "@/store/modules/assets-page-store.js";
-import {fetchAssignmentBlocks, removeAssignmentBlock} from "@/utils/service/server";
+import {fetchAssignmentBlocks, removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+
+export const initial_page_state = () => ({
+    selectedItem: {},
+    items: [],
+    fetching: false,
+    itemsCount: 0,
+    query: {
+        page: 1,
+        itemsLimit: 20,
+    },
+    totalItems: 0,
+    totalPages: 0,
+    searchText: '',
+    alert: {},
+});
 
 const assignmentBlocks = {
     namespaced: true,
     state: () => initial_page_state(),
     getters: {
-        GET_TOKEN: (state) => state.token,
         GET_SELECTED_ITEM: (state) => state.selectedItem,
         GET_ITEMS: (state) => state.items,
         GET_ITEMS_COUNT: (state) => state.itemsCount,
         GET_FETCHING: (state) => state.fetching,
-        GET_CURRENT_PAGE: (state) => state.page,
-        GET_ITEMS_LIMIT: (state) => state.itemsLimit,
+        GET_CURRENT_PAGE: (state) => state.query.page,
+        GET_ITEMS_LIMIT: (state) => state.query.itemsLimit,
         GET_TOTAL_ITEMS: (state) => state.totalItems,
         GET_TOTAL_PAGES: (state) => state.totalPages,
         GET_SEARCH_TEXT: (state) => state.searchText,
-        GET_QUERY_PARAMS: (state) => state.queryParams,
         GET_ALERT: (state) => state.alert,
         GET_QUERY: (state) => {
-            const buff = [
-                state.page && state.page > 0 ? `page=${state.page}` : null,
-                state.itemsLimit && state.itemsLimit > 0 ? `limit=${state.itemsLimit}` : null,
-                state.searchText && state.searchText.length > 0 ? `searchText=${state.searchText}` : null
-            ].filter(e => !!e).join('&');
-            return buff && buff?.length > 0 ? `?${buff}` : '';
+            return '?' + Object.entries(state.query)
+                .filter(([, value]) => !!value)
+                .map(([key, value]) => `${key}=${value}`).join('&')
         }
     },
     mutations: {
@@ -71,7 +79,7 @@ const assignmentBlocks = {
         async UPDATE_ITEMS({commit, getters}, assignmentID) {
 
             commit('SET_FETCHING', true);
-            let answer = await fetchAssignmentBlocks(assignmentID, getters.GET_QUERY, getters.GET_TOKEN)
+            let answer = await fetchAssignmentBlocks(assignmentID, getters.GET_QUERY);
             commit('SET_FETCHING', false);
 
             switch (answer.status) {
@@ -90,7 +98,7 @@ const assignmentBlocks = {
         async REMOVE_ITEM({commit, getters}, payload) {
 
             commit('SET_FETCHING', true);
-            let answer = await removeAssignmentBlock(payload, getters.GET_TOKEN);
+            let answer = await removeAssignmentBlock(payload);
             commit('SET_FETCHING', false);
 
             switch (answer.status) {

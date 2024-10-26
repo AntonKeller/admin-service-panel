@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {removeContract} from "../utils/service/server.ts";
+import {removeContract} from "../utils/api/api_contracts";
 
 export default {
   name: "c-contract-card",
