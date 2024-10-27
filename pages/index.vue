@@ -1,31 +1,11 @@
 <template>
-  <div class="index-background">
-    <div class="au-panel-wrap">
-      <v-card variant="tonal" rounded="lg">
-
-        <v-tabs v-model="currentTab" bg-color="teal-darken-2">
-          <v-tab variant="plain" value="authorization-tab" prepend-icon="mdi-login-variant">Вход</v-tab>
-<!--          <v-tab variant="plain" value="registration-tab" prepend-icon="mdi-account-multiple-plus-outline">Регистрация</v-tab>-->
-        </v-tabs>
-
-        <v-card-text>
-          <v-window v-model="currentTab">
-
-            <v-window-item value="authorization-tab">
-              <c-auth-form/>
-            </v-window-item>
-
-            <v-window-item value="verify-tab">
-              <TheVerifyMenu @updateTab="setTab"/>
-            </v-window-item>
-
-          </v-window>
-        </v-card-text>
-
-      </v-card>
+  <div class="d-flex h-100">
+    <div class="w-50">
+      <c-auth-form/>
     </div>
+    <v-sheet elevation="24" class="w-50 bg-blue-darken-4">
+    </v-sheet>
   </div>
-
 </template>
 
 <script>
@@ -60,20 +40,21 @@ export default {
 </script>
 
 <style scoped>
-  .index-background {
-    background: no-repeat center/cover url("/assets/bg-index-page.png");
-    height: 100vh;
-    max-height: 100vh;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .au-panel-wrap {
-    min-width: 400px;
-    max-width: 400px;
-    align-self: center;
-    justify-self: self-end;
-  }
+.index-background {
+  background: no-repeat center/cover url("/assets/bg-index-page.png");
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.au-panel-wrap {
+  min-width: 400px;
+  max-width: 400px;
+  align-self: center;
+  justify-self: self-end;
+}
 </style>

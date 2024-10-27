@@ -1,47 +1,58 @@
 <template>
-  <v-form @submit.prevent class="d-flex flex-column ga-2 pt-2">
-    <v-text-field
-        :disabled="isLoading"
-        label="Логин"
-        density="comfortable"
-        variant="outlined"
-        rounded="lg"
-        prepend-inner-icon="mdi-account-outline"
-        v-model="login.value"
-        :rules="login.rules"
-    />
+  <div class="d-flex flex-column justify-center align-center h-100">
 
-    <v-text-field
-        :disabled="isLoading"
-        label="Пароль"
-        density="comfortable"
-        variant="outlined"
-        rounded="lg"
-        v-model="password.value"
-        prepend-inner-icon="mdi-lock-outline"
-        :rules="password.rules"
-        :type="password.isPassword ? 'password' : 'text'"
-        :append-icon="!password.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
-        name="input-10-1"
-        @click:append="password.isPassword = !password.isPassword"
-    />
+    <div class="d-flex flex-column justify-start">
+      <p class="text-h4 font-weight-bold">
+        Добро пожаловать в
+        <span class="text-blue-darken-4">Панель управления</span>
+      </p>
+      <v-form @submit.prevent class="d-flex flex-column ga-1 mt-8" style="width: 340px">
+        <v-text-field
+            :disabled="isLoading"
+            label="Логин"
+            density="compact"
+            variant="outlined"
+            rounded="lg"
+            prepend-inner-icon="mdi-account-outline"
+            v-model="login.value"
+            :rules="login.rules"
+        />
 
-    <v-btn
-        :loading="isLoading"
-        block
-        text="Войти"
-        variant="tonal"
-        rounded="lg"
-        prepend-icon="mdi-login-variant"
-        @click="auth"
-    />
+        <v-text-field
+            :disabled="isLoading"
+            label="Пароль"
+            density="compact"
+            variant="outlined"
+            rounded="lg"
+            v-model="password.value"
+            prepend-inner-icon="mdi-lock-outline"
+            :rules="password.rules"
+            :type="password.isPassword ? 'password' : 'text'"
+            :append-icon="!password.isPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            name="input-10-1"
+            @click:append="password.isPassword = !password.isPassword"
+        />
 
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
+        <v-btn
+            class="mt-2"
+            prepend-icon="mdi-login-variant"
+            color="blue-darken-4"
+            variant="elevated"
+            text="Войти"
+            rounded="lg"
+            block
+            :loading="isLoading"
+            @click="auth"
+        />
 
-  </v-form>
+        <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+          <v-icon>mdi-alert-circle-outline</v-icon>
+          {{ snackBar.msg }}
+        </v-snackbar>
+
+      </v-form>
+    </div>
+  </div>
 </template>
 
 <script>

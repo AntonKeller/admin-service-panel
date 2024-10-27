@@ -1,5 +1,17 @@
-import {createStore} from "vuex";
-import {initial_page_state} from "@/store/modules/assets-page-store.js";
+const initial_page_state = () => ({
+    token: '',
+    selectedItem: {},
+    items: [],
+    fetching: false,
+    itemsCount: 0,
+    page: '',
+    itemsLimit: 20,
+    totalItems: 0,
+    totalPages: 0,
+    searchText: '',
+    queryParams: '',
+    alert: {},
+});
 
 const customers = {
     namespaced: true,
@@ -46,11 +58,12 @@ const customers = {
             state.fetching = payload || initial_page_state().fetching;
         },
         SET_ITEMS(state, payload) {
-            state.page = payload.page;
-            state.totalPages = payload.totalPages;
-            state.totalItems = payload.totalItems;
-            state.items = payload.data;
-            state.itemsCount = payload.data?.length || initial_page_state().itemsCount;
+            let {page, totalPages, totalItems, data} = payload;
+            state.page = page;
+            state.totalPages = totalPages;
+            state.totalItems = totalItems;
+            state.items = data;
+            state.itemsCount = data?.length || initial_page_state().itemsCount;
         },
         REMOVE_ITEM(state, payload) {
             state.items = state.items.filter(item => item._id !== payload._id);

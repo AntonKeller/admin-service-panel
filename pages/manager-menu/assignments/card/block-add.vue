@@ -25,12 +25,5 @@ export default {
     }, 1);
   },
 
-  methods: {
-    navigateBack() {
-      const router = useRouter();
-      router.back();
-    }
-  }
-
 }
 </script>

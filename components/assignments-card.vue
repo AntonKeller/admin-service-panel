@@ -245,11 +245,6 @@ export default {
 
     timeStringToDate,
 
-    navigateBack() {
-      const router = useRouter();
-      router.back();
-    },
-
     selectBlock(block) {
       sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));
       this.$store.dispatch('assignmentBlocks/SELECT_ITEM', block);
