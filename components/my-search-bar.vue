@@ -1,18 +1,24 @@
 <template>
   <div class="d-flex ga-2">
+    <v-btn
+        v-if="!hideButton"
+        density="comfortable"
+        icon="mdi-plus"
+        rounded="lg"
+        color="blue-darken-1"
+        @click:appendInner="$emit('btn:click')">
+    </v-btn>
     <v-text-field
         v-bind="$attrs"
         color="blue-grey-darken-1"
         prepend-inner-icon="mdi-magnify"
-        :append-inner-icon="!hideButton ? 'mdi-plus-box-multiple' : ''"
-        @click:appendInner="$emit('btn:click')"
         persistent-hint
         rounded="lg"
         density="compact"
         label="Поиск"
         variant="outlined"
-        single-line
-    />
+        single-line>
+    </v-text-field>
   </div>
 </template>
 

@@ -15,7 +15,6 @@ export default {
   name: 'IndexPage',
 
   data: () => ({
-
     currentTab: null,
     showVerifyAcc: true,
     show_verify_acc: false,
@@ -25,8 +24,8 @@ export default {
     password: '',
     show1: false,
     show2: true,
-    firstNameRules: [v => v?.length > 3 || 'Токен введен неверно',],
-    lastNameRules: [v => /[^0-9]/.test(v) || 'Пароль введен неверно',],
+    firstNameRules: [v => v?.length > 3 || 'Токен введен неверно'],
+    lastNameRules: [v => /[^0-9]/.test(v) || 'Пароль введен неверно'],
   }),
 
   methods: {

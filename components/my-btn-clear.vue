@@ -9,6 +9,6 @@
 
 <script>
 export default {
-  name: "my-btn-clear"
+  name: "my-btn-clear",
 }
 </script>
