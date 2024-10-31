@@ -12,6 +12,25 @@ function createConfig() {
 }
 
 /**
+ * input files send function to route
+ * */
+export function sendFiles(files, route) {
+    if (this.files && this.files.length > 0) {
+        let step = 100 / this.files.length;
+        this.files.forEach(file => {
+            let formData = new FormData();
+            formData.append('image', file);
+            axios.post(serverURL + route, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'authorization': localStorage.accessToken ?? '',
+                },
+            })
+        })
+    }
+}
+
+/**
  * Тестирует access token на вылидность
  * */
 export async function accessTest() {

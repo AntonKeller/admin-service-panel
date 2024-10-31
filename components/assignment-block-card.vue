@@ -146,7 +146,7 @@ import {fetchInspectionObjects} from "../utils/api/api_inspection_objects";
 import {timeStringToDate} from "../utils/functions.js";
 
 export default {
-  name: "c-a-block-card",
+  name: "assignment-block-card",
 
   components: {},
 

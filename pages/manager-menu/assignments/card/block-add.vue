@@ -2,7 +2,7 @@
   <v-overlay
       v-model="visibility"
       class="d-flex justify-center align-center"
-      @click:outside="navigateTo('/manager-menu/assignments/card')"
+      @click:outside="navigateBack"
   >
     <assignment-block-add />
   </v-overlay>
@@ -25,5 +25,10 @@ export default {
     }, 1);
   },
 
+  methods: {
+    navigateBack() {
+      navigateTo('/manager-menu/assignments/card');
+    }
+  }
 }
 </script>

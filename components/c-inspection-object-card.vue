@@ -25,21 +25,21 @@
       <v-card-item>
         <v-file-input
             v-model="files"
-            id="inputfile"
             class="my-1 d-none"
             variant="outlined"
             density="compact"
-            type="file"
-            accept="image/*"
             capture="camera"
+            accept="image/*"
+            id="inputfile"
+            type="file"
             @change="sendImages"
         />
         <v-label for="inputfile">
           <v-chip
+              color="blue-grey-darken-3"
+              variant="elevated"
               class="my-1"
               rounded="lg"
-              variant="elevated"
-              color="blue-grey-darken-3"
           >
             <v-icon>mdi-camera-outline</v-icon>
           </v-chip>
@@ -51,16 +51,16 @@
             @dragover.prevent="onDragover"
             @dragleave.stop="onDragleave"
             @drop.prevent="onDrop"
+            style="overflow-y: scroll"
             max-height="500px"
             height="500px"
-            style="overflow-y: scroll"
         >
 
           <v-sheet
               v-if="dragging"
+              class="bg-blue-grey-lighten-5 rounded-lg border-dashed d-flex justify-center align-center flex-column"
               height="600px"
               border="md"
-              class="bg-blue-grey-lighten-5 rounded-lg border-dashed d-flex justify-center align-center flex-column"
           >
             <div class="d-flex flex-column ga-4">
               <v-icon class="w-100 h-100 text-blue-grey-darken-3" size="x-large">
@@ -74,29 +74,29 @@
             <v-list-item
                 v-for="(item, itemI) of photos"
                 :key="item._id"
+                color="blue-grey-darken-1"
+                class="px-0 py-0"
                 variant="text"
                 rounded="lg"
-                class="px-0 py-0"
-                color="blue-grey-darken-1"
             >
               <v-sheet border="sm" rounded class="position-relative">
                 <img
                     style="width: 242px; height: 245px; object-fit: cover"
                     class="rounded-lg d-block"
+                    alt="loading..."
                     loading="lazy"
                     :src="item.route"
-                    alt="loading..."
                     @click="imageShow(item)"
                 />
               </v-sheet>
               <v-btn
-                  block
-                  density="compact"
-                  variant="tonal"
-                  color="blue-grey"
-                  rounded
-                  text="Удалить"
                   @click="removeImg(item._id)"
+                  color="blue-grey"
+                  density="compact"
+                  text="Удалить"
+                  variant="tonal"
+                  rounded
+                  block
               />
             </v-list-item>
           </v-list>
@@ -114,13 +114,11 @@
       <img
           style="max-height: 90vh; max-width: 80vw; object-fit: contain"
           class="rounded-xl d-block"
+          alt="loading..."
           loading="lazy"
           :src="selectedImg.route"
-          alt="loading..."
       />
     </my-overlay>
-
-
   </v-sheet>
 </template>
 
