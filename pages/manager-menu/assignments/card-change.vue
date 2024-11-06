@@ -4,7 +4,7 @@
       class="d-flex justify-center align-center"
       @click:outside="navigateBack"
   >
-    <v-sheet rounded width="700px">
+    <v-sheet rounded="sm" width="700px">
       <v-card rounded>
         <v-card-title>
           Редактирование
@@ -18,7 +18,7 @@
                 color="blue-grey-darken-3"
                 density="comfortable"
                 variant="outlined"
-                rounded="lg"
+                rounded="sm"
             />
 
             <v-autocomplete
@@ -31,7 +31,7 @@
                 density="comfortable"
                 variant="outlined"
                 label="Договор"
-                rounded="lg"
+                rounded="sm"
             >
               <template v-slot:chip="{ props, item }">
                 <v-chip
@@ -57,7 +57,7 @@
                 color="blue-grey-darken-3"
                 variant="outlined"
                 label="Описание"
-                rounded="lg"
+                rounded="sm"
                 rows="10"
             />
 

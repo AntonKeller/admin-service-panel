@@ -13,8 +13,8 @@ function createConfig() {
 /**
  * Inspection objects
  * */
-export async function fetchInspectionObjects(query) {
-    return axios.get(serverURL + '/inspection-objects' + (query ?? ''), createConfig());
+export async function fetchInspectionObjects(blockID, query) {
+    return axios.get(serverURL + '/inspection-objects/blockId/' + (blockID || '') + (query ?? ''), createConfig());
 }
 
 export async function sendInspectionObject(blockId, inspectionObject, query) {

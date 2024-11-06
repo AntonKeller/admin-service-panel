@@ -1,11 +1,11 @@
 <template>
   <v-sheet
-      rounded="lg"
+      rounded="sm"
       elevation="6"
       color="grey-lighten-4"
   >
     <v-card
-        rounded="lg"
+        rounded="sm"
         variant="text"
         width="600px"
         color="blue-grey-darken-3"
@@ -41,7 +41,7 @@
                 density="comfortable"
                 variant="outlined"
                 label="Заказчик"
-                rounded="lg"
+                rounded="sm"
                 item-value="_id"
                 item-title="fullName"
                 closable-chips
@@ -67,7 +67,7 @@
               </template>
             </v-autocomplete>
             <v-btn
-                rounded="lg"
+                rounded="sm"
                 variant="tonal"
                 icon="mdi-plus"
                 @click="customerAddMenuShow = true"

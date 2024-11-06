@@ -15,7 +15,7 @@
     </v-tooltip>
 
     <my-overlay v-model="questionIsVisible">
-      <v-card color="yellow-lighten-3" density="compact" rounded="lg">
+      <v-card color="yellow-lighten-3" density="compact" rounded="sm">
         <v-card-text>
           <v-icon>mdi-progress-question</v-icon>
           <span class="ml-2">Подтвердите удаление</span>
@@ -24,13 +24,13 @@
           <v-btn
               @click="onclickYes"
               variant="tonal"
-              rounded="lg"
+              rounded="sm"
           >
             Подтвердить
           </v-btn>
           <v-btn
               @click="questionIsVisible=false"
-              rounded="lg"
+              rounded="sm"
           >
             Отменить
           </v-btn>

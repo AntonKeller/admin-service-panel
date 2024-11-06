@@ -36,7 +36,7 @@
                   density="comfortable"
                   variant="outlined"
                   label="Договор"
-                  rounded="lg"
+                  rounded="sm"
                   closable-chips
                   chips
               >
@@ -63,7 +63,7 @@
               <v-btn
                   variant="tonal"
                   icon="mdi-plus"
-                  rounded="lg"
+                  rounded="sm"
                   @click="contractAddMenuShow = true"
               />
             </div>

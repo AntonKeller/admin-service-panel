@@ -50,7 +50,7 @@
 
             <td style="min-width: 240px; width: 240px; max-width: 240px">
               <div><b>Номер: </b>{{ assignment.contract.contractNumber }}</div>
-              <div><b>Заключен: </b>{{ timeStringToDate(assignment.contract.contractDate).toLocaleDateString() }}</div>
+              <div><b>Заключен: </b>{{ timestampToDateString(assignment.contract.contractDate) }}</div>
             </td>
             <td style="min-width: 240px; width: 240px;max-width: 240px">
               <div><b></b>{{ assignment.contract.customer.shortName }}</div>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import {slicer, timeStringToDate} from "../../utils/functions.js";
+import {slicer, timestampToDateString} from "../../utils/functions.js";
 
 export default {
   name: "assignments-page",
@@ -142,7 +142,7 @@ export default {
 
   methods: {
 
-    slicer, timeStringToDate,
+    slicer, timestampToDateString,
 
     setSearchText(text) {
       this.$store.commit('assignments/SET_SEARCH_TEXT', text);

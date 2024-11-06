@@ -1,12 +1,11 @@
 <template>
   <v-btn
       v-bind="$attrs"
-      variant="tonal"
-      icon="mdi-pencil-outline"
-      density="comfortable"
-      border="sm"
-      color="blue-grey-darken-2"
-      rounded="lg"
+      variant="text"
+      icon="mdi-pencil"
+      density="compact"
+      class="d-inline"
+      :rounded="0"
   >
     <v-icon/>
     <v-tooltip activator="parent" location="top">

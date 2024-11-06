@@ -1,7 +1,7 @@
 <template>
   <v-text-field
       v-bind="$attrs"
-      rounded="lg"
+      rounded="sm"
       color="blue-grey-darken-3"
       variant="outlined"
       density="comfortable"

@@ -1,11 +1,11 @@
 <template>
   <v-sheet
-      rounded="lg"
+      rounded="sm"
       elevation="6"
       color="grey-lighten-4"
   >
     <v-card
-        rounded="lg"
+        rounded="sm"
         variant="text"
         width="800"
         color="blue-grey-darken-3"
@@ -80,7 +80,7 @@
                 density="comfortable"
                 variant="outlined"
                 label="Инспектор"
-                rounded="lg"
+                rounded="sm"
                 closable-chips
                 chips
             >
@@ -112,7 +112,7 @@
                 density="comfortable"
                 style="width: 100px"
                 variant="outlined"
-                rounded="lg"
+                rounded="sm"
             />
           </div>
         </v-form>
@@ -149,7 +149,7 @@ import {showAlert} from "../utils/functions.js";
 import _ from "lodash";
 
 export default {
-  name: "assignment-block-change",
+  name: "component-block-card-change",
 
   data: () => ({
     block: {},

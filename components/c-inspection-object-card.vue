@@ -1,10 +1,10 @@
 <template>
   <v-sheet
-      rounded="lg"
+      rounded="sm"
       max-width="1024px"
       elevation="6"
   >
-    <v-card rounded="lg" variant="text">
+    <v-card rounded="sm" variant="text">
       <v-card-title>
         <v-sheet class="d-flex ga-2">
           <c-btn-change prompt="Редактировать объект" @click="objectCardChangeIsShow = true"/>
@@ -39,7 +39,7 @@
               color="blue-grey-darken-3"
               variant="elevated"
               class="my-1"
-              rounded="lg"
+              rounded="sm"
           >
             <v-icon>mdi-camera-outline</v-icon>
           </v-chip>
@@ -77,9 +77,9 @@
                 color="blue-grey-darken-1"
                 class="px-0 py-0"
                 variant="text"
-                rounded="lg"
+                rounded="sm"
             >
-              <v-sheet border="sm" rounded class="position-relative">
+              <v-sheet border="sm" rounded="sm" class="position-relative">
                 <img
                     style="width: 242px; height: 245px; object-fit: cover"
                     class="rounded-lg d-block"

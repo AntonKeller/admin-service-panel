@@ -1,6 +1,6 @@
 import {fetchAssignmentBlocks, removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 
-export const initial_page_state = () => ({
+export const initial = () => ({
     selectedItem: {},
     items: [],
     fetching: false,
@@ -17,7 +17,7 @@ export const initial_page_state = () => ({
 
 const assignmentBlocks = {
     namespaced: true,
-    state: () => initial_page_state(),
+    state: () => initial(),
     getters: {
         GET_SELECTED_ITEM: (state) => state.selectedItem,
         GET_ITEMS: (state) => state.items,
@@ -37,29 +37,29 @@ const assignmentBlocks = {
     },
     mutations: {
         SET_TOKEN(state, payload) {
-            state.token = payload || initial_page_state().token;
+            state.token = payload || initial().token;
         },
         SET_LIMIT_PAGE_ITEMS(state, payload) {
-            state.itemsLimit = payload || initial_page_state().itemsLimit;
+            state.itemsLimit = payload || initial().itemsLimit;
         },
         SET_CURRENT_PAGE(state, payload) {
-            state.page = payload || initial_page_state().page;
+            state.page = payload || initial().page;
         },
         SET_SEARCH_TEXT(state, payload) {
-            state.searchText = payload || initial_page_state().searchText;
+            state.searchText = payload || initial().searchText;
         },
         SELECT_ITEM(state, payload) {
-            state.selectedItem = payload || initial_page_state().selectedItem;
+            state.selectedItem = payload || initial().selectedItem;
         },
         SET_FETCHING(state, payload) {
-            state.fetching = payload || initial_page_state().fetching;
+            state.fetching = payload || initial().fetching;
         },
         SET_ITEMS(state, payload) {
             state.page = payload.page;
             state.totalPages = payload.totalPages;
             state.totalItems = payload.totalItems;
             state.items = payload.data;
-            state.itemsCount = payload.data?.length || initial_page_state().itemsCount;
+            state.itemsCount = payload.data?.length || initial().itemsCount;
         },
         REMOVE_ITEM(state, payload) {
             const index = state.items.findIndex(item => item._id === payload);
@@ -72,7 +72,7 @@ const assignmentBlocks = {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
         },
         RESET_STORE(state) {
-            state = initial_page_state();
+            state = Object.assign(state, initial());
         }
     },
     actions: {

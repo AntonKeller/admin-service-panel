@@ -1,11 +1,11 @@
 <template>
   <v-sheet
-      rounded="lg"
+      rounded="sm"
       elevation="6"
       color="grey-lighten-4"
   >
     <v-card
-        rounded="lg"
+        rounded="sm"
         variant="text"
         width="800"
         color="blue-grey-darken-3"

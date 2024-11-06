@@ -9,7 +9,7 @@
       density="comfortable"
       variant="outlined"
       placeholder="дд.мм.гггг"
-      rounded="lg"
+      rounded="sm"
       clearable
       active
   >
@@ -17,7 +17,7 @@
       <v-locale-provider locale="ru">
         <v-date-picker
             :model-value="modelValue ? new Date(parseInt(modelValue)) : undefined"
-            rounded="lg"
+            rounded="sm"
             title="Дата регистрации"
             hide-header
             @click.stop

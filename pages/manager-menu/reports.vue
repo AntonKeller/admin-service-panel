@@ -5,20 +5,11 @@
         <v-card-title>Отчеты</v-card-title>
         <v-card-item>
           <div class="d-flex ga-4 align-center">
-            <v-text-field
-                color="blue-darken-4"
-                variant="outlined"
-                density="compact"
-                append-inner-icon="mdi-plus-box-multiple"
-                label="Поиск"
-                rounded="lg"
-                single-line
-                persistent-hint
-                style="max-width: 500px"
+            <my-search-bar
                 v-model="search"
                 :hint="`Найдено: ${totalItems ?? 0}`"
-                @update:modelValue="console.log('search text:', search)"
-                @click:appendInner=""
+                style="min-width: 500px"
+                @btn:click=""
             />
           </div>
         </v-card-item>

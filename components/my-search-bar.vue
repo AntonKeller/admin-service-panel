@@ -2,9 +2,9 @@
   <div class="d-flex ga-2">
     <v-btn
         v-if="!hideButton"
-        density="comfortable"
         icon="mdi-plus"
-        rounded="lg"
+        size="small"
+        rounded
         color="blue-darken-1"
         @click:appendInner="$emit('btn:click')">
     </v-btn>
@@ -13,7 +13,7 @@
         color="blue-grey-darken-1"
         prepend-inner-icon="mdi-magnify"
         persistent-hint
-        rounded="lg"
+        rounded="md"
         density="compact"
         label="Поиск"
         variant="outlined"

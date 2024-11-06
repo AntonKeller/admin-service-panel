@@ -4,7 +4,7 @@
       :disabled="loading"
       variant="elevated"
       width="800"
-      rounded="lg"
+      rounded="sm"
   >
     <v-card-title>Новый заказчик</v-card-title>
 
@@ -20,7 +20,7 @@
           density="comfortable"
           hide-details="auto"
           variant="outlined"
-          rounded="lg"
+          rounded="sm"
           clearable
       />
     </v-card-text>

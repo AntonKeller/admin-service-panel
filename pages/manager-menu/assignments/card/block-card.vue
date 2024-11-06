@@ -4,7 +4,7 @@
       class="d-flex justify-center align-center"
       @click:outside="navigateBack"
   >
-    <assignment-block-card/>
+    <component-block-card/>
   </v-overlay>
 </template>
 

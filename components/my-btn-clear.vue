@@ -1,9 +1,9 @@
 <template>
   <v-btn
       v-bind="$attrs"
-      rounded="lg"
+      rounded="sm"
       variant="text"
-      color="blue-grey-darken-4"
+      color="blue-darken-4"
   />
 </template>
 

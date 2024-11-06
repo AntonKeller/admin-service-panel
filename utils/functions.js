@@ -2,8 +2,17 @@ export function slicer(str, len) {
     return str?.length > len ? str?.slice(0, len - 3) + '...' : str;
 }
 
-export function timeStringToDate(_timeString) {
-    return new Date(parseInt(_timeString));
+const configDefault = {
+    weekday: 'short', // weekday: 'short',
+    year: 'numeric',
+    month: 'short', // month: 'short',
+    day: 'numeric',
+}
+
+
+export function timestampToDateString(timestamp, config = configDefault) {
+    return isNaN(parseInt(timestamp)) ?
+        (new Date(parseInt(timestamp))).toLocaleDateString(undefined, config) : '-'
 }
 
 export function dateToTimeString(_date) {

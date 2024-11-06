@@ -3,9 +3,9 @@
       height="700px"
       width="1024px"
       elevation="6"
-      rounded="lg"
+      rounded="sm"
   >
-    <v-card rounded="lg" variant="text">
+    <v-card rounded="sm" variant="text">
       <v-card-title>
         <div class="d-flex justify-space-between">
           <div>{{ getSelectedAssignment?.title }}</div>
@@ -19,7 +19,7 @@
             >
               <v-icon/>
               <v-tooltip activator="parent" location="left">
-                Редактировать
+                Редактировать ТЗ
               </v-tooltip>
             </v-btn>
           </div>
@@ -32,31 +32,18 @@
               prepend-icon="mdi-file-sign"
               color="blue-grey-darken-2"
               density="comfortable"
-              rounded="lg"
+              rounded="sm"
               border="sm"
-          >
-            {{
-              getSelectedAssignment?.contract?.contractNumber && getSelectedAssignment?.contract?.contractDate ?
-                  `Договор: ${getSelectedAssignment?.contract?.contractNumber} / ${getSelectedAssignment?.contract?.contractDate}` :
-                  'Отсутствует договор'
-            }}
-          </v-chip>
-
-
+              :text="assignmentContract"
+          />
           <v-chip
               prepend-icon="mdi-account-tie"
               color="blue-grey-darken-2"
               density="comfortable"
-              rounded="lg"
+              rounded="sm"
               border="sm"
-          >
-            {{
-              getSelectedAssignment?.contract?.customer?.shortName && getSelectedAssignment?.contract?.customer?.inn ?
-                  `Заказчик: ${getSelectedAssignment?.contract?.customer?.shortName} / ${getSelectedAssignment?.contract?.customer?.inn}` :
-                  'Отсутствует заказчик'
-            }}
-          </v-chip>
-
+              :text="assignmentCustomer"
+          />
         </div>
         <v-sheet class="rounded-lg px-2 py-2" style="height: 140px; overflow-y: scroll">
           {{ getSelectedAssignment?.description }}
@@ -100,23 +87,23 @@
                 :key="block._id"
                 @click="selectBlock(block)"
             >
-              <td style="min-width: 280px; max-width: 280px">
+              <td style="min-width: 260px; max-width: 260px">
                 <div><b>Номер: </b>{{ block.loanAgreement }}</div>
-                <div><b>Дата: </b>{{ timeStringToDate(block.loanAgreementDate, 20).toLocaleDateString() }}</div>
+                <div><b>Дата: </b>{{ timestampToDateString(block.loanAgreementDate) }}</div>
               </td>
-              <td style="min-width: 280px; max-width: 280px">
+              <td style="min-width: 260px; max-width: 260px">
                 <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
-                <div><b>Дата: </b>{{ timeStringToDate(block.pledgeAgreementDate, 20).toLocaleDateString() }}</div>
+                <div><b>Дата: </b>{{ timestampToDateString(block.pledgeAgreementDate) }}</div>
               </td>
               <td style="min-width: 180px; max-width: 180px">
-                <div><b>Начало:</b> {{ timeStringToDate(block.startDate, 20).toLocaleDateString() }}</div>
-                <div><b>Окончание:</b> {{ timeStringToDate(block.endDate, 20).toLocaleDateString() }}</div>
+                <div><b>Начало:</b> {{ timestampToDateString(block.startDate) }}</div>
+                <div><b>Окончание:</b> {{ timestampToDateString(block.endDate) }}</div>
               </td>
-              <td style="min-width: 147px; max-width: 147px">
+              <td style="min-width: 120px; max-width: 120px">
                 {{ block.status }}
               </td>
-              <td style="min-width: 30px; max-width: 30px">
-                <c-remove-btn :prompt="'Удалить'" @click:yes="removeBlockById(block._id)"/>
+              <td style="min-width: 50px; max-width: 50px">
+                <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
               </td>
             </tr>
             </tbody>
@@ -137,7 +124,6 @@
       </v-card-text>
     </v-card>
 
-    assignment-card
     <nuxt-page/>
 
     <!--      TODO: Сделать nuxt-page -->
@@ -158,12 +144,15 @@
 </template>
 
 <script>
-import {timeStringToDate} from "../utils/functions.js";
+import {timestampToDateString} from "../utils/functions.js";
 
 export default {
   name: "assignments-card",
 
   data: () => ({
+    searchText: '',
+    currentPage: 1,
+    itemsPerPage: 2,
     visibility: false,
     snackBar: {},
   }),
@@ -211,6 +200,30 @@ export default {
 
   computed: {
 
+    assignmentCustomer() {
+      if (this.getSelectedAssignment?.contract?.customer) {
+
+        const {shortName, inn} = this.getSelectedAssignment?.contract?.customer;
+
+        if (shortName || inn) {
+          return `Заказчик: ${shortName} / ${inn}`;
+        }
+      }
+      return 'Отсутствует заказчик';
+    },
+
+    assignmentContract() {
+      if (this.getSelectedAssignment?.contract) {
+
+        const {contractNumber, contractDate} = this.getSelectedAssignment?.contract;
+
+        if (contractNumber && contractDate) {
+          return `Договор: ${contractNumber} / ${contractDate}`
+        }
+      }
+      return 'Отсутствует договор';
+    },
+
     getSelectedAssignment() {
       return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     },
@@ -243,12 +256,12 @@ export default {
 
   methods: {
 
-    timeStringToDate,
+    timestampToDateString,
 
     selectBlock(block) {
       sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));
-      this.$store.dispatch('assignmentBlocks/SELECT_ITEM', block);
-      navigateTo('/manager-menu/assignments/card/block-change');
+      this.$store.commit('assignmentBlocks/SELECT_ITEM', block);
+      navigateTo('/manager-menu/assignments/card/block-card');
     },
 
     removeBlockById(value) {
