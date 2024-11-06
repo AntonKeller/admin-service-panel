@@ -13,28 +13,12 @@ const assignmentBlocks = {
     getters: {
         GET_BLOCKS: (state) => state.blocks,
         GET_SELECTED_ITEM: (state) => state.selectedItem,
-
-        GET_ITEMS_COUNT: (state) => state.itemsCount,
         GET_FETCHING: (state) => state.fetching,
-        GET_CURRENT_PAGE: (state) => state.query.page,
-        GET_ITEMS_LIMIT: (state) => state.query.itemsLimit,
-        GET_TOTAL_ITEMS: (state) => state.totalItems,
-        GET_TOTAL_PAGES: (state) => state.totalPages,
-        GET_SEARCH_TEXT: (state) => state.searchText,
         GET_ALERT: (state) => state.alert,
     },
     mutations: {
         SET_BLOCKS(state, payload) {
             state.blocks = payload;
-        },
-        SET_LIMIT_PAGE_ITEMS(state, payload) {
-            state.itemsLimit = payload || initial().itemsLimit;
-        },
-        SET_CURRENT_PAGE(state, payload) {
-            state.page = payload || initial().page;
-        },
-        SET_SEARCH_TEXT(state, payload) {
-            state.searchText = payload || initial().searchText;
         },
         SELECT_ITEM(state, payload) {
             state.selectedItem = payload || initial().selectedItem;

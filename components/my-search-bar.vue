@@ -6,7 +6,7 @@
         size="small"
         rounded
         color="blue-darken-1"
-        @click:appendInner="$emit('btn:click')">
+        @click="$emit('btn:click')">
     </v-btn>
     <v-text-field
         v-bind="$attrs"
