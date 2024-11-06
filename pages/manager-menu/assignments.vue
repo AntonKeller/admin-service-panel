@@ -12,7 +12,7 @@
                 @update:modelValue="setSearchText"
                 :hint="`Найдено: ${getTotalAssignments}`"
                 style="min-width: 500px"
-                @btn:click="navigateTo('/manager-menu/assignments/card-add')"
+                @btn:click="navigateTo('/manager-menu/assignments/assignment-add')"
             />
           </div>
         </v-card-item>
@@ -157,7 +157,7 @@ export default {
     cardMenuShow(assignment) {
       this.$store.commit('assignments/SELECT_ITEM', assignment);
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
-      navigateTo('/manager-menu/assignments/card');
+      navigateTo('/manager-menu/assignments/assignment');
     },
 
     removeAssignment(_id) {

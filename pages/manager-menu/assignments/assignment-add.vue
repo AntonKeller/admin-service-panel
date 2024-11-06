@@ -112,7 +112,7 @@
 
 <script>
 export default {
-  name: "card-add-page",
+  name: "assignment-add-page",
   data: () => ({
 
     visibility: false,

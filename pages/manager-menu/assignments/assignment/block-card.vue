@@ -2,15 +2,15 @@
   <v-overlay
       v-model="visibility"
       class="d-flex justify-center align-center"
-      @click:outside="navigateTo('/manager-menu/assignments')"
+      @click:outside="navigateBack"
   >
-    <assignments-card/>
+    <component-block-card/>
   </v-overlay>
 </template>
 
 <script>
 export default {
-  name: "card-page",
+  name: "block-card-page",
 
   data() {
     return {
@@ -25,5 +25,10 @@ export default {
     }, 1);
   },
 
+  methods: {
+    navigateBack() {
+      navigateTo('/manager-menu/assignments/assignment');
+    }
+  }
 }
 </script>

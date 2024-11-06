@@ -4,13 +4,13 @@
       class="d-flex justify-center align-center"
       @click:outside="navigateBack"
   >
-    <component-block-card/>
+    <component-block-card-change/>
   </v-overlay>
 </template>
 
 <script>
 export default {
-  name: "block-card-page",
+  name: "block-change-page",
 
   data() {
     return {
@@ -27,8 +27,9 @@ export default {
 
   methods: {
     navigateBack() {
-      navigateTo('/manager-menu/assignments/card');
+      navigateTo('/manager-menu/assignments/assignment');
     }
   }
+
 }
 </script>

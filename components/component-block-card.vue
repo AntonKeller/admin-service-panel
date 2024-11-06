@@ -18,7 +18,7 @@
                 color="blue-darken-1"
                 rounded
                 icon="mdi-pencil"
-                @click="navigateTo('/manager-menu/assignments/card/block-card/card-change')"
+                @click="navigateTo('/manager-menu/assignments/assignment/block-change')"
             >
               <v-icon/>
               <v-tooltip activator="parent" location="left">
@@ -105,7 +105,7 @@
     </v-card>
 
     <!--    <my-overlay v-model="inspObjectCardIsShow">-->
-    <!--      <c-inspection-object-card-->
+    <!--      <c-inspection-object-assignment-->
     <!--          :_object="selectedObject"-->
     <!--          @update:success="fetchObjects"-->
     <!--      />-->

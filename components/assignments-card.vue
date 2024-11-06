@@ -15,7 +15,7 @@
                 color="blue-darken-1"
                 rounded
                 icon="mdi-pencil"
-                @click="navigateTo('/manager-menu/assignments/card-change')"
+                @click="navigateTo('/manager-menu/assignments/assignment-change')"
             >
               <v-icon/>
               <v-tooltip activator="parent" location="left">
@@ -51,18 +51,17 @@
         <v-divider class="my-1"/>
         <div class="d-flex ga-4 align-center py-1">
           <my-search-bar
+              v-model="searchText"
               style="min-width: 360px"
-              label="Поиск"
               persistent-hint
-              :hint="`Найдено: ${getTotalItems}`"
-              :modelValue="getSearchText"
-              @update:modelValue="setSearchText"
-              @btn:click="navigateTo('/manager-menu/assignments/card/block-add')"
+              label="Поиск"
+              :hint="`Найдено: ${blocksSearchCount}`"
+              @btn:click="navigateTo('/manager-menu/assignments/assignment/block-add')"
           />
         </div>
         <v-sheet>
           <v-divider/>
-          <div v-if="getFetchingDataStatus" class="d-flex align-center justify-center h-100">
+          <div v-if="fetching" class="d-flex align-center justify-center h-100">
             <v-progress-circular
                 :size="140"
                 :width="3"
@@ -71,7 +70,7 @@
             >загрузка...
             </v-progress-circular>
           </div>
-          <v-table v-if="!getFetchingDataStatus" height="290px" fixed-header density="default" class="text-caption">
+          <v-table v-if="!fetching" height="290px" fixed-header density="default" class="text-caption">
             <thead>
             <tr>
               <th>Кредитный договор</th>
@@ -83,7 +82,7 @@
             </thead>
             <tbody>
             <tr
-                v-for="block of getAssignmentBlocks"
+                v-for="block of blocksSLice"
                 :key="block._id"
                 @click="selectBlock(block)"
             >
@@ -111,12 +110,11 @@
           <v-divider/>
           <div class="d-flex align-center mt-4">
             <v-pagination
+                v-model="currentPage"
                 color="blue-grey-darken-2"
                 density="comfortable"
                 show-first-last-page
-                @update:modelValue="setCurrentPage"
-                :modelValue="getCurrentPage"
-                :length="getTotalPages"
+                :length="totalPages"
                 :total-visible="8"
             />
           </div>
@@ -128,7 +126,7 @@
 
     <!--      TODO: Сделать nuxt-page -->
     <!--      <my-overlay v-model="aBlockCardMenuIsShow">-->
-    <!--        <c-a-block-card :_assignmentId="getSelectedAssignment._id" :_assignmentBlock="selectedBlock"/>-->
+    <!--        <c-a-block-assignment :_assignmentId="getSelectedAssignment._id" :_assignmentBlock="selectedBlock"/>-->
     <!--      </my-overlay>-->
 
     <!--      <my-overlay v-model="blockMenuAddIsShow">-->
@@ -182,7 +180,6 @@ export default {
 
     // Обновляем список блоков по ID ТЗ...............................................
     let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
-    console.log('[assignment-card] selected assignmentID:', assignmentId);
 
     if (assignmentId) {
       this.$store.dispatch('assignmentBlocks/UPDATE_ITEMS', assignmentId);
@@ -199,7 +196,34 @@ export default {
   },
 
   computed: {
-
+    blocks() {
+      return this.$store.getters['assignmentBlocks/GET_BLOCKS'];
+    },
+    blocksTotalCount() {
+      return this.blocks.length;
+    },
+    totalPages() {
+      return Math.ceil(this.blocksTotalCount / this.itemsPerPage);
+    },
+    blocksFiltered() {
+      if (typeof this.searchText === 'string' && this.searchText.length > 0) {
+        return this.blocks.filter(block => {
+          return [
+            block.title,
+            block.description,
+          ].filter(e => !!e).find(value => (new RegExp(value, 'ig')).test(this.searchText));
+        });
+      }
+      return this.blocks;
+    },
+    blocksSearchCount() {
+      return this.blocksFiltered.length;
+    },
+    blocksSLice() {
+      const from = (this.currentPage - 1) * this.itemsPerPage;
+      const to = this.currentPage * this.itemsPerPage;
+      return this.blocksFiltered.slice(from, to);
+    },
     assignmentCustomer() {
       if (this.getSelectedAssignment?.contract?.customer) {
 
@@ -211,7 +235,6 @@ export default {
       }
       return 'Отсутствует заказчик';
     },
-
     assignmentContract() {
       if (this.getSelectedAssignment?.contract) {
 
@@ -223,35 +246,12 @@ export default {
       }
       return 'Отсутствует договор';
     },
-
     getSelectedAssignment() {
       return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     },
-
-    getAssignmentBlocks() {
-      return this.$store.getters['assignmentBlocks/GET_ITEMS'];
-    },
-
-    getSearchText() {
-      return this.$store.getters['assignmentBlocks/GET_SEARCH_TEXT'];
-    },
-
-    getCurrentPage() {
-      return this.$store.getters['assignmentBlocks/GET_CURRENT_PAGE'];
-    },
-
-    getTotalPages() {
-      return this.$store.getters['assignmentBlocks/GET_TOTAL_PAGES'];
-    },
-
-    getTotalItems() {
-      return this.$store.getters['assignmentBlocks/GET_TOTAL_ITEMS'];
-    },
-
-    getFetchingDataStatus() {
+    fetching() {
       return this.$store.getters['assignmentBlocks/GET_FETCHING'];
     }
-
   },
 
   methods: {
@@ -261,22 +261,12 @@ export default {
     selectBlock(block) {
       sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));
       this.$store.commit('assignmentBlocks/SELECT_ITEM', block);
-      navigateTo('/manager-menu/assignments/card/block-card');
+      navigateTo('/manager-menu/assignments/assignment/block-card');
     },
 
     removeBlockById(value) {
       this.$store.dispatch('assignmentBlocks/REMOVE_ITEM', value);
     },
-
-    setSearchText(value) {
-      this.$store.commit('assignmentBlocks/SET_SEARCH_TEXT', value);
-      this.$store.dispatch('assignmentBlocks/UPDATE_ITEMS', this.getSelectedAssignment?._id);
-    },
-
-    setCurrentPage(value) {
-      this.$store.commit('assignmentBlocks/SET_CURRENT_PAGE', value);
-    }
-
   }
 }
 </script>

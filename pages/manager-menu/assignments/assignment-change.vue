@@ -92,7 +92,7 @@ import {showAlert} from "../../../utils/functions.js";
 import _ from "lodash";
 
 export default {
-  name: "card-change-page",
+  name: "assignment-change-page",
 
   data: () => ({
     visibility: false,
