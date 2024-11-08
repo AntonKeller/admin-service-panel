@@ -1,9 +1,5 @@
 <template>
-  <v-sheet
-      rounded="sm"
-      elevation="6"
-      color="grey-lighten-4"
-  >
+  <v-sheet rounded="sm" elevation="6" color="grey-lighten-4">
     <v-card
         rounded="sm"
         variant="text"
@@ -67,12 +63,9 @@ import {showAlert} from "../utils/functions.js";
 import {changeInspectionObject} from "../utils/api/api_inspection_objects";
 
 export default {
-  name: "c-inspection-object-change",
-  props: {
-    _object: Object,
-  },
+  name: "object-change",
   mounted() {
-    this.value = _.cloneDeep(this._object);
+    this.value = _.cloneDeep(this.$store.getters['inspectionObjects/GET_SELECTED_OBJECT']);
   },
   data: () => ({
     value: {},

@@ -69,19 +69,19 @@ import {sendInspectionObject} from "../utils/api/api_inspection_objects";
 import {showAlert} from "../utils/functions.js";
 
 export default {
-  name: "c-inspection-object-add",
+  name: "object-add",
   props: {
     _blockId: String,
   },
   data: () => ({
-    value: null,
+    value: {},
     sending: false,
     formIsValid: false,
     snackBar: {},
-    nameRules: [v => v?.length > 0 || 'Заполните поле'],
     inventoryNumberRules: [v => v?.length > 0 || 'Заполните поле'],
-    addressRules: [v => v?.length > 0 || 'Заполните поле'],
     descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
+    addressRules: [v => v?.length > 0 || 'Заполните поле'],
+    nameRules: [v => v?.length > 0 || 'Заполните поле'],
   }),
   methods: {
     async sendValue() {

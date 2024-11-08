@@ -24,3 +24,7 @@ export async function sendInspectionObject(blockId, inspectionObject, query) {
 export async function changeInspectionObject(inspectionObject, query) {
     return axios.put(serverURL + '/inspection-objects/' + inspectionObject._id + (query ?? ''), inspectionObject, createConfig());
 }
+
+export async function uploadObjects(blockID, file, query) {
+    return axios.post(serverURL + '/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, createConfig())
+}

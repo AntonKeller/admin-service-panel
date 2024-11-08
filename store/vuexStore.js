@@ -4,6 +4,7 @@ import inspectionObjects from "./modules/inspectionObjects.js";
 import assignmentBlocks from "./modules/assignmentBlocks.js";
 import contracts from "./modules/contracts.js";
 import customers from "./modules/customers.js";
+import angles from "@/store/modules/angles.js";
 
 // Вводный, короткий курс по Vuex
 // https://habr.com/ru/articles/421551/
@@ -15,6 +16,7 @@ export const vuexStore = createStore({
         inspectionObjects,
         assignmentBlocks,
         contracts,
-        customers
+        customers,
+        angles,
     },
 })

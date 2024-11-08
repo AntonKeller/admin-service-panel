@@ -14,8 +14,7 @@ const assignments = {
         GET_ASSIGNMENTS: (state) => state.assignments,
         GET_SELECTED_ITEM: (state) => state.selectedItem,
         GET_FETCHING: (state) => state.fetching,
-
-
+        ALERT: (state) => state.alert,
     },
     mutations: {
         SET_ASSIGNMENTS(state, payload) {
@@ -28,7 +27,7 @@ const assignments = {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
         },
 
-        SELECT_ITEM(state, payload) {
+        SELECT(state, payload) {
             state.selectedItem = payload || initial_page_state().selectedItem;
         },
         SET_FETCHING(state, payload) {
@@ -60,24 +59,6 @@ const assignments = {
                 case 200:
                     commit('SET_ASSIGNMENTS', answer.data.data);
                     console.log('[store assignments] answer data:', answer.data);
-                    break;
-                case 403:
-                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
-                    break;
-                default:
-                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
-                    break;
-            }
-        },
-
-        async ADD_NEW_ITEM({commit, getters}, payload) {
-
-            let answer = await addNewAssignment(payload, getters.GET_TOKEN);
-
-            switch (answer.status) {
-                case 200:
-                    commit('ADD_ITEM', payload);
-                    commit('SHOW_ALERT_SUCCESS', 'Успешно добавлено' || answer.statusText);
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

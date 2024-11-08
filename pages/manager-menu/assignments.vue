@@ -8,11 +8,10 @@
         <v-card-item>
           <div class="d-flex ga-4 align-center">
             <my-search-bar
-                :modelValue="getSearchText"
-                @update:modelValue="setSearchText"
-                :hint="`Найдено: ${getTotalAssignments}`"
+                v-model="searchText"
+                :hint="`Найдено: ${assignmentsFoundCount}`"
                 style="min-width: 500px"
-                @btn:click="navigateTo('/manager-menu/assignments/assignment-add')"
+                @btn:click="assignmentMenuAddVisibility = true"
             />
           </div>
         </v-card-item>
@@ -38,7 +37,7 @@
           </thead>
           <tbody v-if="!getFetchingDataStatus">
           <tr
-              v-for="(assignment, i) of getAssignments"
+              v-for="(assignment, i) of assignmentsSLice"
               :key="assignment._id"
               @click="cardMenuShow(assignment)"
           >
@@ -71,17 +70,22 @@
 
       <div class="d-flex align-center mt-4">
         <v-pagination
-            :modelValue="getCurrentPage"
-            @update:modelValue="setCurrentPage"
+            v-model="currentPage"
             density="comfortable"
             color="blue-grey-darken-2"
             show-first-last-page
-            :length="getTotalPages"
+            :length="totalPages"
             :total-visible="8"
         />
       </div>
     </v-sheet>
 
+    <!--    assignment add menu-->
+    <v-overlay v-model="assignmentMenuAddVisibility" class="d-flex justify-center align-center">
+      <assignment-add/>
+    </v-overlay>
+
+    <!--    assignment card page-->
     <nuxt-page/>
 
   </v-container>
@@ -89,9 +93,19 @@
 
 <script>
 import {slicer, timestampToDateString} from "../../utils/functions.js";
+import _ from "lodash";
 
 export default {
   name: "assignments-page",
+
+  data() {
+    return {
+      searchText: '',
+      currentPage: 1,
+      itemsPerPage: 2,
+      assignmentMenuAddVisibility: false,
+    }
+  },
 
   beforeMount() {
     try {
@@ -106,7 +120,8 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('assignments/UPDATE_ITEMS');
+    this.$store.dispatch('assignments/FETCH_ASSIGNMENTS');
+    console.log('assignments', this.$store.getters['assignments/GET_ASSIGNMENTS'])
   },
 
   unmounted() {
@@ -114,29 +129,41 @@ export default {
   },
 
   computed: {
-
-    getAssignments() {
-      return this.$store.getters['assignments/GET_ITEMS'];
+    assignmentList() {
+      return this.$store.getters['assignments/GET_ASSIGNMENTS'];
+    },
+    assignmentTotalCount() {
+      return this.assignmentList.length;
+    },
+    assignmentFoundList() {
+      if (typeof this.searchText === 'string' && this.searchText.length > 0) {
+        return this.assignmentList.filter(item => {
+          return (new RegExp(this.searchText, 'ig')).test([
+            item?.reatedAt || null,
+            item?.description || null,
+            item?.title || null,
+            item?.contract?.customer?.fullName || null,
+            item?.contract?.customer?.inn || null
+          ].join(' '));
+        })
+      }
+      return this.assignmentList;
+    },
+    totalPages() {
+      return Math.ceil(this.assignmentTotalCount / this.itemsPerPage);
+    },
+    assignmentsSLice() {
+      const from = (this.currentPage - 1) * this.itemsPerPage;
+      const to = this.currentPage * this.itemsPerPage;
+      return this.assignmentFoundList.slice(from, to);
     },
 
-    getTotalPages() {
-      return this.$store.getters['assignments/GET_TOTAL_PAGES'];
-    },
-
-    getCurrentPage() {
-      return this.$store.getters['assignments/GET_CURRENT_PAGE'];
-    },
-
-    getTotalAssignments() {
-      return this.$store.getters['assignments/GET_TOTAL_ITEMS'];
+    assignmentsFoundCount() {
+      return this.assignmentFoundList.length;
     },
 
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
-    },
-
-    getSearchText() {
-      return this.$store.getters['assignments/GET_SEARCH_TEXT'];
     },
   },
 
@@ -144,20 +171,10 @@ export default {
 
     slicer, timestampToDateString,
 
-    setSearchText(text) {
-      this.$store.commit('assignments/SET_SEARCH_TEXT', text);
-      this.$store.dispatch('assignments/UPDATE_ITEMS');
-    },
-
-    setCurrentPage(currentPage) {
-      this.$store.commit('assignments/SET_CURRENT_PAGE', currentPage);
-      this.$store.dispatch('assignments/UPDATE_ITEMS');
-    },
-
     cardMenuShow(assignment) {
-      this.$store.commit('assignments/SELECT_ITEM', assignment);
+      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
-      navigateTo('/manager-menu/assignments/assignment');
+      navigateTo('/manager-menu/assignments/assignment-card');
     },
 
     removeAssignment(_id) {

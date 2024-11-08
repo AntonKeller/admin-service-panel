@@ -10,7 +10,7 @@
         width="800"
         color="blue-grey-darken-3"
     >
-      <v-card-title>Новый Блок ТЗ</v-card-title>
+      <v-card-title>Редактор Блока ТЗ</v-card-title>
 
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
@@ -71,7 +71,6 @@
             />
           </div>
           <div class="d-flex ga-2">
-            <!--            :rules="contractRules"-->
             <v-autocomplete
                 v-model="block.inspector"
                 :items="inspectors"
@@ -108,7 +107,6 @@
             <v-combobox
                 v-model="block.status"
                 :items="assignment_block_statuses"
-                :rules="blockStatusRules"
                 prepend-inner-icon="mdi-label-variant-outline"
                 label="Статус"
                 density="comfortable"
@@ -122,10 +120,10 @@
 
       <v-card-actions>
         <my-btn-submit
-            text="Добавить"
+            text="Принять"
             prepend-icon="mdi-checkbox-multiple-marked-outline"
             :loading="sendingData"
-            @click="sendBlock"
+            @click="updateBlock"
         />
         <my-btn-clear
             text="Очистить"
@@ -143,18 +141,15 @@
 </template>
 
 <script>
-import {sendAssignmentBlock} from "../utils/api/api_assignment_blocks";
+import {changeAssignmentBlock} from "../utils/api/api_assignment_blocks";
 import assignment_block_statuses from "../configs/assignment-statuses";
-import {isDate, isEmpty} from "../utils/validators/functions";
+import {isDate, isEmpty} from "../utils/validators/functions.js";
 import {fetchInspectorsAll} from "../utils/api/api_inspectors";
 import {showAlert} from "../utils/functions.js";
+import _ from "lodash";
 
 export default {
-  name: "component-block-card-add",
-
-  props: {
-    _assignmentId: String,
-  },
+  name: "block-change",
 
   data: () => ({
     block: {},
@@ -164,7 +159,6 @@ export default {
     formIsValid: null,
     sendingData: false,
     assignment_block_statuses,
-    //................................
     blockTitleRules: [isEmpty],
     blockStartDateRules: [isDate],
     blockEndDateRules: [isDate],
@@ -172,13 +166,13 @@ export default {
     blockLoanAgreementDateRules: [isDate],
     blockPlegeAgreementRules: [isEmpty],
     blockPlegeAgreementDateRules: [isDate],
-    blockStatusRules: [v => {
-      return assignment_block_statuses.includes(v) ? true : 'Установите статус из списка'
-    }]
   }),
 
+  beforeMount() {
+    this.block = _.cloneDeep(this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']);
+  },
+
   mounted() {
-    this.clear();
     this.fetchInspectors();
   },
 
@@ -210,23 +204,22 @@ export default {
           .finally(() => {
             this.fetchingInspectors = false;
           })
-      // dataInspectors,
     },
 
-    async sendBlock() {
+    async updateBlock() {
 
       await this.$refs.form.validate();
 
       if (this.formIsValid) {
         this.sendingData = true;
-        sendAssignmentBlock(this._assignmentId, this.block)
+        changeAssignmentBlock(this._assignmentId, this.block)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
-              this.$emit('add:success');
+              this.$emit('update:success');
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка добавления').error();
-              console.log('Ошибка добавления', err);
+              this.snackBar = showAlert('Ошибка изменения').error();
+              console.log('Ошибка изменения', err);
             })
             .finally(() => {
               this.sendingData = false;
@@ -234,5 +227,7 @@ export default {
       }
     }
   }
+
+
 }
 </script>
