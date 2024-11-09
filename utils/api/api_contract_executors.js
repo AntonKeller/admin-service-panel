@@ -10,11 +10,11 @@ function createConfig() {
 }
 
 export function fetchContractExecutors(query) {
-    return axios.get(serverURL + '/contract/contract-executors' + (query ?? ''), createConfig());
+    return axios.get(serverURL + '/contracts/contract-executors' + (query ?? ''), createConfig());
 }
 
 export function addContractExecutor(contractExecutor, query) {
-    return axios.post(serverURL + '/contract/contract-executor-add' + (query ?? ''), contractExecutor, createConfig());
+    return axios.post(serverURL + '/contracts/contract-executor-add' + (query ?? ''), contractExecutor, createConfig());
 }
 
 

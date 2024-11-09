@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import {addContractExecutor} from "../utils/api/api_contract_executors.js";
+import {addContractExecutor, fetchContractExecutors} from "../utils/api/api_contract_executors.js";
 import {showAlert} from "../utils/functions.js";
 
 export default {

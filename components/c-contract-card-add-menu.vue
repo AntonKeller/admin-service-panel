@@ -89,10 +89,10 @@
               <template v-slot:chip="{ props, item }">
                 <v-chip
                     color="blue-grey-darken-3"
-                    density="default"
+                    density="comfortable"
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
+                    :text="`${item.raw.surname}  ${item.raw.firstName} ${item.raw.lastName} ${item.raw.position} ${item.raw.companyName}`"
                 />
               </template>
 
@@ -100,8 +100,8 @@
                 <v-list-item
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.shortName"
-                    :subtitle="item.raw.inn"
+                    :title="item.raw.surname + ' ' + item.raw.firstName + ' ' + item.raw.lastName"
+                    :subtitle="item.raw.position + ' '+ item.raw.companyName"
                 />
               </template>
             </v-autocomplete>
@@ -187,6 +187,7 @@ export default {
 
   mounted() {
     this.fetchCustomersAll();
+    this.fetchContractExecutors();
   },
 
   methods: {
