@@ -171,7 +171,7 @@ export default {
     getSelectedAssignment() {
       let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
       if (assignmentId) {
-        this.$store.dispatch('assignmentBlocks/UPDATE_ITEMS', assignmentId);
+        this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
       }
     },
   },
@@ -194,7 +194,7 @@ export default {
     let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
 
     if (assignmentId) {
-      this.$store.dispatch('assignmentBlocks/UPDATE_ITEMS', assignmentId);
+      this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
     } else {
       navigateTo('/manager-menu/assignments')
       // TODO: Если ТЗ не выбрано - возвращаемся на страницу Списка ТЗ

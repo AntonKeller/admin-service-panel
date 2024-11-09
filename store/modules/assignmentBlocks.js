@@ -41,7 +41,7 @@ const assignmentBlocks = {
         }
     },
     actions: {
-        async UPDATE_ITEMS({commit, getters}, assignmentID) {
+        async FETCH({commit, getters}, assignmentID) {
 
             commit('SET_FETCHING', true);
             let answer = await fetchAssignmentBlocks(assignmentID);

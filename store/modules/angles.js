@@ -1,5 +1,6 @@
 import {fetchImages} from "@/utils/api/api_images.js";
 import assignments from "@/store/modules/assignments.js";
+import {fetchAngles} from "@/utils/api/api_angles.js";
 
 export const initial = () => ({
     angles: [],
@@ -36,8 +37,10 @@ const angles = {
     actions: {
         async FETCH({commit, getters}, objectID) {
 
+            console.log('[Store: Angles] FETCH')
+
             commit('SET_FETCHING', true);
-            let answer = await fetchImages(objectID);
+            let answer = await fetchAngles(objectID);
             commit('SET_FETCHING', false);
 
             switch (answer.status) {

@@ -119,6 +119,9 @@
         <object-add></object-add>
       </v-overlay>
 
+      <!--      Block Card Page-->
+      <nuxt-page/>
+
     </v-sheet>
   </v-overlay>
 </template>
@@ -239,7 +242,7 @@ export default {
     },
     selectObject(inspectionObject) {
       this.$store.commit('inspectionObjects/SELECT', inspectionObject);
-      navigateTo('/manager-menu/assignments/assignment-card/object');
+      navigateTo('/manager-menu/assignments/assignment-card/block/object');
     },
     textSlicer(txt, size) {
       return txt?.length > size ? txt.slice(0, size - 3) + '...' : txt;

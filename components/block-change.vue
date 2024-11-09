@@ -174,6 +174,7 @@ export default {
 
   mounted() {
     this.fetchInspectors();
+    console.log('this.block', this.block)
   },
 
   methods: {
@@ -211,8 +212,11 @@ export default {
       await this.$refs.form.validate();
 
       if (this.formIsValid) {
+
         this.sendingData = true;
-        changeAssignmentBlock(this._assignmentId, this.block)
+        const assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
+
+        changeAssignmentBlock(assignmentId, this.block)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
               this.$emit('update:success');

@@ -1,19 +1,17 @@
 <template>
   <v-sheet
       rounded="sm"
-      elevation="6"
       color="grey-lighten-4"
   >
     <v-card
         rounded="sm"
         variant="text"
-        width="600px"
+        width="700"
         color="blue-grey-darken-3"
     >
 
       <v-card-title>Новый договор</v-card-title>
-
-      <v-card-subtitle>Заполните поля договора</v-card-subtitle>
+      <v-card-subtitle>Заполните поля</v-card-subtitle>
 
       <v-card-text>
         <v-form v-model="isValid" class="d-flex flex-column ga-2">
@@ -33,24 +31,23 @@
           />
           <div class="d-flex ga-2">
             <v-autocomplete
-                v-model="cCustomer"
+                v-model="contract.customer"
                 :items="customers"
-                :rules="customersRules"
+                :loading="fetchingCustomers"
                 prepend-inner-icon="mdi-account-tie"
+                no-data-text="нет данных"
                 color="blue-grey-darken-3"
                 density="comfortable"
                 variant="outlined"
                 label="Заказчик"
                 rounded="sm"
-                item-value="_id"
-                item-title="fullName"
                 closable-chips
                 chips
             >
               <template v-slot:chip="{ props, item }">
                 <v-chip
                     color="blue-grey-darken-3"
-                    density="comfortable"
+                    density="default"
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
                     :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
@@ -71,6 +68,48 @@
                 variant="tonal"
                 icon="mdi-plus"
                 @click="customerAddMenuShow = true"
+            />
+          </div>
+
+          <div class="d-flex ga-2">
+            <v-autocomplete
+                v-model="contract.contractExecutor"
+                :items="contractExecutors"
+                :loading="fetchingContractExecutors"
+                prepend-inner-icon="mdi-account-tie"
+                color="blue-grey-darken-3"
+                density="comfortable"
+                variant="outlined"
+                label="Исполнитель"
+                no-data-text="нет данных"
+                rounded="sm"
+                closable-chips
+                chips
+            >
+              <template v-slot:chip="{ props, item }">
+                <v-chip
+                    color="blue-grey-darken-3"
+                    density="default"
+                    v-bind="props"
+                    prepend-icon="mdi-file-document-edit"
+                    :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
+                />
+              </template>
+
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                    v-bind="props"
+                    prepend-icon="mdi-file-document-edit"
+                    :title="item.raw.shortName"
+                    :subtitle="item.raw.inn"
+                />
+              </template>
+            </v-autocomplete>
+            <v-btn
+                rounded="sm"
+                variant="tonal"
+                icon="mdi-plus"
+                @click="contractExecutorMenuAddVisibility = true"
             />
           </div>
         </v-form>
@@ -95,20 +134,23 @@
       {{ snackBar.msg }}
     </v-snackbar>
 
+    <my-overlay v-model="contractExecutorMenuAddVisibility">
+      <contract-executor-add></contract-executor-add>
+    </my-overlay>
 
     <my-overlay v-model="customerAddMenuShow">
-      <c-customer-card-add-menu @add:success="fetchCustomersAll"/>
+      <c-customer-card-add-menu @add:success="fetchCustomersAll"></c-customer-card-add-menu>
     </my-overlay>
 
   </v-sheet>
 </template>
 
 <script>
-import _ from "lodash";
 import {showAlert} from "../utils/functions.js";
 import {fetchCustomersAll} from "../utils/api/api_customers";
 import {addContract} from "../utils/api/api_contracts";
 import testDataCustomers from "../configs/data-test/data-test-customers";
+import {fetchContractExecutors} from "../utils/api/api_contract_executors.js";
 
 export default {
   name: "c-contract-card-menu-add",
@@ -117,10 +159,19 @@ export default {
 
     isValid: null,
     loading: false,
-    contract: {},
+    contract: {
+      contractNumber: null,
+      contractDate: null,
+      customer: null,
+      contractExecutor: null,
+    },
     snackBar: {},
     customers: [],
+    fetchingCustomers: false,
+    contractExecutors: [],
+    fetchingContractExecutors: false,
     customerAddMenuShow: false,
+    contractExecutorMenuAddVisibility: false,
 
     contractNumberRules: [
       value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
@@ -136,18 +187,6 @@ export default {
 
   mounted() {
     this.fetchCustomersAll();
-  },
-
-  computed: {
-
-    cCustomer: {
-      set(_id) {
-        this.contract.customer = _id ? _.cloneDeep(this.customers.find(e => e._id === _id)) : null;
-      },
-      get() {
-        return this.contract.customer?._id;
-      },
-    },
   },
 
   methods: {
@@ -173,7 +212,9 @@ export default {
     },
 
     fetchCustomersAll() {
+
       this.fetchingCustomers = true;
+
       fetchCustomersAll()
           .then(response => {
             this.customers = response?.data;
@@ -184,6 +225,22 @@ export default {
           })
           .finally(() => {
             this.fetchingCustomers = false;
+          })
+    },
+
+    async fetchContractExecutors() {
+
+      this.fetchingContractExecutors = true;
+
+      fetchContractExecutors()
+          .then(response => {
+            this.contractExecutors = response.data;
+          })
+          .catch(err => {
+            console.log('Ошибка', err);
+          })
+          .finally(() => {
+            this.fetchingContractExecutors = false;
           })
     },
 

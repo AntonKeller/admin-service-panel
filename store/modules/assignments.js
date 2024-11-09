@@ -49,7 +49,7 @@ const assignments = {
     },
     actions: {
 
-        async FETCH_ASSIGNMENTS({commit, getters}) {
+        async FETCH({commit, getters}) {
 
             commit('SET_FETCHING', true);
             let answer = await fetchAssignments();
