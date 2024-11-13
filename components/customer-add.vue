@@ -127,7 +127,7 @@ export default {
         if (this.templateFile && _id) {
 
           const formData = new FormData()
-          formData.append('file', this.templateFile);
+          formData.append('photoAngles', this.templateFile);
 
           uploadTemplate(_id, formData)
               .then(() => {
