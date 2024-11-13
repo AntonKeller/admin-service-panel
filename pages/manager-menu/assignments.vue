@@ -11,7 +11,7 @@
                 v-model="searchText"
                 :hint="`Найдено: ${assignmentsFoundCount}`"
                 style="min-width: 500px"
-                @btn:click="assignmentMenuAddVisibility = true"
+                @btn:click="assignmentAddVisibility = true"
             />
           </div>
         </v-card-item>
@@ -80,12 +80,10 @@
       </div>
     </v-sheet>
 
-    <!--    assignment add menu-->
-    <v-overlay v-model="assignmentMenuAddVisibility" class="d-flex justify-center align-center">
-      <assignment-add/>
+    <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">
+      <assignment-add></assignment-add>
     </v-overlay>
 
-    <!--    assignment card page-->
     <nuxt-page/>
 
   </v-container>
@@ -102,8 +100,8 @@ export default {
     return {
       searchText: '',
       currentPage: 1,
-      itemsPerPage: 2,
-      assignmentMenuAddVisibility: false,
+      itemsPerPage: 10,
+      assignmentAddVisibility: false,
     }
   },
 
@@ -169,8 +167,9 @@ export default {
 
   methods: {
 
-    slicer, timestampToDateString,
-
+    slicer,
+    timestampToDateString,
+    
     cardMenuShow(assignment) {
       this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));

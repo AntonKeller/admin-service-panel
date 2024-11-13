@@ -130,7 +130,7 @@
 import {timestampToDateString} from "../../../../utils/functions.js";
 
 export default {
-  name: "block-card-page",
+  name: "block-page",
 
   data() {
     return {

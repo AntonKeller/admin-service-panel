@@ -72,9 +72,17 @@ export default defineNuxtConfig({
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
-    build: {
-        transpile: ['vuetify'],
-    },
+    // build: {
+    //     transpile: ['vuetify'],
+    //     vue: {
+    //         compilerOptions: {
+    //             isCustomElement: tag => {
+    //                 // Указываем условия для кастомных элементов
+    //                 return ['assignment-add', 'component-assignment-change'].includes(tag)
+    //             }
+    //         }
+    //     }
+    // },
 
     vite: {
         vue: {

@@ -55,6 +55,7 @@ export async function downloadFile(saveAs, url) {
         const oURL = window.URL.createObjectURL(new Blob([response.data]));
         const selectorA = document.createElement('a');
 
+        selectorA.download = "file.xlsx";
         selectorA.href = oURL;
         document.body.appendChild(selectorA);
         selectorA.click();

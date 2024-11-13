@@ -43,4 +43,18 @@ export const navItems: Array<TNavItem> = [
             content: "12"
         },
     },
+    {
+        _id: 4,
+        title: 'Заказчики',
+        route: '/manager-menu/customers',
+        prependIcon: 'mdi-cards-variant',
+        color: 'blue-darken-3',
+        value: 'customers',
+        active: false,
+        badge: {
+            show: false,
+            color: "info",
+            content: "12"
+        },
+    },
 ];

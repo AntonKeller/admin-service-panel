@@ -6,199 +6,148 @@
         <my-search-bar
             v-model="searchText"
             color="blue-darken-2"
-            @btn:click=""
-        ></my-search-bar>
+            :hint="`Найдено: ${inspectorsFoundCount}`"
+            @btn:click="inspectorMenuAddVisibility = true"
+        />
       </v-card-item>
-      <v-card-text>
-        <v-data-table-virtual
-            fixed-header
-            :headers="headers"
-            :items="search"
-            height="750"
-            item-value="name"
-        >
-          <template v-slot:item="{ item }">
-            <tr @click="itemSelected=item">
-              <td>
-                <v-btn
-                    density="compact"
-                    icon="mdi-pencil"
-                    variant="text"
-                    rounded
-                    color="orange-darken-4"
-                    @click="change(item)"
-                >
-                </v-btn>
-              </td>
-              <td>
-                <p>{{ item._id }}</p>
-                <p>{{ item.name }}</p>
-              </td>
-              <td class="text-center">{{ item.speed }}</td>
-              <td class="text-center">{{ item.length }}</td>
-              <td class="text-center">{{ item.price }}</td>
-              <td class="text-center">{{ item.year }}</td>
-            </tr>
-          </template>
-
-
-          <!--          <template v-slot:item.service="{ item }">-->
-          <!--            <v-btn-->
-          <!--                density="compact"-->
-          <!--                icon="mdi-pencil"-->
-          <!--                variant="text"-->
-          <!--                rounded-->
-          <!--                color="orange-darken-4"-->
-          <!--                @click="change(item)"-->
-          <!--            >-->
-          <!--            </v-btn>-->
-          <!--          </template>-->
-          <!--          <template v-slot:item.name="{ item }">-->
-          <!--            <p>{{ item._id }}</p>-->
-          <!--            <p>{{ item.name }}</p>-->
-          <!--          </template>-->
-          <!--          <template v-slot:item.speed="{ item }">-->
-          <!--            <p>{{ item.speed }}</p>-->
-          <!--          </template>-->
-          <!--          <template v-slot:item.length="{ item }">-->
-          <!--            <p>{{ item.length }}</p>-->
-          <!--          </template>-->
-          <!--          <template v-slot:item.price="{ item }">-->
-          <!--            <p>{{ item.price }}</p>-->
-          <!--          </template>-->
-          <!--          <template v-slot:item.year="{ item }">-->
-          <!--            <p>{{ item.year }}</p>-->
-          <!--          </template>-->
-        </v-data-table-virtual>
-      </v-card-text>
     </v-card>
+
+    <div style="min-height: 700px" class="mt-4">
+      <v-divider/>
+      <v-table
+          style="height: 700px"
+          density="comfortable"
+          class="text-caption"
+          fixed-header
+      >
+        <thead v-if="!fetching">
+        <tr>
+          <th>№</th>
+          <th>Имя</th>
+          <th>Фамилия</th>
+          <th>Отчество</th>
+          <th>Номер телефона</th>
+          <th>Email</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody v-if="!fetching">
+        <tr
+            v-for="(inspector, i) of inspectorsSlice"
+            :key="inspector._id"
+            @click="changeInspector(inspector)"
+        >
+          <td>{{ i + 1 }}</td>
+          <td>{{ inspector?.firstName || '' }}</td>
+          <td>{{ inspector?.surName || '' }}</td>
+          <td>{{ inspector?.lastName || '' }}</td>
+          <td>{{ inspector?.phoneNumber || '' }}</td>
+          <td>{{ inspector?.email || '' }}</td>
+          <td style="min-width: 65px; width: 65px; max-width: 65px">
+            <c-remove-btn :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
+          </td>
+        </tr>
+        </tbody>
+      </v-table>
+      <v-divider/>
+    </div>
+
+    <div class="d-flex align-center mt-4">
+      <v-pagination
+          v-model="currentPage"
+          density="comfortable"
+          color="blue-grey-darken-2"
+          show-first-last-page
+          :length="totalPages"
+          :total-visible="8"
+      />
+    </div>
+
+    <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
+      <inspector-add @add:success="updateInspectors"></inspector-add>
+    </v-overlay>
+
+    <v-overlay v-model="inspectorMenuChangeVisibility" class="d-flex justify-center align-center">
+      <inspector-change @change:success="updateInspectors" :_inspector="inspectorSelected"></inspector-change>
+    </v-overlay>
+
   </v-container>
 </template>
 
 <script>
+import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors.js";
+import {showAlert} from "../../utils/functions.js";
+
 export default {
-  name: "inspectors",
+  name: "inspectors-page",
+  components: {},
+
   data() {
     return {
-      headers: [
-        {title: '', align: 'start', key: 'service'},
-        {title: 'Boat Type', align: 'start', key: 'name'},
-        {title: 'Speed (knots)', align: 'center', key: 'speed'},
-        {title: 'Length (m)', align: 'center', key: 'length'},
-        {title: 'Price ($)', align: 'center', key: 'price'},
-        {title: 'Year', align: 'center', key: 'year'},
-      ],
-      boats: [
-        {
-          _id: 1,
-          name: 'Speedster',
-          speed: 35,
-          length: 22,
-          price: 300000,
-          year: 2021,
-        },
-        {
-          _id: 2,
-          name: 'OceanMaster',
-          speed: 25,
-          length: 35,
-          price: 500000,
-          year: 2020,
-        },
-        {
-          _id: 3,
-          name: 'Voyager',
-          speed: 20,
-          length: 45,
-          price: 700000,
-          year: 2019,
-        },
-        {
-          _id: 4,
-          name: 'WaveRunner',
-          speed: 40,
-          length: 19,
-          price: 250000,
-          year: 2022,
-        },
-        {
-          _id: 5,
-          name: 'SeaBreeze',
-          speed: 28,
-          length: 31,
-          price: 450000,
-          year: 2018,
-        },
-        {
-          _id: 6,
-          name: 'HarborGuard',
-          speed: 18,
-          length: 50,
-          price: 800000,
-          year: 2017,
-        },
-        {
-          _id: 7,
-          name: 'SlickFin',
-          speed: 33,
-          length: 24,
-          price: 350000,
-          year: 2021,
-        },
-        {
-          _id: 8,
-          name: 'StormBreaker',
-          speed: 22,
-          length: 38,
-          price: 600000,
-          year: 2020,
-        },
-        {
-          _id: 9,
-          name: 'WindSail',
-          speed: 15,
-          length: 55,
-          price: 900000,
-          year: 2019,
-        },
-        {
-          _id: 10,
-          name: 'FastTide',
-          speed: 37,
-          length: 20,
-          price: 280000,
-          year: 2022,
-        },
-      ],
+      inspectors: [],
+      inspectorSelected: null,
+      fetching: false,
       searchText: '',
-      itemSelected: null,
-    };
-  },
-  watch: {
-    itemSelected() {
-      console.log('itemSelected:', this.itemSelected);
+      currentPage: 1,
+      itemsPerPage: 20,
+      inspectorMenuAddVisibility: false,
+      inspectorMenuChangeVisibility: false,
     }
   },
+
+  mounted() {
+    this.updateInspectors();
+  },
+
   computed: {
-    search() {
-      return this.virtualBoats.filter(item => {
-        return Object.values(item).find(value => {
-          return typeof value === 'string' && (new RegExp(this.searchText, 'ig')).test(value)
+    totalPages() {
+      return Math.ceil(this.inspectorsFoundCount / this.itemsPerPage);
+    },
+    inspectorsFoundCount() {
+      return this.inspectorsFound.length;
+    },
+    inspectorsSlice() {
+      const from = (this.currentPage - 1) * this.itemsPerPage;
+      const to = this.currentPage * this.itemsPerPage;
+      return this.inspectorsFound.slice(from, to);
+    },
+    inspectorsFound() {
+      if (typeof this.searchText === 'string' && this.searchText.length > 0) {
+        return this.inspectors.filter(e => {
+          return (new RegExp(this.searchText, 'ig')).test([
+            e?.firstName || null,
+            e?.surName || null,
+            e?.lastName || null,
+            e?.phoneNumber || null,
+            e?.email || null
+          ].filter(e => !!e).join(' '));
         })
-      })
-    },
-    virtualBoats() {
-      return [...Array(2000).keys()].map(i => {
-        const boat = {...this.boats[i % this.boats.length]}
-        boat.name = `${boat.name} #${i}`
-        return boat
-      })
-    },
-  },
-  methods: {
-    change(item) {
-      console.log('item:', item);
+      } else {
+        return this.inspectors;
+      }
     }
+  },
+
+  methods: {
+    updateInspectors() {
+      fetchInspectors()
+          .then((response) => {
+            this.inspectors = response.data;
+          })
+    },
+    removeInspector(ID) {
+      removeInspector(ID)
+          .then(() => {
+            this.snackBar = showAlert('Инспектор удален').success();
+          })
+          .catch(() => {
+            this.snackBar = showAlert('Ошибка удаления').error();
+          })
+    },
+    changeInspector(inspector) {
+      this.inspectorSelected = inspector;
+      this.inspectorMenuChangeVisibility = true;
+    },
   }
 }
 </script>

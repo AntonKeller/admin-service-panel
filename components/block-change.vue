@@ -144,7 +144,7 @@
 import {changeAssignmentBlock} from "../utils/api/api_assignment_blocks";
 import assignment_block_statuses from "../configs/assignment-statuses";
 import {isDate, isEmpty} from "../utils/validators/functions.js";
-import {fetchInspectorsAll} from "../utils/api/api_inspectors";
+import {fetchInspectors} from "../utils/api/api_inspectors";
 import {showAlert} from "../utils/functions.js";
 import _ from "lodash";
 
@@ -195,7 +195,7 @@ export default {
 
     fetchInspectors() {
       this.fetchingInspectors = true;
-      fetchInspectorsAll()
+      fetchInspectors()
           .then(response => {
             this.inspectors = response.data;
           })

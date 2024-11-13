@@ -69,7 +69,7 @@ import {fetchReports} from "../../utils/api/api_reports";
 import {showAlert} from "../../utils/functions.js";
 
 export default {
-  name: "reports",
+  name: "reports-page",
 
   data() {
     return {

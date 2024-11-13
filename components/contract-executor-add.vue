@@ -3,7 +3,7 @@
     <v-card-title>Добавление исполнителя (по договору)</v-card-title>
     <v-card-subtitle>Заполните поля</v-card-subtitle>
     <v-card-text>
-      <v-form v-model="isValid" ref="form" class="d-flex flex-column ga-2">
+      <v-form v-model="isValid" ref="form" class="d-flex flex-column ga-1">
         <my-text-field
             v-model="contractExecutor.companyName"
             :rules="rules.companyName"

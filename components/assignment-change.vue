@@ -67,7 +67,6 @@
         />
         <my-btn-clear text="Очистить" @click="this.assignment = {}"/>
       </v-card-actions>
-
     </v-card>
 
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
@@ -79,28 +78,30 @@
 </template>
 
 <script>
-import {changeAssignment} from "../utils/api/api_assignments.js";
-import {fetchContractsAll} from "../utils/api/api_contracts.js";
-import {fetchCustomersAll} from "../utils/api/api_customers.js";
-import {showAlert} from "../utils/functions.js";
+import {changeAssignment} from "../utils/api/api_assignments";
+import {fetchContractsAll} from "../utils/api/api_contracts";
+import {fetchCustomersAll} from "../utils/api/api_customers";
+import {showAlert} from "../utils/functions";
 import _ from "lodash";
 
 export default {
   name: "assignment-change",
 
-  data: () => ({
-    assignment: {},
-    contracts: [],
-    customers: [],
-    loadingContracts: false,
-    loadingCustomers: false,
-    formIsValid: false,
-    changing: false,
-    snackBar: {},
-  }),
+  data() {
+    return {
+      assignment: {},
+      contracts: [],
+      customers: [],
+      loadingContracts: false,
+      loadingCustomers: false,
+      formIsValid: false,
+      changing: false,
+      snackBar: {},
+    }
+  },
 
   beforeMount() {
-    this.assignment = _.cloneDeep(this.$store.getters['assignments/GET_SELECTED_ITEM'] ?? null);
+    this.assignment = _.cloneDeep(this.$store.getters['assignments/GET_SELECTED_ITEM']);
     this.fetchContracts();
     this.fetchCustomers();
   },

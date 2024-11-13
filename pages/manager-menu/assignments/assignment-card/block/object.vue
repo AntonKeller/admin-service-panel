@@ -141,7 +141,7 @@ import {removeImg, sendImg} from "../../../../../utils/api/api_images.js";
 import {fetchAngles} from "../../../../../utils/api/api_angles.js";
 
 export default {
-  name: "object-card-page",
+  name: "object-page",
 
   data() {
     return {

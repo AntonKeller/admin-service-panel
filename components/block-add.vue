@@ -145,7 +145,7 @@
 <script>
 import {sendAssignmentBlock} from "../utils/api/api_assignment_blocks";
 import assignment_block_statuses from "../configs/assignment-statuses";
-import {fetchInspectorsAll} from "../utils/api/api_inspectors";
+import {fetchInspectors} from "../utils/api/api_inspectors";
 import {isDate, isEmpty} from "../utils/validators/functions";
 import {showAlert} from "../utils/functions.js";
 
@@ -200,7 +200,7 @@ export default {
 
     fetchInspectors() {
       this.fetchingInspectors = true;
-      fetchInspectorsAll()
+      fetchInspectors()
           .then(response => {
             this.inspectors = response.data;
           })

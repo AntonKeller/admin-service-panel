@@ -84,7 +84,7 @@
 
 
     <v-overlay v-model="contractMenuAddShow" class="d-flex justify-center align-center">
-      <c-contract-card-add-menu/>
+      <contract-add></contract-add>
     </v-overlay>
 
   </v-card>
@@ -92,7 +92,7 @@
 
 <script>
 export default {
-  name: "assignment-add",
+  name: "assignment-add-page",
 
   data: () => ({
 

@@ -129,12 +129,12 @@
 
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change></assignment-change>
+        <assignment-change />
       </v-overlay>
 
       <!--    Block Menu Add-->
       <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-        <block-add></block-add>
+        <block-add />
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import {timestampToDateString} from "../../../utils/functions.js";
+import {timestampToDateString} from "../../../utils/functions";
 
 export default {
   name: "assignment-card-page",
