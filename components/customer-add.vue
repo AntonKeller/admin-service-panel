@@ -125,10 +125,8 @@ export default {
             })
 
         if (this.templateFile && _id) {
-
           const formData = new FormData()
           formData.append('photoAngles', this.templateFile);
-
           uploadTemplate(_id, formData)
               .then(() => {
                 console.log('Шаблон успешно отправлен');

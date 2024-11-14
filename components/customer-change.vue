@@ -22,9 +22,9 @@
           <my-text-field v-model="customer.phoneNumber" label="Номер телефона"/>
         </div>
 
-        <v-divider />
 
         <v-label>Загруженные ракурсы</v-label>
+        <v-divider />
         <v-sheet max-height="200" style="overflow-y: scroll">
           <v-list max-height="200px">
             <v-list-item v-for="item of customer.template">
@@ -38,6 +38,7 @@
 
     <v-card-item>
       <div>
+        <v-divider />
         <v-label>Вы можете добавить или заменить шаблон</v-label>
         <v-btn
             class="ml-2"
@@ -64,7 +65,6 @@
           <span class="text-caption ml-2">{{ templateFile?.name || '' }}</span>
         </div>
       </div>
-      <v-divider />
     </v-card-item>
 
     <v-card-actions>
@@ -89,7 +89,7 @@
 <script>
 import _ from "lodash";
 import {showAlert} from "../utils/functions";
-import {changeCustomer} from "../utils/api/api_customers";
+import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
 import {downloadFile} from "../utils/api/api_.js";
 import {serverURL} from "../constants/constants.js";
 
@@ -105,6 +105,7 @@ export default {
   data() {
     return {
       customer: {
+        _id: null,
         shortName: null,
         fullName: null,
         inn: null,
@@ -131,7 +132,9 @@ export default {
     async changeCustomer() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
+
         this.loading = true;
+
         changeCustomer(this.customer)
             .then(() => {
               this.$emit('change:success');
@@ -144,6 +147,20 @@ export default {
             .finally(() => {
               this.loading = false;
             })
+
+        if (this.templateFile && this.customer._id) {
+          const formData = new FormData()
+          formData.append('photoAngles', this.templateFile);
+          uploadTemplate(this.customer._id, formData)
+              .then(() => {
+                console.log('Шаблон успешно отправлен');
+                this.$emit('change:success');
+              })
+              .catch(err => {
+                this.snackBar = showAlert('Не удалось отправить шаблон').success();
+                console.log('Не удалось отправить шаблон', err);
+              })
+        }
       }
     },
     // Программно вызываем клик по скрытому input

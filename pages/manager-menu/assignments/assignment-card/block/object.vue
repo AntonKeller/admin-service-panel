@@ -21,7 +21,7 @@
             </div>
             <v-btn
                 class="ml-4"
-                color="blue-darken-1"
+                color="blue-darken-2"
                 density="comfortable"
                 icon="mdi-pencil"
                 variant="tonal"
@@ -54,58 +54,47 @@
               type="file"
               @change="sendImages"
           />
-          <v-divider class="my-2"/>
-          <div class="d-flex ga-2 align-top">
-            <v-btn
-                icon="mdi-camera-outline"
-                density="comfortable"
-                variant="text"
-                color="blue-darken-3"
-                rounded
-                @click="">
-              <v-icon/>
-              <v-tooltip activator="parent" location="right">
-                Добавить фото в ракурс
-              </v-tooltip>
-            </v-btn>
-            <v-autocomplete
-                v-model="angleSelected"
-                :items="angles"
-                prepend-inner-icon="mdi-radiobox-indeterminate-variant"
-                color="blue-grey-darken-3"
-                density="compact"
-                variant="solo"
-                label="Список ракурсов"
-                rounded="md"
-                persistent-hint
-                single-line
-                :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    v-bind="props"
-                    closable
-                    color="blue-grey-darken-1"
-                    density="comfortable"
-                    rounded="md"
-                    label
-                    :text="item.raw?.name"
-                />
-              </template>
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    density="compact"
-                    prepend-icon="mdi-file-document-edit"
-                    :title="item.raw?.name"
-                    :subtitle="item.raw?.name"
-                />
-              </template>
-            </v-autocomplete>
-          </div>
 
-          <v-sheet v-if="!angleSelected" class="d-flex justify-center align-center" height="300">
-            <v-label>Выберите ракурс</v-label>
+          <v-divider class="my-2"/>
+
+          <v-autocomplete
+              v-model="angleSelected"
+              :items="angles"
+              prepend-inner-icon="mdi-radiobox-indeterminate-variant"
+              color="blue-grey-darken-3"
+              density="compact"
+              variant="solo"
+              label="Список ракурсов"
+              rounded="md"
+              persistent-hint
+              single-line
+              :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"
+          >
+            <template v-slot:chip="{ props, item }">
+              <v-chip
+                  v-bind="props"
+                  closable
+                  color="blue-grey-darken-1"
+                  density="comfortable"
+                  rounded="md"
+                  label
+                  :text="item.raw?.name"
+              />
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item
+                  v-bind="props"
+                  density="compact"
+                  prepend-icon="mdi-radiobox-indeterminate-variant"
+                  :title="item.raw?.name"
+                  :subtitle="item.raw?.name"
+              />
+            </template>
+          </v-autocomplete>
+
+          <v-sheet v-if="!angleSelected" class="d-flex flex-column justify-center align-center" height="300">
+            <div><v-label><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-label></div>
+            <div><v-label>Выберите ракурс из выпадающего списка</v-label></div>
           </v-sheet>
 
           <v-sheet v-if="angleSelected" class="d-flex flex-wrap ga-1 mt-1" style="overflow-y: scroll" height="325">
@@ -120,6 +109,21 @@
             />
           </v-sheet>
         </v-card-item>
+        <v-card-actions>
+          <v-btn
+              icon="mdi-camera-outline"
+              variant="text"
+              color="blue-darken-3"
+              rounded
+              text="Добавить фото в ракурс"
+              @click="">
+            <v-icon />
+            <v-tooltip activator="parent" location="right">
+              Добавить фото в ракурс
+            </v-tooltip>
+          </v-btn>
+          <v-divider class="my-2"/>
+        </v-card-actions>
       </v-card>
 
       <my-overlay v-model="imgFullWindowIsShow">
