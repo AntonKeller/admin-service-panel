@@ -28,3 +28,13 @@ export function sendAssignmentBlock(assignmentId, block, query) {
 export function changeAssignmentBlock(assignmentId, block, query) {
     return axios.put(serverURL + '/assignment-blocks/' + assignmentId + '/change/' + block._id + (query ?? ''), block, createConfig());
 }
+
+// Загружает на сервер файл Excel со списокм объектов
+export function uploadObjects(blockID, objectsExcelBlob, query) {
+    return axios.post(serverURL + '/inspection-objects/uploadObjects/' + (blockID ?? '') + (query ?? ''), objectsExcelBlob, createConfig());
+}
+
+// Качает шаблон списка объектов для заполнения
+export function downloadObjectsTemplate(query) {
+    return axios.get(serverURL + '/inspection-objects/inspectionObjectTemplates' + (query ?? ''), createConfig());
+}

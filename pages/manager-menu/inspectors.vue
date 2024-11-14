@@ -14,12 +14,7 @@
 
     <div style="min-height: 700px" class="mt-4">
       <v-divider/>
-      <v-table
-          style="height: 700px"
-          density="comfortable"
-          class="text-caption"
-          fixed-header
-      >
+      <v-table height="700" density="default" fixed-header class="text-caption elevation-1">
         <thead v-if="!fetching">
         <tr>
           <th>№</th>

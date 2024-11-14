@@ -10,7 +10,7 @@
             <my-search-bar
                 v-model="searchText"
                 :hint="`Найдено: ${assignmentsFoundCount}`"
-                style="min-width: 500px"
+                style="width: 500px"
                 @btn:click="assignmentAddVisibility = true"
             />
           </div>
@@ -19,12 +19,7 @@
 
       <div style="min-height: 700px" class="mt-4">
         <v-divider/>
-        <v-table
-            style="height: 700px"
-            density="comfortable"
-            class="text-caption"
-            fixed-header
-        >
+        <v-table height="700" density="default" fixed-header class="text-caption elevation-1">
           <thead v-if="!getFetchingDataStatus">
           <tr>
             <th>№</th>

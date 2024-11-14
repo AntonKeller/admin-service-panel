@@ -102,7 +102,7 @@ export default {
 
   methods: {
     downloadTemplate() {
-      downloadFile('template', serverURL + '/customers/downloadExcelTemplates');
+      downloadFile('angles template.xlsx', serverURL + '/customers/downloadExcelTemplates');
     },
     async addCustomer() {
       await this.$refs.form.validate();

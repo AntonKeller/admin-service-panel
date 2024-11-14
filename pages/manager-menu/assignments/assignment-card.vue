@@ -76,7 +76,7 @@
               >загрузка...
               </v-progress-circular>
             </div>
-            <v-table v-if="!fetching" height="290px" fixed-header density="default" class="text-caption">
+            <v-table v-if="!fetching" height="290" density="default" fixed-header class="text-caption elevation-1">
               <thead>
               <tr>
                 <th>Кредитный договор</th>

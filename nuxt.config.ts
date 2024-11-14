@@ -8,10 +8,6 @@ export default defineNuxtConfig({
 
     ssr: false,
 
-    // routeRules: {
-        //     '/': { ssr: true, prerender: true },
-    // },
-
     app: {
 
         head: {

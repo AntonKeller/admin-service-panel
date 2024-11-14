@@ -9,16 +9,28 @@
         @click="$emit('btn:click')">
     </v-btn>
     <v-text-field
-        v-bind="$attrs"
         color="blue-grey-darken-1"
+        class="border-t"
         prepend-inner-icon="mdi-magnify"
         persistent-hint
         rounded="md"
         density="compact"
         label="Поиск"
-        variant="outlined"
-        single-line>
+        variant="solo"
+        single-line
+        v-bind="$attrs">
     </v-text-field>
+<!--    <v-text-field-->
+<!--        v-bind="$attrs"-->
+<!--        color="blue-grey-darken-1"-->
+<!--        prepend-inner-icon="mdi-magnify"-->
+<!--        persistent-hint-->
+<!--        rounded="md"-->
+<!--        density="compact"-->
+<!--        label="Поиск"-->
+<!--        variant="outlined"-->
+<!--        single-line>-->
+<!--    </v-text-field>-->
   </div>
 </template>
 
