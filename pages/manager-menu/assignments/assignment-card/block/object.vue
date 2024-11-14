@@ -24,6 +24,7 @@
                 color="blue-darken-1"
                 density="comfortable"
                 icon="mdi-pencil"
+                variant="tonal"
                 rounded
                 @click="objectMenuChangeVisibility = true"
             >
@@ -38,8 +39,7 @@
 
         <v-card-text class="d-flex flex-column ga-1">
           <span><b>Адрес: </b>{{ inspectionObject?.address || 'Адрес отсутствует' }}</span>
-          <span><b>Фотографий: </b>{{ photos.length }} шт.</span>
-          <span><b>Описание: </b>{{ inspectionObject?.description || 'Описание отсутствует' }}</span>
+          <span>{{ inspectionObject?.description || 'Описание отсутствует' }}</span>
         </v-card-text>
 
         <v-card-item>
@@ -54,52 +54,55 @@
               type="file"
               @change="sendImages"
           />
-          <v-label for="inputfile">
-            <v-chip
-                color="blue-darken-4"
-                variant="elevated"
+          <v-divider class="my-2"/>
+          <div class="d-flex ga-2 align-top">
+            <v-btn
+                icon="mdi-camera-outline"
+                density="comfortable"
+                variant="text"
+                color="blue-darken-3"
                 rounded
-                class="cursor-pointer"
-            >
-              <v-icon>mdi-camera-outline</v-icon>
+                @click="">
+              <v-icon/>
               <v-tooltip activator="parent" location="right">
                 Добавить фото в ракурс
               </v-tooltip>
-            </v-chip>
-          </v-label>
-          <v-divider class="my-2"/>
-          <v-autocomplete
-              v-model="angleSelected"
-              :items="angles"
-              prepend-inner-icon="mdi-file-sign"
-              color="blue-grey-darken-3"
-              density="compact"
-              variant="outlined"
-              label="Список ракурсов"
-              rounded="sm"
-              persistent-hint
-              single-line
-              hint="5 ракурсов у этого объекта"
-          >
-            <template v-slot:chip="{ props, item }">
-              <v-chip
-                  v-bind="props"
-                  prepend-icon="mdi-file-document-edit"
-                  color="blue-grey-darken-3"
-                  density="compact"
-                  :text="item.raw?.name"
-              />
-            </template>
-            <template v-slot:item="{ props, item }">
-              <v-list-item
-                  v-bind="props"
-                  density="compact"
-                  prepend-icon="mdi-file-document-edit"
-                  :title="item.raw?.name"
-                  :subtitle="item.raw?.name"
-              />
-            </template>
-          </v-autocomplete>
+            </v-btn>
+            <v-autocomplete
+                v-model="angleSelected"
+                :items="angles"
+                prepend-inner-icon="mdi-radiobox-indeterminate-variant"
+                color="blue-grey-darken-3"
+                density="compact"
+                variant="solo"
+                label="Список ракурсов"
+                rounded="md"
+                persistent-hint
+                single-line
+                :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"
+            >
+              <template v-slot:chip="{ props, item }">
+                <v-chip
+                    v-bind="props"
+                    closable
+                    color="blue-grey-darken-1"
+                    density="comfortable"
+                    rounded="md"
+                    label
+                    :text="item.raw?.name"
+                />
+              </template>
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                    v-bind="props"
+                    density="compact"
+                    prepend-icon="mdi-file-document-edit"
+                    :title="item.raw?.name"
+                    :subtitle="item.raw?.name"
+                />
+              </template>
+            </v-autocomplete>
+          </div>
 
           <v-sheet v-if="!angleSelected" class="d-flex justify-center align-center" height="300">
             <v-label>Выберите ракурс</v-label>
@@ -114,7 +117,7 @@
                 cover
                 :src="img.src"
                 class="border-sm"
-            ></v-img>
+            />
           </v-sheet>
         </v-card-item>
       </v-card>
@@ -168,6 +171,8 @@ export default {
 
     // Загружаем картинки в Store
     this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+    console.log('object card mounted')
+    console.log('GET_ANGLES:', this.$store.getters['angles/GET_ANGLES']);
   },
 
   unmounted() {
@@ -197,6 +202,9 @@ export default {
     },
     objectNameTitle() {
       return (this.inspectionObject?.name || 'Имя отсутствует') + ' / ' + (this.inspectionObject?.inventoryNumber || 'Инв. номер отсутствует')
+    },
+    photoCount() {
+      return this.$store.getters['angles/GET_PHOTO_COUNT'];
     }
   },
 

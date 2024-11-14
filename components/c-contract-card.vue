@@ -14,7 +14,7 @@
         <v-btn
             icon="mdi-pencil"
             density="comfortable"
-            variant="text"
+            variant="tonal"
             rounded
             @click.stop="changeClick(contract)"
         />

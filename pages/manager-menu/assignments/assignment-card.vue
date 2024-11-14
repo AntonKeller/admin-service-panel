@@ -19,6 +19,7 @@
                   color="blue-darken-1"
                   density="comfortable"
                   icon="mdi-pencil"
+                  variant="tonal"
                   rounded
                   @click="assignmentMenuChangeVisibility = true"
               >
