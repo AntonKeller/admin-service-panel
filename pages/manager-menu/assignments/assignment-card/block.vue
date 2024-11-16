@@ -86,20 +86,38 @@
           </div>
         </v-card-subtitle>
 
-        <v-card-text>
+        <v-card-text class="text-caption" style="font-size: 10px">
           <div class="d-flex ga-4 align-center py-1">
-            <my-search-bar
-                style="width: 500px"
-                label="Искать объекты"
-                persistent-hint
-                :hint="`Найдено: ${totalObjects}`"
+            <v-btn-group variant="text" color="blue-darken-4" density="compact">
+              <v-btn
+                  prepend-icon="mdi-plus-box-multiple-outline"
+                  text="Добавить"
+                  size="small"
+                  @click="objectMenuAddVisibility = true"
+              />
+              <v-divider vertical/>
+              <v-btn
+                  prepend-icon="mdi-tray-arrow-up"
+                  text="Загрузить xlsx"
+                  size="small"
+              />
+            </v-btn-group>
+
+            <v-text-field
                 v-model="searchText"
-                @btn:click="objectMenuAddVisibility = true"
+                density="compact"
+                label="Поиск объектов"
+                prepend-inner-icon="mdi-magnify"
+                variant="solo-filled"
+                flat
+                hide-details
+                single-line
             />
           </div>
-          <v-sheet >
-            <v-divider/>
-            <v-table height="300" density="default" fixed-header class="text-caption elevation-1">
+          <v-divider/>
+          <v-sheet>
+
+            <v-table height="300" density="default" fixed-header class="text-caption elevation-0">
               <thead>
               <tr class="text-blue-darken-4">
                 <th class="text-left">Объект</th>
@@ -128,6 +146,8 @@
             </v-table>
             <v-divider/>
           </v-sheet>
+
+
           <div class="d-flex align-center mt-2">
             <v-pagination
                 v-model="currentPage"
@@ -145,12 +165,12 @@
 
       <!--    Block Menu Change-->
       <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
-        <block-change></block-change>
+        <block-change @change:success="fetchObjects"></block-change>
       </v-overlay>
 
       <!--    Object Menu Add-->
       <v-overlay v-model="objectMenuAddVisibility" class="d-flex justify-center align-center">
-        <object-add></object-add>
+        <object-add @add:success="fetchObjects"></object-add>
       </v-overlay>
 
       <!--      Block Card Page-->
@@ -162,7 +182,7 @@
 
 <script>
 import {showAlert, timestampToDateString} from "../../../../utils/functions";
-import { uploadObjects} from "../../../../utils/api/api_assignment_blocks";
+import {uploadObjects} from "../../../../utils/api/api_assignment_blocks";
 import {serverURL} from "../../../../constants/constants";
 import {downloadFile} from "../../../../utils/api/api_";
 
@@ -175,8 +195,15 @@ export default {
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,
+      loading: false,
       blockMenuChangeVisibility: false,
       objectMenuAddVisibility: false,
+      headers: [
+        {title: 'Наименование', align: 'start', key: 'name', value: 'name'},
+        {title: 'Тип', align: 'start', key: 'objectType', value: 'objectType'},
+        {title: 'Модель', align: 'start', key: 'model', value: 'model'},
+        {title: 'Адрес', align: 'start', key: 'address', value: 'address'}
+      ],
     }
   },
 
@@ -310,3 +337,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.small-font td {
+  font-size: 12px; /* Уменьшение шрифта */
+}
+</style>

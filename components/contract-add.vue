@@ -14,7 +14,7 @@
         <v-form v-model="isValid" class="d-flex flex-column ga-2">
           <my-text-field
               v-model="contract.contractNumber"
-              :rules="contractNumberRules"
+              :rules="contractContractNumberRules"
               prepend-inner-icon="mdi-file-sign"
               label="Номер договора"
               placeholder="..../..."
@@ -31,6 +31,7 @@
                 v-model="contract.customer"
                 :items="customers"
                 :loading="fetchingCustomers"
+                :rules="customersRules"
                 prepend-inner-icon="mdi-account-tie"
                 no-data-text="нет данных"
                 color="blue-grey-darken-3"
@@ -131,25 +132,25 @@
       {{ snackBar.msg }}
     </v-snackbar>
 
-<!--            <my-overlay v-model="contractExecutorMenuAddVisibility">-->
-<!--              <contract-executor-add></contract-executor-add>-->
-<!--            </my-overlay>-->
+    <my-overlay v-model="contractExecutorMenuAddVisibility">
+      <contract-executor-add  @add:success="fetchContractExecutors"></contract-executor-add>
+    </my-overlay>
 
-    <!--        <my-overlay v-model="customerAddMenuShow">-->
-    <!--          <customer-add @add:success="fetchCustomersAll"></customer-add>-->
-    <!--        </my-overlay>-->
+    <my-overlay v-model="customerAddMenuShow">
+      <customer-add @add:success="fetchCustomersAll"></customer-add>
+    </my-overlay>
 
   </v-sheet>
 </template>
 
 <script>
-// import {showAlert} from "../utils/functions.js";
-// import {fetchCustomersAll} from "../utils/api/api_customers";
-// import {addContract} from "../utils/api/api_contracts";
-// import {fetchContractExecutors} from "../utils/api/api_contract_executors.js";
+import {fetchContractExecutors} from "../utils/api/api_contract_executors.js";
+import {fetchCustomersAll} from "../utils/api/api_customers";
+import {addContract} from "../utils/api/api_contracts";
+import {showAlert} from "../utils/functions.js";
 
 export default {
-  name: "contract-add-page",
+  name: "contract-add",
 
   data() {
     return {
@@ -168,80 +169,77 @@ export default {
       fetchingContractExecutors: false,
       customerAddMenuShow: false,
       contractExecutorMenuAddVisibility: false,
-
-      contractNumberRules: [
-        value => /^\d{4}\/\d{3}$/i.test(value) ? true : 'Неподходящий формат номера',
+      contractContractNumberRules: [
+        v => v?.length > 0 || 'Договора должна быть больше 0',
+        v => v?.length <= 18 || 'Договора должна быть меньше 18',
       ],
-      contractDateRules: [
-        value => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты',
-      ],
-      customersRules: [
-        value => value?.length > 0 ? true : 'Не выбран заказчика'
-      ],
+      contractDateRules: [v => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты'],
+      customersRules: [v => v?.length > 0 || 'Не выбран заказчик'],
     }
   },
   mounted() {
-    // this.fetchCustomersAll();
-    // this.fetchContractExecutors();
+    this.fetchCustomersAll();
+    this.fetchContractExecutors();
   },
 
   methods: {
 
-    // submit() {
-    //   if (this.isValid) {
-    //     this.loading = true;
-    //     addContract(this.contract)
-    //         .then(response => {
-    //           this.snackBar = showAlert('Добавлен новый договор!').success();
-    //           this.$emit('add:success');
-    //         })
-    //         .catch(err => {
-    //           this.snackBar = showAlert('Не удалось добавить договор!').error();
-    //           console.log('Ошибка запроса', err);
-    //         })
-    //         .finally(() => {
-    //           this.loading = false;
-    //         })
-    //   } else {
-    //     this.snackBar = showAlert('Поля не заполнены!').error();
-    //   }
-    // },
-    //
-    // fetchCustomersAll() {
-    //
-    //   this.fetchingCustomers = true;
-    //
-    //   fetchCustomersAll()
-    //       .then(response => {
-    //         this.customers = response?.data;
-    //       })
-    //       .catch(err => {
-    //         console.log('Запрос списка договоров выполнен с ошибкой', err);
-    //       })
-    //       .finally(() => {
-    //         this.fetchingCustomers = false;
-    //       })
-    // },
-    //
-    // async fetchContractExecutors() {
-    //
-    //   this.fetchingContractExecutors = true;
-    //
-    //   fetchContractExecutors()
-    //       .then(response => {
-    //         this.contractExecutors = response.data;
-    //       })
-    //       .catch(err => {
-    //         console.log('Ошибка', err);
-    //       })
-    //       .finally(() => {
-    //         this.fetchingContractExecutors = false;
-    //       })
-    // },
-    //
-    // clear() {
-    //   this.contract = {}
-    // }
+    submit() {
+      if (this.isValid) {
+        this.loading = true;
+        addContract(this.contract)
+            .then(() => {
+              this.snackBar = showAlert('Добавлен новый договор!').success();
+              this.$emit('add:success');
+            })
+            .catch(err => {
+              this.snackBar = showAlert('Не удалось добавить договор!').error();
+              console.log('Ошибка запроса', err);
+            })
+            .finally(() => {
+              this.loading = false;
+            })
+      } else {
+        this.snackBar = showAlert('Поля не заполнены!').error();
+      }
+    },
+
+    fetchCustomersAll() {
+
+      this.fetchingCustomers = true;
+
+      fetchCustomersAll()
+          .then(response => {
+            this.customers = response?.data;
+          })
+          .catch(err => {
+            console.log('Запрос списка договоров выполнен с ошибкой', err);
+          })
+          .finally(() => {
+            this.fetchingCustomers = false;
+          })
+    },
+
+    async fetchContractExecutors() {
+
+      this.fetchingContractExecutors = true;
+      console.log('fetchingContractExecutors')
+
+      fetchContractExecutors()
+          .then(response => {
+            this.contractExecutors = response.data;
+          })
+          .catch(err => {
+            console.log('Ошибка', err);
+          })
+          .finally(() => {
+            this.fetchingContractExecutors = false;
+          })
+    },
+
+    clear() {
+      this.contract = {}
+    }
 
   }
 }

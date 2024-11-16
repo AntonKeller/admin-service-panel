@@ -33,9 +33,8 @@ const assignments = {
         SET_FETCHING(state, payload) {
             state.fetching = payload || initial_page_state().fetching;
         },
-        REMOVE_ITEM(state, payload) {
-            const index = state.items.findIndex(item => item._id === payload);
-            if (index >= 0) state.items.splice(index, 1);
+        REMOVE_ITEM(state, id) {
+            state.assignments = state.assignments.filter(e => e._id !== id);
         },
         SHOW_ALERT_SUCCESS(state, payload) {
             state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}

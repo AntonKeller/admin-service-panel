@@ -2,12 +2,11 @@
   <v-sheet
       rounded="sm"
       elevation="6"
-      color="grey-lighten-4"
   >
     <v-card
         rounded="sm"
         variant="text"
-        width="800"
+        width="1024"
         color="blue-grey-darken-3"
     >
       <v-card-title>Новый Блок ТЗ</v-card-title>
@@ -15,109 +14,147 @@
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
       <v-card-item>
-        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
-          <my-text-field
-              v-model="block.title"
-              :rules="blockTitleRules"
-              prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
-          />
-          <div class="d-flex ga-2">
-            <my-date-picker
-                v-model="block.startDate"
-                :rules="blockStartDateRules"
-                prepend-inner-icon="mdi-calendar-range"
-                label="Дата начала"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.endDate"
-                :rules="blockEndDateRules"
-                prepend-inner-icon="mdi-calendar-range"
-                label="Дата окончания"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <my-text-field
-                v-model="block.loanAgreement"
-                :rules="blockLoanAgreementRules"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="Номер кредитного договора"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.loanAgreementDate"
-                :rules="blockLoanAgreementDateRules"
-                prepend-inner-icon="mdi-calendar-range"
-                label="Дата кредитного договора"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <my-text-field
-                v-model="block.pledgeAgreement"
-                :rules="blockPlegeAgreementRules"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="Номер договора залога"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.pledgeAgreementDate"
-                :rules="blockPlegeAgreementDateRules"
-                prepend-inner-icon="mdi-calendar-range"
-                label="Дата договора залога"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <!--            :rules="contractRules"-->
-            <v-autocomplete
-                v-model="block.inspector"
-                :items="inspectors"
-                style="width: 100px"
-                prepend-inner-icon="mdi-account-hard-hat-outline"
-                color="blue-grey-darken-3"
-                density="comfortable"
-                variant="outlined"
-                label="Инспектор"
-                rounded="sm"
-                closable-chips
-                chips
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    v-bind="props"
-                    :text="`${item.raw?.lastName} ${item.raw?.firstName}`"
-                    prepend-icon="mdi-file-document-edit"
-                    color="blue-grey-darken-3"
-                    density="comfortable"
-                />
-              </template>
+        <v-sheet height="550" class="pr-2" style="overflow-y: scroll">
+          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
 
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    :title="`${item.raw?.lastName} ${item.raw?.firstName}`"
-                    :subtitle="`${item.raw?.email} / ${item.raw?.phoneNumber}`"
-                    prepend-icon="mdi-file-document-edit"
-                />
-              </template>
-            </v-autocomplete>
-
-            <v-combobox
-                v-model="block.status"
-                :items="assignment_block_statuses"
-                :rules="blockStatusRules"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="Статус"
-                density="comfortable"
-                style="width: 100px"
-                variant="outlined"
-                rounded="sm"
+            <my-text-field
+                v-model="block.title"
+                :rules="blockTitleRules"
+                label="Заголовок"
             />
-          </div>
-        </v-form>
+
+            <div class="d-flex ga-2">
+              <my-date-picker
+                  v-model="block.startDate"
+                  :rules="blockStartDateRules"
+                  label="Дата начала"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.endDate"
+                  :rules="blockEndDateRules"
+                  label="Дата окончания"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.loanAgreement"
+                  :rules="blockLoanAgreementRules"
+                  label="Номер кредитного договора"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.loanAgreementDate"
+                  :rules="blockLoanAgreementDateRules"
+                  label="Дата кредитного договора"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.pledgeAgreement"
+                  :rules="blockPlegeAgreementRules"
+                  label="Номер договора залога"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.pledgeAgreementDate"
+                  :rules="blockPlegeAgreementDateRules"
+                  label="Дата договора залога"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <v-autocomplete
+                  v-model="block.inspector"
+                  :items="inspectors"
+                  style="width: 100px"
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  variant="outlined"
+                  label="Инспектор"
+                  rounded="sm"
+                  closable-chips
+                  chips
+              >
+                <template v-slot:chip="{ props, item }">
+                  <v-chip
+                      v-bind="props"
+                      :text="`${item.raw?.lastName} ${item.raw?.firstName}`"
+                      prepend-icon="mdi-file-document-edit"
+                      color="blue-grey-darken-3"
+                      density="comfortable"
+                  />
+                </template>
+
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                      v-bind="props"
+                      :title="`${item.raw?.lastName} ${item.raw?.firstName}`"
+                      :subtitle="`${item.raw?.email} / ${item.raw?.phoneNumber}`"
+                      prepend-icon="mdi-file-document-edit"
+                  />
+                </template>
+              </v-autocomplete>
+              <v-btn
+                  variant="tonal"
+                  icon="mdi-plus"
+                  rounded="sm"
+                  @click="inspectorMenuAdd = true"
+              />
+              <v-combobox
+                  v-model="block.status"
+                  :items="assignment_block_statuses"
+                  label="Статус"
+                  density="comfortable"
+                  style="width: 100px"
+                  variant="outlined"
+                  rounded="sm"
+              />
+            </div>
+
+            <my-text-field
+                v-model="block.pledgeAgreementName"
+                label="ФИО залогодателя"
+            />
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.pledgeAgreementPosition"
+                  label="Должность залогодателя"
+              />
+              <my-text-field
+                  v-model="block.pledgeAgreementCompany"
+                  label="Компания залогодателя"
+              />
+            </div>
+
+            <my-text-field
+                v-model="block.address"
+                label="Адрес метонахождения"
+            />
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.contactFullName"
+                  label="ФИО Контактного лица"
+              />
+              <my-text-field
+                  v-model="block.contactPhoneNumber"
+                  label="Телефон контактного лица"
+              />
+            </div>
+
+            <my-text-field
+                v-model="block.description"
+                label="Комментарий"
+            />
+          </v-form>
+        </v-sheet>
       </v-card-item>
 
       <v-card-actions>
@@ -139,6 +176,9 @@
       {{ snackBar.msg }}
     </v-snackbar>
 
+    <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
+      <inspector-add @add:success="fetchInspectors"></inspector-add>
+    </v-overlay>
   </v-sheet>
 </template>
 
@@ -152,30 +192,55 @@ import {showAlert} from "../utils/functions.js";
 export default {
   name: "block-add",
 
-  props: {
-    _assignmentId: String,
+  emits: ['add:success'],
+
+  data() {
+    return {
+      block: {
+        _id: null,
+        title: null,
+        startDate: null,
+        endDate: null,
+        loanAgreement: null,
+        loanAgreementDate: null,
+        pledgeAgreement: null,
+        pledgeAgreementDate: null,
+        inspector: null,
+        status: null,
+        pledgeAgreementName: null,
+        pledgeAgreementPosition: null,
+        pledgeAgreementCompany: null,
+        address: null,
+        contactFullName: null,
+        contactPhoneNumber: null,
+        description: null,
+      },
+      inspectors: [],
+      inspectorMenuAdd: false,
+      fetchingInspectors: false,
+      snackBar: {},
+      formIsValid: null,
+      sendingData: false,
+      assignment_block_statuses,
+      //................................
+      blockTitleRules: [isEmpty],
+      blockStartDateRules: [isDate],
+      blockEndDateRules: [isDate],
+      blockLoanAgreementRules: [isEmpty],
+      blockLoanAgreementDateRules: [isDate],
+      blockPlegeAgreementRules: [isEmpty],
+      blockPlegeAgreementDateRules: [isDate],
+      blockStatusRules: [v => {
+        return assignment_block_statuses.includes(v) ? true : 'Установите статус из списка'
+      }]
+    }
   },
 
-  data: () => ({
-    block: {},
-    inspectors: [],
-    fetchingInspectors: false,
-    snackBar: {},
-    formIsValid: null,
-    sendingData: false,
-    assignment_block_statuses,
-    //................................
-    blockTitleRules: [isEmpty],
-    blockStartDateRules: [isDate],
-    blockEndDateRules: [isDate],
-    blockLoanAgreementRules: [isEmpty],
-    blockLoanAgreementDateRules: [isDate],
-    blockPlegeAgreementRules: [isEmpty],
-    blockPlegeAgreementDateRules: [isDate],
-    blockStatusRules: [v => {
-      return assignment_block_statuses.includes(v) ? true : 'Установите статус из списка'
-    }]
-  }),
+  computed: {
+    _assignmentId() {
+      return this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
+    },
+  },
 
   mounted() {
     this.clear();
@@ -186,6 +251,7 @@ export default {
 
     clear() {
       this.block = {
+        _id: null,
         title: null,
         startDate: null,
         endDate: null,
@@ -193,8 +259,8 @@ export default {
         loanAgreementDate: null,
         pledgeAgreement: null,
         pledgeAgreementDate: null,
-        status: 'КП',
         inspector: null,
+        status: null,
       }
     },
 
@@ -210,7 +276,6 @@ export default {
           .finally(() => {
             this.fetchingInspectors = false;
           })
-      // dataInspectors,
     },
 
     async sendBlock() {
@@ -219,6 +284,7 @@ export default {
 
       if (this.formIsValid) {
         this.sendingData = true;
+        console.log('this._assignmentId', this._assignmentId)
         sendAssignmentBlock(this._assignmentId, this.block)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();

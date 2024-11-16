@@ -10,15 +10,19 @@
 
     <v-card-text>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
-        <my-text-field v-model="customer.fullName" label="Полное наименование"/>
+        <my-text-field v-model="customer.fullName" :rules="customerFullNameRules" label="Полное наименование"/>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
-          <my-text-field v-model="customer.inn" label="ИНН"/>
+          <my-text-field v-model="customer.inn" :rules="customerInnRules" label="ИНН"/>
         </div>
         <my-text-field v-model="customer.address" label="Адрес"/>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.email" label="Email"/>
           <my-text-field v-model="customer.phoneNumber" label="Номер телефона"/>
+        </div>
+        <div class="d-flex ga-2">
+          <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
+          <my-text-field v-model="customer.representativePosition" label="Представитель (Должность)"/>
         </div>
         <my-text-field v-model="customer.template" label="Шаблон" disabled/>
       </v-form>
@@ -76,9 +80,9 @@
 
 <script>
 import {addCustomer, uploadTemplate} from "../utils/api/api_customers";
-import {showAlert} from "../utils/functions";
+import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
-import {serverURL} from "../constants/constants.js";
+import {showAlert} from "../utils/functions";
 
 export default {
   name: "customer-add",
@@ -87,17 +91,23 @@ export default {
 
   data: () => ({
     customer: {
+      _id: null,
       shortName: null,
       fullName: null,
       inn: null,
       address: null,
       email: null,
       phoneNumber: null,
+      representativeFullName: null,
+      representativePosition: null,
+      template: null,
     },
     templateFile: null,
     loading: false,
     snackBar: {},
     formIsValid: false,
+    customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
+    customerInnRules: [v => v.length > 0 || 'ИНН не должен быть пустым']
   }),
 
   methods: {
@@ -125,7 +135,7 @@ export default {
             })
 
         if (this.templateFile && _id) {
-          const formData = new FormData()
+          const formData = new FormData();
           formData.append('photoAngles', this.templateFile);
           uploadTemplate(_id, formData)
               .then(() => {
@@ -157,12 +167,16 @@ export default {
     },
     clear() {
       this.customer = {
+        _id: null,
         shortName: null,
         fullName: null,
         inn: null,
         address: null,
         email: null,
         phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
+        template: null,
       }
       this.templateFile = null;
       this.$refs.templateInput.value = '';

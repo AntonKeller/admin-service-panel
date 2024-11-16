@@ -10,38 +10,47 @@
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
         <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
-
           <my-text-field
               v-model="value.name"
-              :rules="nameRules"
               prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
+              label="Наименование"
           />
 
           <my-text-field
               v-model="value.inventoryNumber"
-              :rules="inventoryNumberRules"
               prepend-inner-icon="mdi-label-variant-outline"
               label="Инвентарный номер"
           />
 
           <my-text-field
+              v-model="value.model"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Заводской номер"
+          />
+
+          <my-text-field
+              v-model="value.serialNumber"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="VIN номер"
+          />
+
+          <my-text-field
               v-model="value.address"
-              :rules="addressRules"
               prepend-inner-icon="mdi-label-variant-outline"
               label="Адрес"
           />
 
-          <v-textarea
-              v-model="value.description"
-              :rules="descriptionRules"
-              color="blue-grey-darken-3"
-              label="Описание объекта"
-              max-rows="1"
-              variant="outlined"
-              auto-grow
+          <my-text-field
+              v-model="value.objectType"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Тип объекта"
           />
 
+          <my-text-field
+              v-model="value.status"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Наличие"
+          />
         </v-form>
       </v-card-item>
       <v-card-actions>
@@ -68,7 +77,15 @@ export default {
     this.value = _.cloneDeep(this.$store.getters['inspectionObjects/GET_SELECTED_OBJECT']);
   },
   data: () => ({
-    value: {},
+    value: {
+      name: null,
+      inventoryNumber: null,
+      model: null,
+      serialNumber: null,
+      address: null,
+      objectType: null,
+      status: null,
+    },
     sending: false,
     formIsValid: false,
     snackBar: {},
@@ -85,7 +102,7 @@ export default {
         changeInspectionObject(this.value)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
-              this.$emit('update:success');
+              this.$emit('change:success');
             })
             .catch((err) => {
               this.snackBar = showAlert('Ошибка').error();

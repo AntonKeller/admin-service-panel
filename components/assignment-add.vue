@@ -9,6 +9,7 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
         <my-text-field
             v-model="assignment.title"
+            :rules="assignmentTitleRules"
             label="Заголовок задания"
             prepend-inner-icon="mdi-label-variant-outline"
         />
@@ -16,6 +17,7 @@
         <div class="d-flex ga-2">
           <v-autocomplete
               v-model="assignment.contract"
+              :rules="contractRules"
               :items="getContracts"
               prepend-inner-icon="mdi-file-sign"
               color="blue-grey-darken-3"
@@ -24,6 +26,7 @@
               label="Договор"
               rounded="sm"
               closable-chips
+              single-line
               chips
           >
             <template v-slot:chip="{ props, item }">
@@ -84,13 +87,15 @@
 
 
     <v-overlay v-model="contractMenuAddShow" class="d-flex justify-center align-center">
-      <contract-add></contract-add>
+      <contract-add @add:success="contractsStoreUpdate"></contract-add>
     </v-overlay>
 
   </v-card>
 </template>
 
 <script>
+import {addNewAssignment} from "../utils/api/api_assignments.js";
+
 export default {
   name: "assignment-add-page",
 
@@ -102,14 +107,14 @@ export default {
 
     assignmentTitleRules: [
       value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
-      value => value?.length <= 100 ? true : 'Кол-во символов должно быть <= 100'
+      value => value?.length <= 50 ? true : 'Кол-во символов должно быть <= 30'
     ],
     contractRules: [
-      value => value?.length > 0 ? true : 'Выберите договор'
+      value => value || 'Выберите договор'
     ],
     assignmentDescriptionRules: [
       value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
-      value => value?.length <= 1500 ? true : 'Кол-во символов должно быть <= 1500',
+      value => value?.length <= 350 || 'Кол-во символов должно быть <= 350',
     ],
   }),
 
@@ -133,10 +138,19 @@ export default {
   },
 
   methods: {
+    contractsStoreUpdate() {
+      this.$store.dispatch('contracts/UPDATE_ITEMS');
+    },
     async sendAssignment() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
-        this.$store.dispatch('assignments/ADD_NEW_ITEM', this.assignment);
+        addNewAssignment(this.assignment)
+            .then(() => {
+              this.$store.dispatch('assignments/FETCH');
+            })
+            .catch(() => {
+              console.log('Ошибка добавления задачи')
+            })
       }
     }
   }

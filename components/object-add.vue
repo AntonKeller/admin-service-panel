@@ -13,38 +13,53 @@
       <v-card-title>Новый объект</v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
-        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
 
           <my-text-field
               v-model="value.name"
-              :rules="nameRules"
               prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
+              label="Наименование"
           />
 
-          <my-text-field
-              v-model="value.inventoryNumber"
-              :rules="inventoryNumberRules"
-              prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
-          />
+          <div class="d-flex ga-2">
+            <my-text-field
+                v-model="value.inventoryNumber"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Инвентарный номер"
+            />
+
+            <my-text-field
+                v-model="value.model"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Заводской номер"
+            />
+
+            <my-text-field
+                v-model="value.serialNumber"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="VIN номер"
+            />
+          </div>
 
           <my-text-field
               v-model="value.address"
-              :rules="addressRules"
               prepend-inner-icon="mdi-label-variant-outline"
-              label="Заголовок"
+              label="Адрес"
           />
 
-          <v-textarea
-              v-model="value.description"
-              :rules="descriptionRules"
-              color="blue-grey-darken-3"
-              max-rows="1"
-              variant="outlined"
-              auto-grow
-          />
+          <div class="d-flex ga-2">
+            <my-text-field
+                v-model="value.objectType"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Тип объекта"
+            />
 
+            <my-text-field
+                v-model="value.status"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Наличие"
+            />
+          </div>
         </v-form>
       </v-card-item>
       <v-card-actions>
@@ -66,29 +81,41 @@
 
 <script>
 import {sendInspectionObject} from "../utils/api/api_inspection_objects";
-import {showAlert} from "../utils/functions.js";
+import {showAlert} from "../utils/functions";
 
 export default {
   name: "object-add",
-  props: {
-    _blockId: String,
+  data() {
+    return {
+      value: {
+        name: null,
+        inventoryNumber: null,
+        model: null,
+        serialNumber: null,
+        address: null,
+        objectType: null,
+        status: null,
+      },
+      sending: false,
+      formIsValid: false,
+      snackBar: {},
+      inventoryNumberRules: [v => v?.length > 0 || 'Заполните поле'],
+      descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
+      addressRules: [v => v?.length > 0 || 'Заполните поле'],
+      nameRules: [v => v?.length > 0 || 'Заполните поле'],
+    }
   },
-  data: () => ({
-    value: {},
-    sending: false,
-    formIsValid: false,
-    snackBar: {},
-    inventoryNumberRules: [v => v?.length > 0 || 'Заполните поле'],
-    descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
-    addressRules: [v => v?.length > 0 || 'Заполните поле'],
-    nameRules: [v => v?.length > 0 || 'Заполните поле'],
-  }),
+  computed: {
+    assignmentBlock() {
+      return this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM'];
+    },
+  },
   methods: {
     async sendValue() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
         this.sending = true;
-        sendInspectionObject(this._blockId, this.value)
+        sendInspectionObject(this.assignmentBlock._id, this.value)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
               this.$emit('add:success');

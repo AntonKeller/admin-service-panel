@@ -27,7 +27,6 @@
         />
         <my-text-field
             v-model="contractExecutor.lastName"
-            :rules="rules.lastName"
             prepend-inner-icon="mdi-file-sign"
             label="Отчетство (При наличии)"
             placeholder="Иванович"
@@ -56,11 +55,13 @@
 </template>
 
 <script>
-import {addContractExecutor, fetchContractExecutors} from "../utils/api/api_contract_executors.js";
+import {addContractExecutor} from "../utils/api/api_contract_executors.js";
 import {showAlert} from "../utils/functions.js";
 
 export default {
   name: "contract-executor-add",
+
+  emits: ['add:success'],
 
   data() {
     return {
@@ -85,9 +86,9 @@ export default {
         surname: [
           v => v?.length > 0 || 'Не должно быть пустое',
         ],
-        lastName: [
-          v => v?.length > 0 || 'Не должно быть пустое',
-        ],
+        // lastName: [
+        //   v => v?.length > 0 || 'Не должно быть пустое',
+        // ],
         position: [
           v => v?.length > 0 || 'Не должно быть пустое',
         ],
@@ -107,8 +108,10 @@ export default {
         addContractExecutor(this.contractExecutor)
             .then(() => {
               this.snackBar = showAlert('Успешно добавлен').success();
+              this.$emit('add:success');
             })
             .catch(err => {
+              console.log('err', err)
               this.snackBar = showAlert('Не удалось добавить!').error();
             })
             .finally(() => {

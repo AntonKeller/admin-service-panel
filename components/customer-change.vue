@@ -21,8 +21,10 @@
           <my-text-field v-model="customer.email" label="Email"/>
           <my-text-field v-model="customer.phoneNumber" label="Номер телефона"/>
         </div>
-
-
+        <div class="d-flex ga-2">
+          <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
+          <my-text-field v-model="customer.representativePosition" label="Представитель (Должность)"/>
+        </div>
         <v-label>Загруженные ракурсы</v-label>
         <v-divider />
         <v-sheet max-height="200" style="overflow-y: scroll">
@@ -112,6 +114,8 @@ export default {
         address: null,
         email: null,
         phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
         template: null,
       },
       templateFile: null,

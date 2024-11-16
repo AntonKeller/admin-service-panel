@@ -6,62 +6,80 @@
         <v-card-title>Список заданий</v-card-title>
 
         <v-card-item>
-          <div class="d-flex ga-4 align-center">
-            <my-search-bar
-                v-model="searchText"
-                :hint="`Найдено: ${assignmentsFoundCount}`"
-                style="width: 500px"
-                @btn:click="assignmentAddVisibility = true"
-            />
+
+          <div class="d-flex align-center">
+            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+              <v-btn
+                  prepend-icon="mdi-plus-box-multiple-outline"
+                  @click="assignmentAddVisibility = true"
+              >
+                Добавить
+                <v-tooltip activator="parent">
+                  Добавить новыое задание
+                </v-tooltip>
+              </v-btn>
+            </v-btn-group>
+<!--            <v-spacer />-->
+            <v-sheet width="550">
+              <v-text-field
+                  v-model="searchText"
+                  prepend-inner-icon="mdi-magnify"
+                  variant="solo-filled"
+                  label="Поиск заданий"
+                  density="compact"
+                  class="ml-2"
+                  flat
+                  hide-details
+                  single-line
+              />
+            </v-sheet>
+
           </div>
+
+          <v-sheet style="min-height: 600px" >
+            <v-table height="660" density="comfortable" fixed-header class="text-caption">
+              <thead v-if="!getFetchingDataStatus">
+              <tr>
+                <th>№</th>
+                <th>Заголовок</th>
+                <th>Договор</th>
+                <th>Заказчик</th>
+                <th>Описание</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody v-if="!getFetchingDataStatus">
+              <tr
+                  v-for="(assignment, i) of assignmentsSLice"
+                  :key="assignment._id"
+                  @click="cardMenuShow(assignment)"
+              >
+                <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
+                <td style="min-width: 280px; width: 280px; max-width: 280px">
+                  <div>{{ assignment.title }}</div>
+                  <div><b>Создан: </b>{{ assignment.createdAt }}</div>
+                </td>
+
+                <td style="min-width: 240px; width: 240px; max-width: 240px">
+                  <div><b>Номер: </b>{{ assignment?.contract?.contractNumber }}</div>
+                  <div><b>Заключен: </b>{{ timestampToDateString(assignment?.contract?.contractDate) }}</div>
+                </td>
+                <td style="min-width: 240px; width: 240px;max-width: 240px">
+                  <div><b></b>{{ assignment?.contract?.customer?.shortName }}</div>
+                  <div><b>email: </b>{{ assignment?.contract?.customer?.email }}</div>
+                </td>
+                <td style="min-width: 600px; width: 600px; max-width: 600px">
+                  {{ slicer(assignment.description, 260) }}
+                </td>
+                <td style="min-width: 65px; width: 65px; max-width: 65px">
+                  <c-remove-btn :prompt="'Удалить'" @click:yes="removeAssignment(assignment._id)"/>
+                </td>
+              </tr>
+              </tbody>
+            </v-table>
+          </v-sheet>
         </v-card-item>
       </v-card>
-
-      <div style="min-height: 700px" class="mt-4">
-        <v-divider/>
-        <v-table height="700" density="default" fixed-header class="text-caption elevation-1">
-          <thead v-if="!getFetchingDataStatus">
-          <tr>
-            <th>№</th>
-            <th>Заголовок</th>
-            <th>Договор</th>
-            <th>Заказчик</th>
-            <th>Описание</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody v-if="!getFetchingDataStatus">
-          <tr
-              v-for="(assignment, i) of assignmentsSLice"
-              :key="assignment._id"
-              @click="cardMenuShow(assignment)"
-          >
-            <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
-            <td style="min-width: 280px; width: 280px; max-width: 280px">
-              <div>{{ assignment.title }}</div>
-              <div><b>Создан: </b>{{ assignment.createdAt }}</div>
-            </td>
-
-            <td style="min-width: 240px; width: 240px; max-width: 240px">
-              <div><b>Номер: </b>{{ assignment.contract.contractNumber }}</div>
-              <div><b>Заключен: </b>{{ timestampToDateString(assignment.contract.contractDate) }}</div>
-            </td>
-            <td style="min-width: 240px; width: 240px;max-width: 240px">
-              <div><b></b>{{ assignment.contract.customer.shortName }}</div>
-              <div><b>email: </b>{{ assignment.contract.customer.email }}</div>
-            </td>
-            <td style="min-width: 600px; width: 600px; max-width: 600px">
-              {{ slicer(assignment.description, 260) }}
-            </td>
-            <td style="min-width: 65px; width: 65px; max-width: 65px">
-              <c-remove-btn :prompt="'Удалить'" @click:yes="removeAssignment(assignment._id)"/>
-            </td>
-          </tr>
-          </tbody>
-        </v-table>
-
-        <v-divider/>
-      </div>
 
       <div class="d-flex align-center mt-4">
         <v-pagination
@@ -101,15 +119,14 @@ export default {
   },
 
   beforeMount() {
-    try {
-      if (sessionStorage?.selectedAssignment) {
-        let assignment = JSON.parse(sessionStorage?.selectedAssignment);
-        console.log('selectedAssignment', assignment);
-        this.$store.commit('assignments/SELECT_ITEM', assignment);
-      }
-    } catch (err) {
-      console.log('Неудалось прочитать выбранный ТЗ из session storage');
-    }
+    // try {
+    //   if (sessionStorage?.selectedAssignment) {
+    //     let assignment = JSON.parse(sessionStorage?.selectedAssignment);
+    //     this.$store.commit('assignments/SELECT_ITEM', assignment);
+    //   }
+    // } catch (err) {
+    //   console.log('Неудалось прочитать выбранный ТЗ из session storage');
+    // }
   },
 
   mounted() {

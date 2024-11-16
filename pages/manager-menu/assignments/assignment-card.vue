@@ -16,7 +16,7 @@
             <div>{{ getSelectedAssignment?.title }}</div>
             <div>
               <v-btn
-                  color="blue-darken-1"
+                  color="blue-darken-3"
                   density="comfortable"
                   icon="mdi-pencil"
                   variant="tonal"
@@ -56,13 +56,35 @@
           </v-sheet>
           <v-divider class="my-1"/>
           <div class="d-flex ga-4 align-center py-1">
-            <my-search-bar
+<!--            <my-search-bar-->
+<!--                v-model="searchText"-->
+<!--                style="min-width: 360px"-->
+<!--                persistent-hint-->
+<!--                label="Поиск"-->
+<!--                :hint="`Найдено: ${blocksSearchCount}`"-->
+<!--                @btn:click="blockMenuAddVisibility = true"-->
+<!--            />-->
+            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+              <v-btn
+                  prepend-icon="mdi-plus-box-multiple-outline"
+                  @click="blockMenuAddVisibility = true"
+              >
+                Добавить
+                <v-tooltip activator="parent">
+                  Добавить новый блок
+                </v-tooltip>
+              </v-btn>
+            </v-btn-group>
+            <v-text-field
                 v-model="searchText"
-                style="min-width: 360px"
-                persistent-hint
-                label="Поиск"
-                :hint="`Найдено: ${blocksSearchCount}`"
-                @btn:click="blockMenuAddVisibility = true"
+                prepend-inner-icon="mdi-magnify"
+                label="Поиск блоков заданий"
+                variant="solo-filled"
+                density="compact"
+                class="ml-2"
+                flat
+                single-line
+                hide-details
             />
           </div>
           <v-sheet>
@@ -76,9 +98,10 @@
               >загрузка...
               </v-progress-circular>
             </div>
-            <v-table v-if="!fetching" height="290" density="default" fixed-header class="text-caption elevation-1">
+            <v-table v-if="!fetching" height="310" density="default" fixed-header class="text-caption">
               <thead>
               <tr>
+                <th>Заголовок</th>
                 <th>Кредитный договор</th>
                 <th>Договор залога</th>
                 <th>Сроки</th>
@@ -92,11 +115,14 @@
                   :key="block._id"
                   @click="selectBlock(block)"
               >
-                <td style="min-width: 260px; max-width: 260px">
+                <td style="min-width: 180px; max-width: 180px">{{block.title}}</td>
+
+
+                <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.loanAgreement }}</div>
                   <div><b>Дата: </b>{{ timestampToDateString(block.loanAgreementDate) }}</div>
                 </td>
-                <td style="min-width: 260px; max-width: 260px">
+                <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
                   <div><b>Дата: </b>{{ timestampToDateString(block.pledgeAgreementDate) }}</div>
                 </td>
@@ -107,7 +133,7 @@
                 <td style="min-width: 120px; max-width: 120px">
                   {{ block.status }}
                 </td>
-                <td style="min-width: 50px; max-width: 50px">
+                <td style="min-width: 35px; max-width: 35px">
                   <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
                 </td>
               </tr>
@@ -135,7 +161,7 @@
 
       <!--    Block Menu Add-->
       <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-        <block-add />
+        <block-add @add:success="assignmentBlocksStoreUpdate" />
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -223,7 +249,7 @@ export default {
           return [
             block.title,
             block.description,
-          ].filter(e => !!e).find(value => (new RegExp(value, 'ig')).test(this.searchText));
+          ].filter(e => !!e).find(value => (new RegExp(this.searchText, 'ig')).test(value));
         });
       }
       return this.blocks;
@@ -269,6 +295,14 @@ export default {
   methods: {
 
     timestampToDateString,
+
+    assignmentBlocksStoreUpdate(){
+      let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
+
+      if (assignmentId) {
+        this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
+      }
+    },
 
     selectBlock(block) {
       sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));

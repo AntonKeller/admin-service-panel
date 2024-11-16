@@ -15,25 +15,22 @@
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
       <v-card-item>
-        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
           <my-text-field
               v-model="block.title"
               :rules="blockTitleRules"
-              prepend-inner-icon="mdi-label-variant-outline"
               label="Заголовок"
           />
           <div class="d-flex ga-2">
             <my-date-picker
                 v-model="block.startDate"
                 :rules="blockStartDateRules"
-                prepend-inner-icon="mdi-calendar-range"
                 label="Дата начала"
                 fieldWidth="100"
             />
             <my-date-picker
                 v-model="block.endDate"
                 :rules="blockEndDateRules"
-                prepend-inner-icon="mdi-calendar-range"
                 label="Дата окончания"
                 fieldWidth="100"
             />
@@ -42,14 +39,12 @@
             <my-text-field
                 v-model="block.loanAgreement"
                 :rules="blockLoanAgreementRules"
-                prepend-inner-icon="mdi-label-variant-outline"
                 label="Номер кредитного договора"
                 fieldWidth="100"
             />
             <my-date-picker
                 v-model="block.loanAgreementDate"
                 :rules="blockLoanAgreementDateRules"
-                prepend-inner-icon="mdi-calendar-range"
                 label="Дата кредитного договора"
                 fieldWidth="100"
             />
@@ -58,14 +53,12 @@
             <my-text-field
                 v-model="block.pledgeAgreement"
                 :rules="blockPlegeAgreementRules"
-                prepend-inner-icon="mdi-label-variant-outline"
                 label="Номер договора залога"
                 fieldWidth="100"
             />
             <my-date-picker
                 v-model="block.pledgeAgreementDate"
                 :rules="blockPlegeAgreementDateRules"
-                prepend-inner-icon="mdi-calendar-range"
                 label="Дата договора залога"
                 fieldWidth="100"
             />
@@ -75,7 +68,6 @@
                 v-model="block.inspector"
                 :items="inspectors"
                 style="width: 100px"
-                prepend-inner-icon="mdi-account-hard-hat-outline"
                 color="blue-grey-darken-3"
                 density="comfortable"
                 variant="outlined"
@@ -107,7 +99,6 @@
             <v-combobox
                 v-model="block.status"
                 :items="assignment_block_statuses"
-                prepend-inner-icon="mdi-label-variant-outline"
                 label="Статус"
                 density="comfortable"
                 style="width: 100px"
@@ -115,6 +106,24 @@
                 rounded="sm"
             />
           </div>
+          <my-text-field
+              v-model="block.pledgeAgreementName"
+              label="ФИО залогодателя"
+          />
+          <div class="d-flex ga-2">
+            <my-text-field
+                v-model="block.pledgeAgreementPosition"
+                label="Должность залогодателя"
+            />
+            <my-text-field
+                v-model="block.pledgeAgreementCompany"
+                label="Компания залогодателя"
+            />
+          </div>
+          <my-text-field
+              v-model="block.address"
+              label="Адрес метонахождения"
+          />
         </v-form>
       </v-card-item>
 
@@ -187,6 +196,12 @@ export default {
         loanAgreement: null,
         loanAgreementDate: null,
         pledgeAgreement: null,
+
+        pledgeAgreementName: null, // new
+        pledgeAgreementPosition: null, // new
+        pledgeAgreementCompany: null, // new
+        address: null, // new
+
         pledgeAgreementDate: null,
         status: 'КП',
         inspector: null,

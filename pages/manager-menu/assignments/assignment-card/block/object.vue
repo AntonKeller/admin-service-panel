@@ -61,13 +61,14 @@
               v-model="angleSelected"
               :items="angles"
               prepend-inner-icon="mdi-radiobox-indeterminate-variant"
+              no-data-text="Ракурсы отсутствуют"
               color="blue-grey-darken-3"
+              label="Список ракурсов"
               density="compact"
               variant="solo"
-              label="Список ракурсов"
               rounded="md"
-              persistent-hint
               single-line
+              persistent-hint
               :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"
           >
             <template v-slot:chip="{ props, item }">
@@ -84,8 +85,8 @@
             <template v-slot:item="{ props, item }">
               <v-list-item
                   v-bind="props"
-                  density="compact"
                   prepend-icon="mdi-radiobox-indeterminate-variant"
+                  density="compact"
                   :title="item.raw?.name"
                   :subtitle="item.raw?.name"
               />
@@ -93,8 +94,14 @@
           </v-autocomplete>
 
           <v-sheet v-if="!angleSelected" class="d-flex flex-column justify-center align-center" height="300">
-            <div><v-label><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-label></div>
-            <div><v-label>Выберите ракурс из выпадающего списка</v-label></div>
+            <div>
+              <v-label>
+                <v-icon>mdi-arrow-up-bold-circle-outline</v-icon>
+              </v-label>
+            </div>
+            <div>
+              <v-label>Выберите ракурс из выпадающего списка</v-label>
+            </div>
           </v-sheet>
 
           <v-sheet v-if="angleSelected" class="d-flex flex-wrap ga-1 mt-1" style="overflow-y: scroll" height="325">
@@ -111,13 +118,13 @@
         </v-card-item>
         <v-card-actions>
           <v-btn
-              icon="mdi-camera-outline"
-              variant="text"
-              color="blue-darken-3"
-              rounded
               text="Добавить фото в ракурс"
-              @click="">
-            <v-icon />
+              icon="mdi-camera-outline"
+              color="blue-darken-3"
+              variant="text"
+              rounded
+          >
+            <v-icon/>
             <v-tooltip activator="parent" location="right">
               Добавить фото в ракурс
             </v-tooltip>
@@ -127,18 +134,24 @@
       </v-card>
 
       <my-overlay v-model="imgFullWindowIsShow">
-        <img
-            style="max-height: 99vh; max-width: 95vw; object-fit: contain"
-            class="rounded-xl d-block"
-            alt="loading..."
-            loading="lazy"
-            :src="selectedImg.src"
-        />
+        <v-sheet class="bg-transparent d-flex flex-column">
+          <img
+              style="max-height: 94vh; max-width: 95vw; object-fit: contain"
+              class="rounded-t-lg d-block"
+              alt="loading..."
+              loading="lazy"
+              :src="selectedImg.src"
+          />
+        </v-sheet>
+        <v-btn class="mt-1" color="red-darken-4" prepend-icon="mdi-close" @click="removeImg(selectedImg._id)">
+          Удалить
+        </v-btn>
       </my-overlay>
 
       <my-overlay v-model="objectMenuChangeVisibility">
-        <object-change></object-change>
+        <object-change @change:success=""></object-change>
       </my-overlay>
+
     </v-sheet>
   </v-overlay>
 </template>
@@ -146,6 +159,7 @@
 <script>
 import {removeImg, sendImg} from "../../../../../utils/api/api_images.js";
 import {fetchAngles} from "../../../../../utils/api/api_angles.js";
+import logotype from "../../../../../components/logotype.vue";
 
 export default {
   name: "object-page",
@@ -175,8 +189,6 @@ export default {
 
     // Загружаем картинки в Store
     this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
-    console.log('object card mounted')
-    console.log('GET_ANGLES:', this.$store.getters['angles/GET_ANGLES']);
   },
 
   unmounted() {
@@ -221,19 +233,21 @@ export default {
     },
 
     removeImg(_photoId) {
+      console.log(this.angleSelected)
       removeImg(_photoId)
           .then(() => {
-            this.fetchImages(this.inspectionObject._id);
+            this.imgFullWindowIsShow = false;
+
+            this.angleSelected.photoList = this.angleSelected.photoList.filter(e => e._id !== _photoId);
+            if (this.angleSelected.photoList.length === 0) {
+              this.angleSelected = null;
+            }
+
+            this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
           })
           .catch(err => {
             console.log('Ошибка', err);
           })
-    },
-
-    fetchAnglesData(_id) {
-      fetchAngles(this.inspectionObject._id).then(response => {
-        this.photos = response.data;
-      })
     },
 
     sendImages() {
