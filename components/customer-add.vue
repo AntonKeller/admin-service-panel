@@ -107,7 +107,11 @@ export default {
     snackBar: {},
     formIsValid: false,
     customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
-    customerInnRules: [v => v.length > 0 || 'ИНН не должен быть пустым']
+    customerInnRules: [
+      v => v.length > 0 || 'ИНН не должен быть пустым',
+      v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
+
+    ]
   }),
 
   methods: {
