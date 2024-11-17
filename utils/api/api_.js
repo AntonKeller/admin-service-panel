@@ -46,7 +46,6 @@ export async function downloadFile(saveAs, url) {
 
         const response = await axios.get(url, {
             responseType: 'blob',
-            timeout: 5000,
             headers: {
                 authorization: localStorage.accessToken ?? '',
             }

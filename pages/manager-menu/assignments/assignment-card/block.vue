@@ -114,6 +114,8 @@
               <v-btn
                   prepend-icon="mdi-file-download-outline"
                   size="small"
+                  :loading="reportDownloading"
+                  :disabled="reportDownloading"
                   @click="downloadReport"
               >
                 Отчет
@@ -217,6 +219,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 20,
       loading: false,
+      reportDownloading: false,
       blockMenuChangeVisibility: false,
       objectMenuAddVisibility: false,
       headers: [
@@ -225,6 +228,12 @@ export default {
         {title: 'Модель', align: 'start', key: 'model', value: 'model'},
         {title: 'Адрес', align: 'start', key: 'address', value: 'address'}
       ],
+      timeDateConfig: {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }
     }
   },
 
@@ -318,13 +327,16 @@ export default {
     },
     dateFromTo() {
       const {startDate, endDate} = this.assignmentBlock;
-      const t1 = !isNaN(parseInt(startDate)) ? timestampToDateString(startDate) : '';
-      const t2 = !isNaN(parseInt(endDate)) ? timestampToDateString(endDate) : '';
+      const t1 = !isNaN(parseInt(startDate)) ? this.stringToDate(startDate) : '';
+      const t2 = !isNaN(parseInt(endDate)) ? this.stringToDate(endDate) : '';
       return `${t1} - ${t2}`;
     },
   },
 
   methods: {
+    stringToDate(timestamp) {
+      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+    },
     removeOneObject(ID) {
       removeObject(ID)
           .then(() => {
@@ -342,8 +354,15 @@ export default {
       downloadFile('objects template.xlsx', serverURL + '/inspection-objects/inspectionObjectTemplates');
     },
     downloadReport() {
+      this.reportDownloading = true;
       const assignmentBlockId = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
-      downloadFile('Отчет.docx', `${serverURL}/report/${assignmentBlockId}/commercial-proposal`);
+      downloadFile('Отчет.docx', `${serverURL}/report/${assignmentBlockId}/commercial-proposal`)
+          .catch(err => {
+            console.log('Ошибка загрузки отчета', err);
+          })
+          .finally(() => {
+            this.reportDownloading = false;
+          })
     },
     onExcelFileInput(event) {
       if (event.target.files && event.target.files.length > 0) {
