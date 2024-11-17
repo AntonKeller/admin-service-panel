@@ -15,116 +15,147 @@
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
       <v-card-item>
-        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
-          <my-text-field
-              v-model="block.title"
-              :rules="blockTitleRules"
-              label="Заголовок"
-          />
-          <div class="d-flex ga-2">
-            <my-date-picker
-                v-model="block.startDate"
-                :rules="blockStartDateRules"
-                label="Дата начала"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.endDate"
-                :rules="blockEndDateRules"
-                label="Дата окончания"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <my-text-field
-                v-model="block.loanAgreement"
-                :rules="blockLoanAgreementRules"
-                label="Номер кредитного договора"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.loanAgreementDate"
-                :rules="blockLoanAgreementDateRules"
-                label="Дата кредитного договора"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <my-text-field
-                v-model="block.pledgeAgreement"
-                :rules="blockPlegeAgreementRules"
-                label="Номер договора залога"
-                fieldWidth="100"
-            />
-            <my-date-picker
-                v-model="block.pledgeAgreementDate"
-                :rules="blockPlegeAgreementDateRules"
-                label="Дата договора залога"
-                fieldWidth="100"
-            />
-          </div>
-          <div class="d-flex ga-2">
-            <v-autocomplete
-                v-model="block.inspector"
-                :items="inspectors"
-                style="width: 100px"
-                color="blue-grey-darken-3"
-                density="comfortable"
-                variant="outlined"
-                label="Инспектор"
-                rounded="sm"
-                closable-chips
-                chips
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    v-bind="props"
-                    :text="`${item.raw?.lastName} ${item.raw?.firstName}`"
-                    prepend-icon="mdi-file-document-edit"
-                    color="blue-grey-darken-3"
-                    density="comfortable"
-                />
-              </template>
+        <v-sheet height="550" class="pr-2" style="overflow-y: scroll">
+          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
 
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    :title="`${item.raw?.lastName} ${item.raw?.firstName}`"
-                    :subtitle="`${item.raw?.email} / ${item.raw?.phoneNumber}`"
-                    prepend-icon="mdi-file-document-edit"
-                />
-              </template>
-            </v-autocomplete>
+            <my-text-field
+                v-model="block.title"
+                :rules="blockTitleRules"
+                label="Заголовок"
+            />
 
-            <v-combobox
-                v-model="block.status"
-                :items="assignment_block_statuses"
-                label="Статус"
-                density="comfortable"
-                style="width: 100px"
-                variant="outlined"
-                rounded="sm"
-            />
-          </div>
-          <my-text-field
-              v-model="block.pledgeAgreementName"
-              label="ФИО залогодателя"
-          />
-          <div class="d-flex ga-2">
+            <div class="d-flex ga-2">
+              <my-date-picker
+                  v-model="block.startDate"
+                  :rules="blockStartDateRules"
+                  label="Дата начала"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.endDate"
+                  :rules="blockEndDateRules"
+                  label="Дата окончания"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.loanAgreement"
+                  :rules="blockLoanAgreementRules"
+                  label="Номер кредитного договора"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.loanAgreementDate"
+                  :rules="blockLoanAgreementDateRules"
+                  label="Дата кредитного договора"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.pledgeAgreement"
+                  :rules="blockPlegeAgreementRules"
+                  label="Номер договора залога"
+                  fieldWidth="100"
+              />
+              <my-date-picker
+                  v-model="block.pledgeAgreementDate"
+                  :rules="blockPlegeAgreementDateRules"
+                  label="Дата договора залога"
+                  fieldWidth="100"
+              />
+            </div>
+
+            <div class="d-flex ga-2">
+              <v-autocomplete
+                  v-model="block.inspector"
+                  :items="inspectors"
+                  style="width: 100px"
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  variant="outlined"
+                  label="Инспектор"
+                  rounded="sm"
+                  closable-chips
+                  chips
+              >
+                <template v-slot:chip="{ props, item }">
+                  <v-chip
+                      v-bind="props"
+                      :text="`${item.raw?.lastName} ${item.raw?.firstName}`"
+                      prepend-icon="mdi-file-document-edit"
+                      color="blue-grey-darken-3"
+                      density="comfortable"
+                  />
+                </template>
+
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                      v-bind="props"
+                      :title="`${item.raw?.lastName} ${item.raw?.firstName}`"
+                      :subtitle="`${item.raw?.email} / ${item.raw?.phoneNumber}`"
+                      prepend-icon="mdi-file-document-edit"
+                  />
+                </template>
+              </v-autocomplete>
+              <v-btn
+                  variant="tonal"
+                  icon="mdi-plus"
+                  rounded="sm"
+                  @click="inspectorMenuAdd = true"
+              />
+              <v-combobox
+                  v-model="block.status"
+                  :items="assignment_block_statuses"
+                  label="Статус"
+                  density="comfortable"
+                  style="width: 100px"
+                  variant="outlined"
+                  rounded="sm"
+              />
+            </div>
+
             <my-text-field
-                v-model="block.pledgeAgreementPosition"
-                label="Должность залогодателя"
+                v-model="block.pledgeAgreementName"
+                label="ФИО залогодателя"
             />
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.pledgeAgreementPosition"
+                  label="Должность залогодателя"
+              />
+              <my-text-field
+                  v-model="block.pledgeAgreementCompany"
+                  label="Компания залогодателя"
+              />
+            </div>
+
             <my-text-field
-                v-model="block.pledgeAgreementCompany"
-                label="Компания залогодателя"
+                v-model="block.address"
+                label="Адрес метонахождения"
             />
-          </div>
-          <my-text-field
-              v-model="block.address"
-              label="Адрес метонахождения"
-          />
-        </v-form>
+
+            <div class="d-flex ga-2">
+              <my-text-field
+                  v-model="block.contactFullName"
+                  label="ФИО Контактного лица"
+              />
+              <my-text-field
+                  v-model="block.contactPhoneNumber"
+                  label="Телефон контактного лица"
+              />
+            </div>
+
+            <my-text-field
+                v-model="block.description"
+                label="Комментарий"
+            />
+          </v-form>
+        </v-sheet>
       </v-card-item>
 
       <v-card-actions>
@@ -145,6 +176,10 @@
       <v-icon>mdi-alert-circle-outline</v-icon>
       {{ snackBar.msg }}
     </v-snackbar>
+
+    <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
+      <inspector-add @add:success="fetchInspectors"></inspector-add>
+    </v-overlay>
 
   </v-sheet>
 </template>
@@ -167,6 +202,7 @@ export default {
     snackBar: {},
     formIsValid: null,
     sendingData: false,
+    inspectorMenuAdd: false,
     assignment_block_statuses,
     blockTitleRules: [isEmpty],
     blockStartDateRules: [isDate],
@@ -190,21 +226,23 @@ export default {
 
     clear() {
       this.block = {
+        _id: null,
         title: null,
         startDate: null,
         endDate: null,
         loanAgreement: null,
         loanAgreementDate: null,
         pledgeAgreement: null,
-
-        pledgeAgreementName: null, // new
-        pledgeAgreementPosition: null, // new
-        pledgeAgreementCompany: null, // new
-        address: null, // new
-
         pledgeAgreementDate: null,
-        status: 'КП',
         inspector: null,
+        status: null,
+        pledgeAgreementName: null,
+        pledgeAgreementPosition: null,
+        pledgeAgreementCompany: null,
+        address: null,
+        contactFullName: null,
+        contactPhoneNumber: null,
+        description: null,
       }
     },
 

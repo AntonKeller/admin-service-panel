@@ -28,10 +28,6 @@ const inspectionObjects = {
         },
         SELECT(state, inspectionObject) {
             state.selectedObject = inspectionObject;
-            console.log('[STORE/inspectionObjects] [SELECT] selectedObject = ', state.selectedObject);
-        },
-        REMOVE_OBJECT(state) {
-
         },
         ALERT_SUCCESS(state, payload) {
             state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}

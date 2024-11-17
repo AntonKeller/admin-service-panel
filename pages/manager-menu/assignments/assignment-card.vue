@@ -56,14 +56,14 @@
           </v-sheet>
           <v-divider class="my-1"/>
           <div class="d-flex ga-4 align-center py-1">
-<!--            <my-search-bar-->
-<!--                v-model="searchText"-->
-<!--                style="min-width: 360px"-->
-<!--                persistent-hint-->
-<!--                label="Поиск"-->
-<!--                :hint="`Найдено: ${blocksSearchCount}`"-->
-<!--                @btn:click="blockMenuAddVisibility = true"-->
-<!--            />-->
+            <!--            <my-search-bar-->
+            <!--                v-model="searchText"-->
+            <!--                style="min-width: 360px"-->
+            <!--                persistent-hint-->
+            <!--                label="Поиск"-->
+            <!--                :hint="`Найдено: ${blocksSearchCount}`"-->
+            <!--                @btn:click="blockMenuAddVisibility = true"-->
+            <!--            />-->
             <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-plus-box-multiple-outline"
@@ -115,20 +115,20 @@
                   :key="block._id"
                   @click="selectBlock(block)"
               >
-                <td style="min-width: 180px; max-width: 180px">{{block.title}}</td>
+                <td style="min-width: 180px; max-width: 180px">{{ block.title }}</td>
 
 
                 <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.loanAgreement }}</div>
-                  <div><b>Дата: </b>{{ timestampToDateString(block.loanAgreementDate) }}</div>
+                  <div><b>Дата: </b>{{ stringToDate(block.loanAgreementDate) }}</div>
                 </td>
                 <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
-                  <div><b>Дата: </b>{{ timestampToDateString(block.pledgeAgreementDate) }}</div>
+                  <div><b>Дата: </b>{{ stringToDate(block.pledgeAgreementDate) }}</div>
                 </td>
-                <td style="min-width: 180px; max-width: 180px">
-                  <div><b>Начало:</b> {{ timestampToDateString(block.startDate) }}</div>
-                  <div><b>Окончание:</b> {{ timestampToDateString(block.endDate) }}</div>
+                <td style="min-width: 190px; max-width: 190px">
+                  <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
+                  <div><b>По:</b> {{ stringToDate(block.endDate) }}</div>
                 </td>
                 <td style="min-width: 120px; max-width: 120px">
                   {{ block.status }}
@@ -156,12 +156,12 @@
 
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change />
+        <assignment-change/>
       </v-overlay>
 
       <!--    Block Menu Add-->
       <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-        <block-add @add:success="assignmentBlocksStoreUpdate" />
+        <block-add @add:success="assignmentBlocksStoreUpdate"/>
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -191,6 +191,12 @@ export default {
       snackBar: {},
       assignmentMenuChangeVisibility: false,
       blockMenuAddVisibility: false,
+      timeDateConfig: {
+        weekday: 'short', // weekday: 'short',
+        year: 'numeric',
+        month: 'short', // month: 'short',
+        day: 'numeric',
+      }
     }
   },
 
@@ -204,14 +210,14 @@ export default {
   },
 
   beforeMount() {
+    // Считываем Блок из session storage -> vuex store
     try {
-      // Считываем выбранный Блок ТЗ из session storage
       if (sessionStorage?.selectedAssignmentBlock) {
-        let assignmentBlock = JSON.parse(sessionStorage?.selectedAssignmentBlock);
-        this.$store.commit('assignmentBlocks/SELECT_ITEM', assignmentBlock);
+        this.$store.commit('assignmentBlocks/SELECT_ITEM', JSON.parse(sessionStorage?.selectedAssignmentBlock));
       }
     } catch (err) {
-      console.log('Неудалось прочитать выбранный Блок ТЗ из session storage');
+      sessionStorage.removeItem('selectedAssignmentBlock');
+      console.log('[sessionStorage] Ошибка чтения selectedAssignmentBlock');
     }
   },
 
@@ -279,7 +285,7 @@ export default {
         const {contractNumber, contractDate} = this.getSelectedAssignment?.contract;
 
         if (contractNumber && contractDate) {
-          return `Договор: ${contractNumber} / ${contractDate}`
+          return `Договор: ${contractNumber} / ${this.stringToDate(contractDate)}`
         }
       }
       return 'Отсутствует договор';
@@ -294,9 +300,11 @@ export default {
 
   methods: {
 
-    timestampToDateString,
+    stringToDate(timestamp) {
+      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+    },
 
-    assignmentBlocksStoreUpdate(){
+    assignmentBlocksStoreUpdate() {
       let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
 
       if (assignmentId) {
@@ -305,8 +313,11 @@ export default {
     },
 
     selectBlock(block) {
+      // Записываем в session storage
       sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));
+      // Записываем в vuex store
       this.$store.commit('assignmentBlocks/SELECT_ITEM', block);
+      // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card/block');
     },
 

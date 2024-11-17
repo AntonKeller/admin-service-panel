@@ -24,3 +24,13 @@ export async function removeImg(photoId, query) {
 export async function fetchImages(objectId, query) {
     return axios.get(serverURL + '/photos/all/' + objectId + (query ?? ''), createConfig());
 }
+
+export async function downloadImage(url, query) {
+    return axios.get(url + (query ?? ''), {
+        timeout: 1500,
+        responseType: "blob",
+        headers: {
+            authorization: localStorage.accessToken ?? '',
+        }
+    });
+}

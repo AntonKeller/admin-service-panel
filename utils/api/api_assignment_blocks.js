@@ -33,8 +33,3 @@ export function changeAssignmentBlock(assignmentId, block, query) {
 export function uploadObjects(blockID, objectsExcelBlob, query) {
     return axios.post(serverURL + '/inspection-objects/uploadObjects/' + (blockID ?? '') + (query ?? ''), objectsExcelBlob, createConfig());
 }
-
-// Качает шаблон списка объектов для заполнения
-export function downloadObjectsTemplate(query) {
-    return axios.get(serverURL + '/inspection-objects/inspectionObjectTemplates' + (query ?? ''), createConfig());
-}

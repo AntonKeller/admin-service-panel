@@ -60,6 +60,7 @@
           <v-autocomplete
               v-model="angleSelected"
               :items="angles"
+              @update:modelValue="onSelectAngle"
               prepend-inner-icon="mdi-radiobox-indeterminate-variant"
               no-data-text="Ракурсы отсутствуют"
               color="blue-grey-darken-3"
@@ -158,8 +159,6 @@
 
 <script>
 import {removeImg, sendImg} from "../../../../../utils/api/api_images.js";
-import {fetchAngles} from "../../../../../utils/api/api_angles.js";
-import logotype from "../../../../../components/logotype.vue";
 
 export default {
   name: "object-page",
@@ -179,16 +178,16 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
 
     const timeoutID = setTimeout(() => {
       this.visibility = true;
       clearTimeout(timeoutID);
     }, 1);
 
-
     // Загружаем картинки в Store
-    this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+    await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+    this.readSessionStorage();
   },
 
   unmounted() {
@@ -226,10 +225,26 @@ export default {
 
   methods: {
 
+    readSessionStorage() {
+      // Считываем Просматриваемый ракурс из session storage -> vuex store
+      if (!sessionStorage.selectedAngleId) return;
+
+      // Проверяем наличие такого в store
+      const has = this.$store.getters['angles/HAS_ANGLE'](sessionStorage.selectedAngleId);
+      if (!has) return;
+
+      this.angleSelected = this.$store.getters['angles/GET_ANGLE_BY_ID'](sessionStorage.selectedAngleId);
+    },
+
+    onSelectAngle(angle) {
+      if (angle) {
+        sessionStorage.setItem('selectedAngleId', angle._id);
+      }
+    },
+
     selectImage(img) {
       this.selectedImg = img;
       this.imgFullWindowIsShow = true;
-
     },
 
     removeImg(_photoId) {

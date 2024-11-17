@@ -35,7 +35,7 @@
                   prepend-icon="mdi-file-document-edit"
                   color="blue-grey-darken-3"
                   density="comfortable"
-                  :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate} / ${item.raw?.customer?.shortName}`"
+                  :text="`${item.raw?.contractNumber} / ${item.raw?.customer?.shortName}`"
               />
             </template>
 

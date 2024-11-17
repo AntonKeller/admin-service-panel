@@ -173,8 +173,8 @@ export default {
         v => v?.length > 0 || 'Договора должна быть больше 0',
         v => v?.length <= 18 || 'Договора должна быть меньше 18',
       ],
-      contractDateRules: [v => /^\d{2}\.\d{2}\.\d{4}$/i.test(value) ? true : 'Неподходящий формат даты'],
-      customersRules: [v => v?.length > 0 || 'Не выбран заказчик'],
+      contractDateRules: [v => /^\d{2}\.\d{2}\.\d{4}$/i.test(v) ? true : 'Неподходящий формат даты'],
+      customersRules: [v => v || 'Не выбран заказчик'],
     }
   },
   mounted() {

@@ -26,5 +26,9 @@ export async function changeInspectionObject(inspectionObject, query) {
 }
 
 export async function uploadObjects(blockID, file, query) {
-    return axios.post(serverURL + '/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, createConfig())
+    return axios.post(serverURL + '/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, createConfig());
+}
+
+export async function removeObject(objectID, query) {
+    return axios.delete(serverURL + '/inspection-objects/removeObject/' + (objectID ?? '') + (query ?? ''), createConfig());
 }

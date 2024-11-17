@@ -15,11 +15,11 @@
               >
                 Добавить
                 <v-tooltip activator="parent">
-                  Добавить новыое задание
+                  Добавить новое задание
                 </v-tooltip>
               </v-btn>
             </v-btn-group>
-<!--            <v-spacer />-->
+            <!--            <v-spacer />-->
             <v-sheet width="550">
               <v-text-field
                   v-model="searchText"
@@ -33,11 +33,10 @@
                   single-line
               />
             </v-sheet>
-
           </div>
 
-          <v-sheet style="min-height: 600px" >
-            <v-table height="660" density="comfortable" fixed-header class="text-caption">
+          <v-sheet style="min-height: 600px" class="mt-2">
+            <v-table height="700" density="comfortable" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
                 <th>№</th>
@@ -52,17 +51,17 @@
               <tr
                   v-for="(assignment, i) of assignmentsSLice"
                   :key="assignment._id"
-                  @click="cardMenuShow(assignment)"
+                  @click="selectAssignment(assignment)"
               >
                 <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
                 <td style="min-width: 280px; width: 280px; max-width: 280px">
                   <div>{{ assignment.title }}</div>
-                  <div><b>Создан: </b>{{ assignment.createdAt }}</div>
+                  <div><b>Создан: </b>{{ stringToDate(assignment.createdAt) }}</div>
                 </td>
 
                 <td style="min-width: 240px; width: 240px; max-width: 240px">
                   <div><b>Номер: </b>{{ assignment?.contract?.contractNumber }}</div>
-                  <div><b>Заключен: </b>{{ timestampToDateString(assignment?.contract?.contractDate) }}</div>
+                  <div><b>Заключен: </b>{{ stringToDate(assignment?.contract?.contractDate) }}</div>
                 </td>
                 <td style="min-width: 240px; width: 240px;max-width: 240px">
                   <div><b></b>{{ assignment?.contract?.customer?.shortName }}</div>
@@ -103,7 +102,7 @@
 </template>
 
 <script>
-import {slicer, timestampToDateString} from "../../utils/functions.js";
+import {slicer, timestampToDateString} from "../../utils/functions";
 import _ from "lodash";
 
 export default {
@@ -115,18 +114,25 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       assignmentAddVisibility: false,
+      timeDateConfig: {
+        weekday: 'short', // weekday: 'short',
+        year: 'numeric',
+        month: 'short', // month: 'short',
+        day: 'numeric',
+      }
     }
   },
 
   beforeMount() {
-    // try {
-    //   if (sessionStorage?.selectedAssignment) {
-    //     let assignment = JSON.parse(sessionStorage?.selectedAssignment);
-    //     this.$store.commit('assignments/SELECT_ITEM', assignment);
-    //   }
-    // } catch (err) {
-    //   console.log('Неудалось прочитать выбранный ТЗ из session storage');
-    // }
+    // Считываем ТЗ из session storage -> vuex store
+    try {
+      if (sessionStorage?.selectedAssignment) {
+        this.$store.commit('assignments/SELECT', JSON.parse(sessionStorage?.selectedAssignment));
+      }
+    } catch (err) {
+      sessionStorage.removeItem('selectedAssignment');
+      console.log('[sessionStorage] Ошибка чтения selectedAssignment');
+    }
   },
 
   mounted() {
@@ -181,10 +187,17 @@ export default {
 
     slicer,
     timestampToDateString,
-    
-    cardMenuShow(assignment) {
-      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
+
+    stringToDate(timestamp) {
+      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+    },
+
+    selectAssignment(assignment) {
+      // Записываем в session storage
       sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
+      // Записываем в vuex store
+      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
+      // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card');
     },
 

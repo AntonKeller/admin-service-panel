@@ -1,51 +1,71 @@
 <template>
   <v-container fluid>
     <v-card variant="text">
-      <v-card-title>inspectors</v-card-title>
+      <v-card-title>Осмотрщики</v-card-title>
       <v-card-item>
-        <my-search-bar
-            v-model="searchText"
-            color="blue-darken-2"
-            :hint="`Найдено: ${inspectorsFoundCount}`"
-            @btn:click="inspectorMenuAddVisibility = true"
-        />
+
+        <div class="d-flex align-center">
+          <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+            <v-btn
+                prepend-icon="mdi-plus-box-multiple-outline"
+                @click="inspectorMenuAddVisibility = true"
+            >
+              Добавить
+              <v-tooltip activator="parent">
+                Добавить нового осмотрщика
+              </v-tooltip>
+            </v-btn>
+          </v-btn-group>
+          <v-sheet width="550">
+            <v-text-field
+                v-model="searchText"
+                prepend-inner-icon="mdi-magnify"
+                variant="solo-filled"
+                label="Поиск осмотрщика"
+                density="compact"
+                class="ml-2"
+                flat
+                hide-details
+                single-line
+            />
+          </v-sheet>
+        </div>
+
+        <v-sheet style="min-height: 600px" class="mt-2">
+          <v-table height="700" density="comfortable" fixed-header>
+            <thead v-if="!fetching">
+            <tr>
+              <th>№</th>
+              <th>Имя</th>
+              <th>Фамилия</th>
+              <th>Отчество</th>
+              <th>Номер телефона</th>
+              <th>Email</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody v-if="!fetching">
+            <tr
+                v-for="(inspector, i) of inspectorsSlice"
+                :key="inspector._id"
+                @click="changeInspector(inspector)"
+            >
+              <td>{{ i + 1 }}</td>
+              <td>{{ inspector?.firstName || '' }}</td>
+              <td>{{ inspector?.surName || '' }}</td>
+              <td>{{ inspector?.lastName || '' }}</td>
+              <td>{{ inspector?.phoneNumber || '' }}</td>
+              <td>{{ inspector?.email || '' }}</td>
+              <td style="min-width: 65px; width: 65px; max-width: 65px">
+                <c-remove-btn :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-sheet>
+
       </v-card-item>
     </v-card>
-
-    <div style="min-height: 700px" class="mt-4">
-      <v-divider/>
-      <v-table height="700" density="default" fixed-header class="text-caption elevation-1">
-        <thead v-if="!fetching">
-        <tr>
-          <th>№</th>
-          <th>Имя</th>
-          <th>Фамилия</th>
-          <th>Отчество</th>
-          <th>Номер телефона</th>
-          <th>Email</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody v-if="!fetching">
-        <tr
-            v-for="(inspector, i) of inspectorsSlice"
-            :key="inspector._id"
-            @click="changeInspector(inspector)"
-        >
-          <td>{{ i + 1 }}</td>
-          <td>{{ inspector?.firstName || '' }}</td>
-          <td>{{ inspector?.surName || '' }}</td>
-          <td>{{ inspector?.lastName || '' }}</td>
-          <td>{{ inspector?.phoneNumber || '' }}</td>
-          <td>{{ inspector?.email || '' }}</td>
-          <td style="min-width: 65px; width: 65px; max-width: 65px">
-            <c-remove-btn :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
-          </td>
-        </tr>
-        </tbody>
-      </v-table>
-      <v-divider/>
-    </div>
 
     <div class="d-flex align-center mt-4">
       <v-pagination

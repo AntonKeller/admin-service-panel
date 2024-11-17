@@ -14,8 +14,11 @@
 
           <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
-              subtitle="ivan_ivanov@gmail.com"
-              title="Project Manager"
+              :title="profile.fullName"
+              :subtitle="profile.email"
+              to="/manager-menu/profile"
+              @click="activeItem = 'profile'"
+              :active="activeItem === 'profile'"
           />
 
           <v-divider/>
@@ -40,7 +43,6 @@
               />
             </template>
           </v-list-item>
-
         </v-list>
       </v-navigation-drawer>
 
@@ -54,6 +56,7 @@
 
 <script>
 import {navItems} from '../configs/./navigate-items';
+import {getProfile} from "../utils/api/api_profile";
 
 export default {
 
@@ -61,8 +64,13 @@ export default {
 
   data: () => ({
     activeItem: null,
+    profile: {},
     navItems,
   }),
+
+  beforeMount() {
+    this.getProfile();
+  },
 
   mounted() {
     this.activeItem = this.whichRouteIsActive() || null;
@@ -71,6 +79,10 @@ export default {
   methods: {
     whichRouteIsActive() {
       return this.navItems?.find(item => this.$route.fullPath.indexOf(item.route) !== -1)?._id;
+    },
+    async getProfile() {
+      const response = await getProfile();
+      this.profile = response.data;
     }
   }
 

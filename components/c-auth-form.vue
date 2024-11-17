@@ -1,12 +1,12 @@
 <template>
   <div class="d-flex flex-column justify-center align-center h-100">
 
-    <div class="d-flex flex-column justify-start">
-      <p class="text-h4 font-weight-bold">
-        Добро пожаловать в
-        <span class="text-blue-darken-4">Панель управления</span>
-      </p>
-      <v-form @submit.prevent class="d-flex flex-column ga-1 mt-8" style="width: 340px">
+    <div class="d-flex flex-column ">
+
+      <div class="text-h5 text-blue-darken-4 font-weight-bold align-start">Авторизация в системе</div>
+      <div class="text-h7 font-weight-bold text-left mt-1">Введите ваши данные</div>
+
+      <v-form @submit.prevent class="d-flex flex-column ga-2 mt-8" style="width: 380px">
         <v-text-field
             :disabled="isLoading"
             label="Логин"
@@ -59,6 +59,7 @@
 import axios from "axios";
 import {serverURL} from "../constants/constants";
 import {reloadNuxtApp} from "nuxt/app";
+import {showAlert} from "../utils/functions.js";
 
 export default {
   name: "c-auth-form",
@@ -95,16 +96,18 @@ export default {
         login: this.login.value,
         password: this.password.value,
       }).then(async (response) => {
-
-        localStorage.setItem("accessToken", JSON.stringify({
-          accessToken: response.data.accessToken
-        }));
-
-        reloadNuxtApp();
-
+        if (response.data?.accessToken) {
+          localStorage.setItem('accessToken', response.data.accessToken);
+          reloadNuxtApp();
+        } else {
+          this.snackBar = showAlert('Ошибка авторизации').error();
+        }
       }).catch((err) => {
+
         console.log('Ошибка авторизации', err);
+        this.snackBar = showAlert('Ошибка авторизации').error();
         this.loginErrMsg = 'Ошибка авторизации';
+
       }).finally(() => {
         this.isLoading = false;
       });

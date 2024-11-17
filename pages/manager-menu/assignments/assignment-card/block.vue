@@ -91,16 +91,36 @@
             <v-btn-group variant="text" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-plus-box-multiple-outline"
-                  text="Добавить"
                   size="small"
                   @click="objectMenuAddVisibility = true"
-              />
+              >
+                Добавить
+                <v-tooltip activator="parent" location="top">
+                  Добавить новый объект
+                </v-tooltip>
+              </v-btn>
               <v-divider vertical/>
               <v-btn
                   prepend-icon="mdi-tray-arrow-up"
-                  text="Загрузить xlsx"
                   size="small"
-              />
+                  @click="clickExcelInputFile"
+              >
+                Загрузить
+                <v-tooltip activator="parent" location="top">
+                  Загрузить список объектов в формате xlsx
+                </v-tooltip>
+              </v-btn>
+              <v-divider vertical/>
+              <v-btn
+                  prepend-icon="mdi-file-download-outline"
+                  size="small"
+                  @click="downloadReport"
+              >
+                Отчет
+                <v-tooltip activator="parent" location="top">
+                  Скачать отчет
+                </v-tooltip>
+              </v-btn>
             </v-btn-group>
 
             <v-text-field
@@ -139,7 +159,7 @@
                 <td style="min-width: 250px; max-width: 250px">{{ textSlicer(inspectionObject.address, 50) }}</td>
                 <td style="min-width: 400px; max-width: 400px">{{ textSlicer(inspectionObject.description, 80) }}</td>
                 <td style="min-width: 30px; max-width: 30px">
-                  <c-remove-btn :prompt="'Удалить'" @click.stop=""/>
+                  <c-remove-btn :prompt="'Удалить'" @click.stop="removeOneObject(inspectionObject._id)"/>
                 </td>
               </tr>
               </tbody>
@@ -185,6 +205,7 @@ import {showAlert, timestampToDateString} from "../../../../utils/functions";
 import {uploadObjects} from "../../../../utils/api/api_assignment_blocks";
 import {serverURL} from "../../../../constants/constants";
 import {downloadFile} from "../../../../utils/api/api_";
+import {removeObject} from "../../../../utils/api/api_inspection_objects.js";
 
 export default {
   name: "block-page",
@@ -204,6 +225,18 @@ export default {
         {title: 'Модель', align: 'start', key: 'model', value: 'model'},
         {title: 'Адрес', align: 'start', key: 'address', value: 'address'}
       ],
+    }
+  },
+
+  beforeMount() {
+    // Считываем Объект из session storage -> vuex store
+    try {
+      if (sessionStorage?.selectedInspectionObject) {
+        this.$store.commit('inspectionObjects/SELECT', JSON.parse(sessionStorage?.selectedInspectionObject));
+      }
+    } catch (err) {
+      sessionStorage.removeItem('selectedInspectionObject');
+      console.log('[sessionStorage] Ошибка чтения selectedInspectionObject');
     }
   },
 
@@ -292,11 +325,25 @@ export default {
   },
 
   methods: {
+    removeOneObject(ID) {
+      removeObject(ID)
+          .then(() => {
+            this.fetchObjects();
+            this.snackBar = showAlert('Успешно удален').success();
+          })
+          .catch(() => {
+            this.snackBar = showAlert('Ошибка удаления').error();
+          })
+    },
     clickExcelInputFile() {
       this.$refs.excelFileInput.click();
     },
     downloadObjectsTemplate() {
-      downloadFile('angles template.xlsx', serverURL + '/inspection-objects/inspectionObjectTemplates');
+      downloadFile('objects template.xlsx', serverURL + '/inspection-objects/inspectionObjectTemplates');
+    },
+    downloadReport() {
+      const assignmentBlockId = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
+      downloadFile('Отчет.docx', `${serverURL}/report/${assignmentBlockId}/commercial-proposal`);
     },
     onExcelFileInput(event) {
       if (event.target.files && event.target.files.length > 0) {
@@ -305,9 +352,10 @@ export default {
         uploadObjects(this.assignmentBlock._id, formData)
             .then(() => {
               this.$refs.excelFileInput.value = '';
+              this.fetchObjects();
             })
             .catch(err => {
-              this.snackBar = showAlert('Не удалось загрузить файл').success();
+              this.snackBar = showAlert('Не удалось загрузить файл').error();
               console.log('Не удалось загрузить файл', err);
             })
       }
@@ -325,7 +373,11 @@ export default {
       }
     },
     selectObject(inspectionObject) {
+      // Записываем в session storage
+      sessionStorage.setItem('selectedInspectionObject', JSON.stringify(inspectionObject));
+      // Записываем в vuex store
       this.$store.commit('inspectionObjects/SELECT', inspectionObject);
+      // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card/block/object');
     },
     textSlicer(txt, size) {

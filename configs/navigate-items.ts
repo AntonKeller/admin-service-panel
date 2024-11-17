@@ -17,20 +17,6 @@ export const navItems: Array<TNavItem> = [
     },
     {
         _id: 2,
-        title: 'Отчеты',
-        route: '/manager-menu/reports',
-        prependIcon: 'mdi-file-document-arrow-right-outline',
-        color: 'blue-darken-3',
-        value: 'reports',
-        active: false,
-        badge: {
-            show: false,
-            color: "info",
-            content: "12"
-        },
-    },
-    {
-        _id: 3,
         title: 'Осмотрщики',
         route: '/manager-menu/inspectors',
         prependIcon: 'mdi-account-settings-outline',
@@ -44,7 +30,7 @@ export const navItems: Array<TNavItem> = [
         },
     },
     {
-        _id: 4,
+        _id: 3,
         title: 'Заказчики',
         route: '/manager-menu/customers',
         prependIcon: 'mdi-cards-variant',
@@ -57,4 +43,5 @@ export const navItems: Array<TNavItem> = [
             content: "12"
         },
     },
+
 ];

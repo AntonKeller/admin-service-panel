@@ -1,10 +1,6 @@
 <template>
-  <div class="d-flex h-100">
-    <div class="w-50">
-      <c-auth-form/>
-    </div>
-    <v-sheet elevation="24" class="w-50 bg-blue-darken-4">
-    </v-sheet>
+  <div class="d-flex align-center justify-center h-100">
+    <c-auth-form/>
   </div>
 </template>
 
