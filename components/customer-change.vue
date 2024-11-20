@@ -4,8 +4,12 @@
       :loading="loading"
       :disabled="loading"
   >
-
-    <v-card-title>Редактор заказчика</v-card-title>
+    <v-card-title>
+      <div class="d-flex justify-space-between align-center">
+        <div>Редактор заказчика</div>
+        <my-button-close-card @click="$emit('click:close')"/>
+      </div>
+    </v-card-title>
 
     <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 

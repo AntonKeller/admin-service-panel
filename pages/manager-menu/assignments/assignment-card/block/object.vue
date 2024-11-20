@@ -15,24 +15,26 @@
       <v-card rounded="sm" variant="text">
 
         <v-card-title>
-          <div class="d-flex justify-space-between">
-            <div class="text-wrap">
+          <div class="d-flex align-center justify-space-between">
+            <div class="d-flex ga-1 align-center text-wrap">
               {{ objectNameTitle }}
+              <v-btn
+                  class="align-self-start"
+                  density="comfortable"
+                  color="blue-darken-3"
+                  icon="mdi-pencil"
+                  variant="text"
+                  rounded="lg"
+                  size="small"
+                  @click="objectMenuChangeVisibility = true"
+              >
+                <v-icon/>
+                <v-tooltip activator="parent" location="left">
+                  Редактировать Объект
+                </v-tooltip>
+              </v-btn>
             </div>
-            <v-btn
-                class="ml-4"
-                color="blue-darken-2"
-                density="comfortable"
-                icon="mdi-pencil"
-                variant="tonal"
-                rounded
-                @click="objectMenuChangeVisibility = true"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Редактировать Объект
-              </v-tooltip>
-            </v-btn>
+            <my-button-close-card @click="goBack"/>
           </div>
 
         </v-card-title>
@@ -150,7 +152,10 @@
       </my-overlay>
 
       <my-overlay v-model="objectMenuChangeVisibility">
-        <object-change @change:success=""></object-change>
+        <object-change
+            @change:success="updateObjectsStore"
+            @click:close="objectMenuChangeVisibility=false"
+        ></object-change>
       </my-overlay>
 
     </v-sheet>
@@ -159,6 +164,7 @@
 
 <script>
 import {removeImg, sendImg} from "../../../../../utils/api/api_images.js";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "object-page",
@@ -224,6 +230,23 @@ export default {
   },
 
   methods: {
+
+    goBack(){
+      navigateTo('/manager-menu/assignments/assignment-card/block');
+    },
+
+    updateObjectsStore() {
+      // Получаем ID Блока
+      const currentObject = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM'];
+
+      if (currentObject?._id) {
+        // Обращаемся к состоянию <inspection Objects> и Загружаем его список
+        this.$store.dispatch('inspectionObjects/FETCH', currentObject?._id);
+      } else {
+        // Отсутствует ID Блока по которому должны получить список объектов
+        this.$store.commit('inspectionObjects/ALERT_ERROR', 'Отсутствует ID Блока в Store');
+      }
+    },
 
     readSessionStorage() {
       // Считываем Просматриваемый ракурс из session storage -> vuex store

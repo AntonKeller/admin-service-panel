@@ -2,15 +2,18 @@
   <v-sheet rounded="sm" width="700px">
     <v-card rounded>
       <v-card-title>
-        Редактирование
+        <div class="d-flex justify-space-between align-center">
+          <div>Редактор задания</div>
+          <my-button-close-card @click="$emit('click:close')"/>
+        </div>
       </v-card-title>
+      <v-card-subtitle />
       <v-card-text>
         <v-form v-model="formIsValid" ref="form">
           <my-text-field
               v-model="assignment.title"
               prepend-inner-icon="mdi-label-variant-outline"
               label="Заголовок тех. задания"
-
           />
           <v-autocomplete
               v-model="assignment.contract"
@@ -48,7 +51,7 @@
               color="yellow-darken-3"
               variant="outlined"
               label="Описание"
-              rows="10"
+              rows="6"
           />
 
         </v-form>
@@ -81,8 +84,6 @@ import _ from "lodash";
 
 export default {
   name: "assignment-change",
-  components: {},
-
 
   data() {
     return {

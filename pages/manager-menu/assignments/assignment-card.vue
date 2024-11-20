@@ -12,15 +12,17 @@
     >
       <v-card rounded="sm" variant="text">
         <v-card-title>
-          <div class="d-flex justify-space-between">
-            <div>{{ getSelectedAssignment?.title }}</div>
-            <div>
+          <div class="d-flex justify-space-between align-center">
+            <div class="d-flex ga-1 align-center">
+              {{ getSelectedAssignment?.title }}
               <v-btn
-                  color="blue-darken-3"
+                  class="align-self-start"
                   density="comfortable"
+                  color="blue-darken-3"
                   icon="mdi-pencil"
-                  variant="tonal"
-                  rounded
+                  variant="text"
+                  rounded="lg"
+                  size="small"
                   @click="assignmentMenuChangeVisibility = true"
               >
                 <v-icon/>
@@ -29,6 +31,7 @@
                 </v-tooltip>
               </v-btn>
             </div>
+            <my-button-close-card @click="goBack"/>
           </div>
         </v-card-title>
 
@@ -120,11 +123,13 @@
 
                 <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.loanAgreement }}</div>
-                  <div><b>Дата: </b>{{ stringToDate(block.loanAgreementDate) }}</div>
+                  <v-divider/>
+                  <div class="text-caption font-weight-bold">{{ stringToDate(block.loanAgreementDate) }}</div>
                 </td>
                 <td style="min-width: 180px; max-width: 180px">
                   <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
-                  <div><b>Дата: </b>{{ stringToDate(block.pledgeAgreementDate) }}</div>
+                  <v-divider/>
+                  <div class="text-caption font-weight-bold">{{ stringToDate(block.pledgeAgreementDate) }}</div>
                 </td>
                 <td style="min-width: 190px; max-width: 190px">
                   <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
@@ -156,12 +161,12 @@
 
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change/>
+        <assignment-change @click:close="assignmentMenuChangeVisibility=false"/>
       </v-overlay>
 
       <!--    Block Menu Add-->
       <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-        <block-add @add:success="assignmentBlocksStoreUpdate"/>
+        <block-add @add:success="assignmentBlocksStoreUpdate" @click:close="blockMenuAddVisibility=false"/>
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -177,8 +182,6 @@
 </template>
 
 <script>
-import {timestampToDateString} from "../../../utils/functions";
-
 export default {
   name: "assignment-card-page",
 
@@ -299,7 +302,9 @@ export default {
   },
 
   methods: {
-
+    goBack() {
+      navigateTo('/manager-menu/assignments');
+    },
     stringToDate(timestamp) {
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },

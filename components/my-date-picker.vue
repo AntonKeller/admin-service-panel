@@ -1,17 +1,18 @@
 <template>
   <div class="d-flex ga-1">
     <v-text-field
+        v-bind="$attrs"
         v-model="textField"
-        :style="fieldWidth ? `width: ${fieldWidth}px` : '' "
+        :style="`width: ${fieldWidth}px`"
         :rules="[v => textDateValid(v)]"
         ref="dateInput"
         @input="onInput"
         prepend-inner-icon="mdi-calendar-range"
-        color="yellow-darken-3"
-        density="compact"
-        variant="outlined"
         label="Дата регистрации"
         placeholder="дд:мм:гггг"
+        color="yellow-darken-3"
+        variant="outlined"
+        density="compact"
     />
     <v-btn icon="mdi-dots-horizontal" size="small" variant="text" rounded="lg">
       <v-icon/>

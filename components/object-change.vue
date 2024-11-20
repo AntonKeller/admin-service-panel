@@ -6,7 +6,12 @@
         width="800"
         color="blue-grey-darken-3"
     >
-      <v-card-title>Редактирование</v-card-title>
+      <v-card-title>
+        <div class="d-flex justify-space-between align-center">
+          <div>Редактирование объекта</div>
+          <my-button-close-card @click="$emit('click:close')"/>
+        </div>
+      </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
         <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">

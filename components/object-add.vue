@@ -10,7 +10,12 @@
         width="800"
         color="blue-grey-darken-3"
     >
-      <v-card-title>Новый объект</v-card-title>
+      <v-card-title>
+        <div class="d-flex justify-space-between align-center">
+          <div>Новый объект</div>
+          <my-button-close-card @click="$emit('click:close')"/>
+        </div>
+      </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
         <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">

@@ -10,7 +10,12 @@
         width="800"
         color="blue-grey-darken-3"
     >
-      <v-card-title>Редактор Блока ТЗ</v-card-title>
+      <v-card-title>
+        <div class="d-flex justify-space-between align-center">
+          <div>Редактор блока задания</div>
+          <my-button-close-card @click="$emit('click:close')"/>
+        </div>
+      </v-card-title>
 
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
@@ -178,7 +183,7 @@
     </v-snackbar>
 
     <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
-      <inspector-add @add:success="fetchInspectors"></inspector-add>
+      <inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></inspector-add>
     </v-overlay>
 
   </v-sheet>

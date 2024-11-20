@@ -1,6 +1,11 @@
 <template>
   <v-card width="700">
-    <v-card-title>Добавление исполнителя (по договору)</v-card-title>
+    <v-card-title>
+      <div class="d-flex justify-space-between align-center">
+        <div>Новый исполнитель (по договору)</div>
+        <my-button-close-card @click="$emit('click:close')"/>
+      </div>
+    </v-card-title>
     <v-card-subtitle>Заполните поля</v-card-subtitle>
     <v-card-text>
       <v-form v-model="isValid" ref="form" class="d-flex flex-column ga-1">

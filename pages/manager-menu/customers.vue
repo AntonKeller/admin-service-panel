@@ -84,11 +84,11 @@
   </v-snackbar>
 
   <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-add @add:success="updateCustomers" />
+    <customer-add @add:success="updateCustomers" @click:close="menuAddCustomerIsShow=false"/>
   </v-overlay>
 
   <v-overlay v-model="menuChangeCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-change :_customer="customerSelected" @change:success="updateCustomers"></customer-change>
+    <customer-change :_customer="customerSelected" @change:success="updateCustomers" @click:close="menuChangeCustomerIsShow=false"></customer-change>
   </v-overlay>
 </template>
 

@@ -5,68 +5,34 @@
       @click:outside="navigateBack"
   >
     <v-sheet
-        rounded="sm"
+        rounded
         max-width="1024px"
         min-width="1024px"
-        elevation="6"
+        elevation="4"
     >
       <v-card rounded="sm">
 
         <v-card-title>
-          <div class="d-flex justify-space-between">
-            <div>
+          <div class="d-flex align-center justify-space-between">
+            <div class="d-flex ga-1 align-center">
               {{ assignmentBlock.title }}
+              <v-btn
+                  class="align-self-start"
+                  density="comfortable"
+                  color="blue-darken-3"
+                  icon="mdi-pencil"
+                  variant="text"
+                  rounded="lg"
+                  size="small"
+                  @click="blockMenuChangeVisibility = true"
+              >
+                <v-icon/>
+                <v-tooltip activator="parent" location="left">
+                  Редактировать Блок
+                </v-tooltip>
+              </v-btn>
             </div>
-
-            <v-btn id="menu-activator" variant="text" rounded="sm" density="comfortable" icon="mdi-dots-horizontal">
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Функции
-              </v-tooltip>
-            </v-btn>
-            <v-menu activator="#menu-activator" location="bottom">
-              <div class="d-flex flex-column align-center justify-center ga-1 mt-1">
-                <v-btn
-                    color="blue-darken-1"
-                    density="comfortable"
-                    icon="mdi-pencil"
-                    variant="tonal"
-                    rounded
-                    @click="blockMenuChangeVisibility = true"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="left">
-                    Редактировать Блок
-                  </v-tooltip>
-                </v-btn>
-                <v-btn
-                    color="blue-darken-1"
-                    density="comfortable"
-                    icon="mdi-file-download-outline"
-                    variant="tonal"
-                    rounded
-                    @click="downloadObjectsTemplate"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="left">
-                    Скачать шаблон для заполнения
-                  </v-tooltip>
-                </v-btn>
-                <v-btn
-                    color="blue-darken-1"
-                    density="comfortable"
-                    icon="mdi-table-arrow-up"
-                    variant="tonal"
-                    rounded
-                    @click="clickExcelInputFile"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="left">
-                    Загрузить объекты из xlsx
-                  </v-tooltip>
-                </v-btn>
-              </div>
-            </v-menu>
+            <my-button-close-card @click="goBack"/>
           </div>
         </v-card-title>
 
@@ -87,7 +53,7 @@
         </v-card-subtitle>
 
         <v-card-text class="text-caption" style="font-size: 10px">
-          <div class="d-flex ga-4 align-center py-1">
+          <div class="d-flex ga-1 align-center py-1">
             <v-btn-group variant="text" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-plus-box-multiple-outline"
@@ -99,31 +65,62 @@
                   Добавить новый объект
                 </v-tooltip>
               </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-tray-arrow-up"
-                  size="small"
-                  @click="clickExcelInputFile"
-              >
-                Загрузить
-                <v-tooltip activator="parent" location="top">
-                  Загрузить список объектов в формате xlsx
-                </v-tooltip>
-              </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-file-download-outline"
-                  size="small"
-                  :loading="reportDownloading"
-                  :disabled="reportDownloading"
-                  @click="downloadReport"
-              >
-                Отчет
-                <v-tooltip activator="parent" location="top">
-                  Скачать отчет
-                </v-tooltip>
-              </v-btn>
+              <v-divider vertical />
             </v-btn-group>
+
+            <div>
+              <v-menu activator="#menu-activator" location="top">
+                <div class="d-flex align-center justify-center ga-1 mb-1">
+                  <v-btn
+                      color="blue-darken-1"
+                      density="comfortable"
+                      icon="mdi-file-download-outline"
+                      variant="flat"
+                      rounded="lg"
+                      @click="downloadObjectsTemplate"
+                  >
+                    <v-icon/>
+                    <v-tooltip activator="parent" location="top">
+                      Скачать шаблон для заполнения
+                    </v-tooltip>
+                  </v-btn>
+                  <v-btn
+                      color="blue-darken-1"
+                      density="comfortable"
+                      icon="mdi-table-arrow-up"
+                      variant="flat"
+                      rounded="lg"
+                      @click="clickExcelInputFile"
+                  >
+                    <v-icon/>
+                    <v-tooltip activator="parent" location="top">
+                      Загрузить объекты из xlsx
+                    </v-tooltip>
+                  </v-btn>
+                  <v-btn
+                      icon="mdi-file-document-arrow-right-outline"
+                      color="blue-darken-1"
+                      density="comfortable"
+                      variant="flat"
+                      rounded="lg"
+                      :loading="reportDownloading"
+                      :disabled="reportDownloading"
+                      @click="downloadReport"
+                  >
+                    <v-icon/>
+                    <v-tooltip activator="parent" location="top">
+                      Скачать отчет
+                    </v-tooltip>
+                  </v-btn>
+                </div>
+              </v-menu>
+              <v-btn id="menu-activator" variant="text" rounded="lg" density="comfortable" icon="mdi-dots-horizontal">
+                <v-icon/>
+                <v-tooltip activator="parent" location="left">
+                  Функции
+                </v-tooltip>
+              </v-btn>
+            </div>
 
             <v-text-field
                 v-model="searchText"
@@ -135,6 +132,7 @@
                 hide-details
                 single-line
             />
+
           </div>
           <v-divider/>
           <v-sheet>
@@ -187,12 +185,12 @@
 
       <!--    Block Menu Change-->
       <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
-        <block-change @change:success="fetchObjects"></block-change>
+        <block-change @change:success="fetchObjects" @click:close="blockMenuChangeVisibility=false"></block-change>
       </v-overlay>
 
       <!--    Object Menu Add-->
       <v-overlay v-model="objectMenuAddVisibility" class="d-flex justify-center align-center">
-        <object-add @add:success="fetchObjects"></object-add>
+        <object-add @add:success="fetchObjects" @click:close="objectMenuAddVisibility=false"></object-add>
       </v-overlay>
 
       <!--      Block Card Page-->
@@ -203,11 +201,11 @@
 </template>
 
 <script>
-import {showAlert, timestampToDateString} from "../../../../utils/functions";
+import {removeObject} from "../../../../utils/api/api_inspection_objects.js";
 import {uploadObjects} from "../../../../utils/api/api_assignment_blocks";
 import {serverURL} from "../../../../constants/constants";
 import {downloadFile} from "../../../../utils/api/api_";
-import {removeObject} from "../../../../utils/api/api_inspection_objects.js";
+import {showAlert} from "../../../../utils/functions";
 
 export default {
   name: "block-page",
@@ -334,6 +332,9 @@ export default {
   },
 
   methods: {
+    goBack(){
+      navigateTo('/manager-menu/assignments/assignment-card');
+    },
     stringToDate(timestamp) {
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },
@@ -382,9 +383,9 @@ export default {
     fetchObjects() {
       // Получаем ID Блока
       const currentObject = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM'];
+
       if (currentObject?._id) {
-        // Обращаемся к состоянию <inspection Objects>
-        // Загружаем его список
+        // Обращаемся к состоянию <inspection Objects> и Загружаем его список
         this.$store.dispatch('inspectionObjects/FETCH', currentObject?._id);
       } else {
         // Отсутствует ID Блока по которому должны получить список объектов

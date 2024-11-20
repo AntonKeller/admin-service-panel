@@ -1,7 +1,12 @@
 <template>
   <v-card rounded="sm" width="700" elevation="6">
 
-    <v-card-title>Новая задача</v-card-title>
+    <v-card-title>
+      <div class="d-flex justify-space-between align-center">
+        <div>Новая задача</div>
+        <my-button-close-card @click="$emit('click:close')"/>
+      </div>
+    </v-card-title>
 
     <v-card-subtitle>Заполните поля</v-card-subtitle>
 
@@ -87,7 +92,7 @@
 
 
     <v-overlay v-model="contractMenuAddShow" class="d-flex justify-center align-center">
-      <contract-add @add:success="contractsStoreUpdate"></contract-add>
+      <contract-add @add:success="contractsStoreUpdate" @click:close="contractMenuAddShow = false"></contract-add>
     </v-overlay>
 
   </v-card>
@@ -97,7 +102,7 @@
 import {addNewAssignment} from "../utils/api/api_assignments.js";
 
 export default {
-  name: "assignment-add-page",
+  name: "assignment-add",
 
   data: () => ({
 

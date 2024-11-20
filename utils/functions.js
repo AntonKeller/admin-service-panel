@@ -1,4 +1,5 @@
 import moment from "moment";
+import 'moment/dist/locale/ru'; // "moment/locale/ru.js";
 
 export function slicer(str, len) {
     return str?.length > len ? str?.slice(0, len - 3) + '...' : str;
@@ -13,23 +14,12 @@ const configDefault = {
 
 // Короткая дата из Unix date
 export function unixDateToShortDateString(unixDate) {
-    return moment(unixDate).format('DD.MM.YYYY');
+    return moment(parseInt(unixDate)).locale('ru').format('DD.MM.YYYY');
 }
 
 // Широкая дата из Unix date
 export function unixDateToLongDateString(unixDate) {
-    return moment(unixDate).locale('ru').format('dddd, MMMM DD YYYY');
-}
-
-export function timestampToDateString(timestamp, config = configDefault) {
-
-
-    return isNaN(parseInt(timestamp)) ?
-        (new Date(parseInt(timestamp))).toLocaleDateString(undefined, config) : '-'
-}
-
-export function dateToTimeString(_date) {
-    return `${Date.parse(_date)}`;
+    return moment(parseInt(unixDate)).locale('ru').format('dd, MMM DD YYYY');
 }
 
 export function showAlert(text) {

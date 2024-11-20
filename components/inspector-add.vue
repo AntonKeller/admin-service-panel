@@ -1,6 +1,11 @@
 <template>
   <v-card rounded="sm" width="700" elevation="6">
-    <v-card-title>Новый инспектор</v-card-title>
+    <v-card-title>
+      <div class="d-flex justify-space-between align-center">
+        <div>Новый инспектор</div>
+        <my-button-close-card @click="$emit('click:close')"/>
+      </div>
+    </v-card-title>
 
     <v-card-subtitle>Заполните поля</v-card-subtitle>
 

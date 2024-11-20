@@ -79,11 +79,11 @@
     </div>
 
     <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
-      <inspector-add @add:success="updateInspectors"></inspector-add>
+      <inspector-add @add:success="updateInspectors" @click:close="inspectorMenuAddVisibility=false"></inspector-add>
     </v-overlay>
 
     <v-overlay v-model="inspectorMenuChangeVisibility" class="d-flex justify-center align-center">
-      <inspector-change @change:success="updateInspectors" :_inspector="inspectorSelected"></inspector-change>
+      <inspector-change @change:success="updateInspectors" :_inspector="inspectorSelected" @click:close="inspectorMenuChangeVisibility=false"></inspector-change>
     </v-overlay>
 
   </v-container>

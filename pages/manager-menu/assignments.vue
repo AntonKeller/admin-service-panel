@@ -56,7 +56,8 @@
                 <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
                 <td style="min-width: 280px; width: 280px; max-width: 280px">
                   <div>{{ assignment.title }}</div>
-                  <div><b>Создан: </b>{{ stringToDate(assignment.createdAt) }}</div>
+                  <v-divider />
+                  <div class="text-caption font-weight-bold">{{ stringToDate(assignment.createdAt) }}</div>
                 </td>
 
                 <td style="min-width: 240px; width: 240px; max-width: 240px">
@@ -93,7 +94,7 @@
     </v-sheet>
 
     <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">
-      <assignment-add></assignment-add>
+      <assignment-add @click:close="assignmentAddVisibility=false"></assignment-add>
     </v-overlay>
 
     <nuxt-page/>
@@ -102,9 +103,9 @@
 </template>
 
 <script>
-import {slicer, timestampToDateString} from "../../utils/functions";
+import {slicer, unixDateToLongDateString, unixDateToShortDateString} from "../../utils/functions";
 import _ from "lodash";
-
+import 'moment/locale/fr';
 export default {
   name: "assignments-page",
 
@@ -182,10 +183,13 @@ export default {
   methods: {
 
     slicer,
-    timestampToDateString,
+    unixDateToLongDateString,
+    unixDateToShortDateString,
+
 
     stringToDate(timestamp) {
-      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+      return unixDateToLongDateString(timestamp)
+      // return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },
 
     selectAssignment(assignment) {

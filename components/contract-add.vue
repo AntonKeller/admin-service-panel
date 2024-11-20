@@ -6,8 +6,12 @@
         width="700"
         color="blue-grey-darken-3"
     >
-
-      <v-card-title>Новый договор</v-card-title>
+      <v-card-title>
+        <div class="d-flex justify-space-between align-center">
+          <div>Новый договор</div>
+          <my-button-close-card @click="$emit('click:close')"/>
+        </div>
+      </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
 
       <v-card-text>
@@ -35,8 +39,8 @@
                 prepend-inner-icon="mdi-account-tie"
                 no-data-text="нет данных"
                 color="yellow-darken-3"
-                density="compact"
                 variant="outlined"
+                density="compact"
                 label="Заказчик"
                 closable-chips
                 chips
@@ -66,7 +70,12 @@
                 rounded="lg"
                 size="small"
                 @click="customerAddMenuShow = true"
-            />
+            >
+              <v-icon/>
+              <v-tooltip activator="parent" location="left">
+                Добавить заказчика
+              </v-tooltip>
+            </v-btn>
           </div>
 
           <div class="d-flex ga-1">
@@ -108,7 +117,12 @@
                 rounded="lg"
                 size="small"
                 @click="contractExecutorMenuAddVisibility = true"
-            />
+            >
+              <v-icon/>
+              <v-tooltip activator="parent" location="left">
+                Добавить исполнителя
+              </v-tooltip>
+            </v-btn>
           </div>
         </v-form>
       </v-card-text>
@@ -133,11 +147,11 @@
     </v-snackbar>
 
     <my-overlay v-model="contractExecutorMenuAddVisibility">
-      <contract-executor-add  @add:success="fetchContractExecutors"></contract-executor-add>
+      <contract-executor-add @add:success="fetchContractExecutors" @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
     </my-overlay>
 
     <my-overlay v-model="customerAddMenuShow">
-      <customer-add @add:success="fetchCustomersAll"></customer-add>
+      <customer-add @add:success="fetchCustomersAll" @click:close="customerAddMenuShow=false"></customer-add>
     </my-overlay>
 
   </v-sheet>
