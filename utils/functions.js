@@ -1,5 +1,5 @@
-import moment from "moment";
-import 'moment/dist/locale/ru'; // "moment/locale/ru.js";
+import moment from "moment/min/moment-with-locales";
+// import 'moment/dist/locale/ru'; // "moment/locale/ru.js";
 
 export function slicer(str, len) {
     return str?.length > len ? str?.slice(0, len - 3) + '...' : str;
