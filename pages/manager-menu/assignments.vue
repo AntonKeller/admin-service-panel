@@ -105,7 +105,6 @@
 <script>
 import {slicer, unixDateToLongDateString, unixDateToShortDateString} from "../../utils/functions";
 import _ from "lodash";
-import 'moment/locale/fr';
 export default {
   name: "assignments-page",
 
