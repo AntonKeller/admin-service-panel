@@ -11,7 +11,6 @@
                 label="Email"
                 variant="outlined"
                 density="compact"
-
                 disabled
                 flat
             />
@@ -21,7 +20,6 @@
                 label="Имя для авторизации"
                 variant="outlined"
                 density="compact"
-
                 disabled
                 flat
             />

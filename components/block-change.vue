@@ -69,16 +69,15 @@
               />
             </div>
 
-            <div class="d-flex ga-2">
+            <div class="d-flex ga-1">
               <v-autocomplete
                   v-model="block.inspector"
                   :items="inspectors"
                   style="width: 100px"
-                  color="blue-grey-darken-3"
-                  density="comfortable"
+                  color="yellow-darken-3"
+                  density="compact"
                   variant="outlined"
                   label="Инспектор"
-                  rounded="sm"
                   closable-chips
                   chips
               >
@@ -87,7 +86,7 @@
                       v-bind="props"
                       :text="`${item.raw?.lastName} ${item.raw?.firstName}`"
                       prepend-icon="mdi-file-document-edit"
-                      color="blue-grey-darken-3"
+                      color="blue-grey-darken-4"
                       density="comfortable"
                   />
                 </template>
@@ -102,19 +101,20 @@
                 </template>
               </v-autocomplete>
               <v-btn
-                  variant="tonal"
                   icon="mdi-plus"
-                  rounded="sm"
+                  variant="text"
+                  rounded="lg"
+                  size="small"
                   @click="inspectorMenuAdd = true"
               />
               <v-combobox
                   v-model="block.status"
                   :items="assignment_block_statuses"
-                  label="Статус"
-                  density="comfortable"
-                  style="width: 100px"
+                  color="yellow-darken-3"
                   variant="outlined"
-                  rounded="sm"
+                  density="compact"
+                  label="Статус"
+                  style="width: 100px"
               />
             </div>
 

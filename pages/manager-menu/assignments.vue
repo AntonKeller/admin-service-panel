@@ -174,10 +174,6 @@ export default {
       return this.assignmentFoundList.slice(from, to);
     },
 
-    assignmentsFoundCount() {
-      return this.assignmentFoundList.length;
-    },
-
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },

@@ -6,35 +6,31 @@
       </v-card-title>
       <v-card-text>
         <v-form v-model="formIsValid" ref="form">
-          <v-text-field
+          <my-text-field
               v-model="assignment.title"
               prepend-inner-icon="mdi-label-variant-outline"
               label="Заголовок тех. задания"
-              color="blue-grey-darken-3"
-              density="comfortable"
-              variant="outlined"
-              rounded="sm"
-          />
 
+          />
           <v-autocomplete
               v-model="assignment.contract"
               :disabled="loadingContracts"
               :loading="loadingContracts"
               :items="contracts"
               prepend-inner-icon="mdi-file-sign"
-              color="blue-grey-lighten-3"
-              density="comfortable"
+              color="yellow-darken-3"
+              density="compact"
               variant="outlined"
               label="Договор"
-              rounded="sm"
           >
             <template v-slot:chip="{ props, item }">
               <v-chip
                   v-bind="props"
                   :text="`${item.raw?.contractNumber} / ${item.raw?.contractDate} / ${item.raw?.customer?.shortName}`"
                   prepend-icon="mdi-file-document-edit"
-                  color="blue-grey-darken-3"
+                  color="blue-grey-darken-4"
                   density="comfortable"
+                  rounded="sm"
               />
             </template>
             <template v-slot:item="{ props, item }">
@@ -49,10 +45,9 @@
           <v-textarea
               v-model="assignment.description"
               no-resize
-              color="blue-grey-darken-3"
+              color="yellow-darken-3"
               variant="outlined"
               label="Описание"
-              rounded="sm"
               rows="10"
           />
 
@@ -86,6 +81,8 @@ import _ from "lodash";
 
 export default {
   name: "assignment-change",
+  components: {},
+
 
   data() {
     return {

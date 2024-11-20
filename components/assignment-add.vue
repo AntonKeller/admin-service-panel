@@ -14,17 +14,16 @@
             prepend-inner-icon="mdi-label-variant-outline"
         />
 
-        <div class="d-flex ga-2">
+        <div class="d-flex ga-1">
           <v-autocomplete
               v-model="assignment.contract"
               :rules="contractRules"
               :items="getContracts"
               prepend-inner-icon="mdi-file-sign"
-              color="blue-grey-darken-3"
-              density="comfortable"
+              color="yellow-darken-3"
+              density="compact"
               variant="outlined"
               label="Договор"
-              rounded="sm"
               closable-chips
               single-line
               chips
@@ -50,9 +49,10 @@
           </v-autocomplete>
 
           <v-btn
-              variant="tonal"
               icon="mdi-plus"
-              rounded="sm"
+              variant="text"
+              size="small"
+              rounded="lg"
               @click="contractMenuAddShow = true"
           />
         </div>
@@ -60,7 +60,7 @@
         <v-textarea
             v-model="assignment.description"
             :rules="assignmentDescriptionRules"
-            color="blue-grey-darken-3"
+            color="yellow-darken-3"
             max-rows="1"
             variant="outlined"
             auto-grow

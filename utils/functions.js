@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function slicer(str, len) {
     return str?.length > len ? str?.slice(0, len - 3) + '...' : str;
 }
@@ -9,8 +11,19 @@ const configDefault = {
     day: 'numeric',
 }
 
+// Короткая дата из Unix date
+export function unixDateToShortDateString(unixDate) {
+    return moment(unixDate).format('DD.MM.YYYY');
+}
+
+// Широкая дата из Unix date
+export function unixDateToLongDateString(unixDate) {
+    return moment(unixDate).locale('ru').format('dddd, MMMM DD YYYY');
+}
 
 export function timestampToDateString(timestamp, config = configDefault) {
+
+
     return isNaN(parseInt(timestamp)) ?
         (new Date(parseInt(timestamp))).toLocaleDateString(undefined, config) : '-'
 }

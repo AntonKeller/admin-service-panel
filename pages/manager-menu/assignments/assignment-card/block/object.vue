@@ -63,10 +63,10 @@
               @update:modelValue="onSelectAngle"
               prepend-inner-icon="mdi-radiobox-indeterminate-variant"
               no-data-text="Ракурсы отсутствуют"
-              color="blue-grey-darken-3"
+              color="yellow-darken-3"
               label="Список ракурсов"
+              variant="outlined"
               density="compact"
-              variant="solo"
               rounded="md"
               single-line
               persistent-hint

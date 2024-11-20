@@ -26,7 +26,7 @@
               label="Дата заключения"
               placeholder="дд:мм:гггг"
           />
-          <div class="d-flex ga-2">
+          <div class="d-flex ga-1">
             <v-autocomplete
                 v-model="contract.customer"
                 :items="customers"
@@ -34,11 +34,10 @@
                 :rules="customersRules"
                 prepend-inner-icon="mdi-account-tie"
                 no-data-text="нет данных"
-                color="blue-grey-darken-3"
-                density="comfortable"
+                color="yellow-darken-3"
+                density="compact"
                 variant="outlined"
                 label="Заказчик"
-                rounded="sm"
                 closable-chips
                 chips
             >
@@ -62,25 +61,25 @@
               </template>
             </v-autocomplete>
             <v-btn
-                rounded="sm"
-                variant="tonal"
                 icon="mdi-plus"
+                variant="text"
+                rounded="lg"
+                size="small"
                 @click="customerAddMenuShow = true"
             />
           </div>
 
-          <div class="d-flex ga-2">
+          <div class="d-flex ga-1">
             <v-autocomplete
                 v-model="contract.contractExecutor"
                 :items="contractExecutors"
                 :loading="fetchingContractExecutors"
                 prepend-inner-icon="mdi-account-tie"
-                color="blue-grey-darken-3"
-                density="comfortable"
+                color="yellow-darken-3"
+                no-data-text="нет данных"
+                density="compact"
                 variant="outlined"
                 label="Исполнитель"
-                no-data-text="нет данных"
-                rounded="sm"
                 closable-chips
                 chips
             >
@@ -104,9 +103,10 @@
               </template>
             </v-autocomplete>
             <v-btn
-                rounded="sm"
-                variant="tonal"
                 icon="mdi-plus"
+                variant="text"
+                rounded="lg"
+                size="small"
                 @click="contractExecutorMenuAddVisibility = true"
             />
           </div>
