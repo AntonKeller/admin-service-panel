@@ -81,9 +81,9 @@ export default defineNuxtConfig({
     // },
 
     vite: {
-        ssr: {
-            noExternal: ["moment"]
-        },
+        // ssr: {
+        //     noExternal: ["moment"]
+        // },
         // rollup: {
         //     external: ['moment'],
         //     output: {
