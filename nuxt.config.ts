@@ -81,6 +81,17 @@ export default defineNuxtConfig({
     // },
 
     vite: {
+        ssr: {
+            noExternal: ["moment"]
+        },
+        // rollup: {
+        //     external: ['moment'],
+        //     output: {
+        //         globals: {
+        //             moment: 'moment'
+        //         }
+        //     },
+        // },
         vue: {
             template: {
                 transformAssetUrls,
