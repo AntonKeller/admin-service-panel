@@ -135,7 +135,7 @@ export default {
 
   methods: {
     downloadTemplate() {
-      downloadFile('template', serverURL + '/customers/downloadExcelTemplates');
+      downloadFile('template.xlsx', serverURL + '/customers/downloadExcelTemplates');
     },
     async changeCustomer() {
       await this.$refs.form.validate();
