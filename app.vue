@@ -5,3 +5,7 @@
     </v-app>
   </NuxtLayout>
 </template>
+
+<style>
+
+</style>

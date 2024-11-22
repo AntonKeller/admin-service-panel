@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex ga-1">
+<!--  :style="`min-width: ${fieldWidth}px`"-->
+  <div class="d-flex ga-1" style="width: 100%">
     <v-text-field
         v-bind="$attrs"
         v-model="textField"
-        :style="`width: ${fieldWidth}px`"
         :rules="[v => textDateValid(v)]"
         ref="dateInput"
         @input="onInput"

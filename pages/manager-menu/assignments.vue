@@ -56,7 +56,7 @@
                 <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
                 <td style="min-width: 280px; width: 280px; max-width: 280px">
                   <div>{{ assignment.title }}</div>
-                  <v-divider />
+                  <v-divider/>
                   <div class="text-caption font-weight-bold">{{ stringToDate(assignment.createdAt) }}</div>
                 </td>
 
@@ -94,7 +94,7 @@
     </v-sheet>
 
     <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">
-      <assignment-add @click:close="assignmentAddVisibility=false"></assignment-add>
+      <assignment-add @click:close="onClickClose" @add:success="onAddSuccess"></assignment-add>
     </v-overlay>
 
     <nuxt-page/>
@@ -105,6 +105,7 @@
 <script>
 import {slicer, unixDateToLongDateString, unixDateToShortDateString} from "../../utils/functions";
 import _ from "lodash";
+
 export default {
   name: "assignments-page",
 
@@ -185,6 +186,13 @@ export default {
     unixDateToLongDateString,
     unixDateToShortDateString,
 
+    onClickClose() {
+      this.assignmentAddVisibility = false;
+    },
+
+    onAddSuccess() {
+      this.assignmentAddVisibility = false;
+    },
 
     stringToDate(timestamp) {
       return unixDateToLongDateString(timestamp)

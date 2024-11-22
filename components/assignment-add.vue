@@ -59,7 +59,12 @@
               size="small"
               rounded="lg"
               @click="contractMenuAddShow = true"
-          />
+          >
+            <v-icon />
+            <v-tooltip activator="parent" location="left">
+              Добавить новый договор
+            </v-tooltip>
+          </v-btn>
         </div>
 
         <v-textarea
@@ -152,6 +157,7 @@ export default {
         addNewAssignment(this.assignment)
             .then(() => {
               this.$store.dispatch('assignments/FETCH');
+              this.$emit('add:success');
             })
             .catch(() => {
               console.log('Ошибка добавления задачи')
@@ -161,3 +167,10 @@ export default {
   }
 }
 </script>
+
+<style>
+@font-face {
+  font-family: 'Norwester';
+  src: url('~assets/fonts/TildaSans-Regular.ttf')  format('opentype'),
+}
+</style>

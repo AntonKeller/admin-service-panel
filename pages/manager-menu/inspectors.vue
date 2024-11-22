@@ -7,6 +7,7 @@
         <div class="d-flex align-center">
           <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
             <v-btn
+
                 prepend-icon="mdi-plus-box-multiple-outline"
                 @click="inspectorMenuAddVisibility = true"
             >

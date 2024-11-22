@@ -6,7 +6,7 @@
   >
     <v-sheet
         height="700px"
-        width="1024px"
+        max-width="900px"
         elevation="6"
         rounded="sm"
     >
@@ -35,26 +35,35 @@
           </div>
         </v-card-title>
 
-        <v-card-text class="d-flex flex-column ga-2">
-          <div class="d-flex ga-2">
-            <v-chip
-                prepend-icon="mdi-file-sign"
-                color="blue-grey-darken-2"
-                density="comfortable"
-                rounded="sm"
-                border="sm"
-                :text="assignmentContract"
-            />
-            <v-chip
-                prepend-icon="mdi-account-tie"
-                color="blue-grey-darken-2"
-                density="comfortable"
-                rounded="sm"
-                border="sm"
-                :text="assignmentCustomer"
-            />
+        <v-card-text class="d-flex flex-column ga-4 mt-2">
+          <div class="d-flex ga-4 flex-wrap">
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-file-sign"/>
+              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
+            </v-label>
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-account-tie"/>
+              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+            </v-label>
+
+            <!--            <v-chip-->
+            <!--                prepend-icon="mdi-file-sign"-->
+            <!--                color="blue-grey-darken-2"-->
+            <!--                density="comfortable"-->
+            <!--                rounded="sm"-->
+            <!--                border="sm"-->
+            <!--                :text="assignmentContract"-->
+            <!--            />-->
+            <!--            <v-chip-->
+            <!--                prepend-icon="mdi-account-tie"-->
+            <!--                color="blue-grey-darken-2"-->
+            <!--                density="comfortable"-->
+            <!--                rounded="sm"-->
+            <!--                border="sm"-->
+            <!--                :text="assignmentCustomer"-->
+            <!--            />-->
           </div>
-          <v-sheet class="rounded-lg px-2 py-2" style="height: 140px; overflow-y: scroll">
+          <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
             {{ getSelectedAssignment?.description }}
           </v-sheet>
           <v-divider class="my-1"/>
@@ -101,7 +110,7 @@
               >загрузка...
               </v-progress-circular>
             </div>
-            <v-table v-if="!fetching" height="310" density="default" fixed-header class="text-caption">
+            <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header class="bg-grey-lighten-4 text-caption">
               <thead>
               <tr>
                 <th>Заголовок</th>
@@ -161,7 +170,7 @@
 
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change @click:close="assignmentMenuChangeVisibility=false"/>
+        <assignment-change @click:close="onClickCloseMenuChange" @update:success="onUpdateSuccess"/>
       </v-overlay>
 
       <!--    Block Menu Add-->
@@ -302,6 +311,12 @@ export default {
   },
 
   methods: {
+    onUpdateSuccess() {
+      this.assignmentMenuChangeVisibility = false;
+    },
+    onClickCloseMenuChange() {
+      this.assignmentMenuChangeVisibility = false;
+    },
     goBack() {
       navigateTo('/manager-menu/assignments');
     },
