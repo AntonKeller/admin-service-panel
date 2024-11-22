@@ -5,18 +5,17 @@
       <v-card-item>
 
         <div class="d-flex align-center">
-          <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-            <v-btn
-
-                prepend-icon="mdi-plus-box-multiple-outline"
-                @click="inspectorMenuAddVisibility = true"
-            >
-              Добавить
-              <v-tooltip activator="parent">
-                Добавить нового осмотрщика
-              </v-tooltip>
-            </v-btn>
-          </v-btn-group>
+          <v-btn
+              variant="tonal"
+              color="blue-darken-4"
+              prepend-icon="mdi-plus-box-multiple-outline"
+              @click="inspectorMenuAddVisibility = true"
+          >
+            Добавить
+            <v-tooltip activator="parent">
+              Добавить нового осмотрщика
+            </v-tooltip>
+          </v-btn>
           <v-sheet width="550">
             <v-text-field
                 v-model="searchText"

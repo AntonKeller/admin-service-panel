@@ -9,7 +9,7 @@
       <v-card-title>
         <div class="d-flex justify-space-between align-center">
           <div>Редактирование объекта</div>
-          <my-button-close-card @click="$emit('click:close')"/>
+          <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
         </div>
       </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
@@ -94,15 +94,12 @@ export default {
     sending: false,
     formIsValid: false,
     snackBar: {},
-    nameRules: [v => v?.length > 0 || 'Заполните поле'],
-    inventoryNumberRules: [v => v?.length > 0 || 'Заполните поле'],
-    addressRules: [v => v?.length > 0 || 'Заполните поле'],
-    descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
   }),
   methods: {
     async changeValue() {
-      await this.$refs.form.validate();
-      if (this.formIsValid) {
+      console.log('change')
+      // await this.$refs.form.validate();
+      // if (this.formIsValid) {
         this.sending = true;
         changeInspectionObject(this.value)
             .then(() => {
@@ -117,7 +114,7 @@ export default {
               this.sending = false;
             })
       }
-    }
+    // }
   }
 }
 </script>

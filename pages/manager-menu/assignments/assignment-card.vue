@@ -4,169 +4,147 @@
       class="d-flex justify-center align-center"
       @click:outside="back"
   >
-    <v-sheet
-        height="700px"
-        max-width="900px"
-        elevation="6"
+    <v-card
         rounded="sm"
+        min-width="400"
+        max-width="900"
+        width="100vw"
+        elevation="6"
     >
-      <v-card rounded="sm" variant="text">
-        <v-card-title>
-          <div class="d-flex justify-space-between align-center">
-            <div class="d-flex ga-1 align-center">
-              {{ getSelectedAssignment?.title }}
-              <v-btn
-                  class="align-self-start"
-                  density="comfortable"
-                  color="blue-darken-3"
-                  icon="mdi-pencil"
-                  variant="text"
-                  rounded="lg"
-                  size="small"
-                  @click="assignmentMenuChangeVisibility = true"
-              >
-                <v-icon/>
-                <v-tooltip activator="parent" location="left">
-                  Редактировать ТЗ
-                </v-tooltip>
-              </v-btn>
-            </div>
-            <my-button-close-card @click="goBack"/>
+      <v-card-title>
+        <div class="d-flex justify-space-between align-center">
+          <div class="d-flex ga-1 align-center">
+            {{ getSelectedAssignment?.title }}
+            <v-btn
+                class="align-self-start"
+                density="comfortable"
+                color="blue-darken-3"
+                icon="mdi-pencil"
+                variant="text"
+                rounded="lg"
+                size="small"
+                @click="assignmentMenuChangeVisibility = true"
+            >
+              <v-icon/>
+              <v-tooltip activator="parent" location="left">
+                Редактировать ТЗ
+              </v-tooltip>
+            </v-btn>
           </div>
-        </v-card-title>
+          <my-button-close-card @click="goBack" class="align-self-start"/>
+        </div>
+      </v-card-title>
 
-        <v-card-text class="d-flex flex-column ga-4 mt-2">
-          <div class="d-flex ga-4 flex-wrap">
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-file-sign"/>
-              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
-            </v-label>
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-account-tie"/>
-              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-            </v-label>
-
-            <!--            <v-chip-->
-            <!--                prepend-icon="mdi-file-sign"-->
-            <!--                color="blue-grey-darken-2"-->
-            <!--                density="comfortable"-->
-            <!--                rounded="sm"-->
-            <!--                border="sm"-->
-            <!--                :text="assignmentContract"-->
-            <!--            />-->
-            <!--            <v-chip-->
-            <!--                prepend-icon="mdi-account-tie"-->
-            <!--                color="blue-grey-darken-2"-->
-            <!--                density="comfortable"-->
-            <!--                rounded="sm"-->
-            <!--                border="sm"-->
-            <!--                :text="assignmentCustomer"-->
-            <!--            />-->
+      <v-card-text class="d-flex flex-column ga-4 mt-2">
+        <div class="d-flex ga-4 flex-wrap">
+          <v-label class="text-body-2">
+            <v-icon icon="mdi-file-sign"/>
+            <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
+          </v-label>
+          <v-label class="text-body-2">
+            <v-icon icon="mdi-account-tie"/>
+            <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+          </v-label>
+        </div>
+        <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
+          {{ getSelectedAssignment?.description }}
+        </v-sheet>
+        <v-divider class="my-1"/>
+        <div class="d-flex ga-4 align-center py-1">
+          <!--            <my-search-bar-->
+          <!--                v-model="searchText"-->
+          <!--                style="min-width: 360px"-->
+          <!--                persistent-hint-->
+          <!--                label="Поиск"-->
+          <!--                :hint="`Найдено: ${blocksSearchCount}`"-->
+          <!--                @btn:click="blockMenuAddVisibility = true"-->
+          <!--            />-->
+          <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+            <v-btn
+                prepend-icon="mdi-plus-box-multiple-outline"
+                @click="blockMenuAddVisibility = true"
+            >
+              Добавить
+              <v-tooltip activator="parent">
+                Добавить новый блок
+              </v-tooltip>
+            </v-btn>
+          </v-btn-group>
+          <v-text-field
+              v-model="searchText"
+              prepend-inner-icon="mdi-magnify"
+              label="Поиск блоков заданий"
+              variant="solo-filled"
+              density="compact"
+              class="ml-2"
+              flat
+              single-line
+              hide-details
+          />
+        </div>
+        <v-sheet>
+          <v-divider/>
+          <div v-if="fetching" class="d-flex align-center justify-center h-100">
+            <v-progress-circular
+                :size="140"
+                :width="3"
+                color="teal"
+                indeterminate
+            >загрузка...
+            </v-progress-circular>
           </div>
-          <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
-            {{ getSelectedAssignment?.description }}
-          </v-sheet>
-          <v-divider class="my-1"/>
-          <div class="d-flex ga-4 align-center py-1">
-            <!--            <my-search-bar-->
-            <!--                v-model="searchText"-->
-            <!--                style="min-width: 360px"-->
-            <!--                persistent-hint-->
-            <!--                label="Поиск"-->
-            <!--                :hint="`Найдено: ${blocksSearchCount}`"-->
-            <!--                @btn:click="blockMenuAddVisibility = true"-->
-            <!--            />-->
-            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-              <v-btn
-                  prepend-icon="mdi-plus-box-multiple-outline"
-                  @click="blockMenuAddVisibility = true"
-              >
-                Добавить
-                <v-tooltip activator="parent">
-                  Добавить новый блок
-                </v-tooltip>
-              </v-btn>
-            </v-btn-group>
-            <v-text-field
-                v-model="searchText"
-                prepend-inner-icon="mdi-magnify"
-                label="Поиск блоков заданий"
-                variant="solo-filled"
-                density="compact"
-                class="ml-2"
-                flat
-                single-line
-                hide-details
+          <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header class="bg-grey-lighten-4 text-caption">
+            <thead>
+            <tr>
+              <th>Заголовок</th>
+              <th>Кредитный договор</th>
+              <th>Договор залога</th>
+              <th>Сроки</th>
+              <th>Статус</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="block of blocksSLice"
+                :key="block._id"
+                @click="selectBlock(block)"
+            >
+              <td>{{ block.title }}</td>
+              <td>
+                <div><b>Номер: </b>{{ block.loanAgreement }}</div>
+                <v-divider/>
+                <div class="text-caption font-weight-bold">{{ stringToDate(block.loanAgreementDate) }}</div>
+              </td>
+              <td>
+                <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
+                <v-divider/>
+                <div class="text-caption font-weight-bold">{{ stringToDate(block.pledgeAgreementDate) }}</div>
+              </td>
+              <td style="min-width: 190px; width: 190px; max-width: 190px">
+                <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
+                <div><b>По:</b> {{ stringToDate(block.endDate) }}</div>
+              </td>
+              <td >{{ block.status }}</td>
+              <td style="min-width: 50px; max-width: 50px">
+                <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+          <v-divider/>
+          <div class="d-flex align-center mt-4">
+            <v-pagination
+                v-model="currentPage"
+                color="blue-grey-darken-2"
+                density="comfortable"
+                show-first-last-page
+                :length="totalPages"
+                :total-visible="8"
             />
           </div>
-          <v-sheet>
-            <v-divider/>
-            <div v-if="fetching" class="d-flex align-center justify-center h-100">
-              <v-progress-circular
-                  :size="140"
-                  :width="3"
-                  color="teal"
-                  indeterminate
-              >загрузка...
-              </v-progress-circular>
-            </div>
-            <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header class="bg-grey-lighten-4 text-caption">
-              <thead>
-              <tr>
-                <th>Заголовок</th>
-                <th>Кредитный договор</th>
-                <th>Договор залога</th>
-                <th>Сроки</th>
-                <th>Статус</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                  v-for="block of blocksSLice"
-                  :key="block._id"
-                  @click="selectBlock(block)"
-              >
-                <td style="min-width: 180px; max-width: 180px">{{ block.title }}</td>
-
-
-                <td style="min-width: 180px; max-width: 180px">
-                  <div><b>Номер: </b>{{ block.loanAgreement }}</div>
-                  <v-divider/>
-                  <div class="text-caption font-weight-bold">{{ stringToDate(block.loanAgreementDate) }}</div>
-                </td>
-                <td style="min-width: 180px; max-width: 180px">
-                  <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
-                  <v-divider/>
-                  <div class="text-caption font-weight-bold">{{ stringToDate(block.pledgeAgreementDate) }}</div>
-                </td>
-                <td style="min-width: 190px; max-width: 190px">
-                  <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
-                  <div><b>По:</b> {{ stringToDate(block.endDate) }}</div>
-                </td>
-                <td style="min-width: 120px; max-width: 120px">
-                  {{ block.status }}
-                </td>
-                <td style="min-width: 35px; max-width: 35px">
-                  <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
-            <v-divider/>
-            <div class="d-flex align-center mt-4">
-              <v-pagination
-                  v-model="currentPage"
-                  color="blue-grey-darken-2"
-                  density="comfortable"
-                  show-first-last-page
-                  :length="totalPages"
-                  :total-visible="8"
-              />
-            </div>
-          </v-sheet>
-        </v-card-text>
-      </v-card>
+        </v-sheet>
+      </v-card-text>
 
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
@@ -185,8 +163,7 @@
         <v-icon>mdi-alert-circle-outline</v-icon>
         {{ snackBar.msg }}
       </v-snackbar>
-
-    </v-sheet>
+    </v-card>
   </v-overlay>
 </template>
 

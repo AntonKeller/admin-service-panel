@@ -9,7 +9,7 @@
       <v-card-title>
         <div class="d-flex justify-space-between align-center">
           <div>Новый договор</div>
-          <my-button-close-card @click="$emit('click:close')"/>
+          <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
         </div>
       </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
@@ -147,21 +147,22 @@
     </v-snackbar>
 
     <my-overlay v-model="contractExecutorMenuAddVisibility">
-      <contract-executor-add @add:success="fetchContractExecutors" @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
+      <contract-executor-add @add:success="fetchContractExecutors"
+                             @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
     </my-overlay>
 
     <my-overlay v-model="customerAddMenuShow">
-      <customer-add @add:success="fetchCustomersAll" @click:close="customerAddMenuShow=false"></customer-add>
+      <customer-add @add:success="onCustomerAddSuccess" @click:close="customerAddMenuShow=false"></customer-add>
     </my-overlay>
 
   </v-sheet>
 </template>
 
 <script>
-import {fetchContractExecutors} from "../utils/api/api_contract_executors.js";
+import {fetchContractExecutors} from "../utils/api/api_contract_executors";
 import {fetchCustomersAll} from "../utils/api/api_customers";
 import {addContract} from "../utils/api/api_contracts";
-import {showAlert} from "../utils/functions.js";
+import {showAlert} from "../utils/functions";
 
 export default {
   name: "contract-add",
@@ -216,6 +217,11 @@ export default {
       } else {
         this.snackBar = showAlert('Поля не заполнены!').error();
       }
+    },
+
+    onCustomerAddSuccess() {
+      this.customerAddMenuShow = false;
+      this.fetchCustomersAll();
     },
 
     fetchCustomersAll() {

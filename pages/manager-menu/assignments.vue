@@ -8,17 +8,17 @@
         <v-card-item>
 
           <div class="d-flex align-center">
-            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-              <v-btn
-                  prepend-icon="mdi-plus-box-multiple-outline"
-                  @click="assignmentAddVisibility = true"
-              >
-                Добавить
-                <v-tooltip activator="parent">
-                  Добавить новое задание
-                </v-tooltip>
-              </v-btn>
-            </v-btn-group>
+            <v-btn
+                variant="tonal"
+                color="blue-darken-4"
+                prepend-icon="mdi-plus-box-multiple-outline"
+                @click="assignmentAddVisibility = true"
+            >
+              Добавить
+              <v-tooltip activator="parent">
+                Добавить новое задание
+              </v-tooltip>
+            </v-btn>
             <!--            <v-spacer />-->
             <v-sheet width="550">
               <v-text-field
@@ -91,6 +91,7 @@
             :total-visible="8"
         />
       </div>
+
     </v-sheet>
 
     <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">

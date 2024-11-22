@@ -4,7 +4,7 @@
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Новая задача</div>
-        <my-button-close-card @click="$emit('click:close')"/>
+        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
 
@@ -60,7 +60,7 @@
               rounded="lg"
               @click="contractMenuAddShow = true"
           >
-            <v-icon />
+            <v-icon/>
             <v-tooltip activator="parent" location="left">
               Добавить новый договор
             </v-tooltip>
@@ -97,7 +97,7 @@
 
 
     <v-overlay v-model="contractMenuAddShow" class="d-flex justify-center align-center">
-      <contract-add @add:success="contractsStoreUpdate" @click:close="contractMenuAddShow = false"></contract-add>
+      <contract-add @add:success="onContractAddSuccess" @click:close="contractMenuAddShow = false"></contract-add>
     </v-overlay>
 
   </v-card>
@@ -151,6 +151,10 @@ export default {
     contractsStoreUpdate() {
       this.$store.dispatch('contracts/UPDATE_ITEMS');
     },
+    onContractAddSuccess() {
+      this.contractMenuAddShow = false;
+      this.contractsStoreUpdate();
+    },
     async sendAssignment() {
       await this.$refs.form.validate();
       if (this.formIsValid) {
@@ -168,9 +172,9 @@ export default {
 }
 </script>
 
-<style>
-@font-face {
-  font-family: 'Norwester';
-  src: url('~assets/fonts/TildaSans-Regular.ttf')  format('opentype'),
-}
-</style>
+<!--<style>-->
+<!--@font-face {-->
+<!--  font-family: 'TildaSans-Regular';-->
+<!--  src: url('~assets/fonts/TildaSans-Regular.ttf') format('opentype'),-->
+<!--}-->
+<!--</style>-->

@@ -4,7 +4,7 @@
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редактирование инспектора</div>
-        <my-button-close-card @click="$emit('click:close')"/>
+        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
 

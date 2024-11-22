@@ -7,7 +7,7 @@
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редактор заказчика</div>
-        <my-button-close-card @click="$emit('click:close')"/>
+        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
 
@@ -30,21 +30,21 @@
           <my-text-field v-model="customer.representativePosition" label="Представитель (Должность)"/>
         </div>
         <v-label>Загруженные ракурсы</v-label>
-        <v-divider />
+        <v-divider/>
         <v-sheet max-height="200" style="overflow-y: scroll">
           <v-list max-height="200px">
             <v-list-item v-for="item of customer.template">
-              <b>Объект:</b>{{item.type}}<b> Кол-во ракурсов:</b>{{item?.angles?.length}}
+              <b>Объект:</b>{{ item.type }}<b> Кол-во ракурсов:</b>{{ item?.angles?.length }}
             </v-list-item>
           </v-list>
         </v-sheet>
-<!--        <my-text-field v-model="customer.template" label="Шаблон" disabled/>-->
+        <!--        <my-text-field v-model="customer.template" label="Шаблон" disabled/>-->
       </v-form>
     </v-card-text>
 
     <v-card-item>
       <div>
-        <v-divider />
+        <v-divider/>
         <v-label>Вы можете добавить или заменить шаблон</v-label>
         <v-btn
             class="ml-2"
@@ -93,11 +93,11 @@
 </template>
 
 <script>
-import _ from "lodash";
-import {showAlert} from "../utils/functions";
 import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
-import {downloadFile} from "../utils/api/api_.js";
-import {serverURL} from "../constants/constants.js";
+import {serverURL} from "../constants/constants";
+import {downloadFile} from "../utils/api/api_";
+import {showAlert} from "../utils/functions";
+import _ from "lodash";
 
 export default {
   name: "customer-change",

@@ -7,17 +7,17 @@
       <v-card-item>
 
         <div class="d-flex align-center">
-          <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-            <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                @click="menuAddCustomerIsShow = true"
-            >
-              Добавить
-              <v-tooltip activator="parent">
-                Добавить нового заказчика
-              </v-tooltip>
-            </v-btn>
-          </v-btn-group>
+          <v-btn
+              variant="tonal"
+              color="blue-darken-4"
+              prepend-icon="mdi-plus-box-multiple-outline"
+              @click="menuAddCustomerIsShow = true"
+          >
+            Добавить
+            <v-tooltip activator="parent">
+              Добавить нового заказчика
+            </v-tooltip>
+          </v-btn>
           <v-sheet width="550">
             <v-text-field
                 v-model="searchText"
@@ -84,11 +84,12 @@
   </v-snackbar>
 
   <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-add @add:success="updateCustomers" @click:close="menuAddCustomerIsShow=false"/>
+    <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>
   </v-overlay>
 
   <v-overlay v-model="menuChangeCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-change :_customer="customerSelected" @change:success="updateCustomers" @click:close="menuChangeCustomerIsShow=false"></customer-change>
+    <customer-change :_customer="customerSelected" @change:success="onCustomerChangeSuccess"
+                     @click:close="menuChangeCustomerIsShow=false"></customer-change>
   </v-overlay>
 </template>
 
@@ -158,6 +159,14 @@ export default {
           .finally(() => {
             this.fetching = false;
           })
+    },
+    onCustomerAddSuccess() {
+      this.menuAddCustomerIsShow = false;
+      this.updateCustomers();
+    },
+    onCustomerChangeSuccess() {
+      this.menuChangeCustomerIsShow = false;
+      this.updateCustomers();
     },
     menuChangeCustomerShow(customer) {
       this.customerSelected = customer;
