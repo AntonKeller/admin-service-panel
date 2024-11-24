@@ -14,7 +14,8 @@
       </v-card-title>
       <v-card-subtitle>Заполните поля</v-card-subtitle>
       <v-card-item>
-        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+        <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
+
           <my-text-field
               v-model="value.name"
               prepend-inner-icon="mdi-label-variant-outline"
@@ -45,17 +46,19 @@
               label="Адрес"
           />
 
-          <my-text-field
-              v-model="value.objectType"
-              prepend-inner-icon="mdi-label-variant-outline"
-              label="Тип объекта"
-          />
+          <div class="d-flex ga-2">
+            <my-text-field
+                v-model="value.objectType"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Тип объекта"
+            />
 
-          <my-text-field
-              v-model="value.status"
-              prepend-inner-icon="mdi-label-variant-outline"
-              label="Наличие"
-          />
+            <my-text-field
+                v-model="value.status"
+                prepend-inner-icon="mdi-label-variant-outline"
+                label="Наличие"
+            />
+          </div>
         </v-form>
       </v-card-item>
       <v-card-actions>

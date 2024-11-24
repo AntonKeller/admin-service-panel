@@ -176,7 +176,7 @@ export default {
       visibility: false,
       searchText: '',
       currentPage: 1,
-      itemsPerPage: 2,
+      itemsPerPage: 8,
       snackBar: {},
       assignmentMenuChangeVisibility: false,
       blockMenuAddVisibility: false,

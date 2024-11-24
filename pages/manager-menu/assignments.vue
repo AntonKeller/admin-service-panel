@@ -36,10 +36,9 @@
           </div>
 
           <v-sheet style="min-height: 600px" class="mt-2">
-            <v-table height="700" density="comfortable" fixed-header>
+            <v-table height="77vh" density="comfortable" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
-                <th>№</th>
                 <th>Заголовок</th>
                 <th>Договор</th>
                 <th>Заказчик</th>
@@ -53,23 +52,22 @@
                   :key="assignment._id"
                   @click="selectAssignment(assignment)"
               >
-                <td style="min-width: 30px; width: 30px; max-width: 30px">{{ i + 1 }}</td>
-                <td style="min-width: 280px; width: 280px; max-width: 280px">
+                <td style="max-width: 200px">
                   <div>{{ assignment.title }}</div>
                   <v-divider/>
                   <div class="text-caption font-weight-bold">{{ stringToDate(assignment.createdAt) }}</div>
                 </td>
 
-                <td style="min-width: 240px; width: 240px; max-width: 240px">
+                <td style="max-width: 140px">
                   <div><b>Номер: </b>{{ assignment?.contract?.contractNumber }}</div>
                   <div><b>Заключен: </b>{{ stringToDate(assignment?.contract?.contractDate) }}</div>
                 </td>
-                <td style="min-width: 240px; width: 240px;max-width: 240px">
+                <td style="max-width: 140px">
                   <div><b></b>{{ assignment?.contract?.customer?.shortName }}</div>
                   <div><b>email: </b>{{ assignment?.contract?.customer?.email }}</div>
                 </td>
-                <td style="min-width: 600px; width: 600px; max-width: 600px">
-                  {{ slicer(assignment.description, 260) }}
+                <td style="max-width: 200px">
+                  {{ slicer(assignment.description, 50) }}
                 </td>
                 <td style="min-width: 65px; width: 65px; max-width: 65px">
                   <c-remove-btn :prompt="'Удалить'" @click:yes="removeAssignment(assignment._id)"/>
@@ -156,13 +154,12 @@ export default {
     assignmentFoundList() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
         return this.assignmentList.filter(item => {
-          return (new RegExp(this.searchText, 'ig')).test([
-            item?.reatedAt || null,
-            item?.description || null,
+          return [
             item?.title || null,
+            item?.description || null,
             item?.contract?.customer?.fullName || null,
             item?.contract?.customer?.inn || null
-          ].join(' '));
+          ].filter(e => !!e).find(field => (new RegExp(this.searchText, 'ig')).test(field));
         })
       }
       return this.assignmentList;

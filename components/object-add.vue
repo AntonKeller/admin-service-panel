@@ -26,25 +26,23 @@
               label="Наименование"
           />
 
-          <div class="d-flex ga-2">
-            <my-text-field
-                v-model="value.inventoryNumber"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="Инвентарный номер"
-            />
+          <my-text-field
+              v-model="value.inventoryNumber"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Инвентарный номер"
+          />
 
-            <my-text-field
-                v-model="value.model"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="Заводской номер"
-            />
+          <my-text-field
+              v-model="value.model"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Заводской номер"
+          />
 
-            <my-text-field
-                v-model="value.serialNumber"
-                prepend-inner-icon="mdi-label-variant-outline"
-                label="VIN номер"
-            />
-          </div>
+          <my-text-field
+              v-model="value.serialNumber"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="VIN номер"
+          />
 
           <my-text-field
               v-model="value.address"

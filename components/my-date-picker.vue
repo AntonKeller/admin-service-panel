@@ -1,8 +1,6 @@
 <template>
-<!--  :style="`min-width: ${fieldWidth}px`"-->
   <div class="d-flex ga-1" style="width: 100%">
     <v-text-field
-        v-bind="$attrs"
         v-model="textField"
         :rules="[v => textDateValid(v)]"
         ref="dateInput"
@@ -13,6 +11,7 @@
         color="yellow-darken-3"
         variant="outlined"
         density="compact"
+        v-bind="$attrs"
     />
     <v-btn icon="mdi-dots-horizontal" size="small" variant="text" rounded="lg">
       <v-icon/>
@@ -51,6 +50,11 @@ export default {
       datepickerValue: null,
       isVisibleMenu: false,
     }
+  },
+
+  beforeMount() {
+    this.textFieldValue = moment(this.modelValue).format('DD.MM.YYYY');
+    this.unixDate = this.modelValue;
   },
 
   computed: {

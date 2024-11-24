@@ -24,6 +24,7 @@
               v-model="assignment.contract"
               :rules="contractRules"
               :items="getContracts"
+              no-data-text="Пусто"
               prepend-inner-icon="mdi-file-sign"
               color="yellow-darken-3"
               density="compact"

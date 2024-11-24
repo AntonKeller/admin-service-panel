@@ -32,7 +32,7 @@
         </div>
 
         <v-sheet style="min-height: 600px" class="mt-2">
-          <v-table height="700" density="comfortable" fixed-header>
+          <v-table height="77vh" density="comfortable" fixed-header>
             <thead v-if="!fetching">
             <tr>
               <th>№</th>
@@ -56,7 +56,7 @@
               <td>{{ inspector?.lastName || '' }}</td>
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
-              <td style="min-width: 65px; width: 65px; max-width: 65px">
+              <td>
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
               </td>
             </tr>
