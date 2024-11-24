@@ -36,18 +36,22 @@
       </v-card-title>
 
       <v-card-subtitle>
-        <div class="d-flex ga-2">
-          <b>Статус:</b> {{ assignmentBlock.status }}
-        </div>
-        <div class="d-flex ga-2">
-          <b>Начало-Окончание:</b>{{ dateFromTo }}
-        </div>
+        <div class="d-flex flex-column ga-2">
+          <div class="d-flex ga-2">
+            <b>Статус:</b> {{ assignmentBlock.status }}
+          </div>
 
-        <div class="d-flex ga-2">
-          <b>Инспектор:</b> {{ inspectorName }}
-        </div>
-        <div class="d-flex ga-2">
-          <b>{{ inspectorContactsTitle }}</b>
+          <div class="d-flex ga-2">
+            <b>Начало-Окончание:</b>{{ dateFromTo }}
+          </div>
+
+          <div class="d-flex ga-2">
+            <b>Инспектор:</b> {{ inspectorName }}
+          </div>
+
+          <div class="d-flex ga-2">
+            <b>{{ inspectorContactsTitle }}</b>
+          </div>
         </div>
       </v-card-subtitle>
 
@@ -71,7 +75,7 @@
             <v-menu activator="#menu-activator" location="top">
               <div class="d-flex align-center justify-center ga-1 mb-1">
                 <v-btn
-                    color="blue-darken-1"
+                    color="blue-grey-darken-2"
                     density="comfortable"
                     icon="mdi-file-download-outline"
                     variant="flat"
@@ -84,7 +88,7 @@
                   </v-tooltip>
                 </v-btn>
                 <v-btn
-                    color="blue-darken-1"
+                    color="blue-grey-darken-2"
                     density="comfortable"
                     icon="mdi-table-arrow-up"
                     variant="flat"
@@ -98,7 +102,7 @@
                 </v-btn>
                 <v-btn
                     icon="mdi-file-document-arrow-right-outline"
-                    color="blue-darken-1"
+                    color="blue-grey-darken-2"
                     density="comfortable"
                     variant="flat"
                     rounded="lg"
@@ -136,7 +140,7 @@
         <v-divider/>
         <v-sheet>
 
-          <v-table height="440" density="default" fixed-header class="text-caption elevation-0">
+          <v-table height="400" density="default" fixed-header class="text-caption elevation-0">
             <thead>
             <tr class="text-blue-darken-4">
               <th class="text-left">Объект</th>

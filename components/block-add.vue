@@ -289,6 +289,13 @@ export default {
         pledgeAgreementDate: null,
         inspector: null,
         status: null,
+        pledgeAgreementName: null,
+        pledgeAgreementPosition: null,
+        pledgeAgreementCompany: null,
+        address: null,
+        contactFullName: null,
+        contactPhoneNumber: null,
+        description: null,
       }
     },
 

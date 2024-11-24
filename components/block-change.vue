@@ -185,10 +185,6 @@
           :loading="sendingData"
           @click="updateBlock"
       />
-      <my-btn-clear
-          text="Очистить"
-          @click="clear"
-      />
     </v-card-actions>
 
     <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
@@ -266,28 +262,6 @@ export default {
   },
 
   methods: {
-
-    clear() {
-      this.block = {
-        _id: null,
-        title: null,
-        startDate: null,
-        endDate: null,
-        loanAgreement: null,
-        loanAgreementDate: null,
-        pledgeAgreement: null,
-        pledgeAgreementDate: null,
-        inspector: null,
-        status: null,
-        pledgeAgreementName: null,
-        pledgeAgreementPosition: null,
-        pledgeAgreementCompany: null,
-        address: null,
-        contactFullName: null,
-        contactPhoneNumber: null,
-        description: null,
-      }
-    },
 
     fetchInspectors() {
       this.fetchingInspectors = true;

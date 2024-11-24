@@ -72,7 +72,7 @@
             :loading="sending"
             @click="sendValue"
         />
-        <my-btn-clear text="Очистить" @click="this.value = null"/>
+        <my-btn-clear text="Очистить" @click="this.value = {}"/>
       </v-card-actions>
     </v-card>
     <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">

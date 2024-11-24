@@ -93,7 +93,8 @@
             >загрузка...
             </v-progress-circular>
           </div>
-          <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header class="bg-grey-lighten-4 text-caption">
+          <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header
+                   class="bg-grey-lighten-4 text-caption">
             <thead>
             <tr>
               <th>Заголовок</th>
@@ -125,7 +126,7 @@
                 <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
                 <div><b>По:</b> {{ stringToDate(block.endDate) }}</div>
               </td>
-              <td >{{ block.status }}</td>
+              <td>{{ block.status }}</td>
               <td style="min-width: 50px; max-width: 50px">
                 <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
               </td>
@@ -146,14 +147,15 @@
         </v-sheet>
       </v-card-text>
 
-      <!--    Assignment Menu Change-->
-      <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change @click:close="onClickCloseMenuChange" @update:success="onUpdateSuccess"/>
-      </v-overlay>
-
       <!--    Block Menu Add-->
       <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-        <block-add @add:success="assignmentBlocksStoreUpdate" @click:close="blockMenuAddVisibility=false"/>
+        <block-add @add:success="onAddBlockSuccess" @click:close="blockMenuAddVisibility=false"/>
+      </v-overlay>
+
+      <!--    Assignment Menu Change-->
+      <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
+        <assignment-change @update:success="onUpdateSuccess"
+                           @click:close="this.assignmentMenuChangeVisibility = false;"/>
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -163,6 +165,7 @@
         <v-icon>mdi-alert-circle-outline</v-icon>
         {{ snackBar.msg }}
       </v-snackbar>
+
     </v-card>
   </v-overlay>
 </template>
@@ -288,11 +291,13 @@ export default {
   },
 
   methods: {
+    onAddBlockSuccess() {
+      this.blockMenuAddVisibility = false;
+      this.assignmentBlocksStoreUpdate();
+    },
     onUpdateSuccess() {
       this.assignmentMenuChangeVisibility = false;
-    },
-    onClickCloseMenuChange() {
-      this.assignmentMenuChangeVisibility = false;
+      this.assignmentBlocksStoreUpdate();
     },
     goBack() {
       navigateTo('/manager-menu/assignments');
