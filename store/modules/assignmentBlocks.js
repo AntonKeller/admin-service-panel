@@ -26,9 +26,8 @@ const assignmentBlocks = {
         SET_FETCHING(state, payload) {
             state.fetching = payload || initial().fetching;
         },
-        REMOVE_ITEM(state, payload) {
-            const index = state.items.findIndex(item => item._id === payload);
-            if (index >= 0) state.items.splice(index, 1);
+        REMOVE_ITEM(state, blockID) {
+            state.blocks = state.blocks.filter(block => block._id !== blockID);
         },
         SHOW_ALERT_SUCCESS(state, payload) {
             state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
@@ -59,26 +58,6 @@ const assignmentBlocks = {
                     break;
             }
         },
-
-        async REMOVE_ITEM({commit, getters}, payload) {
-
-            commit('SET_FETCHING', true);
-            let answer = await removeAssignmentBlock(payload);
-            commit('SET_FETCHING', false);
-
-            switch (answer.status) {
-                case 200:
-                    commit('REMOVE_ITEM', payload);
-                    commit('SHOW_ALERT_SUCCESS', 'Успешно удалено' || answer.statusText);
-                    break;
-                case 403:
-                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
-                    break;
-                default:
-                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
-                    break;
-            }
-        }
     }
 }
 

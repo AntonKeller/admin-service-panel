@@ -171,6 +171,9 @@
 </template>
 
 <script>
+import logotype from "@/components/logotype.vue";
+import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks.js";
+
 export default {
   name: "assignment-card-page",
 
@@ -252,9 +255,6 @@ export default {
       }
       return this.blocks;
     },
-    blocksSearchCount() {
-      return this.blocksFiltered.length;
-    },
     blocksSLice() {
       const from = (this.currentPage - 1) * this.itemsPerPage;
       const to = this.currentPage * this.itemsPerPage;
@@ -323,8 +323,18 @@ export default {
       navigateTo('/manager-menu/assignments/assignment-card/block');
     },
 
-    removeBlockById(value) {
-      this.$store.dispatch('assignmentBlocks/REMOVE_ITEM', value);
+    removeBlockById(blockID) {
+
+      console.log('Removed block')
+
+      removeAssignmentBlock(blockID)
+          .then(() => {
+            this.$store.commit('assignmentBlocks/REMOVE_ITEM', blockID);
+            console.log('Removed block success');
+          })
+          .catch(err => {
+            console.log('Ошибка удаления Блока', err);
+          })
     },
     back() {
       navigateTo('/manager-menu/assignments')
