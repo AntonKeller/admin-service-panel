@@ -3,7 +3,6 @@ import {serverURL} from "@/constants/constants";
 
 function createConfig() {
     return {
-        timeout: 1500,
         headers: {
             authorization: localStorage.accessToken ?? '',
         }
@@ -27,7 +26,6 @@ export async function fetchImages(objectId, query) {
 
 export async function downloadImage(url, query) {
     return axios.get(url + (query ?? ''), {
-        timeout: 1500,
         responseType: "blob",
         headers: {
             authorization: localStorage.accessToken ?? '',

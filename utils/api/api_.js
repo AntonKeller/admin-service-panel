@@ -3,7 +3,6 @@ import {serverURL} from "@/constants/constants";
 
 function createConfig() {
     return {
-        timeout: 1500,
         headers: {
             'Content-type': '*/*',
             authorization: localStorage.accessToken ?? '',
