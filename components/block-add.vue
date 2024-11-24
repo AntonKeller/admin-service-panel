@@ -244,8 +244,8 @@ export default {
       assignment_block_statuses,
       //................................
       blockTitleRules: [
-        v => v.length > 0 || 'Поле не должно быть пустым',
-        v => v.length <= 50 || 'Текст не должен превышать 50 символов',
+        v => v && v.length > 0 || 'Поле не должно быть пустым',
+        v => v && v.length <= 50 || 'Текст не должен превышать 50 символов',
       ],
       blockStartDateRules: [isDate],
       blockEndDateRules: [isDate],
@@ -312,7 +312,6 @@ export default {
 
       if (this.formIsValid) {
         this.sendingData = true;
-        console.log('this._assignmentId', this._assignmentId)
         sendAssignmentBlock(this._assignmentId, this.block)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();

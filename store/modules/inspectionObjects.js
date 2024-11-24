@@ -13,11 +13,9 @@ const inspectionObjects = {
     getters: {
         GET_OBJECTS: (state) => state.objects,
         GET_SELECTED_OBJECT: (state) => {
-            console.log('[store-inspection-objects]:[GET_SELECTED_OBJECT] value = ', state.selectedObject)
             return state.selectedObject;
         },
         GET_FETCHING: (state) => {
-            console.log('[store-inspection-objects]:[GET_FETCHING] value = ', state.fetching)
             return state.fetching;
         },
         GET_ALERT: (state) => state.alert,
@@ -36,14 +34,12 @@ const inspectionObjects = {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
         },
         RESET(state) {
-            console.log('[store-inspection-objects]:[RESET]')
             state = Object.assign(state, initial());
         },
         RESET_OBJECT_LIST(state) {
             state.objects = Object.assign(state.objects, initial().objects);
         },
         RESET_SELECTED(state) {
-            console.log('[store-inspection-objects]:[RESET_SELECTED]')
             state.selectedObject = Object.assign(state.selectedObject, initial().selectedObject);
         }
     },

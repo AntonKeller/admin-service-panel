@@ -53,8 +53,10 @@ export default {
   },
 
   beforeMount() {
-    this.textFieldValue = moment(this.modelValue).format('DD.MM.YYYY');
-    this.unixDate = this.modelValue;
+    if (!isNaN(parseInt(this.modelValue))) {
+      this.textFieldValue = moment(this.modelValue).format('DD.MM.YYYY');
+      this.unixDate = this.modelValue;
+    }
   },
 
   computed: {
@@ -93,7 +95,6 @@ export default {
   watch: {
     unixDate(value) {
       this.$emit('update:modelValue', value);
-      console.log('[update:modelValue]', value)
     },
   },
 
@@ -147,15 +148,6 @@ export default {
       }
 
       if (this.isVisibleMenu) this.isVisibleMenu = false;
-
-      // console.log('\n\n--------------------------------------------------------------------------------------------');
-      // console.log('foundIndexLastValid:', foundIndexLastValid);
-      // console.log('this.textFieldValue:', this.textFieldValue);
-      // console.log('this.$refs.dateInput.value:', this.$refs.dateInput.value);
-      // if (this.momentCheckDate(textDate)) {
-      //   console.log('is valid:', this.momentCheckDate(textDate));
-      // }
-      // console.log('--------------------------------------------------------------------------------------------\n\n');
     }
   }
 }

@@ -149,7 +149,7 @@ export default {
               this.snackBar = showAlert('Успешно изменен').success();
             })
             .catch(err => {
-              console.log('Ошибка изменения', err);
+              console.log('Ошибка изменения заказчика', err);
               this.snackBar = showAlert('Ошибка изменения').error();
             })
             .finally(() => {
@@ -161,7 +161,6 @@ export default {
           formData.append('photoAngles', this.templateFile);
           uploadTemplate(this.customer._id, formData)
               .then(() => {
-                console.log('Шаблон успешно отправлен');
                 this.$emit('change:success');
               })
               .catch(err => {

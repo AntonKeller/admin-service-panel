@@ -181,13 +181,15 @@
 
       <!--    Block Menu Change-->
       <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
-        <block-change @change:success="fetchObjects" @click:close="blockMenuChangeVisibility=false"></block-change>
+        <block-change @change:success="onBlockChangeSuccess"
+                      @click:close="blockMenuChangeVisibility=false"></block-change>
       </v-overlay>
 
       <!--    Object Menu Add-->
       <v-overlay v-model="objectMenuAddVisibility" class="d-flex justify-center align-center">
-        <object-add @add:success="fetchObjects" @click:close="objectMenuAddVisibility=false"></object-add>
+        <object-add @add:success="onObjectAddSuccess" @click:close="objectMenuAddVisibility=false"></object-add>
       </v-overlay>
+
 
       <!--      Block Card Page-->
       <nuxt-page/>
@@ -334,6 +336,16 @@ export default {
   },
 
   methods: {
+    onBlockChangeSuccess() {
+      this.fetchObjects();
+      this.blockMenuChangeVisibility = false;
+    },
+
+    onObjectAddSuccess() {
+      this.fetchObjects();
+      this.objectMenuAddVisibility = false;
+    },
+
     goBack() {
       navigateTo('/manager-menu/assignments/assignment-card');
     },

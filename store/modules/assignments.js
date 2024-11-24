@@ -57,7 +57,6 @@ const assignments = {
             switch (answer.status) {
                 case 200:
                     commit('SET_ASSIGNMENTS', answer.data.data);
-                    console.log('[store assignments] answer data:', answer.data);
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

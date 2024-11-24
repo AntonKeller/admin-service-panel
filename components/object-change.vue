@@ -100,7 +100,6 @@ export default {
   }),
   methods: {
     async changeValue() {
-      console.log('change')
       // await this.$refs.form.validate();
       // if (this.formIsValid) {
         this.sending = true;

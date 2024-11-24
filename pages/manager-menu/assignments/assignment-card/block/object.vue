@@ -278,7 +278,6 @@ export default {
     },
 
     removeImg(_photoId) {
-      console.log(this.angleSelected)
       removeImg(_photoId)
           .then(() => {
             this.imgFullWindowIsShow = false;
@@ -291,7 +290,7 @@ export default {
             this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
           })
           .catch(err => {
-            console.log('Ошибка', err);
+            console.log('Ошибка удаления фотографии', err);
           })
     },
 
@@ -314,7 +313,7 @@ export default {
               this.fetchImages();
             })
             .catch(err => {
-              console.log('Ошибка', err);
+              console.log('Ошибка отправки фотографии', err);
             })
 
         this.progress += Math.floor(step);

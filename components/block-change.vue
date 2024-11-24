@@ -255,7 +255,6 @@ export default {
 
   mounted() {
     this.fetchInspectors();
-    console.log('this.block', this.block)
   },
 
   computed: {

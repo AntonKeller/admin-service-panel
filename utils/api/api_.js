@@ -40,7 +40,6 @@ export async function accessTest() {
  * Загружает файл
  * */
 export async function downloadFile(saveAs, url) {
-
     try {
 
         const response = await axios.get(url, {
@@ -62,6 +61,5 @@ export async function downloadFile(saveAs, url) {
     } catch (err) {
         console.log('Ошибка загрузки файла')
     }
-
 }
 

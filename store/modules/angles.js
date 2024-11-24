@@ -39,8 +39,6 @@ const angles = {
     actions: {
         async FETCH({commit, getters}, objectID) {
 
-            console.log('[Store: Angles] FETCH')
-
             commit('SET_FETCHING', true);
             let answer = await fetchAngles(objectID);
             commit('SET_FETCHING', false);

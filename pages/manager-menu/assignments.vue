@@ -137,7 +137,6 @@ export default {
 
   mounted() {
     this.$store.dispatch('assignments/FETCH');
-    console.log('assignments', this.$store.getters['assignments/GET_ASSIGNMENTS'])
   },
 
   unmounted() {

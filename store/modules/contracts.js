@@ -75,7 +75,6 @@ const contracts = {
             switch (answer.status) {
                 case 200:
                     commit('SET_ITEMS', answer.data);
-                    console.log('contracts data', answer.data)
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

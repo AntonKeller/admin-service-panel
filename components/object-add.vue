@@ -125,7 +125,7 @@ export default {
             })
             .catch((err) => {
               this.snackBar = showAlert('Ошибка').error();
-              console.log('Ошибка добавления', err);
+              console.log('Ошибка добавления объекта', err);
             })
             .finally(() => {
               this.sending = false;

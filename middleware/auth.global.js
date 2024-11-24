@@ -9,9 +9,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
         let tokenTest = await accessTest().then(r => r.data);
 
-        console.log('tokenTest', tokenTest);
-
-
         if (tokenTest && /^\/$/ig.test(to?.fullPath) || /^\/manager-menu$/ig.test(to?.fullPath)) {
             return navigateTo('/manager-menu/assignments');
         }

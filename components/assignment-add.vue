@@ -133,12 +133,6 @@ export default {
     this.$store.dispatch('contracts/UPDATE_ITEMS');
   },
 
-  watch: {
-    assignment() {
-      console.log('assignment', assignment);
-    }
-  },
-
   computed: {
     getContracts() {
       return this.$store.getters['contracts/GET_ITEMS'];
@@ -164,8 +158,8 @@ export default {
               this.$store.dispatch('assignments/FETCH');
               this.$emit('add:success');
             })
-            .catch(() => {
-              console.log('Ошибка добавления задачи')
+            .catch((err) => {
+              console.log('Ошибка добавления задачи', err)
             })
       }
     }

@@ -176,10 +176,11 @@ export default {
       removeCustomer(id)
           .then(() => {
             this.snackBar = showAlert('Успешно удален').success();
+            this.updateCustomers();
           })
           .catch((err) => {
             this.snackBar = showAlert('Ошибка удаления').error();
-            console.log('Ошибка удаления', err);
+            console.log('Ошибка удаления заказчика', err);
           })
     }
   }

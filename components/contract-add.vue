@@ -209,7 +209,7 @@ export default {
             })
             .catch(err => {
               this.snackBar = showAlert('Не удалось добавить договор!').error();
-              console.log('Ошибка запроса', err);
+              console.log('Ошибка добавления договора', err);
             })
             .finally(() => {
               this.loading = false;
@@ -243,14 +243,13 @@ export default {
     async fetchContractExecutors() {
 
       this.fetchingContractExecutors = true;
-      console.log('fetchingContractExecutors')
 
       fetchContractExecutors()
           .then(response => {
             this.contractExecutors = response.data;
           })
           .catch(err => {
-            console.log('Ошибка', err);
+            console.log('Ошибка получения исполнителей', err);
           })
           .finally(() => {
             this.fetchingContractExecutors = false;

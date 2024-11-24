@@ -63,7 +63,6 @@
             </tbody>
           </v-table>
         </v-sheet>
-
       </v-card-item>
     </v-card>
 
@@ -79,12 +78,23 @@
     </div>
 
     <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
-      <inspector-add @add:success="updateInspectors" @click:close="inspectorMenuAddVisibility=false"></inspector-add>
+      <inspector-add @add:success="onInspectorAddSuccess"
+                     @click:close="inspectorMenuAddVisibility=false"/>
     </v-overlay>
 
+
     <v-overlay v-model="inspectorMenuChangeVisibility" class="d-flex justify-center align-center">
-      <inspector-change @change:success="updateInspectors" :_inspector="inspectorSelected" @click:close="inspectorMenuChangeVisibility=false"></inspector-change>
+      <inspector-change
+          :_inspector="inspectorSelected"
+          @change:success="onInspectorChangeSuccess"
+          @click:close="inspectorMenuChangeVisibility=false"
+      />
     </v-overlay>
+
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
 
   </v-container>
 </template>
@@ -107,6 +117,7 @@ export default {
       itemsPerPage: 20,
       inspectorMenuAddVisibility: false,
       inspectorMenuChangeVisibility: false,
+      snackBar: {},
     }
   },
 
@@ -144,16 +155,28 @@ export default {
   },
 
   methods: {
-    updateInspectors() {
-      fetchInspectors()
-          .then((response) => {
-            this.inspectors = response.data;
-          })
+
+    onInspectorAddSuccess() {
+      this.inspectorMenuAddVisibility = false;
+      this.updateInspectors();
     },
+
+    onInspectorChangeSuccess() {
+      this.inspectorMenuChangeVisibility = false;
+      this.updateInspectors();
+    },
+
+    updateInspectors() {
+      fetchInspectors().then((response) => {
+        this.inspectors = response.data;
+      })
+    },
+
     removeInspector(ID) {
       removeInspector(ID)
           .then(() => {
             this.snackBar = showAlert('Инспектор удален').success();
+            this.updateInspectors();
           })
           .catch(() => {
             this.snackBar = showAlert('Ошибка удаления').error();

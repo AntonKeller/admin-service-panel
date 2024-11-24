@@ -50,7 +50,6 @@ export default {
     remove(id) {
       removeContract(id)
           .then(response => {
-            console.log('Договор успешно удален', response);
             this.removeClick(id);
           })
           .catch(err => {

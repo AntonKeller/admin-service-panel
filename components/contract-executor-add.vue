@@ -116,7 +116,7 @@ export default {
               this.$emit('add:success');
             })
             .catch(err => {
-              console.log('err', err)
+              console.log('Ошибка добавления исполнителя', err)
               this.snackBar = showAlert('Не удалось добавить!').error();
             })
             .finally(() => {

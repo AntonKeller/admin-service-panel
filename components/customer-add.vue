@@ -148,7 +148,6 @@ export default {
           formData.append('photoAngles', this.templateFile);
           uploadTemplate(_id, formData)
               .then(() => {
-                console.log('Шаблон успешно отправлен');
                 this.$emit('add:success');
               })
               .catch(err => {

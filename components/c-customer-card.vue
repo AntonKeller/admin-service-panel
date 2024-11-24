@@ -37,7 +37,6 @@
             variant="tonal"
             color="teal-darken-3"
             label
-            @click.stop="console.log('click')"
         >
           {{ customerProp.email }}
         </v-chip>
@@ -48,7 +47,6 @@
             variant="tonal"
             color="teal-darken-3"
             label
-            @click.stop="console.log('click')"
         >
           {{ customerProp.phoneNumber }}
         </v-chip>
