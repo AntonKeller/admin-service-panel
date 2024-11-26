@@ -30,6 +30,7 @@
                 Редактировать ТЗ
               </v-tooltip>
             </v-btn>
+            Техническое задание
           </div>
           <my-button-close-card @click="goBack" class="align-self-start"/>
         </div>
@@ -51,20 +52,12 @@
         </v-sheet>
         <v-divider class="my-1"/>
         <div class="d-flex ga-4 align-center py-1">
-          <!--            <my-search-bar-->
-          <!--                v-model="searchText"-->
-          <!--                style="min-width: 360px"-->
-          <!--                persistent-hint-->
-          <!--                label="Поиск"-->
-          <!--                :hint="`Найдено: ${blocksSearchCount}`"-->
-          <!--                @btn:click="blockMenuAddVisibility = true"-->
-          <!--            />-->
           <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
                 @click="blockMenuAddVisibility = true"
             >
-              Добавить
+              Добавить блок
               <v-tooltip activator="parent">
                 Добавить новый блок
               </v-tooltip>
@@ -98,10 +91,9 @@
             <thead>
             <tr>
               <th>Заголовок</th>
-              <th>Кредитный договор</th>
-              <th>Договор залога</th>
-              <th>Сроки</th>
-              <th>Статус</th>
+              <th>Адрес</th>
+              <th>Дедлайн</th>
+              <th>Инспектор</th>
               <th></th>
             </tr>
             </thead>
@@ -111,24 +103,15 @@
                 :key="block._id"
                 @click="selectBlock(block)"
             >
-              <td>{{ block.title }}</td>
-              <td>
-                <div><b>Номер: </b>{{ block.loanAgreement }}</div>
-                <v-divider/>
-                <div class="text-caption font-weight-bold">{{ stringToDate(block.loanAgreementDate) }}</div>
-              </td>
-              <td>
-                <div><b>Номер: </b>{{ block.pledgeAgreement }}</div>
-                <v-divider/>
-                <div class="text-caption font-weight-bold">{{ stringToDate(block.pledgeAgreementDate) }}</div>
-              </td>
+              <td>{{ block?.title }}</td>
+              <td>{{ block?.address }}</td>
               <td style="min-width: 190px; width: 190px; max-width: 190px">
-                <div><b>С:</b> {{ stringToDate(block.startDate) }}</div>
-                <div><b>По:</b> {{ stringToDate(block.endDate) }}</div>
+                <div><b>Начало:</b> {{ stringToDate(block?.startDate) }}</div>
+                <div><b>Окончание:</b> {{ stringToDate(block?.endDate) }}</div>
               </td>
-              <td>{{ block.status }}</td>
+              <td>{{ block?.inspector?.surName + block?.inspector?.firstName + block?.inspector?.lastName }}</td>
               <td style="min-width: 50px; max-width: 50px">
-                <c-remove-btn class="" prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+                <c-remove-btn prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
               </td>
             </tr>
             </tbody>
@@ -155,7 +138,7 @@
       <!--    Assignment Menu Change-->
       <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
         <assignment-change @update:success="onUpdateSuccess"
-                           @click:close="this.assignmentMenuChangeVisibility = false;"/>
+                           @click:close="this.assignmentMenuChangeVisibility = false"/>
       </v-overlay>
 
       <!--    Block Page Card-->
@@ -171,8 +154,7 @@
 </template>
 
 <script>
-import logotype from "@/components/logotype.vue";
-import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks.js";
+import {removeAssignmentBlock} from "../../../utils/api/api_assignment_blocks";
 
 export default {
   name: "assignment-card-page",
@@ -225,13 +207,14 @@ export default {
       this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
     } else {
       navigateTo('/manager-menu/assignments')
-      // TODO: Если ТЗ не выбрано - возвращаемся на страницу Списка ТЗ
     }
 
     const timeoutID = setTimeout(() => {
       this.visibility = true;
       clearTimeout(timeoutID);
     }, 1);
+
+    // console.log('blocksSLice', this.blocksSLice)
   },
 
   computed: {

@@ -156,7 +156,7 @@
 
           <my-text-field
               v-model="block.address"
-              label="Адрес метонахождения"
+              label="Адрес местонахождения"
           />
 
           <div class="d-flex ga-2">
