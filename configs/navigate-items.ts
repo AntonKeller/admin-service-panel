@@ -17,7 +17,7 @@ export const navItems: Array<TNavItem> = [
     },
     {
         _id: 2,
-        title: 'Осмотрщики',
+        title: 'Инспекторы',
         route: '/manager-menu/inspectors',
         prependIcon: 'mdi-account-settings-outline',
         color: 'blue-darken-3',

@@ -75,6 +75,7 @@
             max-rows="1"
             variant="outlined"
             auto-grow
+            label="Комментарии к задаче"
         />
       </v-form>
     </v-card-item>

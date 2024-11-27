@@ -6,7 +6,7 @@
   >
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Редактор заказчика</div>
+        <div>Редакторование данных заказчика</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -149,7 +149,7 @@ export default {
               this.snackBar = showAlert('Успешно изменен').success();
             })
             .catch(err => {
-              console.log('Ошибка изменения заказчика', err);
+              console.log('Ошибка изменения данных заказчика', err);
               this.snackBar = showAlert('Ошибка изменения').error();
             })
             .finally(() => {

@@ -57,16 +57,16 @@
                 prepend-icon="mdi-plus-box-multiple-outline"
                 @click="blockMenuAddVisibility = true"
             >
-              Добавить блок
+              Добавить адрес
               <v-tooltip activator="parent">
-                Добавить новый блок
+                Добавить новый адрес нас осмотр
               </v-tooltip>
             </v-btn>
           </v-btn-group>
           <v-text-field
               v-model="searchText"
               prepend-inner-icon="mdi-magnify"
-              label="Поиск блоков заданий"
+              label="Поиск"
               variant="solo-filled"
               density="compact"
               class="ml-2"
@@ -83,17 +83,18 @@
                 :width="3"
                 color="teal"
                 indeterminate
-            >загрузка...
+            >
+              загрузка...
             </v-progress-circular>
           </div>
           <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header
                    class="bg-grey-lighten-4 text-caption">
             <thead>
             <tr>
-              <th>Заголовок</th>
               <th>Адрес</th>
-              <th>Дедлайн</th>
+              <th>Сроки</th>
               <th>Инспектор</th>
+              <th>Контакты инспектора</th>
               <th></th>
             </tr>
             </thead>
@@ -103,13 +104,26 @@
                 :key="block._id"
                 @click="selectBlock(block)"
             >
-              <td>{{ block?.title }}</td>
               <td>{{ block?.address }}</td>
               <td style="min-width: 190px; width: 190px; max-width: 190px">
-                <div><b>Начало:</b> {{ stringToDate(block?.startDate) }}</div>
-                <div><b>Окончание:</b> {{ stringToDate(block?.endDate) }}</div>
+                <div>
+                  Начало: {{ stringToDate(block?.startDate) }}
+                </div>
+                <div>
+                  Окончание: {{ stringToDate(block?.endDate) }}
+                </div>
               </td>
-              <td>{{ block?.inspector?.surName + block?.inspector?.firstName + block?.inspector?.lastName }}</td>
+              <td>
+                {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
+              </td>
+              <td>
+                <div>
+                  {{ block?.inspector?.phoneNumber || '-' }}
+                </div>
+                <div>
+                  {{ block?.inspector?.email || '-' }}
+                </div>
+              </td>
               <td style="min-width: 50px; max-width: 50px">
                 <c-remove-btn prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
               </td>
@@ -170,7 +184,7 @@ export default {
       blockMenuAddVisibility: false,
       timeDateConfig: {
         weekday: 'short', // weekday: 'short',
-        year: 'numeric',
+        // year: 'numeric',
         month: 'short', // month: 'short',
         day: 'numeric',
       }
@@ -218,7 +232,7 @@ export default {
       clearTimeout(timeoutID);
     }, 1);
 
-    // console.log('blocksSLice', this.blocksSLice)
+    // console.log('assignment blocks', this.blocks)
   },
 
   computed: {
@@ -290,7 +304,9 @@ export default {
     goBack() {
       navigateTo('/manager-menu/assignments');
     },
+
     stringToDate(timestamp) {
+
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },
 

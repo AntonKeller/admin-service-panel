@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-card variant="text">
-      <v-card-title>Осмотрщики</v-card-title>
+      <v-card-title>Инспекторы</v-card-title>
       <v-card-item>
 
         <div class="d-flex align-center">
@@ -13,7 +13,7 @@
           >
             Добавить
             <v-tooltip activator="parent">
-              Добавить нового осмотрщика
+              Добавить нового инспектора
             </v-tooltip>
           </v-btn>
           <v-sheet width="550">
@@ -21,7 +21,7 @@
                 v-model="searchText"
                 prepend-inner-icon="mdi-magnify"
                 variant="solo-filled"
-                label="Поиск осмотрщика"
+                label="Поиск инспектора"
                 density="compact"
                 class="ml-2"
                 flat

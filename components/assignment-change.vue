@@ -50,7 +50,7 @@
               no-resize
               color="yellow-darken-3"
               variant="outlined"
-              label="Описание"
+              label="Комментарии к задаче"
               rows="6"
           />
 

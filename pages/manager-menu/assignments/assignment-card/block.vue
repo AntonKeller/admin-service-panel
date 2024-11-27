@@ -56,74 +56,56 @@
       </v-card-subtitle>
 
       <v-card-text class="text-caption">
-        <div class="d-flex ga-1 align-center py-1">
+        <div class="d-flex flex-column ga-1  py-1">
           <v-btn-group variant="text" color="blue-darken-4" density="compact">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
                 size="small"
                 @click="objectMenuAddVisibility = true"
             >
-              Добавить
+              Добавить объект
               <v-tooltip activator="parent" location="top">
                 Добавить новый объект
               </v-tooltip>
             </v-btn>
             <v-divider vertical/>
-          </v-btn-group>
-
-          <div>
-            <v-menu activator="#menu-activator" location="top">
-              <div class="d-flex align-center justify-center ga-1 mb-1">
-                <v-btn
-                    color="blue-grey-darken-2"
-                    density="comfortable"
-                    icon="mdi-file-download-outline"
-                    variant="flat"
-                    rounded="lg"
-                    @click="downloadObjectsTemplate"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="top">
-                    Скачать шаблон для заполнения
-                  </v-tooltip>
-                </v-btn>
-                <v-btn
-                    color="blue-grey-darken-2"
-                    density="comfortable"
-                    icon="mdi-table-arrow-up"
-                    variant="flat"
-                    rounded="lg"
-                    @click="clickExcelInputFile"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="top">
-                    Загрузить объекты из xlsx
-                  </v-tooltip>
-                </v-btn>
-                <v-btn
-                    icon="mdi-file-document-arrow-right-outline"
-                    color="blue-grey-darken-2"
-                    density="comfortable"
-                    variant="flat"
-                    rounded="lg"
-                    :loading="reportDownloading"
-                    :disabled="reportDownloading"
-                    @click="downloadReport"
-                >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="top">
-                    Скачать отчет
-                  </v-tooltip>
-                </v-btn>
-              </div>
-            </v-menu>
-            <v-btn id="menu-activator" variant="text" rounded="lg" density="comfortable" icon="mdi-dots-horizontal">
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Функции
+            <v-btn
+                color="blue-grey-darken-2"
+                size="small"
+                prepend-icon="mdi-file-download-outline"
+                @click="downloadObjectsTemplate"
+            >
+              Скачать шаблон
+              <v-tooltip activator="parent" location="top">
+                Скачать шаблон для заполнения объектами
               </v-tooltip>
             </v-btn>
-          </div>
+            <v-divider vertical/>
+            <v-btn
+                color="blue-grey-darken-2"
+                prepend-icon="mdi-table-arrow-up"
+                size="small"
+                @click="clickExcelInputFile"
+            >
+              Загрузить объекты
+              <v-tooltip activator="parent" location="top">
+                Загрузить объекты из xlsx
+              </v-tooltip>
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-file-document-arrow-right-outline"
+                color="blue-grey-darken-2"
+                size="small"
+                :loading="reportDownloading"
+                :disabled="reportDownloading"
+                @click="downloadReport"
+            >
+              Скачать отчет
+              <v-tooltip activator="parent" location="top">
+                Скачать отчет
+              </v-tooltip>
+            </v-btn>
+          </v-btn-group>
 
           <v-text-field
               v-model="searchText"
@@ -135,30 +117,34 @@
               hide-details
               single-line
           />
-
         </div>
         <v-divider/>
         <v-sheet>
 
-          <v-table height="400" density="default" fixed-header class="text-caption elevation-0">
+          <v-table height="350" density="default" fixed-header class="text-caption elevation-0">
             <thead>
             <tr class="text-blue-darken-4">
-              <th class="text-left">Объект</th>
-              <th class="text-left">Адрес</th>
+              <th class="text-left">№ п/п</th>
+              <th class="text-left">Инв. №</th>
+              <th class="text-left">Наименование</th>
+              <th class="text-left">Кадастровый №</th>
+              <th class="text-left">Заводской №</th>
+              <th class="text-left">VIN №</th>
               <th class="text-left"></th>
             </tr>
             </thead>
             <tbody>
             <tr
-                v-for="inspectionObject in objectsSlice"
+                v-for="(inspectionObject, i) in objectsSlice"
                 :key="inspectionObject._id"
                 @click.stop="selectObject(inspectionObject)"
             >
-              <td style="min-width: 200px; max-width: 200px">
-                <div><b>Наименование: </b>{{ textSlicer(inspectionObject.name, 25) }}</div>
-                <div><b>Инв. №: </b>{{ textSlicer(inspectionObject.inventoryNumber, 25) }}</div>
-              </td>
-              <td style="min-width: 200px; max-width: 200px">{{ textSlicer(inspectionObject.address, 50) }}</td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ textSlicer(inspectionObject?.inventoryNumber, 25) }}</td>
+              <td>{{ textSlicer(inspectionObject?.name, 25) }}</td>
+              <td>{{ textSlicer(inspectionObject?.cadNum, 25) }}</td>
+              <td>{{ textSlicer(inspectionObject?.model, 25) }}</td>
+              <td>{{ textSlicer(inspectionObject?.serialNumber, 25) }}</td>
               <td style="min-width: 30px; max-width: 30px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
               </td>
@@ -167,7 +153,6 @@
           </v-table>
           <v-divider/>
         </v-sheet>
-
 
         <div class="d-flex align-center mt-2">
           <v-pagination
@@ -234,6 +219,8 @@ export default {
       }
     }
   },
+
+
 
   // beforeMount() {
   //   // Считываем Объект из session storage -> vuex store

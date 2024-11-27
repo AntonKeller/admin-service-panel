@@ -35,6 +35,12 @@
           />
 
           <my-text-field
+              v-model="value.cadNum"
+              prepend-inner-icon="mdi-label-variant-outline"
+              label="Кадастровый номер"
+          />
+
+          <my-text-field
               v-model="value.serialNumber"
               prepend-inner-icon="mdi-label-variant-outline"
               label="VIN номер"
@@ -89,6 +95,7 @@ export default {
       name: null,
       inventoryNumber: null,
       model: null,
+      cadNum: null,
       serialNumber: null,
       address: null,
       objectType: null,
