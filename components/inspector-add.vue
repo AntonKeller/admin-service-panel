@@ -11,15 +11,15 @@
 
     <v-card-item>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
-        <my-text-field v-model="inspector.firstName" :rules="inspectorFirstNameRules" label="Имя"/>
-        <my-text-field v-model="inspector.surName" :rules="inspectorSurNameRules" label="Фамилия"/>
-        <my-text-field v-model="inspector.lastName" :rules="inspectorLastNameRules" label="Отчество"/>
+        <my-text-field v-model="inspector.firstName" label="Имя"/>
+        <my-text-field v-model="inspector.surName" label="Фамилия"/>
+        <my-text-field v-model="inspector.lastName" label="Отчество"/>
         <div class="d-flex ga-2">
-          <my-text-field v-model="inspector.phoneNumber" :rules="inspectorPhoneNumberRules" label="Номер телефона"/>
-          <my-text-field v-model="inspector.email" :rules="inspectorEmailRules" label="Email"/>
+          <my-text-field v-model="inspector.phoneNumber" label="Номер телефона"/>
+          <my-text-field v-model="inspector.email" label="Email"/>
         </div>
-        <my-text-field v-model="inspector.login" :rules="inspectorLoginRules" label="Логин"/>
-        <my-text-field v-model="inspector.password" :rules="inspectorPasswordRules" label="Пароль"/>
+        <my-text-field v-model="inspector.login" label="Логин"/>
+        <my-text-field v-model="inspector.password" label="Пароль"/>
       </v-form>
     </v-card-item>
 

@@ -21,7 +21,6 @@
             <v-col cols="12">
               <my-text-field
                   v-model="block.title"
-                  :rules="blockTitleRules"
                   label="Заголовок"
               />
             </v-col>
@@ -31,14 +30,12 @@
             <v-col :cols="cols">
               <my-date-picker
                   v-model="block.startDate"
-                  :rules="blockStartDateRules"
                   label="Дата начала"
               />
             </v-col>
             <v-col :cols="cols">
               <my-date-picker
                   v-model="block.endDate"
-                  :rules="blockEndDateRules"
                   label="Дата окончания"
                   class="ml-1"
               />
@@ -49,14 +46,12 @@
             <v-col :cols="cols">
               <my-text-field
                   v-model="block.loanAgreement"
-                  :rules="blockLoanAgreementRules"
                   label="Номер кредитного договора"
               />
             </v-col>
             <v-col :cols="cols">
               <my-date-picker
                   v-model="block.loanAgreementDate"
-                  :rules="blockLoanAgreementDateRules"
                   label="Дата кредитного договора"
                   class="ml-2"
               />
@@ -67,14 +62,12 @@
             <v-col :cols="cols">
               <my-text-field
                   v-model="block.pledgeAgreement"
-                  :rules="blockPlegeAgreementRules"
                   label="Номер договора залога"
               />
             </v-col>
             <v-col :cols="cols">
               <my-date-picker
                   v-model="block.pledgeAgreementDate"
-                  :rules="blockPlegeAgreementDateRules"
                   label="Дата договора залога"
                   class="ml-2"
               />
@@ -128,7 +121,6 @@
               <v-combobox
                   v-model="block.status"
                   :items="assignment_block_statuses"
-                  :rules="[e => !!e || 'Выберите статус']"
                   color="yellow-darken-3"
                   variant="outlined"
                   density="compact"

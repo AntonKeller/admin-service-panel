@@ -14,7 +14,6 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
         <my-text-field
             v-model="assignment.title"
-            :rules="assignmentTitleRules"
             label="Заголовок задания"
             prepend-inner-icon="mdi-label-variant-outline"
         />
@@ -70,7 +69,6 @@
 
         <v-textarea
             v-model="assignment.description"
-            :rules="assignmentDescriptionRules"
             color="yellow-darken-3"
             max-rows="1"
             variant="outlined"

@@ -11,21 +11,18 @@
       <v-form v-model="isValid" ref="form" class="d-flex flex-column ga-1">
         <my-text-field
             v-model="contractExecutor.companyName"
-            :rules="rules.companyName"
             prepend-inner-icon="mdi-file-sign"
             label="Наименование компании"
             placeholder="ООО 'ВЕБ РФ'"
         />
         <my-text-field
             v-model="contractExecutor.firstName"
-            :rules="rules.firstName"
             prepend-inner-icon="mdi-file-sign"
             label="Имя"
             placeholder="Иван"
         />
         <my-text-field
             v-model="contractExecutor.surname"
-            :rules="rules.surname"
             prepend-inner-icon="mdi-file-sign"
             label="Фамилия"
             placeholder="Иванов"
@@ -38,7 +35,6 @@
         />
         <my-text-field
             v-model="contractExecutor.position"
-            :rules="rules.position"
             prepend-inner-icon="mdi-file-sign"
             placeholder="Генеральный директор"
             label="Должность"

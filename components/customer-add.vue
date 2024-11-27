@@ -15,10 +15,10 @@
 
     <v-card-text>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
-        <my-text-field v-model="customer.fullName" :rules="customerFullNameRules" label="Полное наименование"/>
+        <my-text-field v-model="customer.fullName"  label="Полное наименование"/>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
-          <my-text-field v-model="customer.inn" :rules="customerInnRules" label="ИНН"/>
+          <my-text-field v-model="customer.inn" label="ИНН"/>
         </div>
         <my-text-field v-model="customer.address" label="Адрес"/>
         <div class="d-flex ga-2">

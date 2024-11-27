@@ -121,7 +121,7 @@
         <v-divider/>
         <v-sheet>
 
-          <v-table height="350" density="default" fixed-header class="text-caption elevation-0">
+          <v-table height="350" density="compact" fixed-header class="text-caption elevation-0">
             <thead>
             <tr class="text-blue-darken-4">
               <th class="text-left">№ п/п</th>
@@ -139,13 +139,13 @@
                 :key="inspectionObject._id"
                 @click.stop="selectObject(inspectionObject)"
             >
-              <td>{{ i + 1 }}</td>
-              <td>{{ textSlicer(inspectionObject?.inventoryNumber, 25) }}</td>
-              <td>{{ textSlicer(inspectionObject?.name, 25) }}</td>
-              <td>{{ textSlicer(inspectionObject?.cadNum, 25) }}</td>
-              <td>{{ textSlicer(inspectionObject?.model, 25) }}</td>
-              <td>{{ textSlicer(inspectionObject?.serialNumber, 25) }}</td>
-              <td style="min-width: 30px; max-width: 30px">
+              <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.inventoryNumber, 25) }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.name, 25) }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.cadNum, 25) }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.model, 25) }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.serialNumber, 25) }}</td>
+              <td style="min-width: 50px; width: 50px; max-width: 50px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
               </td>
             </tr>

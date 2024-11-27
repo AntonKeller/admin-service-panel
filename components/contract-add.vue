@@ -18,14 +18,12 @@
         <v-form v-model="isValid" class="d-flex flex-column ga-2">
           <my-text-field
               v-model="contract.contractNumber"
-              :rules="contractContractNumberRules"
               prepend-inner-icon="mdi-file-sign"
               label="Номер договора"
               placeholder="..../..."
           />
           <my-date-picker
               v-model="contract.contractDate"
-              :rules="contractDateRules"
               prepend-inner-icon="mdi-calendar-range"
               label="Дата заключения"
               placeholder="дд:мм:гггг"
@@ -83,6 +81,7 @@
                 v-model="contract.contractExecutor"
                 :items="contractExecutors"
                 :loading="fetchingContractExecutors"
+                :rules="[v => !!v || 'Выберите исполнителя']"
                 prepend-inner-icon="mdi-account-tie"
                 color="yellow-darken-3"
                 no-data-text="нет данных"
@@ -147,9 +146,10 @@
     </v-snackbar>
 
     <my-overlay v-model="contractExecutorMenuAddVisibility">
-      <contract-executor-add @add:success="fetchContractExecutors"
+      <contract-executor-add @add:success="onContractExecutorAddSuccess"
                              @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
     </my-overlay>
+
 
     <my-overlay v-model="customerAddMenuShow">
       <customer-add @add:success="onCustomerAddSuccess" @click:close="customerAddMenuShow=false"></customer-add>
@@ -198,6 +198,11 @@ export default {
   },
 
   methods: {
+
+    onContractExecutorAddSuccess(){
+      this.contractExecutorMenuAddVisibility = false;
+      this.fetchContractExecutors();
+    },
 
     submit() {
       if (this.isValid) {

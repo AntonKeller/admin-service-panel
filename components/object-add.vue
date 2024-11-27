@@ -109,10 +109,6 @@ export default {
       sending: false,
       formIsValid: false,
       snackBar: {},
-      inventoryNumberRules: [v => v?.length > 0 || 'Заполните поле'],
-      descriptionRules: [v => v?.length > 0 || 'Заполните поле'],
-      addressRules: [v => v?.length > 0 || 'Заполните поле'],
-      nameRules: [v => v?.length > 0 || 'Заполните поле'],
     }
   },
   computed: {

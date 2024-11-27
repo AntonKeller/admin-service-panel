@@ -20,6 +20,7 @@
               :disabled="loadingContracts"
               :loading="loadingContracts"
               :items="contracts"
+              :rules="[v => v || 'Выберите договор']"
               prepend-inner-icon="mdi-file-sign"
               color="yellow-darken-3"
               density="compact"
