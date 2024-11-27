@@ -54,17 +54,16 @@
               >
                 <td style="max-width: 200px">
                   <div>{{ assignment.title }}</div>
-                  <v-divider/>
-                  <div class="text-caption font-weight-bold">{{ stringToDate(assignment.createdAt) }}</div>
+                  <v-divider />
+                  <div class="text-caption">{{ stringToDate(assignment.createdAt) }}</div>
                 </td>
 
                 <td style="max-width: 140px">
-                  <div><b>Номер: </b>{{ assignment?.contract?.contractNumber }}</div>
-                  <div><b>Заключен: </b>{{ stringToDate(assignment?.contract?.contractDate) }}</div>
+                  <div>Номер: {{ assignment?.contract?.contractNumber }}</div>
+                  <div>Заключен: {{ stringToDate(assignment?.contract?.contractDate) }}</div>
                 </td>
                 <td style="max-width: 140px">
-                  <div><b></b>{{ assignment?.contract?.customer?.shortName }}</div>
-                  <div><b>email: </b>{{ assignment?.contract?.customer?.email }}</div>
+                  {{ assignment?.contract?.customer?.shortName }}
                 </td>
                 <td style="max-width: 200px">
                   {{ slicer(assignment.description, 50) }}
