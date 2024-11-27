@@ -178,10 +178,14 @@ export default {
   },
 
   watch: {
-    getSelectedAssignment() {
-      let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
-      if (assignmentId) {
-        this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
+    blocks(_newArray) {
+      // Определяем последний выбранный блок
+      const blockID = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
+      // Находим его в массиве
+      const foundBlock = _newArray.find(block => block._id === blockID)
+      if (foundBlock) {
+        // Заменяем его новым
+        this.$store.commit('assignmentBlocks/SELECT_ITEM', foundBlock);
       }
     },
   },
@@ -281,12 +285,17 @@ export default {
     onUpdateSuccess() {
       this.assignmentMenuChangeVisibility = false;
       this.assignmentBlocksStoreUpdate();
+      this.assignmentsStoreUpdate();
     },
     goBack() {
       navigateTo('/manager-menu/assignments');
     },
     stringToDate(timestamp) {
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+    },
+
+    assignmentsStoreUpdate() {
+      this.$store.dispatch('assignments/FETCH');
     },
 
     assignmentBlocksStoreUpdate() {
@@ -304,6 +313,7 @@ export default {
       this.$store.commit('assignmentBlocks/SELECT_ITEM', block);
       // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card/block');
+      console.log('[Block card] Select block ')
     },
 
     removeBlockById(blockID) {

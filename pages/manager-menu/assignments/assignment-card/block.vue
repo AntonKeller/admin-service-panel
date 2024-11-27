@@ -160,7 +160,7 @@
               </td>
               <td style="min-width: 200px; max-width: 200px">{{ textSlicer(inspectionObject.address, 50) }}</td>
               <td style="min-width: 30px; max-width: 30px">
-                <c-remove-btn :prompt="'Удалить'" @click.stop="removeOneObject(inspectionObject._id)"/>
+                <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
               </td>
             </tr>
             </tbody>
@@ -183,17 +183,16 @@
 
       <v-file-input class="d-none" ref="excelFileInput" accept=".xlsx" @change="onExcelFileInput"/>
 
-      <!--    Block Menu Change-->
-      <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
-        <block-change @change:success="onBlockChangeSuccess"
-                      @click:close="blockMenuChangeVisibility=false"></block-change>
-      </v-overlay>
-
       <!--    Object Menu Add-->
       <v-overlay v-model="objectMenuAddVisibility" class="d-flex justify-center align-center">
         <object-add @add:success="onObjectAddSuccess" @click:close="objectMenuAddVisibility=false"></object-add>
       </v-overlay>
 
+      <!--    Block Menu Change-->
+      <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
+        <block-change @change:success="onBlockChangeSuccess"
+                      @click:close="blockMenuChangeVisibility=false"></block-change>
+      </v-overlay>
 
       <!--      Block Card Page-->
       <nuxt-page/>
@@ -236,17 +235,17 @@ export default {
     }
   },
 
-  beforeMount() {
-    // Считываем Объект из session storage -> vuex store
-    try {
-      if (sessionStorage?.selectedInspectionObject) {
-        this.$store.commit('inspectionObjects/SELECT', JSON.parse(sessionStorage?.selectedInspectionObject));
-      }
-    } catch (err) {
-      sessionStorage.removeItem('selectedInspectionObject');
-      console.log('[sessionStorage] Ошибка чтения selectedInspectionObject');
-    }
-  },
+  // beforeMount() {
+  //   // Считываем Объект из session storage -> vuex store
+  //   try {
+  //     if (sessionStorage?.selectedInspectionObject) {
+  //       this.$store.commit('inspectionObjects/SELECT', JSON.parse(sessionStorage?.selectedInspectionObject));
+  //     }
+  //   } catch (err) {
+  //     sessionStorage.removeItem('selectedInspectionObject');
+  //     console.log('[sessionStorage] Ошибка чтения selectedInspectionObject');
+  //   }
+  // },
 
   mounted() {
     const timeoutID = setTimeout(() => {
@@ -268,12 +267,15 @@ export default {
       this.fetchObjects();
     },
     inspectionObjects(newArray) {
-      if (this.activeObject._id) {
+      if (this.activeObject?._id) {
 
         const foundObject = newArray.find(item => item._id === this.activeObject._id);
 
         if (foundObject) {
-          this.selectObject(foundObject);
+          // Записываем в session storage
+          sessionStorage.setItem('selectedInspectionObject', JSON.stringify(foundObject));
+          // Записываем в vuex store
+          this.$store.commit('inspectionObjects/SELECT', foundObject);
         }
       }
     }
@@ -341,6 +343,10 @@ export default {
 
   methods: {
     onBlockChangeSuccess() {
+      // Обновит текущий блок (обновив все блоки в объекте)
+      const assignmentID = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
+      this.$store.dispatch('assignmentBlocks/FETCH', assignmentID);
+      // Обновим список объектов в блоке
       this.fetchObjects();
       this.blockMenuChangeVisibility = false;
     },
@@ -410,6 +416,7 @@ export default {
         this.$store.commit('inspectionObjects/ALERT_ERROR', 'Отсутствует ID Блока в Store');
       }
     },
+
     selectObject(inspectionObject) {
       // Записываем в session storage
       sessionStorage.setItem('selectedInspectionObject', JSON.stringify(inspectionObject));
@@ -417,7 +424,9 @@ export default {
       this.$store.commit('inspectionObjects/SELECT', inspectionObject);
       // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card/block/object');
+      console.log('[Block card] select object')
     },
+
     textSlicer(txt, size) {
       return txt?.length > size ? txt.slice(0, size - 3) + '...' : txt;
     },

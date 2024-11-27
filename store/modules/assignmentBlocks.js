@@ -12,7 +12,7 @@ const assignmentBlocks = {
     state: () => initial(),
     getters: {
         GET_BLOCKS: (state) => state.blocks,
-        GET_SELECTED_ITEM: (state) => state.selectedItem,
+        GET_SELECTED_ITEM: (state) => state.selectedBlock,
         GET_FETCHING: (state) => state.fetching,
         GET_ALERT: (state) => state.alert,
     },
@@ -21,7 +21,7 @@ const assignmentBlocks = {
             state.blocks = payload;
         },
         SELECT_ITEM(state, payload) {
-            state.selectedItem = payload || initial().selectedItem;
+            state.selectedBlock = payload || initial().selectedBlock;
         },
         SET_FETCHING(state, payload) {
             state.fetching = payload || initial().fetching;

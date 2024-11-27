@@ -143,6 +143,16 @@ export default {
     this.$store.commit('assignments/RESET_STORE');
   },
 
+  watch: {
+    assignmentList(newAssignments) {
+      const selectedID = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
+      const selected = newAssignments.find(item => item._id === selectedID);
+      if (selected) {
+        this.$store.commit('assignments/SELECT', selected);
+      }
+    },
+  },
+
   computed: {
     assignmentList() {
       return this.$store.getters['assignments/GET_ASSIGNMENTS'];

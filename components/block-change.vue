@@ -289,7 +289,7 @@ export default {
         changeAssignmentBlock(assignmentId, this.block)
             .then(() => {
               this.snackBar = showAlert('Успешно').success();
-              this.$emit('update:success');
+              this.$emit('change:success');
             })
             .catch((err) => {
               this.snackBar = showAlert('Ошибка изменения').error();
