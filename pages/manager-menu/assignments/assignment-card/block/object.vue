@@ -1,12 +1,10 @@
 <template>
   <v-overlay
-      :model-value="true"
       class="d-flex justify-center align-center"
+      :model-value="true"
       @click:outside="back"
   >
     <v-card
-
-        class="bg-blue-grey-lighten-5"
         rounded="sm"
         min-width="400"
         max-width="900"
@@ -33,11 +31,9 @@
                 Редактировать Объект
               </v-tooltip>
             </v-btn>
-
           </div>
           <my-button-close-card @click="goBack" class="align-self-start"/>
         </div>
-
       </v-card-title>
 
       <v-card-text class="d-flex flex-column ga-1">
@@ -45,79 +41,100 @@
         <span>{{ inspectionObject?.description || 'Описание отсутствует' }}</span>
       </v-card-text>
 
+      <!--      <v-card-item>-->
+      <!--        <v-divider class="my-2"/>-->
+      <!--        <v-autocomplete-->
+      <!--            v-model="angleSelected"-->
+      <!--            :items="angles"-->
+      <!--            @update:modelValue="onSelectAngle"-->
+      <!--            prepend-inner-icon="mdi-radiobox-indeterminate-variant"-->
+      <!--            no-data-text="Ракурсы отсутствуют"-->
+      <!--            color="yellow-darken-3"-->
+      <!--            label="Список ракурсов"-->
+      <!--            variant="outlined"-->
+      <!--            density="compact"-->
+      <!--            rounded="md"-->
+      <!--            single-line-->
+      <!--            persistent-hint-->
+      <!--            :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"-->
+      <!--        >-->
+      <!--          <template v-slot:chip="{ props, item }">-->
+      <!--            <v-chip-->
+      <!--                v-bind="props"-->
+      <!--                closable-->
+      <!--                color="blue-grey-darken-1"-->
+      <!--                density="comfortable"-->
+      <!--                rounded="md"-->
+      <!--                label-->
+      <!--                :text="item.raw?.name"-->
+      <!--            />-->
+      <!--          </template>-->
+      <!--          <template v-slot:item="{ props, item }">-->
+      <!--            <v-list-item-->
+      <!--                v-bind="props"-->
+      <!--                prepend-icon="mdi-radiobox-indeterminate-variant"-->
+      <!--                density="compact"-->
+      <!--                :title="item.raw?.name"-->
+      <!--                :subtitle="item.raw?.name"-->
+      <!--            />-->
+      <!--          </template>-->
+      <!--        </v-autocomplete>-->
+
+      <!--        <v-sheet v-if="!angleSelected" class="d-flex flex-column justify-center align-center" height="300">-->
+      <!--          <div>-->
+      <!--            <v-label>-->
+      <!--              <v-icon>mdi-arrow-up-bold-circle-outline</v-icon>-->
+      <!--            </v-label>-->
+      <!--          </div>-->
+      <!--          <div>-->
+      <!--            <v-label>Выберите ракурс из выпадающего списка</v-label>-->
+      <!--          </div>-->
+      <!--        </v-sheet>-->
+
+      <!--        <v-sheet v-if="angleSelected" class="d-flex flex-wrap ga-1 mt-1" style="overflow-y: scroll" height="350">-->
+      <!--          <v-img-->
+      <!--              v-for="img of photosBySelectedAngle"-->
+      <!--              @click="selectImage(img)"-->
+      <!--              :width="190"-->
+      <!--              aspect-ratio="1/1"-->
+      <!--              cover-->
+      <!--              :src="img.src"-->
+      <!--              class="border-sm"-->
+      <!--          />-->
+      <!--        </v-sheet>-->
+      <!--      </v-card-item>-->
+
+      <v-file-input
+          v-model="files"
+          class="d-none"
+          variant="outlined"
+          density="compact"
+          capture="camera"
+          accept=".jpg, .png, .jpeg"
+          id="inputfile"
+          type="file"
+          @change="sendImages"
+      />
+
       <v-card-item>
-        <v-file-input
-            v-model="files"
-            class="d-none"
-            variant="outlined"
-            density="compact"
-            capture="camera"
-            accept=".jpg, .png, .jpeg"
-            id="inputfile"
-            type="file"
-            @change="sendImages"
-        />
-
-        <v-divider class="my-2"/>
-
-        <v-autocomplete
-            v-model="angleSelected"
-            :items="angles"
-            @update:modelValue="onSelectAngle"
-            prepend-inner-icon="mdi-radiobox-indeterminate-variant"
-            no-data-text="Ракурсы отсутствуют"
-            color="yellow-darken-3"
-            label="Список ракурсов"
-            variant="outlined"
-            density="compact"
-            rounded="md"
-            single-line
-            persistent-hint
-            :hint="`Ракурсов: ${angles.length} шт. | Фотографий: ${photoCount} шт.`"
-        >
-          <template v-slot:chip="{ props, item }">
-            <v-chip
-                v-bind="props"
-                closable
-                color="blue-grey-darken-1"
-                density="comfortable"
-                rounded="md"
-                label
-                :text="item.raw?.name"
-            />
-          </template>
-          <template v-slot:item="{ props, item }">
-            <v-list-item
-                v-bind="props"
-                prepend-icon="mdi-radiobox-indeterminate-variant"
-                density="compact"
-                :title="item.raw?.name"
-                :subtitle="item.raw?.name"
-            />
-          </template>
-        </v-autocomplete>
-
-        <v-sheet v-if="!angleSelected" class="d-flex flex-column justify-center align-center" height="300">
-          <div>
-            <v-label>
-              <v-icon>mdi-arrow-up-bold-circle-outline</v-icon>
-            </v-label>
+        <v-sheet style="overflow-y: scroll" height="400">
+          <div v-for="(angleT, i) of anglesTransformed">
+            <div class="px-2 py-2 font-bold" :class="i !== 0 ? 'mt-2' : ''">
+              {{ angleT.angleName }}
+            </div>
+            <v-sheet style="overflow-y: scroll" height="100" class="d-flex">
+              <v-img
+                  v-for="img of angleT.photos"
+                  @click="selectImage(img)"
+                  :min-width="150"
+                  :height="100"
+                  aspect-ratio="1/1"
+                  cover
+                  :src="img.src"
+                  class="border-sm"
+              />
+            </v-sheet>
           </div>
-          <div>
-            <v-label>Выберите ракурс из выпадающего списка</v-label>
-          </div>
-        </v-sheet>
-
-        <v-sheet v-if="angleSelected" class="d-flex flex-wrap ga-1 mt-1" style="overflow-y: scroll" height="350">
-          <v-img
-              v-for="img of photosBySelectedAngle"
-              @click="selectImage(img)"
-              :width="190"
-              aspect-ratio="1/1"
-              cover
-              :src="img.src"
-              class="border-sm"
-          />
         </v-sheet>
       </v-card-item>
 
@@ -192,8 +209,11 @@ export default {
       clearTimeout(timeoutID);
     }, 1);
 
-    // Загружаем картинки в Store
-    await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+    if (this.inspectionObject?._id) {
+      // Загружаем картинки в Store
+      await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+    }
+
     this.readSessionStorage();
   },
 
@@ -216,6 +236,16 @@ export default {
       }
       return [];
     },
+    anglesTransformed() {
+      const transformed = [];
+      this.angles.forEach(angle => {
+        transformed.push({
+          angleName: angle.name,
+          photos: angle.photoList.map(img => img)
+        });
+      });
+      return transformed;
+    },
     angles() {
       return this.$store.getters['angles/GET_ANGLES'];
     },
@@ -232,11 +262,11 @@ export default {
 
   methods: {
 
-    goBack(){
+    goBack() {
       navigateTo('/manager-menu/assignments/assignment-card/block');
     },
 
-    onObjectChangeSuccess(){
+    onObjectChangeSuccess() {
       this.objectMenuChangeVisibility = false;
       this.updateObjectsStore();
     },

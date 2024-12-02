@@ -1,12 +1,12 @@
 <template>
   <v-text-field
-      v-bind="$attrs"
       color="yellow-darken-3"
       variant="outlined"
       density="compact"
       label="Заголовок задания"
       :style="fieldWidth ? `width: ${fieldWidth}px` : '' "
       clearable
+      v-bind="$attrs"
   />
 </template>
 

@@ -43,6 +43,8 @@ const angles = {
             let answer = await fetchAngles(objectID);
             commit('SET_FETCHING', false);
 
+            console.log('[ANGLES] answer.data', answer.data)
+
             switch (answer.status) {
                 case 200:
                     commit('SET_ANGLES', answer.data);

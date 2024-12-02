@@ -156,10 +156,15 @@
                 v-model="block.contactFullName"
                 label="ФИО Контактного лица"
             />
-            <my-text-field
+            <my-input-number
                 v-model="block.contactPhoneNumber"
                 label="Телефон контактного лица"
+                prefix="[8-xxx-xxx-xx-xx]:"
             />
+<!--            <my-text-field-->
+<!--                v-model="block.contactPhoneNumber"-->
+<!--                label="Телефон контактного лица"-->
+<!--            />-->
           </div>
 
           <my-text-field
@@ -200,10 +205,11 @@ import assignment_block_statuses from "../configs/assignment-statuses";
 import {fetchInspectors} from "../utils/api/api_inspectors";
 import {isDate, isEmpty} from "../utils/validators/functions";
 import {showAlert} from "../utils/functions.js";
+import MyInputNumber from "./my-input-number.vue";
 
 export default {
   name: "block-add",
-
+  components: {MyInputNumber},
   emits: ['add:success'],
 
   data() {

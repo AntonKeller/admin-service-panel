@@ -1,16 +1,10 @@
 <template>
   <v-card height="100vh">
-    <v-layout class="c-layout" full-height>
+    <v-layout full-height>
 
-      <v-navigation-drawer
-          permanent
-          expand-on-hover
-          rail
-          rounded
-          elevation="0"
-      >
+      <v-navigation-drawer permanent elevation="0" width="230">
 
-        <v-list variant="text" density="default" nav rounded>
+        <v-list variant="text" density="default" nav rounded="lg" >
 
           <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"

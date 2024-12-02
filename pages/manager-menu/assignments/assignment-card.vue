@@ -219,7 +219,7 @@ export default {
   mounted() {
 
     // Обновляем список блоков по ID ТЗ...............................................
-    let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
+    let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
 
     if (assignmentId) {
       this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
@@ -315,7 +315,7 @@ export default {
     },
 
     assignmentBlocksStoreUpdate() {
-      let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']._id;
+      let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
 
       if (assignmentId) {
         this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
