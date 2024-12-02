@@ -119,8 +119,9 @@
       <v-card-item>
         <v-sheet style="overflow-y: scroll" height="400">
           <div v-for="(angleT, i) of anglesTransformed">
-            <div class="px-2 py-2 font-bold" :class="i !== 0 ? 'mt-2' : ''">
-              {{ angleT.angleName }}
+            <div class="py-2 font-bold d-flex align-center" :class="i !== 0 ? 'mt-2' : ''">
+<!--              <v-divider style="max-width: 20px"/>-->
+              <span>{{ angleT.angleName }}</span>
             </div>
             <v-sheet style="overflow-y: scroll" height="100" class="d-flex">
               <v-img
