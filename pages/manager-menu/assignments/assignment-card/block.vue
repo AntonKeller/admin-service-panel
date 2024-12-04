@@ -14,7 +14,7 @@
       <v-card-title>
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex ga-1 align-center">
-            {{ assignmentBlock.title }}
+            {{ assignmentBlock.address }}
             <v-btn
                 class="align-self-start"
                 density="comfortable"
@@ -38,11 +38,7 @@
       <v-card-subtitle>
         <div class="d-flex flex-column ga-2">
           <div class="d-flex ga-2">
-            <b>Статус:</b> {{ assignmentBlock.status }}
-          </div>
-
-          <div class="d-flex ga-2">
-            <b>Начало-Окончание:</b>{{ dateFromTo }}
+            <b>Начало:</b>{{ dateFromTo }}
           </div>
 
           <div class="d-flex ga-2">
@@ -58,17 +54,6 @@
       <v-card-text class="text-caption">
         <div class="d-flex flex-column ga-1  py-1">
           <v-btn-group variant="text" color="blue-darken-4" density="compact">
-            <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                size="small"
-                @click="objectMenuAddVisibility = true"
-            >
-              Добавить объект
-              <v-tooltip activator="parent" location="top">
-                Добавить новый объект
-              </v-tooltip>
-            </v-btn>
-            <v-divider vertical/>
             <v-btn
                 color="blue-grey-darken-2"
                 size="small"
@@ -92,9 +77,10 @@
                 Загрузить объекты из xlsx
               </v-tooltip>
             </v-btn>
+            <v-divider vertical/>
             <v-btn
                 prepend-icon="mdi-file-document-arrow-right-outline"
-                color="blue-grey-darken-2"
+                color="blue-darken-2"
                 size="small"
                 :loading="reportDownloading"
                 :disabled="reportDownloading"
@@ -103,6 +89,18 @@
               Скачать отчет
               <v-tooltip activator="parent" location="top">
                 Скачать отчет
+              </v-tooltip>
+            </v-btn>
+            <v-divider vertical/>
+            <v-btn
+                prepend-icon="mdi-file-document-arrow-right-outline"
+                color="red-darken-2"
+                size="small"
+                @click="removeObjectsAll"
+            >
+              Удалить все
+              <v-tooltip activator="parent" location="top">
+                Удалить все объекты
               </v-tooltip>
             </v-btn>
           </v-btn-group>
@@ -140,11 +138,24 @@
                 @click.stop="selectObject(inspectionObject)"
             >
               <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.inventoryNumber, 25) }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.name, 25) }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.cadNum, 25) }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.model, 25) }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ textSlicer(inspectionObject?.serialNumber, 25) }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
+                  textSlicer(inspectionObject?.name, 25)
+                }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
+                  textSlicer(inspectionObject?.cadNum, 25)
+                }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
+                  textSlicer(inspectionObject?.model, 25)
+                }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.serialNumber, 25) }}
+              </td>
               <td style="min-width: 50px; width: 50px; max-width: 50px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
               </td>
@@ -168,11 +179,6 @@
 
       <v-file-input class="d-none" ref="excelFileInput" accept=".xlsx" @change="onExcelFileInput"/>
 
-      <!--    Object Menu Add-->
-      <v-overlay v-model="objectMenuAddVisibility" class="d-flex justify-center align-center">
-        <object-add @add:success="onObjectAddSuccess" @click:close="objectMenuAddVisibility=false"></object-add>
-      </v-overlay>
-
       <!--    Block Menu Change-->
       <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
         <block-change @change:success="onBlockChangeSuccess"
@@ -190,7 +196,7 @@ import {removeObject} from "../../../../utils/api/api_inspection_objects.js";
 import {uploadObjects} from "../../../../utils/api/api_assignment_blocks";
 import {serverURL} from "../../../../constants/constants";
 import {downloadFile} from "../../../../utils/api/api_";
-import {showAlert} from "../../../../utils/functions";
+import {showAlert, unixDateToMiddleDateString} from "../../../../utils/functions";
 
 export default {
   name: "block-page",
@@ -204,23 +210,14 @@ export default {
       loading: false,
       reportDownloading: false,
       blockMenuChangeVisibility: false,
-      objectMenuAddVisibility: false,
       headers: [
         {title: 'Наименование', align: 'start', key: 'name', value: 'name'},
         {title: 'Тип', align: 'start', key: 'objectType', value: 'objectType'},
         {title: 'Модель', align: 'start', key: 'model', value: 'model'},
         {title: 'Адрес', align: 'start', key: 'address', value: 'address'}
       ],
-      timeDateConfig: {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }
     }
   },
-
-
 
   // beforeMount() {
   //   // Считываем Объект из session storage -> vuex store
@@ -321,10 +318,8 @@ export default {
       }
     },
     dateFromTo() {
-      const {startDate, endDate} = this.assignmentBlock;
-      const t1 = !isNaN(parseInt(startDate)) ? this.stringToDate(startDate) : '';
-      const t2 = !isNaN(parseInt(endDate)) ? this.stringToDate(endDate) : '';
-      return `${t1} - ${t2}`;
+      const {startDate} = this.assignmentBlock;
+      return unixDateToMiddleDateString(startDate);
     },
   },
 
@@ -338,17 +333,10 @@ export default {
       this.blockMenuChangeVisibility = false;
     },
 
-    onObjectAddSuccess() {
-      this.fetchObjects();
-      this.objectMenuAddVisibility = false;
-    },
-
     goBack() {
       navigateTo('/manager-menu/assignments/assignment-card');
     },
-    stringToDate(timestamp) {
-      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
-    },
+
     removeOneObject(ID) {
       removeObject(ID)
           .then(() => {

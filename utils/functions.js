@@ -17,6 +17,10 @@ export function unixDateToShortDateString(unixDate) {
     return moment(parseInt(unixDate)).locale('ru').format('DD.MM.YYYY');
 }
 
+export function unixDateToMiddleDateString(unixDate) {
+    return moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM');
+}
+
 // Широкая дата из Unix date
 export function unixDateToLongDateString(unixDate) {
     return moment(parseInt(unixDate)).locale('ru').format('dd, MMM DD YYYY');

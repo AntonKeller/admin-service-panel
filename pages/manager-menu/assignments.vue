@@ -36,7 +36,7 @@
           </div>
 
           <v-sheet style="min-height: 600px" class="mt-2">
-            <v-table height="77vh" density="comfortable" fixed-header>
+            <v-table height="77vh" density="default" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
                 <th>Заголовок</th>
