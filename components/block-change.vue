@@ -27,19 +27,19 @@
           </v-row>
 
           <v-row no-gutters>
-            <v-col :cols="cols">
+            <v-col :cols="12">
               <my-date-picker
                   v-model="block.startDate"
                   label="Дата начала"
               />
             </v-col>
-            <v-col :cols="cols">
-              <my-date-picker
-                  v-model="block.endDate"
-                  label="Дата окончания"
-                  class="ml-1"
-              />
-            </v-col>
+<!--            <v-col :cols="cols">-->
+<!--              <my-date-picker-->
+<!--                  v-model="block.endDate"-->
+<!--                  label="Дата окончания"-->
+<!--                  class="ml-1"-->
+<!--              />-->
+<!--            </v-col>-->
           </v-row>
 
           <v-row no-gutters>
@@ -206,7 +206,6 @@ export default {
       _id: null,
       title: null,
       startDate: null,
-      endDate: null,
       loanAgreement: null,
       loanAgreementDate: null,
       pledgeAgreement: null,
@@ -230,7 +229,6 @@ export default {
     assignment_block_statuses,
     blockTitleRules: [isEmpty],
     blockStartDateRules: [isDate],
-    blockEndDateRules: [isDate],
     blockLoanAgreementRules: [isEmpty],
     blockLoanAgreementDateRules: [isDate],
     blockPlegeAgreementRules: [isEmpty],

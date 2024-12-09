@@ -92,7 +92,7 @@
             <thead>
             <tr>
               <th>Адрес</th>
-              <th>Сроки</th>
+              <th>Начало</th>
               <th>Инспектор</th>
               <th>Контакты инспектора</th>
               <th></th>
@@ -106,12 +106,7 @@
             >
               <td>{{ block?.address }}</td>
               <td style="min-width: 190px; width: 190px; max-width: 190px">
-                <div>
-                  Начало: {{ stringToDate(block?.startDate) }}
-                </div>
-                <div>
-                  Окончание: {{ stringToDate(block?.endDate) }}
-                </div>
+                {{ stringToDate(block?.startDate) }}
               </td>
               <td>
                 {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
@@ -169,6 +164,7 @@
 
 <script>
 import {removeAssignmentBlock} from "../../../utils/api/api_assignment_blocks";
+import {unixDateToMiddleDateString} from "../../../utils/functions.js";
 
 export default {
   name: "assignment-card-page",
@@ -306,7 +302,6 @@ export default {
     },
 
     stringToDate(timestamp) {
-
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },
 

@@ -16,7 +16,8 @@
         <my-text-field v-model="inspector.surName" label="Фамилия"/>
         <my-text-field v-model="inspector.lastName" label="Отчество"/>
         <div class="d-flex ga-2">
-          <my-text-field v-model="inspector.phoneNumber" label="Номер телефона"/>
+          <my-text-field v-model="inspector.phoneNumber" v-mask="options" label="Номер телефона"
+                         placeholder="+7-###-###-##-##"/>
           <my-text-field v-model="inspector.email" label="Email"/>
         </div>
         <my-text-field v-model="inspector.login" label="Логин"/>
@@ -43,6 +44,7 @@
 import {changeInspector} from "../utils/api/api_inspectors";
 import {showAlert} from "../utils/functions";
 import _ from "lodash";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "inspector-change",
@@ -53,12 +55,22 @@ export default {
     _inspector: Object,
   },
 
+  directives: {
+    mask: vMaska
+  },
+
   mounted() {
     this.inspector = _.cloneDeep(this._inspector);
   },
 
   data() {
     return {
+
+      options: {
+        mask: "+7-###-###-##-##",
+        eager: true
+      },
+
       inspector: {
         firstName: null,
         surName: null,

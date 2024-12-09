@@ -142,13 +142,16 @@ export default {
   },
 
   methods: {
+
     contractsStoreUpdate() {
       this.$store.dispatch('contracts/UPDATE_ITEMS');
     },
+
     onContractAddSuccess() {
       this.contractMenuAddShow = false;
       this.contractsStoreUpdate();
     },
+
     async sendAssignment() {
       await this.$refs.form.validate();
       if (this.formIsValid) {

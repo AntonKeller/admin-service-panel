@@ -23,7 +23,8 @@
         <my-text-field v-model="customer.address" label="Адрес"/>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.email" label="Email"/>
-          <my-text-field v-model="customer.phoneNumber" label="Номер телефона"/>
+          <my-text-field v-model="customer.phoneNumber" v-mask="options" label="Номер телефона"
+                         placeholder="+7-###-###-##-##"/>
         </div>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
@@ -98,6 +99,7 @@ import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {showAlert} from "../utils/functions";
 import _ from "lodash";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "customer-change",
@@ -108,8 +110,18 @@ export default {
     _customer: Object,
   },
 
+  directives: {
+    mask: vMaska
+  },
+
   data() {
     return {
+
+      options: {
+        mask: "+7-###-###-##-##",
+        eager: true
+      },
+
       customer: {
         _id: null,
         shortName: null,

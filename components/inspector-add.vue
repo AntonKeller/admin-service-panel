@@ -15,7 +15,8 @@
         <my-text-field v-model="inspector.surName" label="Фамилия"/>
         <my-text-field v-model="inspector.lastName" label="Отчество"/>
         <div class="d-flex ga-2">
-          <my-text-field v-model="inspector.phoneNumber" label="Номер телефона"/>
+          <my-text-field v-model="inspector.phoneNumber" v-mask="options" label="Номер телефона"
+                         placeholder="+7-###-###-##-##"/>
           <my-text-field v-model="inspector.email" label="Email"/>
         </div>
         <my-text-field v-model="inspector.login" label="Логин"/>
@@ -42,14 +43,25 @@
 <script>
 import {addInspector} from "../utils/api/api_inspectors";
 import {showAlert} from "../utils/functions";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "inspector-add",
 
   emits: ['add:success'],
 
+  directives: {
+    mask: vMaska
+  },
+
   data() {
     return {
+
+      options: {
+        mask: "+7-###-###-##-##",
+        eager: true
+      },
+
       inspector: {
         firstName: null,
         surName: null,
@@ -62,32 +74,32 @@ export default {
       formIsValid: false,
       snackBar: {},
       inspectorFirstNameRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorSurNameRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorLastNameRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorPhoneNumberRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorEmailRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorLoginRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
       inspectorPasswordRules: [
-          v => v?.length > 0 || 'поле не должно быть пустым',
-          v => v.length <= 30 || 'поле не должно превышать 30 символов'
+        v => v?.length > 0 || 'поле не должно быть пустым',
+        v => v.length <= 30 || 'поле не должно превышать 30 символов'
       ],
     }
   },
