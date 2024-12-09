@@ -40,7 +40,7 @@
               <thead v-if="!getFetchingDataStatus">
               <tr>
                 <th>Заголовок</th>
-                <th>Договор</th>
+                <th>Договор с заказчиком</th>
                 <th>Заказчик</th>
                 <th>Описание</th>
                 <th></th>
@@ -51,16 +51,15 @@
                   v-for="(assignment, i) of assignmentsSLice"
                   :key="assignment._id"
                   @click="selectAssignment(assignment)"
+                  class="text-caption"
               >
                 <td style="max-width: 200px">
-                  <div>{{ assignment.title }}</div>
-                  <v-divider />
-                  <div class="text-caption">{{ stringToDate(assignment.createdAt) }}</div>
+                  {{ assignment.title }}
                 </td>
 
                 <td style="max-width: 140px">
-                  <div>Номер: {{ assignment?.contract?.contractNumber }}</div>
-                  <div>Заключен: {{ stringToDate(assignment?.contract?.contractDate) }}</div>
+                  № {{ assignment?.contract?.contractNumber }}
+                  от {{ stringToDate(assignment?.contract?.contractDate) }}
                 </td>
                 <td style="max-width: 140px">
                   {{ assignment?.contract?.customer?.shortName }}
@@ -201,7 +200,7 @@ export default {
     },
 
     stringToDate(timestamp) {
-      return unixDateToLongDateString(timestamp)
+      return unixDateToShortDateString(timestamp)
       // return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
     },
 

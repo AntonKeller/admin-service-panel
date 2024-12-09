@@ -24,7 +24,7 @@
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.email" label="Email"/>
           <my-text-field v-model="customer.phoneNumber" v-mask="options" label="Номер телефона"
-                         placeholder="+7-###-###-##-##"/>
+                         placeholder="+7 (___) ___-__-__"/>
         </div>
         <div class="d-flex ga-2">
           <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
@@ -118,7 +118,7 @@ export default {
     return {
 
       options: {
-        mask: "+7-###-###-##-##",
+        mask: "+7 (###) ###-##-##",
         eager: true
       },
 
