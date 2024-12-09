@@ -125,9 +125,6 @@
               <th class="text-left">№ п/п</th>
               <th class="text-left">Инв. №</th>
               <th class="text-left">Наименование</th>
-              <th class="text-left">Кадастровый №</th>
-              <th class="text-left">Заводской №</th>
-              <th class="text-left">VIN №</th>
               <th class="text-left"></th>
             </tr>
             </thead>
@@ -144,17 +141,6 @@
               <td style="min-width: 100px; width: 100px; max-width: 100px">{{
                   textSlicer(inspectionObject?.name, 25)
                 }}
-              </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
-                  textSlicer(inspectionObject?.cadNum, 25)
-                }}
-              </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
-                  textSlicer(inspectionObject?.model, 25)
-                }}
-              </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ textSlicer(inspectionObject?.serialNumber, 25) }}
               </td>
               <td style="min-width: 50px; width: 50px; max-width: 50px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
