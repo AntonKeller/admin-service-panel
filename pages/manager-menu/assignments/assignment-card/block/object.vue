@@ -7,7 +7,7 @@
     <v-card
         rounded="sm"
         min-width="400"
-        max-width="900"
+        max-width="1024"
         width="100vw"
         elevation="6"
     >
@@ -139,21 +139,21 @@
         </v-sheet>
       </v-card-item>
 
-      <v-card-actions>
-        <v-btn
-            text="Добавить фото в ракурс"
-            icon="mdi-camera-outline"
-            color="blue-darken-3"
-            variant="text"
-            rounded
-        >
-          <v-icon/>
-          <v-tooltip activator="parent" location="right">
-            Добавить фото в ракурс
-          </v-tooltip>
-        </v-btn>
-        <v-divider class="my-2"/>
-      </v-card-actions>
+<!--      <v-card-actions>-->
+<!--        <v-btn-->
+<!--            text="Добавить фото в ракурс"-->
+<!--            icon="mdi-camera-outline"-->
+<!--            color="blue-darken-3"-->
+<!--            variant="text"-->
+<!--            rounded-->
+<!--        >-->
+<!--          <v-icon/>-->
+<!--          <v-tooltip activator="parent" location="right">-->
+<!--            Добавить фото в ракурс-->
+<!--          </v-tooltip>-->
+<!--        </v-btn>-->
+<!--        <v-divider class="my-2"/>-->
+<!--      </v-card-actions>-->
 
 
       <my-overlay v-model="imgFullWindowIsShow">

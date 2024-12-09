@@ -7,7 +7,7 @@
           <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
         </div>
       </v-card-title>
-      <v-card-subtitle />
+      <v-card-subtitle/>
       <v-card-text>
         <v-form v-model="formIsValid" ref="form">
           <my-text-field
@@ -45,16 +45,6 @@
               />
             </template>
           </v-autocomplete>
-
-          <v-textarea
-              v-model="assignment.description"
-              no-resize
-              color="yellow-darken-3"
-              variant="outlined"
-              label="Комментарии к задаче"
-              rows="6"
-          />
-
         </v-form>
       </v-card-text>
 

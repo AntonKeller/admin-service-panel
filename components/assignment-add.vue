@@ -66,15 +66,6 @@
             </v-tooltip>
           </v-btn>
         </div>
-
-        <v-textarea
-            v-model="assignment.description"
-            color="yellow-darken-3"
-            max-rows="1"
-            variant="outlined"
-            auto-grow
-            label="Комментарии к задаче"
-        />
       </v-form>
     </v-card-item>
 
@@ -121,10 +112,6 @@ export default {
     ],
     contractRules: [
       value => value || 'Выберите договор'
-    ],
-    assignmentDescriptionRules: [
-      value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
-      value => value?.length <= 350 || 'Кол-во символов должно быть <= 350',
     ],
   }),
 
