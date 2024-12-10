@@ -120,7 +120,6 @@ export default {
       contract: {
         contractNumber: null,
         contractDate: null,
-        customer: null,
         contractExecutor: null,
       },
       snackBar: {},
@@ -183,7 +182,11 @@ export default {
     },
 
     clear() {
-      this.contract = {}
+      this.contract = {
+        contractNumber: null,
+        contractDate: null,
+        contractExecutor: null,
+      }
     }
 
   }

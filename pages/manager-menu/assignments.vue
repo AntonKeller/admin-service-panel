@@ -57,7 +57,7 @@
                   № {{ assignment?.contract?.contractNumber }}
                   от {{ stringToDate(assignment?.contract?.contractDate) }}
                 </td>
-                <td>{{ assignment?.contract?.customer?.shortName }}</td>
+                <td>{{ assignment?.customer?.shortName }}</td>
                 <td>{{ slicer(assignment.description, 50) }}</td>
                 <td style="min-width: 90px; width: 90px; max-width: 90px" >
                   <div class="d-flex ga-2">

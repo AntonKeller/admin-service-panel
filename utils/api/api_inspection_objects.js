@@ -31,3 +31,7 @@ export async function uploadObjects(blockID, file, query) {
 export async function removeObject(objectID, query) {
     return axios.delete(serverURL + '/inspection-objects/removeObject/' + (objectID ?? '') + (query ?? ''), createConfig());
 }
+
+export function removeObjects(blockID, query) {
+    return axios.delete(serverURL + '/assignment-blocks/deleteAll/' + (blockID ?? '') + (query ?? ''), createConfig());
+}

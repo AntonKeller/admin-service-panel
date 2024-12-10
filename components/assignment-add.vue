@@ -34,7 +34,6 @@
               variant="outlined"
               label="Договор"
               closable-chips
-              single-line
               chips
           >
             <template v-slot:chip="{ props, item }">
@@ -132,7 +131,7 @@
       />
       <my-btn-clear
           text="Очистить"
-          @click="assignment = {}"
+          @click="clear"
       />
     </v-card-actions>
 
@@ -237,13 +236,14 @@ export default {
           })
     },
 
+    clear() {
+      this.assignment = {
+        title: null,
+        contract: null,
+        customer: null,
+      }
+    }
+
   }
 }
 </script>
-
-<!--<style>-->
-<!--@font-face {-->
-<!--  font-family: 'TildaSans-Regular';-->
-<!--  src: url('~assets/fonts/TildaSans-Regular.ttf') format('opentype'),-->
-<!--}-->
-<!--</style>-->

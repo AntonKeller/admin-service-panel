@@ -82,8 +82,8 @@
                 prepend-icon="mdi-file-document-arrow-right-outline"
                 color="blue-darken-2"
                 size="small"
-                :loading="reportDownloading"
                 :disabled="reportDownloading"
+                :loading="reportDownloading"
                 @click="downloadReport"
             >
               Скачать отчет
@@ -105,16 +105,48 @@
             </v-btn>
           </v-btn-group>
 
-          <v-text-field
-              v-model="searchText"
-              density="compact"
-              label="Поиск объектов"
-              prepend-inner-icon="mdi-magnify"
-              variant="solo-filled"
-              flat
-              hide-details
-              single-line
-          />
+          <v-row no-gutters>
+            <v-col :cols="8">
+              <v-text-field
+                  v-model="searchText"
+                  density="compact"
+                  label="Поиск объектов"
+                  prepend-inner-icon="mdi-magnify"
+                  variant="solo-filled"
+                  hide-details
+                  single-line
+                  flat
+              />
+            </v-col>
+            <v-col :cols="2">
+              <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="sm">
+                <v-icon/>
+                <v-menu v-model="filterMenuVisible" activator="parent" :close-on-content-click="false" location="start">
+                  <v-card min-width="250">
+                    <v-card-item>
+                      <div class="px-2">
+                        <v-switch
+                            v-model="filter.objectIsMissing"
+                            density="compact"
+                            label="Отсутствующие"
+                            color="blue-darken-3"
+                            hide-details
+                        />
+                        <v-switch
+                            v-model="filter.objectWithDefects"
+                            density="compact"
+                            label="С дефектами"
+                            color="blue-darken-3"
+                            hide-details
+                        />
+                      </div>
+                    </v-card-item>
+                  </v-card>
+                </v-menu>
+              </v-btn>
+            </v-col>
+          </v-row>
+
         </div>
         <v-divider/>
         <v-sheet>
@@ -123,8 +155,8 @@
             <thead>
             <tr class="text-blue-darken-4">
               <th class="text-left">№ п/п</th>
-              <th class="text-left">Инв. №</th>
               <th class="text-left">Наименование</th>
+              <th class="text-left">Инв. №</th>
               <th class="text-left"></th>
             </tr>
             </thead>
@@ -136,11 +168,10 @@
             >
               <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
+                {{ textSlicer(inspectionObject?.name, 100) }}
               </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
-                  textSlicer(inspectionObject?.name, 25)
-                }}
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
               </td>
               <td style="min-width: 50px; width: 50px; max-width: 50px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
@@ -168,21 +199,24 @@
       <!--    Block Menu Change-->
       <v-overlay v-model="blockMenuChangeVisibility" class="d-flex justify-center align-center">
         <block-change @change:success="onBlockChangeSuccess"
-                      @click:close="blockMenuChangeVisibility=false"></block-change>
+                      @click:close="blockMenuChangeVisibility=false"/>
       </v-overlay>
 
       <!--      Block Card Page-->
       <nuxt-page/>
+
     </v-card>
   </v-overlay>
 </template>
 
 <script>
-import {removeObject} from "../../../../utils/api/api_inspection_objects.js";
+import {removeObject, removeObjects} from "../../../../utils/api/api_inspection_objects.js";
 import {uploadObjects} from "../../../../utils/api/api_assignment_blocks";
 import {serverURL} from "../../../../constants/constants";
 import {downloadFile} from "../../../../utils/api/api_";
 import {showAlert, unixDateToMiddleDateString} from "../../../../utils/functions";
+import axios from "axios";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "block-page",
@@ -196,6 +230,11 @@ export default {
       loading: false,
       reportDownloading: false,
       blockMenuChangeVisibility: false,
+      filterMenuVisible: false,
+      filter: {
+        objectIsMissing: null,
+        objectWithDefects: null,
+      },
       headers: [
         {title: 'Наименование', align: 'start', key: 'name', value: 'name'},
         {title: 'Тип', align: 'start', key: 'objectType', value: 'objectType'},
@@ -310,13 +349,18 @@ export default {
   },
 
   methods: {
+
     onBlockChangeSuccess() {
-      // Обновит текущий блок (обновив все блоки в объекте)
-      const assignmentID = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
-      this.$store.dispatch('assignmentBlocks/FETCH', assignmentID);
-      // Обновим список объектов в блоке
+      this.blocksStoreUpdate();
       this.fetchObjects();
       this.blockMenuChangeVisibility = false;
+    },
+
+    blocksStoreUpdate() {
+      const assignmentID = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
+      if (assignmentID) {
+        this.$store.dispatch('assignmentBlocks/FETCH', assignmentID);
+      }
     },
 
     goBack() {
@@ -333,12 +377,15 @@ export default {
             this.snackBar = showAlert('Ошибка удаления').error();
           })
     },
+
     clickExcelInputFile() {
       this.$refs.excelFileInput.click();
     },
+
     downloadObjectsTemplate() {
       downloadFile('objects template.xlsx', serverURL + '/inspection-objects/inspectionObjectTemplates');
     },
+
     downloadReport() {
       this.reportDownloading = true;
       const assignmentBlockId = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
@@ -350,6 +397,7 @@ export default {
             this.reportDownloading = false;
           })
     },
+
     onExcelFileInput(event) {
       if (event.target.files && event.target.files.length > 0) {
         const formData = new FormData();
@@ -365,13 +413,13 @@ export default {
             })
       }
     },
+
     fetchObjects() {
       // Получаем ID Блока
-      const currentObject = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM'];
-
-      if (currentObject?._id) {
+      const currentObjectID = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
+      if (currentObjectID) {
         // Обращаемся к состоянию <inspection Objects> и Загружаем его список
-        this.$store.dispatch('inspectionObjects/FETCH', currentObject?._id);
+        this.$store.dispatch('inspectionObjects/FETCH', currentObjectID);
       } else {
         // Отсутствует ID Блока по которому должны получить список объектов
         this.$store.commit('inspectionObjects/ALERT_ERROR', 'Отсутствует ID Блока в Store');
@@ -391,8 +439,21 @@ export default {
     textSlicer(txt, size) {
       return txt?.length > size ? txt.slice(0, size - 3) + '...' : txt;
     },
+
     navigateBack() {
       navigateTo('/manager-menu/assignments/assignment-card');
+    },
+
+    removeObjectsAll(blockID) {
+      removeObjects(blockID)
+          .then(() => {
+            this.snackBar = showAlert('Успешно удалены').success();
+            this.fetchObjects();
+          })
+          .catch(err => {
+            this.snackBar = showAlert('Ошибка удаления').error();
+            console.log('Ошибка удаления объектов', err);
+          })
     }
   }
 }
