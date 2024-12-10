@@ -1,7 +1,7 @@
 <template>
   <v-card
       min-width="400"
-      max-width="900"
+      max-width="1024"
       width="100vw"
   >
     <v-card-title>

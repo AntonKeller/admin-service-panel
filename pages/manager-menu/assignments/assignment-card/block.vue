@@ -125,8 +125,6 @@
               <th class="text-left">№ п/п</th>
               <th class="text-left">Инв. №</th>
               <th class="text-left">Наименование</th>
-              <th class="text-left">Статус</th>
-              <th class="text-left">Описание дефект</th>
               <th class="text-left"></th>
             </tr>
             </thead>
@@ -136,12 +134,15 @@
                 :key="inspectionObject._id"
                 @click.stop="selectObject(inspectionObject)"
             >
-              <td>{{ i + 1 }}</td>
-              <td>{{ textSlicer(inspectionObject?.inventoryNumber, 25) }}</td>
-              <td>{{textSlicer(inspectionObject?.name, 80) }}</td>
-              <td>-</td>
-              <td>Описание дефекта</td>
-              <td style="min-width: 55px; width: 55px; max-width: 55px">
+              <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{
+                  textSlicer(inspectionObject?.name, 25)
+                }}
+              </td>
+              <td style="min-width: 50px; width: 50px; max-width: 50px">
                 <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
               </td>
             </tr>

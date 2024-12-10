@@ -5,9 +5,8 @@
       @click:outside="back"
   >
     <v-card
-        rounded="sm"
         min-width="400"
-        max-width="900"
+        max-width="1024"
         width="100vw"
         elevation="6"
     >
@@ -15,22 +14,7 @@
         <div class="d-flex justify-space-between align-center">
           <div class="d-flex ga-1 align-center">
             {{ getSelectedAssignment?.title }}
-            <v-btn
-                class="align-self-start"
-                density="comfortable"
-                color="blue-darken-3"
-                icon="mdi-pencil"
-                variant="text"
-                rounded="lg"
-                size="small"
-                @click="assignmentMenuChangeVisibility = true"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Редактировать ТЗ
-              </v-tooltip>
-            </v-btn>
-            Техническое задание
+             [ Техническое задание ]
           </div>
           <my-button-close-card @click="goBack" class="align-self-start"/>
         </div>
@@ -144,12 +128,6 @@
         <block-add @add:success="onAddBlockSuccess" @click:close="blockMenuAddVisibility=false"/>
       </v-overlay>
 
-      <!--    Assignment Menu Change-->
-      <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-        <assignment-change @update:success="onUpdateSuccess"
-                           @click:close="this.assignmentMenuChangeVisibility = false"/>
-      </v-overlay>
-
       <!--    Block Page Card-->
       <nuxt-page/>
 
@@ -165,6 +143,7 @@
 <script>
 import {removeAssignmentBlock} from "../../../utils/api/api_assignment_blocks";
 import {unixDateToMiddleDateString} from "../../../utils/functions.js";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "assignment-card-page",
@@ -176,7 +155,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       snackBar: {},
-      assignmentMenuChangeVisibility: false,
+
       blockMenuAddVisibility: false,
       timeDateConfig: {
         weekday: 'short', // weekday: 'short',
@@ -292,21 +271,12 @@ export default {
       this.blockMenuAddVisibility = false;
       this.assignmentBlocksStoreUpdate();
     },
-    onUpdateSuccess() {
-      this.assignmentMenuChangeVisibility = false;
-      this.assignmentBlocksStoreUpdate();
-      this.assignmentsStoreUpdate();
-    },
     goBack() {
       navigateTo('/manager-menu/assignments');
     },
 
     stringToDate(timestamp) {
       return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
-    },
-
-    assignmentsStoreUpdate() {
-      this.$store.dispatch('assignments/FETCH');
     },
 
     assignmentBlocksStoreUpdate() {

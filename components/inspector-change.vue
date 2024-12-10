@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="sm" width="700" elevation="6">
+  <v-card width="700" elevation="6">
 
     <v-card-title>
       <div class="d-flex justify-space-between align-center">

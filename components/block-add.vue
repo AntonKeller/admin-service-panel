@@ -1,7 +1,7 @@
 <template>
   <v-card
       min-width="400"
-      max-width="900"
+      max-width="1024"
       width="100vw"
   >
     <v-card-title>
@@ -19,27 +19,21 @@
 
           <v-row no-gutters>
             <v-col cols="12">
-              <my-text-field
-                  v-model="block.title"
-                  label="Заголовок"
-              />
+              <my-text-field v-model="block.title" label="Заголовок"/>
             </v-col>
           </v-row>
 
           <v-row no-gutters>
             <v-col :cols="12">
-              <my-date-picker
-                  v-model="block.startDate"
-                  label="Дата начала"
-              />
+              <my-date-picker v-model="block.startDate" label="Дата начала"/>
             </v-col>
-<!--            <v-col :cols="cols">-->
-<!--              <my-date-picker-->
-<!--                  v-model="block.endDate"-->
-<!--                  label="Дата окончания"-->
-<!--                  class="ml-1"-->
-<!--              />-->
-<!--            </v-col>-->
+            <!--            <v-col :cols="cols">-->
+            <!--              <my-date-picker-->
+            <!--                  v-model="block.endDate"-->
+            <!--                  label="Дата окончания"-->
+            <!--                  class="ml-1"-->
+            <!--              />-->
+            <!--            </v-col>-->
           </v-row>
 
           <v-row no-gutters>
@@ -161,10 +155,10 @@
                 label="Телефон контактного лица"
                 prefix="[8-xxx-xxx-xx-xx]:"
             />
-<!--            <my-text-field-->
-<!--                v-model="block.contactPhoneNumber"-->
-<!--                label="Телефон контактного лица"-->
-<!--            />-->
+            <!--            <my-text-field-->
+            <!--                v-model="block.contactPhoneNumber"-->
+            <!--                label="Телефон контактного лица"-->
+            <!--            />-->
           </div>
 
           <my-text-field

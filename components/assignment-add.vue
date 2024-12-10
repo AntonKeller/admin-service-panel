@@ -1,5 +1,9 @@
 <template>
-  <v-card rounded="sm" width="700" elevation="6">
+  <v-card
+      min-width="400"
+      max-width="750"
+      width="100vw"
+  >
 
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
@@ -12,6 +16,7 @@
 
     <v-card-item>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+
         <my-text-field
             v-model="assignment.title"
             label="Заголовок задания"
@@ -21,9 +26,8 @@
         <div class="d-flex ga-1">
           <v-autocomplete
               v-model="assignment.contract"
-              :rules="contractRules"
-              :items="getContracts"
-              no-data-text="Пусто"
+              :items="contracts"
+              no-data-text="нет данных"
               prepend-inner-icon="mdi-file-sign"
               color="yellow-darken-3"
               density="compact"
@@ -39,6 +43,7 @@
                   prepend-icon="mdi-file-document-edit"
                   color="blue-grey-darken-3"
                   density="comfortable"
+                  label
                   :text="`${item.raw?.contractNumber} / ${item.raw?.customer?.shortName}`"
               />
             </template>
@@ -66,6 +71,56 @@
             </v-tooltip>
           </v-btn>
         </div>
+
+        <div class="d-flex ga-1">
+          <v-autocomplete
+              v-model="assignment.customer"
+              :items="customers"
+              :loading="customersFetching"
+              :rules="customerRules"
+              prepend-inner-icon="mdi-account-tie"
+              no-data-text="нет данных"
+              color="yellow-darken-3"
+              variant="outlined"
+              density="compact"
+              label="Заказчик"
+              closable-chips
+              chips
+          >
+            <template v-slot:chip="{ props, item }">
+              <v-chip
+                  v-bind="props"
+                  :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
+                  prepend-icon="mdi-file-document-edit"
+                  color="blue-grey-darken-3"
+                  density="comfortable"
+                  label
+              />
+            </template>
+
+            <template v-slot:item="{ props, item }">
+              <v-list-item
+                  v-bind="props"
+                  prepend-icon="mdi-file-document-edit"
+                  :title="item.raw.shortName"
+                  :subtitle="item.raw.inn"
+              />
+            </template>
+          </v-autocomplete>
+          <v-btn
+              icon="mdi-plus"
+              variant="text"
+              rounded="lg"
+              size="small"
+              @click="customerAddMenuVisible = true"
+          >
+            <v-icon/>
+            <v-tooltip activator="parent" location="left">
+              Добавить заказчика
+            </v-tooltip>
+          </v-btn>
+        </div>
+
       </v-form>
     </v-card-item>
 
@@ -91,36 +146,44 @@
       <contract-add @add:success="onContractAddSuccess" @click:close="contractMenuAddShow = false"></contract-add>
     </v-overlay>
 
+    <my-overlay v-model="customerAddMenuVisible">
+      <customer-add @add:success="onCustomerAddSuccess" @click:close="customerAddMenuVisible=false"></customer-add>
+    </my-overlay>
+
   </v-card>
 </template>
 
 <script>
 import {addNewAssignment} from "../utils/api/api_assignments.js";
+import {fetchCustomersAll} from "../utils/api/api_customers";
 
 export default {
   name: "assignment-add",
 
-  data: () => ({
-
-    formIsValid: false,
-    contractMenuAddShow: false,
-    assignment: {},
-
-    assignmentTitleRules: [
-      value => value?.length > 0 ? true : 'Кол-во символов должно быть > 0',
-      value => value?.length <= 50 ? true : 'Кол-во символов должно быть <= 30'
-    ],
-    contractRules: [
-      value => value || 'Выберите договор'
-    ],
-  }),
+  data() {
+    return {
+      assignment: {
+        title: null,
+        contract: null,
+        customer: null,
+      },
+      formIsValid: false,
+      contractMenuAddShow: false,
+      customers: [],
+      customersFetching: false,
+      customerAddMenuVisible: false,
+      customerRules: [v => v || 'Не выбран заказчик'],
+      assignmentTitleRules: [v => v?.length <= 50 || 'Кол-во символов должно быть <= 30'],
+    }
+  },
 
   beforeMount() {
     this.$store.dispatch('contracts/UPDATE_ITEMS');
+    this.fetchCustomers();
   },
 
   computed: {
-    getContracts() {
+    contracts() {
       return this.$store.getters['contracts/GET_ITEMS'];
     },
     getAlert() {
@@ -132,6 +195,11 @@ export default {
 
     contractsStoreUpdate() {
       this.$store.dispatch('contracts/UPDATE_ITEMS');
+    },
+
+    onCustomerAddSuccess() {
+      this.customerAddMenuVisible = false;
+      this.fetchCustomers();
     },
 
     onContractAddSuccess() {
@@ -151,7 +219,24 @@ export default {
               console.log('Ошибка добавления задачи', err)
             })
       }
-    }
+    },
+
+    fetchCustomers() {
+
+      this.customersFetching = true;
+
+      fetchCustomersAll()
+          .then(response => {
+            this.customers = response?.data;
+          })
+          .catch(err => {
+            console.log('Запрос списка договоров выполнен с ошибкой', err);
+          })
+          .finally(() => {
+            this.customersFetching = false;
+          })
+    },
+
   }
 }
 </script>

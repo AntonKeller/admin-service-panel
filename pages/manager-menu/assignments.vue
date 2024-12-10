@@ -19,7 +19,6 @@
                 Добавить новое задание
               </v-tooltip>
             </v-btn>
-            <!--            <v-spacer />-->
             <v-sheet width="550">
               <v-text-field
                   v-model="searchText"
@@ -53,22 +52,18 @@
                   @click="selectAssignment(assignment)"
                   class="text-caption"
               >
-                <td style="max-width: 200px">
-                  {{ assignment.title }}
-                </td>
-
-                <td style="max-width: 140px">
+                <td>{{ assignment.title }}</td>
+                <td>
                   № {{ assignment?.contract?.contractNumber }}
                   от {{ stringToDate(assignment?.contract?.contractDate) }}
                 </td>
-                <td style="max-width: 140px">
-                  {{ assignment?.contract?.customer?.shortName }}
-                </td>
-                <td style="max-width: 200px">
-                  {{ slicer(assignment.description, 50) }}
-                </td>
-                <td style="min-width: 65px; width: 65px; max-width: 65px">
-                  <c-remove-btn :prompt="'Удалить'" @click:yes="removeAssignment(assignment._id)"/>
+                <td>{{ assignment?.contract?.customer?.shortName }}</td>
+                <td>{{ slicer(assignment.description, 50) }}</td>
+                <td style="min-width: 90px; width: 90px; max-width: 90px" >
+                  <div class="d-flex ga-2">
+                    <my-change-button prompt="Редактировать ТЗ" @click.stop="assignmentMenuChangeVisibility = true"/>
+                    <c-remove-btn prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -87,11 +82,16 @@
             :total-visible="8"
         />
       </div>
-
     </v-sheet>
 
     <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">
       <assignment-add @click:close="onClickClose" @add:success="onAddSuccess"></assignment-add>
+    </v-overlay>
+
+    <!--    Assignment Menu Change-->
+    <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
+      <assignment-change @update:success="onChangeSuccess"
+                         @click:close="this.assignmentMenuChangeVisibility = false"/>
     </v-overlay>
 
     <nuxt-page/>
@@ -100,7 +100,8 @@
 </template>
 
 <script>
-import {slicer, unixDateToLongDateString, unixDateToShortDateString} from "../../utils/functions";
+import {slicer, unixDateToShortDateString} from "../../utils/functions";
+import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
 export default {
@@ -112,6 +113,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       assignmentAddVisibility: false,
+      assignmentMenuChangeVisibility: false,
       timeDateConfig: {
         weekday: 'short', // weekday: 'short',
         year: 'numeric',
@@ -134,7 +136,7 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('assignments/FETCH');
+    this.assignmentsStoreUpdate();
   },
 
   unmounted() {
@@ -179,7 +181,6 @@ export default {
       const to = this.currentPage * this.itemsPerPage;
       return this.assignmentFoundList.slice(from, to);
     },
-
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },
@@ -188,8 +189,15 @@ export default {
   methods: {
 
     slicer,
-    unixDateToLongDateString,
-    unixDateToShortDateString,
+
+    onChangeSuccess() {
+      this.assignmentMenuChangeVisibility = false;
+      this.assignmentsStoreUpdate();
+    },
+
+    assignmentsStoreUpdate() {
+      this.$store.dispatch('assignments/FETCH');
+    },
 
     onClickClose() {
       this.assignmentAddVisibility = false;
@@ -200,8 +208,7 @@ export default {
     },
 
     stringToDate(timestamp) {
-      return unixDateToShortDateString(timestamp)
-      // return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
+      return unixDateToShortDateString(timestamp);
     },
 
     selectAssignment(assignment) {

@@ -1,6 +1,6 @@
 <template>
   <v-card
-      rounded="sm" width="700" elevation="6"
+      width="750"
       :loading="loading"
       :disabled="loading"
   >
@@ -14,23 +14,57 @@
     <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 
     <v-card-text>
-      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
-        <my-text-field v-model="customer.fullName" label="Полное наименование"/>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
-          <my-text-field v-model="customer.inn" label="ИНН"/>
-        </div>
-        <my-text-field v-model="customer.address" label="Адрес"/>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.email" label="Email"/>
-          <my-text-field v-model="customer.phoneNumber" v-mask="options" label="Номер телефона"
-                         placeholder="+7 (___) ___-__-__"/>
-        </div>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
-          <my-text-field v-model="customer.representativePosition" label="Представитель (Должность)"/>
-        </div>
-        <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1">
+
+        <v-row no-gutters>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.fullName" label="Полное наименование"/>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field v-model="customer.inn" label="ИНН"/>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.address" label="Адрес"/>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.email" label="Email"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field
+                v-model="customer.phoneNumber"
+                v-mask="options"
+                label="Номер телефона"
+                placeholder="+7 (___) ___-__-__"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.representativeFullName" label="ФИО Представителя"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
 

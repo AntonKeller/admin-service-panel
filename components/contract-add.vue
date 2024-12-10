@@ -1,7 +1,6 @@
 <template>
-  <v-sheet rounded="sm" color="grey-lighten-4">
+  <v-sheet color="grey-lighten-4">
     <v-card
-        rounded="sm"
         variant="text"
         width="700"
         color="blue-grey-darken-3"
@@ -28,53 +27,6 @@
               label="Дата заключения"
               placeholder="дд:мм:гггг"
           />
-          <div class="d-flex ga-1">
-            <v-autocomplete
-                v-model="contract.customer"
-                :items="customers"
-                :loading="fetchingCustomers"
-                :rules="customersRules"
-                prepend-inner-icon="mdi-account-tie"
-                no-data-text="нет данных"
-                color="yellow-darken-3"
-                variant="outlined"
-                density="compact"
-                label="Заказчик"
-                closable-chips
-                chips
-            >
-              <template v-slot:chip="{ props, item }">
-                <v-chip
-                    color="blue-grey-darken-3"
-                    density="default"
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw?.shortName} / ${item.raw?.inn}`"
-                />
-              </template>
-
-              <template v-slot:item="{ props, item }">
-                <v-list-item
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.shortName"
-                    :subtitle="item.raw.inn"
-                />
-              </template>
-            </v-autocomplete>
-            <v-btn
-                icon="mdi-plus"
-                variant="text"
-                rounded="lg"
-                size="small"
-                @click="customerAddMenuShow = true"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Добавить заказчика
-              </v-tooltip>
-            </v-btn>
-          </div>
 
           <div class="d-flex ga-1">
             <v-autocomplete
@@ -150,17 +102,11 @@
                              @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
     </my-overlay>
 
-
-    <my-overlay v-model="customerAddMenuShow">
-      <customer-add @add:success="onCustomerAddSuccess" @click:close="customerAddMenuShow=false"></customer-add>
-    </my-overlay>
-
   </v-sheet>
 </template>
 
 <script>
 import {fetchContractExecutors} from "../utils/api/api_contract_executors";
-import {fetchCustomersAll} from "../utils/api/api_customers";
 import {addContract} from "../utils/api/api_contracts";
 import {showAlert} from "../utils/functions";
 
@@ -178,22 +124,18 @@ export default {
         contractExecutor: null,
       },
       snackBar: {},
-      customers: [],
-      fetchingCustomers: false,
       contractExecutors: [],
       fetchingContractExecutors: false,
-      customerAddMenuShow: false,
       contractExecutorMenuAddVisibility: false,
       contractContractNumberRules: [
         v => v?.length > 0 || 'Договора должна быть больше 0',
         v => v?.length <= 18 || 'Договора должна быть меньше 18',
       ],
       contractDateRules: [v => /^\d{2}\.\d{2}\.\d{4}$/i.test(v) ? true : 'Неподходящий формат даты'],
-      customersRules: [v => v || 'Не выбран заказчик'],
     }
   },
+
   mounted() {
-    this.fetchCustomersAll();
     this.fetchContractExecutors();
   },
 
@@ -222,27 +164,6 @@ export default {
       } else {
         this.snackBar = showAlert('Поля не заполнены!').error();
       }
-    },
-
-    onCustomerAddSuccess() {
-      this.customerAddMenuShow = false;
-      this.fetchCustomersAll();
-    },
-
-    fetchCustomersAll() {
-
-      this.fetchingCustomers = true;
-
-      fetchCustomersAll()
-          .then(response => {
-            this.customers = response?.data;
-          })
-          .catch(err => {
-            console.log('Запрос списка договоров выполнен с ошибкой', err);
-          })
-          .finally(() => {
-            this.fetchingCustomers = false;
-          })
     },
 
     async fetchContractExecutors() {
