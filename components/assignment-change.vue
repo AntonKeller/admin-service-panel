@@ -22,6 +22,7 @@
               :items="contracts"
               :rules="[v => v || 'Выберите договор']"
               prepend-inner-icon="mdi-file-sign"
+              no-data-text="нет данных"
               color="yellow-darken-3"
               density="compact"
               variant="outlined"

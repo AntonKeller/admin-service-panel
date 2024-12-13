@@ -18,7 +18,7 @@
           <my-text-field
               v-model="contract.contractNumber"
               prepend-inner-icon="mdi-file-sign"
-              label="Номер договора"
+              label="Номер договора/ТЗ"
               placeholder="..../..."
           />
           <my-date-picker
@@ -35,8 +35,8 @@
                 :loading="fetchingContractExecutors"
                 :rules="[v => !!v || 'Выберите исполнителя']"
                 prepend-inner-icon="mdi-account-tie"
-                color="yellow-darken-3"
                 no-data-text="нет данных"
+                color="yellow-darken-3"
                 density="compact"
                 variant="outlined"
                 label="Исполнитель"

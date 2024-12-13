@@ -66,11 +66,13 @@ const contracts = {
         }
     },
     actions: {
-        async UPDATE_ITEMS({commit, getters}) {
+        async UPDATE_ITEMS({commit}) {
 
             commit('SET_FETCHING', true);
-            let answer = await fetchContracts(getters.GET_QUERY);
+            let answer = await fetchContracts();
             commit('SET_FETCHING', false);
+
+            console.log('contracts answer')
 
             switch (answer.status) {
                 case 200:

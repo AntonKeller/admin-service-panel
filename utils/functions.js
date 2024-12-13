@@ -23,7 +23,7 @@ export function unixDateToMiddleDateString(unixDate) {
 
 // Широкая дата из Unix date
 export function unixDateToLongDateString(unixDate) {
-    return moment(parseInt(unixDate)).locale('ru').format('dd, MMM DD YYYY');
+    return moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM YYYY');
 }
 
 export function showAlert(text) {

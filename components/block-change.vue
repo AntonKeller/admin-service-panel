@@ -81,6 +81,7 @@
                 <v-autocomplete
                     v-model="block.inspector"
                     :items="inspectors"
+                    no-data-text="нет данных"
                     color="yellow-darken-3"
                     density="compact"
                     variant="outlined"

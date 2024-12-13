@@ -75,6 +75,7 @@
                 <v-autocomplete
                     v-model="block.inspector"
                     :items="inspectors"
+                    no-data-text="нет данных"
                     color="yellow-darken-3"
                     density="compact"
                     variant="outlined"
@@ -150,15 +151,11 @@
                 v-model="block.contactFullName"
                 label="ФИО Контактного лица"
             />
-            <my-input-number
+            <my-text-field
                 v-model="block.contactPhoneNumber"
+                v-mask="options"
                 label="Телефон контактного лица"
-                prefix="[8-xxx-xxx-xx-xx]:"
-            />
-            <!--            <my-text-field-->
-            <!--                v-model="block.contactPhoneNumber"-->
-            <!--                label="Телефон контактного лица"-->
-            <!--            />-->
+                placeholder="+7 (___) ___-__-__"/>
           </div>
 
           <my-text-field
@@ -199,12 +196,16 @@ import assignment_block_statuses from "../configs/assignment-statuses";
 import {fetchInspectors} from "../utils/api/api_inspectors";
 import {isDate, isEmpty} from "../utils/validators/functions";
 import {showAlert} from "../utils/functions.js";
-import MyInputNumber from "./my-input-number.vue";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "block-add",
-  components: {MyInputNumber},
+
   emits: ['add:success'],
+
+  directives: {
+    mask: vMaska
+  },
 
   data() {
     return {
@@ -232,6 +233,10 @@ export default {
       snackBar: {},
       formIsValid: null,
       sendingData: false,
+      options: {
+        mask: "+7 (###) ###-##-##",
+        eager: true
+      },
       assignment_block_statuses,
       //................................
       blockTitleRules: [

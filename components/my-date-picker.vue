@@ -36,6 +36,7 @@
 
 <script>
 import moment from 'moment';
+
 export default {
   inheritAttrs: false,
 
@@ -53,10 +54,30 @@ export default {
   },
 
   beforeMount() {
-    if (!isNaN(parseInt(this.modelValue))) {
+    if (!this.modelValue) {
+      this.unixDate = null;
+      this.textFieldValue = null;
+      this.datepickerValue = null;
+    } else if (!isNaN(parseInt(this.modelValue))) {
       this.textFieldValue = moment(this.modelValue).format('DD.MM.YYYY');
       this.unixDate = this.modelValue;
     }
+  },
+
+  watch: {
+    modelValue() {
+      if (!this.modelValue) {
+        this.unixDate = null;
+        this.textFieldValue = null;
+        this.datepickerValue = null;
+      } else if (!isNaN(parseInt(this.modelValue))) {
+        this.textFieldValue = moment(this.modelValue).format('DD.MM.YYYY');
+        this.unixDate = this.modelValue;
+      }
+    },
+    unixDate(value) {
+      this.$emit('update:modelValue', value);
+    },
   },
 
   computed: {
@@ -90,12 +111,6 @@ export default {
         this.textFieldValue = v;
       }
     }
-  },
-
-  watch: {
-    unixDate(value) {
-      this.$emit('update:modelValue', value);
-    },
   },
 
   methods: {
