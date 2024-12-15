@@ -19,9 +19,9 @@ body::-webkit-scrollbar {
   @apply bg-transparent;
 }
 
-*::-webkit-scrollbar-thumb {
-  @apply bg-gray-600/50 rounded-xl;
-}
+//*::-webkit-scrollbar-thumb {
+//  @apply bg-gray-600/50 rounded-xl;
+//}
 
 ::-webkit-scrollbar {
   height: 8px;

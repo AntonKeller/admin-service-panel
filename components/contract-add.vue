@@ -11,18 +11,23 @@
           <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
         </div>
       </v-card-title>
-      <v-card-subtitle>Заполните поля</v-card-subtitle>
+
+      <v-card-subtitle>
+        Заполните поля
+      </v-card-subtitle>
 
       <v-card-text>
         <v-form v-model="isValid" class="d-flex flex-column ga-2">
+
           <my-text-field
-              v-model="contract.contractNumber"
+              v-model="contract.number"
               prepend-inner-icon="mdi-file-sign"
               label="Номер договора/ТЗ"
               placeholder="..../..."
           />
+
           <my-date-picker
-              v-model="contract.contractDate"
+              v-model="contract.date"
               prepend-inner-icon="mdi-calendar-range"
               label="Дата заключения"
               placeholder="дд:мм:гггг"
@@ -30,51 +35,65 @@
 
           <div class="d-flex ga-1">
             <v-autocomplete
-                v-model="contract.contractExecutor"
-                :items="contractExecutors"
-                :loading="fetchingContractExecutors"
-                :rules="[v => !!v || 'Выберите исполнителя']"
-                prepend-inner-icon="mdi-account-tie"
+                v-model="contract.parent"
+                :loading="contractsListFetching"
+                :items="contracts"
+                :custom-filter="contractSearchFilter"
+                prepend-inner-icon="mdi-file-document-edit"
                 no-data-text="нет данных"
                 color="yellow-darken-3"
-                density="compact"
                 variant="outlined"
-                label="Исполнитель"
+                density="compact"
+                label="Рамочный договор"
                 closable-chips
+                hide-selected
                 chips
             >
-              <template v-slot:chip="{ props, item }">
+              <template #chip="{ props, item }">
                 <v-chip
+                    v-bind="props"
+                    :text="`${item.raw?.number} / ${unixDateToLongDateString(item.raw?.date)}`"
+                    prepend-icon="mdi-file-document-edit"
                     color="blue-grey-darken-3"
                     density="comfortable"
-                    v-bind="props"
-                    prepend-icon="mdi-file-document-edit"
-                    :text="`${item.raw.surname}  ${item.raw.firstName} ${item.raw.lastName} ${item.raw.position} ${item.raw.companyName}`"
+                    label
                 />
               </template>
 
-              <template v-slot:item="{ props, item }">
+              <template #item="{ props, item }">
                 <v-list-item
                     v-bind="props"
                     prepend-icon="mdi-file-document-edit"
-                    :title="item.raw.surname + ' ' + item.raw.firstName + ' ' + item.raw.lastName"
-                    :subtitle="item.raw.position + ' '+ item.raw.companyName"
-                />
+                    :title="item.raw?.number"
+                    :subtitle="unixDateToLongDateString(item.raw?.date)"
+                >
+                  <template #append>
+                    <v-btn
+                        icon="mdi-progress-close"
+                        color="red-darken-4"
+                        density="comfortable"
+                        variant="text"
+                        @click.stop="removeContract"
+                    >
+                      <v-icon/>
+                      <v-tooltip activator="parent">
+                        Удалить запись
+                      </v-tooltip>
+                    </v-btn>
+                  </template>
+                </v-list-item>
               </template>
             </v-autocomplete>
-            <v-btn
-                icon="mdi-plus"
-                variant="text"
-                rounded="lg"
-                size="small"
-                @click="contractExecutorMenuAddVisibility = true"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Добавить исполнителя
-              </v-tooltip>
-            </v-btn>
           </div>
+
+          <v-textarea
+              v-model="contract.description"
+              variant="outlined"
+              density="compact"
+              label="Описание"
+              rows="5"
+              no-resize
+          />
         </v-form>
       </v-card-text>
 
@@ -97,52 +116,91 @@
       {{ snackBar.msg }}
     </v-snackbar>
 
-    <my-overlay v-model="contractExecutorMenuAddVisibility">
-      <contract-executor-add @add:success="onContractExecutorAddSuccess"
-                             @click:close="contractExecutorMenuAddVisibility=false"></contract-executor-add>
-    </my-overlay>
+    <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
+      <contract-add
+          @add:success="onContractAddSuccess"
+          @click:close="contractMenuAddVisible = false"
+      />
+    </v-overlay>
 
   </v-sheet>
 </template>
 
 <script>
-import {fetchContractExecutors} from "../utils/api/api_contract_executors";
+import {fetchContracts, removeContract} from "@/utils/api/api_contracts";
 import {addContract} from "../utils/api/api_contracts";
-import {showAlert} from "../utils/functions";
+import {showAlert, unixDateToLongDateString} from "../utils/functions";
 
 export default {
   name: "contract-add",
 
   data() {
     return {
+      contract: {
+        number: null,
+        date: null,
+        parent: null,
+        description: null,
+      },
+
       isValid: null,
       loading: false,
-      contract: {
-        contractNumber: null,
-        contractDate: null,
-        contractExecutor: null,
-      },
+
+      contractsList: [],
+      contractsListFetching: false,
+      contractMenuAddVisible: false,
+      contractRules: [v => v || 'Договор должен быть выбран'],
+
       snackBar: {},
-      contractExecutors: [],
-      fetchingContractExecutors: false,
-      contractExecutorMenuAddVisibility: false,
-      contractContractNumberRules: [
+
+      contractNumberRules: [
         v => v?.length > 0 || 'Договора должна быть больше 0',
         v => v?.length <= 18 || 'Договора должна быть меньше 18',
       ],
-      contractDateRules: [v => /^\d{2}\.\d{2}\.\d{4}$/i.test(v) ? true : 'Неподходящий формат даты'],
+      contractDateRules: [
+        v => /^\d{2}\.\d{2}\.\d{4}$/i.test(v) ? true : 'Неподходящий формат даты'
+      ],
     }
   },
 
-  mounted() {
-    this.fetchContractExecutors();
+  async mounted() {
+    await this.fetchContractsList();
+  },
+
+  computed: {
+    contracts() {
+      return this.contractsList?.filter(contract => !contract.parent) || [];
+    },
   },
 
   methods: {
 
-    onContractExecutorAddSuccess(){
-      this.contractExecutorMenuAddVisibility = false;
-      this.fetchContractExecutors();
+    unixDateToLongDateString,
+
+    contractSearchFilter(value, query, item) {
+      return [
+        item.raw.inn || null,
+        item.raw.fullName || null,
+      ].some(value => (new RegExp(query, 'ig')).test(value));
+    },
+
+    async onContractAddSuccess() {
+      this.contractMenuAddVisible = false;
+      await this.fetchContractsList();
+    },
+
+    async fetchContractsList() {
+      this.contractsFetching = true;
+      const answer = await fetchContracts();
+      switch (answer.status) {
+        case 200:
+          this.contractsList = answer.data;
+          break;
+        default:
+          console.log('Ошибка получения данных о договорах');
+          break;
+      }
+      this.contractsFetching = false;
     },
 
     submit() {
@@ -165,27 +223,22 @@ export default {
       }
     },
 
-    async fetchContractExecutors() {
-
-      this.fetchingContractExecutors = true;
-
-      fetchContractExecutors()
-          .then(response => {
-            this.contractExecutors = response.data;
+    removeContract() {
+      removeContract()
+          .then(() => {
+            //   TODO: написать логику удаления
           })
           .catch(err => {
-            console.log('Ошибка получения исполнителей', err);
-          })
-          .finally(() => {
-            this.fetchingContractExecutors = false;
+            console.log('Не удалось удалить', err);
           })
     },
 
     clear() {
       this.contract = {
-        contractNumber: null,
-        contractDate: null,
-        contractExecutor: null,
+        number: null,
+        date: null,
+        parent: null,
+        description: null,
       }
     }
 

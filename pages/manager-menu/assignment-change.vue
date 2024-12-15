@@ -1,10 +1,16 @@
 <template>
-  <v-sheet rounded="sm" width="700px">
-    <v-card rounded>
+  <v-container fluid>
+    <v-card
+        variant="elevated"
+        min-width="200px"
+        max-width="600px"
+        width="100%"
+        rounded
+    >
       <v-card-title>
         <div class="d-flex justify-space-between align-center">
           <div>Редактор задания</div>
-          <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
+          <my-button-close-card @click="goBack" class="align-self-start"/>
         </div>
       </v-card-title>
       <v-card-subtitle/>
@@ -57,25 +63,24 @@
         />
         <my-btn-clear text="Очистить" @click="this.assignment = {}"/>
       </v-card-actions>
+
+      <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+        <v-icon>mdi-alert-circle-outline</v-icon>
+        {{ snackBar.msg }}
+      </v-snackbar>
     </v-card>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
-
-  </v-sheet>
+  </v-container>
 </template>
 
 <script>
-import {changeAssignment} from "../utils/api/api_assignments";
-import {fetchContractsAll} from "../utils/api/api_contracts";
-import {fetchCustomersAll} from "../utils/api/api_customers";
-import {showAlert} from "../utils/functions";
+import {changeAssignment} from "../../utils/api/api_assignments";
+import {fetchContractsAll} from "../../utils/api/api_contracts";
+import {fetchCustomersAll} from "../../utils/api/api_customers";
+import {showAlert} from "../../utils/functions";
 import _ from "lodash";
 
 export default {
-  name: "assignment-change",
+  name: "assignment-change-page",
 
   data() {
     return {
@@ -98,6 +103,10 @@ export default {
 
   methods: {
 
+    goBack() {
+      navigateTo('/manager-menu/assignments');
+    },
+
     async sendChanges() {
 
       await this.$refs.form.validate();
@@ -110,6 +119,7 @@ export default {
             .then(() => {
               this.snackBar = showAlert('Изменено успешно!').success();
               this.$emit('update:success');
+              this.goBack();
             })
             .catch(err => {
               this.snackBar = showAlert('Не удалось изменить!').error();

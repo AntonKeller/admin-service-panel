@@ -6,13 +6,12 @@
         <v-card-title>Список заданий</v-card-title>
 
         <v-card-item>
-
           <div class="d-flex align-center">
             <v-btn
                 variant="tonal"
                 color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
-                @click="assignmentAddVisibility = true"
+                @click="navigateTo('/manager-menu/assignment-add')"
             >
               Добавить
               <v-tooltip activator="parent">
@@ -34,8 +33,9 @@
             </v-sheet>
           </div>
 
-          <v-sheet style="min-height: 600px" class="mt-2">
-            <v-table height="77vh" density="default" fixed-header>
+          <v-sheet style="min-height: 200px" class="mt-2">
+            <!--            height="77vh"-->
+            <v-table style="max-height: 77vh" density="default" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
                 <th>Заголовок</th>
@@ -49,17 +49,22 @@
               <tr
                   v-for="(assignment, i) of assignmentsSLice"
                   :key="assignment._id"
+                  class="text-caption row-hover"
                   @click="selectAssignment(assignment)"
-                  class="text-caption"
               >
                 <td>{{ assignment.title }}</td>
                 <td>
-                  № {{ assignment?.contract?.contractNumber }}
-                  от {{ stringToDate(assignment?.contract?.contractDate) }}
+                  <v-chip color="deep-purple-darken-2" density="comfortable" label>
+                    {{ getContractString(assignment.contract) }}
+                  </v-chip>
                 </td>
-                <td>{{ assignment?.customer?.shortName }}</td>
+                <td>
+                  <v-chip color="blue-darken-3" density="comfortable" label>
+                    {{ assignment?.customer?.shortName || '-' }}
+                  </v-chip>
+                </td>
                 <td>{{ slicer(assignment.description, 50) }}</td>
-                <td style="min-width: 90px; width: 90px; max-width: 90px" >
+                <td style="min-width: 90px; width: 90px; max-width: 90px">
                   <div class="d-flex ga-2">
                     <my-change-button prompt="Редактировать ТЗ" @click.stop="assignmentMenuChangeVisibility = true"/>
                     <c-remove-btn prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
@@ -68,6 +73,7 @@
               </tr>
               </tbody>
             </v-table>
+            <v-divider/>
           </v-sheet>
         </v-card-item>
       </v-card>
@@ -82,20 +88,17 @@
             :total-visible="8"
         />
       </div>
+
+      <!--      <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">-->
+      <!--        <assignment-add @click:close="onClickClose" @add:success="onAddSuccess"></assignment-add>-->
+      <!--      </v-overlay>-->
+
+      <!--    Assignment Menu Change-->
+      <!--      <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">-->
+      <!--        <assignment-change @update:success="onChangeSuccess"-->
+      <!--                           @click:close="this.assignmentMenuChangeVisibility = false"/>-->
+      <!--      </v-overlay>-->
     </v-sheet>
-
-    <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">
-      <assignment-add @click:close="onClickClose" @add:success="onAddSuccess"></assignment-add>
-    </v-overlay>
-
-    <!--    Assignment Menu Change-->
-    <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">
-      <assignment-change @update:success="onChangeSuccess"
-                         @click:close="this.assignmentMenuChangeVisibility = false"/>
-    </v-overlay>
-
-    <nuxt-page/>
-
   </v-container>
 </template>
 
@@ -190,6 +193,15 @@ export default {
 
     slicer,
 
+    getContractString(contract) {
+      const a = contract?.number;
+      const b = contract?.date;
+      if (!a && !b) return 'Договор отсутствует';
+      if (a && !b) return `№ ${contract?.number} от [дата отсутствует]`;
+      if (!a && b) return `[№ отсутствует] от ${this.stringToDate(contract?.date)}`;
+      if (a && b) return `№ ${contract?.number} от ${this.stringToDate(contract?.date)}`;
+    },
+
     onChangeSuccess() {
       this.assignmentMenuChangeVisibility = false;
       this.assignmentsStoreUpdate();
@@ -217,7 +229,7 @@ export default {
       // Записываем в vuex store
       this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
       // Открываем меню
-      navigateTo('/manager-menu/assignments/assignment-card');
+      navigateTo('/manager-menu/assignment-change');
     },
 
     removeAssignment(_id) {

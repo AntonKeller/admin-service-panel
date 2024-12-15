@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     ssr: false,
 
     app: {
+        // mode: "default",
+        pageTransition: {
+            name: 'page',
+            mode: 'out-in'
+        },
 
         head: {
 
@@ -58,7 +63,7 @@ export default defineNuxtConfig({
                     rel: "stylesheet",
                     href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",
                 },
-            ]
+            ],
         },
     },
 

@@ -56,7 +56,7 @@ const assignments = {
 
             switch (answer.status) {
                 case 200:
-                    commit('SET_ASSIGNMENTS', answer.data.data);
+                    commit('SET_ASSIGNMENTS', answer.data);
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

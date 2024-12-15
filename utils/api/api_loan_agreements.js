@@ -13,17 +13,17 @@ function createConfig() {
  * Loan Agreements
  * */
 export async function fetchLoanAgreements(query) {
-    return axios.get(serverURL + '/________' + (query ?? ''), createConfig());
+    return axios.get(serverURL + '/loan-agreement' + (query ?? ''), createConfig());
 }
 
 export async function addLoanAgreement(loanAgreement, query) {
-    return axios.post(serverURL + '/_________/add' + (query ?? ''), loanAgreement, createConfig());
+    return axios.post(serverURL + '/loan-agreement/add' + (query ?? ''), loanAgreement, createConfig());
 }
 
 export async function changeLoanAgreement(loanAgreement, query) {
-    return axios.put(serverURL + '/_________/' + loanAgreement._id + (query ?? ''), loanAgreement, createConfig());
+    return axios.put(serverURL + '/loan-agreement/update/' + loanAgreement._id + (query ?? ''), loanAgreement, createConfig());
 }
 
 export async function removeLoanAgreement(loanAgreementID, query) {
-    return axios.delete(serverURL + '/_________/' + loanAgreementID + (query ?? ''), createConfig());
+    return axios.delete(serverURL + '/loan-agreement/remove/' + loanAgreementID + (query ?? ''), createConfig());
 }

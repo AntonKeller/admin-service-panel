@@ -76,21 +76,21 @@
           :total-visible="8"
       />
     </div>
+
+    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+      <v-icon>mdi-alert-circle-outline</v-icon>
+      {{ snackBar.msg }}
+    </v-snackbar>
+
+    <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
+      <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>
+    </v-overlay>
+
+    <v-overlay v-model="menuChangeCustomerIsShow" class="d-flex justify-center align-center">
+      <customer-change :_customer="customerSelected" @change:success="onCustomerChangeSuccess"
+                       @click:close="menuChangeCustomerIsShow=false"></customer-change>
+    </v-overlay>
   </v-container>
-
-  <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-    <v-icon>mdi-alert-circle-outline</v-icon>
-    {{ snackBar.msg }}
-  </v-snackbar>
-
-  <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>
-  </v-overlay>
-
-  <v-overlay v-model="menuChangeCustomerIsShow" class="d-flex justify-center align-center">
-    <customer-change :_customer="customerSelected" @change:success="onCustomerChangeSuccess"
-                     @click:close="menuChangeCustomerIsShow=false"></customer-change>
-  </v-overlay>
 </template>
 
 <script>

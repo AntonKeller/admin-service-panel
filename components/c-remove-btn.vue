@@ -1,16 +1,16 @@
 <template>
   <v-btn
-      v-bind="$attrs"
       class="d-inline"
       icon="mdi-progress-close"
       rounded
       variant="text"
       color="red-darken-4"
       density="compact"
+      v-bind="$attrs"
       @click.stop="questionIsVisible = true"
   >
     <v-icon/>
-    <v-tooltip activator="parent" location="top">
+    <v-tooltip activator="parent" location="left">
       {{ prompt ? prompt : '...' }}
     </v-tooltip>
 
@@ -21,8 +21,8 @@
           <span class="ml-2">Хотите удалить запись ?</span>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="onclickYes" variant="elevated" text="Да"/>
-          <v-btn @click="questionIsVisible=false" text="Отмена"/>
+          <v-btn @click.stop="onclickYes" variant="elevated" text="Да"/>
+          <v-btn @click.stop="questionIsVisible=false" text="Отмена"/>
         </v-card-actions>
       </v-card>
     </my-overlay>
@@ -43,7 +43,6 @@ export default {
 
   methods: {
     onclickYes(e) {
-      e.preventDefault;
       this.questionIsVisible = false;
       this.$emit('click:yes');
     }
