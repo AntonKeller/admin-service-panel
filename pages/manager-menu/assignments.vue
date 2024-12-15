@@ -1,7 +1,11 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-card class="mx-auto" variant="text" :loading="getFetchingDataStatus">
+      <v-card
+          variant="text"
+          max-width="1024"
+          :loading="getFetchingDataStatus"
+      >
 
         <v-card-title>Список заданий</v-card-title>
 
@@ -18,7 +22,7 @@
                 Добавить новое задание
               </v-tooltip>
             </v-btn>
-            <v-sheet width="550">
+            <v-sheet width="100%">
               <v-text-field
                   v-model="searchText"
                   prepend-inner-icon="mdi-magnify"

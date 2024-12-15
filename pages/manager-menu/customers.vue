@@ -151,7 +151,7 @@ export default {
       this.fetching = true;
       fetchCustomers()
           .then(response => {
-            this.customers = response.data.data;
+            this.customers = response.data;
           })
           .catch(err => {
             console.log('Ошибка загрузки заказчиков', err);

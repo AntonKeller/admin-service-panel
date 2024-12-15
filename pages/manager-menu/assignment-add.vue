@@ -1,15 +1,29 @@
 <template>
   <v-container fluid>
     <v-card
+        variant="text"
         min-width="400"
-        max-width="750"
-        width="100vw"
+        max-width="1024"
     >
 
       <v-card-title>
         <div class="d-flex justify-space-between align-center">
-          <div>Новая задача</div>
-          <my-button-close-card @click="navigateTo('/manager-menu/assignments')" class="align-self-start"/>
+          <div>Новое задание</div>
+          <v-btn
+              density="comfortable"
+              color="blue-grey-darken-2"
+              icon="mdi-arrow-left"
+              variant="text"
+              rounded="lg"
+              @click="navigateTo('/manager-menu/assignments')"
+          >
+            <v-icon />
+            <v-tooltip activator="parent" location="left">
+              Назад
+            </v-tooltip>
+          </v-btn>
+
+<!--          <my-button-close-card @click="navigateTo('/manager-menu/assignments')" class="align-self-start"/>-->
         </div>
       </v-card-title>
 
@@ -529,7 +543,7 @@ export default {
         addNewAssignment(this.assignment)
             .then(() => {
               this.$store.dispatch('assignments/FETCH');
-              this.$emit('add:success');
+              navigateTo('/manager-menu/assignments');
             })
             .catch((err) => {
               console.log('Ошибка добавления задачи', err)
