@@ -16,8 +16,8 @@ export function fetchAssignmentBlocks(assignmentID, query) {
     return axios.get(serverURL + '/assignment-blocks/' + assignmentID + (query ?? ''), createConfig());
 }
 
-export function removeAssignmentBlock(blockId, query) {
-    return axios.delete(serverURL + `/assignment-blocks/` + blockId + (query ?? ''), createConfig());
+export function fetchAssignmentBlockOneById(assignmentBlockID, query) {
+    return axios.get(serverURL + '/assignment-blocks/findOneById/' + (assignmentBlockID ?? '') + (query ?? ''), createConfig());
 }
 
 export function sendAssignmentBlock(assignmentId, block, query) {
@@ -26,6 +26,10 @@ export function sendAssignmentBlock(assignmentId, block, query) {
 
 export function changeAssignmentBlock(assignmentId, block, query) {
     return axios.put(serverURL + '/assignment-blocks/' + assignmentId + '/change/' + block._id + (query ?? ''), block, createConfig());
+}
+
+export function removeAssignmentBlock(blockId, query) {
+    return axios.delete(serverURL + `/assignment-blocks/` + blockId + (query ?? ''), createConfig());
 }
 
 // Загружает на сервер файл Excel со списокм объектов

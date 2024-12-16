@@ -17,13 +17,11 @@
               rounded="lg"
               @click="navigateTo('/manager-menu/assignments')"
           >
-            <v-icon />
+            <v-icon/>
             <v-tooltip activator="parent" location="left">
               Назад
             </v-tooltip>
           </v-btn>
-
-<!--          <my-button-close-card @click="navigateTo('/manager-menu/assignments')" class="align-self-start"/>-->
         </div>
       </v-card-title>
 
@@ -34,11 +32,10 @@
 
           <my-text-field
               v-model="assignment.title"
+              :rules="assignmentTitleRules"
               label="Заголовок задания"
               prepend-inner-icon="mdi-label-variant-outline"
           />
-
-          <!--        <my-autocomplete-customers></my-autocomplete-customers>-->
 
           <div class="d-flex ga-1">
             <v-autocomplete
@@ -411,12 +408,12 @@
 </template>
 
 <script>
-import {addNewAssignment} from "../../utils/api/api_assignments.js";
-import {fetchCustomers, removeCustomer} from "../../utils/api/api_customers.js";
-import {fetchContracts, removeContract} from "@/utils/api/api_contracts.js";
-import {fetchLoanAgreements, removeLoanAgreement} from "@/utils/api/api_loan_agreements.js";
-import {fetchPledgeAgreements, removePledgeAgreement} from "@/utils/api/api_pledge-agreements.js";
-import {unixDateToLongDateString} from "../../utils/functions.js";
+import {fetchPledgeAgreements, removePledgeAgreement} from "../../utils/api/api_pledge-agreements";
+import {fetchLoanAgreements, removeLoanAgreement} from "../../utils/api/api_loan_agreements";
+import {fetchContracts, removeContract} from "../../utils/api/api_contracts";
+import {fetchCustomers, removeCustomer} from "../../utils/api/api_customers";
+import {addNewAssignment} from "../../utils/api/api_assignments";
+import {unixDateToLongDateString} from "../../utils/functions";
 
 export default {
   name: "assignment-add-page",
@@ -495,26 +492,27 @@ export default {
     },
 
     contractSearchFilter(value, query, item) {
-      const res = [
-        item.raw.inn || null,
-        item.raw.fullName || null,
+      return [
+        item.raw.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
-      return res;
     },
 
     subContractSearchFilter(value, query, item) {
-      console.log('value:', value, 'query:', query, 'item:', item);
-      return true;
+      return [
+        item.raw.number || null,
+      ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 
     loanAgreementSearchFilter(value, query, item) {
-      console.log('value:', value, 'query:', query, 'item:', item);
-      return true;
+      return [
+        item.raw.number || null,
+      ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 
     pledgeAgreementSearchFilter(value, query, item) {
-      console.log('value:', value, 'query:', query, 'item:', item);
-      return true;
+      return [
+        item.raw.number || null,
+      ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 
     async onCustomerAddSuccess() {
@@ -557,7 +555,6 @@ export default {
       switch (answer.status) {
         case 200:
           this.customersList = answer.data;
-          console.log('contractsList', this.contractsList)
           break;
         default:
           console.log('Ошибка получения данных о заказчиках');

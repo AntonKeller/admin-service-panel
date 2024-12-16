@@ -16,6 +16,10 @@ export async function fetchInspectionObjects(blockID, query) {
     return axios.get(serverURL + '/inspection-objects/blockId/' + (blockID || '') + (query ?? ''), createConfig());
 }
 
+export function fetchInspectionObjectOneById(inspectionObjectID, query) {
+    return axios.get(serverURL + '/inspection-objects/findOneById/' + (inspectionObjectID ?? '') + (query ?? ''), createConfig());
+}
+
 export async function sendInspectionObject(blockId, inspectionObject, query) {
     return axios.post(serverURL + '/inspection-objects/add/' + blockId + (query ?? ''), inspectionObject, createConfig());
 }

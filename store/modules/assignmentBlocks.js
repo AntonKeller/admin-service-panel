@@ -20,7 +20,7 @@ const assignmentBlocks = {
         SET_BLOCKS(state, payload) {
             state.blocks = payload;
         },
-        SELECT_ITEM(state, payload) {
+        SELECT(state, payload) {
             state.selectedBlock = payload || initial().selectedBlock;
         },
         SET_FETCHING(state, payload) {
@@ -48,7 +48,7 @@ const assignmentBlocks = {
 
             switch (answer.status) {
                 case 200:
-                    commit('SET_BLOCKS', answer.data.data);
+                    commit('SET_BLOCKS', answer.data);
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

@@ -1,4 +1,4 @@
-import {addNewAssignment, fetchAssignments, removeAssignment} from "@/utils/api/api_assignments";
+import {fetchAssignments, removeAssignment} from "@/utils/api/api_assignments";
 
 export const initial_page_state = () => ({
     assignments: [],
@@ -11,8 +11,10 @@ const assignments = {
     namespaced: true,
     state: () => initial_page_state(),
     getters: {
+        GET_COUNT: (state) => state.assignments.length,
         GET_ASSIGNMENTS: (state) => state.assignments,
-        GET_SELECTED_ITEM: (state) => state.selectedItem,
+        GET_SELECTED_ITEM: (state) => state.selectedAssignment,
+        SELECTED: (state) => state.selectedAssignment,
         GET_FETCHING: (state) => state.fetching,
         ALERT: (state) => state.alert,
     },
@@ -28,7 +30,7 @@ const assignments = {
         },
 
         SELECT(state, payload) {
-            state.selectedItem = payload || initial_page_state().selectedItem;
+            state.selectedAssignment = payload || initial_page_state().selectedAssignment;
         },
         SET_FETCHING(state, payload) {
             state.fetching = payload || initial_page_state().fetching;
@@ -50,6 +52,8 @@ const assignments = {
 
         async FETCH({commit, getters}) {
 
+            console.log('fetch assignments execute')
+
             commit('SET_FETCHING', true);
             let answer = await fetchAssignments();
             commit('SET_FETCHING', false);
@@ -57,6 +61,7 @@ const assignments = {
             switch (answer.status) {
                 case 200:
                     commit('SET_ASSIGNMENTS', answer.data);
+                    console.log('assignments:', answer.data);
                     break;
                 case 403:
                     commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);

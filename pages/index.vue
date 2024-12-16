@@ -24,6 +24,7 @@ export default {
     lastNameRules: [v => /[^0-9]/.test(v) || 'Пароль введен неверно'],
   }),
 
+
   methods: {
     setTab(v) {
       this.currentTab = v;

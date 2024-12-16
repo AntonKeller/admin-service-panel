@@ -7,6 +7,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (import.meta.client) {
 
+        // console.log('sessionStorage', sessionStorage)
+
         let tokenTest = await accessTest().then(r => r.data);
 
         if (tokenTest && /^\/$/ig.test(to?.fullPath) || /^\/manager-menu$/ig.test(to?.fullPath)) {

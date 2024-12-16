@@ -15,7 +15,7 @@
                 variant="tonal"
                 color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
-                @click="navigateTo('/manager-menu/assignment-add')"
+                @click="navigateToAddMenu"
             >
               Добавить
               <v-tooltip activator="parent">
@@ -38,7 +38,6 @@
           </div>
 
           <v-sheet style="min-height: 200px" class="mt-2">
-            <!--            height="77vh"-->
             <v-table style="max-height: 77vh" density="default" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
@@ -54,7 +53,7 @@
                   v-for="(assignment, i) of assignmentsSLice"
                   :key="assignment._id"
                   class="text-caption row-hover"
-                  @click="selectAssignment(assignment)"
+                  @click="navigateToCardMenu(assignment)"
               >
                 <td>{{ assignment.title }}</td>
                 <td>
@@ -70,7 +69,7 @@
                 <td>{{ slicer(assignment.description, 50) }}</td>
                 <td style="min-width: 90px; width: 90px; max-width: 90px">
                   <div class="d-flex ga-2">
-                    <my-change-button prompt="Редактировать ТЗ" @click.stop="assignmentMenuChangeVisibility = true"/>
+                    <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
                     <c-remove-btn prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
                   </div>
                 </td>
@@ -93,15 +92,6 @@
         />
       </div>
 
-      <!--      <v-overlay v-model="assignmentAddVisibility" class="d-flex justify-center align-center">-->
-      <!--        <assignment-add @click:close="onClickClose" @add:success="onAddSuccess"></assignment-add>-->
-      <!--      </v-overlay>-->
-
-      <!--    Assignment Menu Change-->
-      <!--      <v-overlay v-model="assignmentMenuChangeVisibility" class="d-flex justify-center align-center">-->
-      <!--        <assignment-change @update:success="onChangeSuccess"-->
-      <!--                           @click:close="this.assignmentMenuChangeVisibility = false"/>-->
-      <!--      </v-overlay>-->
     </v-sheet>
   </v-container>
 </template>
@@ -130,34 +120,12 @@ export default {
     }
   },
 
-  beforeMount() {
-    // Считываем ТЗ из session storage -> vuex store
-    try {
-      if (sessionStorage?.selectedAssignment) {
-        this.$store.commit('assignments/SELECT', JSON.parse(sessionStorage?.selectedAssignment));
-      }
-    } catch (err) {
-      sessionStorage.removeItem('selectedAssignment');
-      console.log('[sessionStorage] Ошибка чтения selectedAssignment');
-    }
-  },
-
   mounted() {
     this.assignmentsStoreUpdate();
   },
 
   unmounted() {
     this.$store.commit('assignments/RESET_STORE');
-  },
-
-  watch: {
-    assignmentList(newAssignments) {
-      const selectedID = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
-      const selected = newAssignments.find(item => item._id === selectedID);
-      if (selected) {
-        this.$store.commit('assignments/SELECT', selected);
-      }
-    },
   },
 
   computed: {
@@ -196,49 +164,45 @@ export default {
   methods: {
 
     slicer,
+    unixDateToShortDateString,
 
     getContractString(contract) {
       const a = contract?.number;
       const b = contract?.date;
       if (!a && !b) return 'Договор отсутствует';
       if (a && !b) return `№ ${contract?.number} от [дата отсутствует]`;
-      if (!a && b) return `[№ отсутствует] от ${this.stringToDate(contract?.date)}`;
-      if (a && b) return `№ ${contract?.number} от ${this.stringToDate(contract?.date)}`;
-    },
-
-    onChangeSuccess() {
-      this.assignmentMenuChangeVisibility = false;
-      this.assignmentsStoreUpdate();
+      if (!a && b) return `[№ отсутствует] от ${this.unixDateToShortDateString(contract?.date)}`;
+      if (a && b) return `№ ${contract?.number} от ${this.unixDateToShortDateString(contract?.date)}`;
     },
 
     assignmentsStoreUpdate() {
       this.$store.dispatch('assignments/FETCH');
     },
 
-    onClickClose() {
-      this.assignmentAddVisibility = false;
-    },
-
-    onAddSuccess() {
-      this.assignmentAddVisibility = false;
-    },
-
-    stringToDate(timestamp) {
-      return unixDateToShortDateString(timestamp);
-    },
-
-    selectAssignment(assignment) {
-      // Записываем в session storage
-      sessionStorage.setItem('selectedAssignment', JSON.stringify(assignment));
-      // Записываем в vuex store
-      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
-      // Открываем меню
-      navigateTo('/manager-menu/assignment-change');
-    },
-
     removeAssignment(_id) {
       this.$store.dispatch('assignments/REMOVE_ITEM', _id);
     },
+
+    selectAssignment(assignment) {
+      // Записываем в session storage и во vuex store
+      sessionStorage.selectedAssignmentID = assignment._id;
+      sessionStorage.selectedAssignment = JSON.stringify(assignment);
+      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
+    },
+
+    navigateToCardMenu(assignment) {
+      this.selectAssignment(assignment);
+      navigateTo('/manager-menu/assignment-card');
+    },
+
+    navigateToAddMenu() {
+      navigateTo('/manager-menu/assignment-change');
+    },
+
+    navigateToChangeMenu(assignment) {
+      this.selectAssignment(assignment);
+      navigateTo('/manager-menu/assignment-change');
+    }
 
   }
 }

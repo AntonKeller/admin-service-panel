@@ -1,22 +1,29 @@
 <template>
-  <v-overlay
-      v-model="visibility"
-      class="d-flex justify-center align-center"
-      @click:outside="back"
-  >
+  <v-container fluid>
     <v-card
+        variant="text"
         min-width="400"
         max-width="1024"
-        width="100vw"
-        elevation="6"
     >
       <v-card-title>
         <div class="d-flex justify-space-between align-center">
           <div class="d-flex ga-1 align-center">
-            {{ getSelectedAssignment?.title }}
-             [ Техническое задание ]
+            {{ selectedAssignment?.title }}
+            [ Техническое задание ]
           </div>
-          <my-button-close-card @click="goBack" class="align-self-start"/>
+          <v-btn
+              density="comfortable"
+              color="blue-grey-darken-2"
+              icon="mdi-arrow-left"
+              variant="text"
+              rounded="lg"
+              @click="goBack"
+          >
+            <v-icon/>
+            <v-tooltip activator="parent" location="left">
+              Назад
+            </v-tooltip>
+          </v-btn>
         </div>
       </v-card-title>
 
@@ -32,7 +39,7 @@
           </v-label>
         </div>
         <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
-          {{ getSelectedAssignment?.description }}
+          {{ selectedAssignment?.description }}
         </v-sheet>
         <v-divider class="my-1"/>
         <div class="d-flex ga-4 align-center py-1">
@@ -137,12 +144,12 @@
       </v-snackbar>
 
     </v-card>
-  </v-overlay>
+  </v-container>
 </template>
 
 <script>
-import {removeAssignmentBlock} from "../../../utils/api/api_assignment_blocks";
-import {unixDateToMiddleDateString} from "../../../utils/functions.js";
+import {removeAssignmentBlock} from "../../utils/api/api_assignment_blocks";
+import {unixDateToMiddleDateString} from "../../utils/functions";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -150,7 +157,6 @@ export default {
 
   data() {
     return {
-      visibility: false,
       searchText: '',
       currentPage: 1,
       itemsPerPage: 8,
@@ -166,60 +172,52 @@ export default {
     }
   },
 
+  beforeMount() {
+    // Считываем активное задание
+    if (!this.$store.getters['assignments/SELECTED']?._id) {
+      if (sessionStorage.selectedAssignment) {
+        try {
+          const parseAssignment = JSON.parse(sessionStorage.selectedAssignment);
+          this.$store.commit('assignments/SELECT', parseAssignment);
+          this.$store.dispatch('assignmentBlocks/FETCH', parseAssignment._id);
+        } catch (err) {
+          console.log('[session storage] Не удалось распарсить selectedAssignment -> navigate back');
+          this.goBack();
+        }
+      } else {
+        this.goBack();
+        console.log('[before mount][session storage] selectedAssignment не определен -> navigate back');
+      }
+    }
+  },
+
   watch: {
     blocks(_newArray) {
       // Определяем последний выбранный блок
       const blockID = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
       // Находим его в массиве
-      const foundBlock = _newArray.find(block => block._id === blockID)
+      const foundBlock = _newArray?.find(block => block._id === blockID);
       if (foundBlock) {
         // Заменяем его новым
-        this.$store.commit('assignmentBlocks/SELECT_ITEM', foundBlock);
+        this.$store.commit('assignmentBlocks/SELECT', foundBlock);
       }
     },
-  },
-
-  beforeMount() {
-    // Считываем Блок из session storage -> vuex store
-    try {
-      if (sessionStorage?.selectedAssignmentBlock) {
-        this.$store.commit('assignmentBlocks/SELECT_ITEM', JSON.parse(sessionStorage?.selectedAssignmentBlock));
-      }
-    } catch (err) {
-      sessionStorage.removeItem('selectedAssignmentBlock');
-      console.log('[sessionStorage] Ошибка чтения selectedAssignmentBlock');
-    }
-  },
-
-  mounted() {
-
-    // Обновляем список блоков по ID ТЗ...............................................
-    let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
-
-    if (assignmentId) {
-      this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
-    } else {
-      navigateTo('/manager-menu/assignments')
-    }
-
-    const timeoutID = setTimeout(() => {
-      this.visibility = true;
-      clearTimeout(timeoutID);
-    }, 1);
-
-    // console.log('assignment blocks', this.blocks)
   },
 
   computed: {
+
     blocks() {
       return this.$store.getters['assignmentBlocks/GET_BLOCKS'];
     },
+
     blocksTotalCount() {
       return this.blocks.length;
     },
+
     totalPages() {
       return Math.ceil(this.blocksTotalCount / this.itemsPerPage);
     },
+
     blocksFiltered() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
         return this.blocks.filter(block => {
@@ -231,46 +229,55 @@ export default {
       }
       return this.blocks;
     },
+
     blocksSLice() {
       const from = (this.currentPage - 1) * this.itemsPerPage;
       const to = this.currentPage * this.itemsPerPage;
       return this.blocksFiltered.slice(from, to);
     },
+
+    assignments() {
+      return this.$store.getters['assignments/GET_ASSIGNMENTS'] || [];
+    },
+
     assignmentCustomer() {
-      if (this.getSelectedAssignment?.contract?.customer) {
+      if (!this.selectedAssignment?.customer) return 'Заказчик отсутствует';
 
-        const {shortName, inn} = this.getSelectedAssignment?.contract?.customer;
+      const {
+        shortName, fullName, inn, phoneNumber, email, address,
+        representativePosition, representativeFullName
+      } = this.selectedAssignment.customer;
 
-        if (shortName || inn) {
-          return `Заказчик: ${shortName} / ${inn}`;
-        }
-      }
-      return 'Отсутствует заказчик';
+      const returnName = shortName || fullName || email || phoneNumber || 'наименование отсутствует';
+      return `Компания: ${returnName} инн: ${inn}`
     },
+
     assignmentContract() {
-      if (this.getSelectedAssignment?.contract) {
-
-        const {contractNumber, contractDate} = this.getSelectedAssignment?.contract;
-
-        if (contractNumber && contractDate) {
-          return `Договор: ${contractNumber} / ${this.stringToDate(contractDate)}`
-        }
-      }
-      return 'Отсутствует договор';
+      if (!this.selectedAssignment?.contract) return `Договор не задан`;
+      const {number, date} = this.selectedAssignment?.contract;
+      if (number && date) return `№ ${number} от ${this.unixDateToMiddleDateString(date)}`;
+      if (!number && date) return `№ [№ договора отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
+      if (number && !date) return `№ ${number} от [дата договора отсутствует]`;
     },
-    getSelectedAssignment() {
+
+    selectedAssignment() {
       return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     },
+
     fetching() {
       return this.$store.getters['assignmentBlocks/GET_FETCHING'];
     }
   },
 
   methods: {
+
+    unixDateToMiddleDateString,
+
     onAddBlockSuccess() {
       this.blockMenuAddVisibility = false;
       this.assignmentBlocksStoreUpdate();
     },
+
     goBack() {
       navigateTo('/manager-menu/assignments');
     },
@@ -289,12 +296,11 @@ export default {
 
     selectBlock(block) {
       // Записываем в session storage
-      sessionStorage.setItem('selectedAssignmentBlock', JSON.stringify(block));
+      sessionStorage.selectedAssignmentBlock = JSON.stringify(block);
       // Записываем в vuex store
-      this.$store.commit('assignmentBlocks/SELECT_ITEM', block);
+      this.$store.commit('assignmentBlocks/SELECT', block);
       // Открываем меню
       navigateTo('/manager-menu/assignments/assignment-card/block');
-      console.log('[Block card] Select block ')
     },
 
     removeBlockById(blockID) {

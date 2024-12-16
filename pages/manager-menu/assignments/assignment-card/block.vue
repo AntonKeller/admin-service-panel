@@ -281,9 +281,8 @@ export default {
         const foundObject = newArray.find(item => item._id === this.activeObject._id);
 
         if (foundObject) {
-          // Записываем в session storage
-          sessionStorage.setItem('selectedInspectionObject', JSON.stringify(foundObject));
-          // Записываем в vuex store
+          // Записываем в session storage и записываем во vuex store
+          sessionStorage.selectedInspectionObject = JSON.stringify(foundObject);
           this.$store.commit('inspectionObjects/SELECT', foundObject);
         }
       }

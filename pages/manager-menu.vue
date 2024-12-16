@@ -11,6 +11,40 @@
 <script>
 export default {
   name: 'manager-menu',
+
+  beforeCreate() {
+
+    if (sessionStorage.selectedAssignment) { // Инициализация текущего активного assignment
+      try {
+        const selectedAssignmentParse = JSON.parse(sessionStorage.selectedAssignment);
+        this.$store.commit('assignments/SELECT', selectedAssignmentParse);
+        console.log('[manager-menu] selectedAssignment инициализирован из session storage');
+      } catch (err) {
+        console.log('Не удалось распарсить selectedAssignment из session storage', err);
+      }
+    }
+
+
+    if (sessionStorage.selectedAssignmentBlock) { // Инициализация текущего активного assignment block
+      try {
+        const selectedAssignmentBlockParse = JSON.parse(sessionStorage.selectedAssignmentBlock);
+        this.$store.commit('assignmentBlocks/SELECT', selectedAssignmentBlockParse);
+      } catch (err) {
+        console.log('Не удалось распарсить selectedAssignmentBlock из session storage', err);
+      }
+    }
+
+
+    if (sessionStorage.selectedInspectionObject) { // Инициализация текущего активного inspection object
+      try {
+        const selectedInspectionObjectParse = JSON.parse(sessionStorage.selectedInspectionObject);
+        this.$store.commit('inspectionObjects/SELECT', selectedInspectionObjectParse);
+      } catch (err) {
+        console.log('Не удалось распарсить selectedInspectionObject из session storage', err);
+      }
+    }
+
+  },
 }
 </script>
 
@@ -24,6 +58,6 @@ export default {
 .page-leave-to {
   opacity: 0;
   transform: translateX(-100px);
-  filter: blur(0.3rem);
+  filter: blur(0.2rem);
 }
 </style>

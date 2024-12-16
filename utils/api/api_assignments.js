@@ -16,6 +16,10 @@ export function fetchAssignments(query) {
     return axios.get(serverURL + '/assignments' + (query ?? ''), createConfig());
 }
 
+export function fetchAssignmentOneById(assignmentID, query) {
+    return axios.get(serverURL + '/assignments/findOneById/' + (assignmentID ?? '') + (query ?? ''), createConfig());
+}
+
 export function addNewAssignment(assignment, query) {
     return axios.post(serverURL + '/assignments/add' + (query ?? ''), assignment, createConfig());
 }
