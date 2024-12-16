@@ -444,7 +444,7 @@ export default {
           .catch(err => {
             console.log('Запись была удалена', err);
             this.goBack();
-            this.$store.commit('assignments/ALERT_ERROR', 'К сожалению карточка была удалена');
+            this.$store.commit('assignments/ALERT_ERROR', 'К сожалению карточка больше не существует!');
           });
     }
 
