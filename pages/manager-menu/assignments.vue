@@ -92,6 +92,11 @@
         />
       </div>
 
+      <v-snackbar :color="alert.type" v-model="alert.isShow">
+        <v-icon>mdi-alert-circle-outline</v-icon>
+        {{ alert.msg }}
+      </v-snackbar>
+
     </v-sheet>
   </v-container>
 </template>
@@ -159,6 +164,9 @@ export default {
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },
+    alert(){
+      return this.$store.getters['assignments/ALERT'];
+    }
   },
 
   methods: {
@@ -196,7 +204,7 @@ export default {
     },
 
     navigateToAddMenu() {
-      navigateTo('/manager-menu/assignment-change');
+      navigateTo('/manager-menu/assignment-add');
     },
 
     navigateToChangeMenu(assignment) {

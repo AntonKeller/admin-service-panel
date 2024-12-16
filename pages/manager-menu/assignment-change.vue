@@ -429,20 +429,26 @@ export default {
 
 
   async beforeMount() {
+
+    console.log('id:', this.$store.getters['assignments/SELECTED'])
+
     if (!this.$store.getters['assignments/SELECTED']?._id) {
+      console.log('go back _id is false')
       this.goBack();
     } else {
-      const answer = await fetchAssignmentOneById(this.$store.getters['assignments/SELECTED']?._id);
-      switch (answer.status) {
-        case 200:
-          console.log('[beforeMount] init selected assignment: req answer', answer)
-          this.assignment = _.cloneDeep(answer.data);
-          break;
-        default:
-          this.goBack();
-          break;
-      }
+      await fetchAssignmentOneById(this.$store.getters['assignments/SELECTED']?._id)
+          .then((resp) => {
+            console.log('[beforeMount] init selected assignment: req answer', resp)
+            this.assignment = _.cloneDeep(resp.data);
+          })
+          .catch(err => {
+            console.log('Запись была удалена', err);
+            this.goBack();
+            this.$store.commit('assignments/ALERT_ERROR', 'К сожалению карточка была удалена');
+          });
     }
+
+
     console.log('selected assignment', this.assignment);
   },
 
@@ -502,6 +508,7 @@ export default {
     },
 
     goBack() {
+      console.log('go back - выполнен');
       navigateTo('/manager-menu/assignments');
     },
 
