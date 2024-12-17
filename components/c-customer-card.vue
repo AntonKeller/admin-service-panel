@@ -10,7 +10,7 @@
       {{ (customerProp?.shortName || 'name error') + ' / ' + (customerProp?.inn || 'inn error') }}
       <div class="d-flex ga-2">
         <v-btn
-            icon="mdi-pencil"
+            icon="mdi-pencil-outline"
             density="comfortable"
             variant="tonal"
             rounded

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet>
+    <v-sheet class="ml-8 mt-6">
       <v-card
           variant="text"
           max-width="1024"
@@ -114,8 +114,6 @@ export default {
       searchText: '',
       currentPage: 1,
       itemsPerPage: 10,
-      assignmentAddVisibility: false,
-      assignmentMenuChangeVisibility: false,
       timeDateConfig: {
         weekday: 'short', // weekday: 'short',
         year: 'numeric',
@@ -130,7 +128,7 @@ export default {
   },
 
   unmounted() {
-    this.$store.commit('assignments/RESET_STORE');
+    this.$store.commit('assignments/RESET_ASSIGNMENT_LIST');
   },
 
   computed: {
@@ -215,3 +213,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.row-hover:hover{
+  background-color: #fffff1;
+}
+</style>

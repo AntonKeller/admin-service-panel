@@ -2,7 +2,7 @@
   <v-btn
       v-bind="$attrs"
       variant="text"
-      icon="mdi-pencil"
+      icon="mdi-pencil-outline"
       density="compact"
       class="d-inline"
       :rounded="0"

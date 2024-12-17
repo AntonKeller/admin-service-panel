@@ -12,9 +12,9 @@
       {{ contract.contractNumber }}
       <div class="d-flex ga-2">
         <v-btn
-            icon="mdi-pencil"
+            icon="mdi-pencil-outline"
             density="comfortable"
-            variant="tonal"
+            variant="text"
             rounded
             @click.stop="changeClick(contract)"
         />

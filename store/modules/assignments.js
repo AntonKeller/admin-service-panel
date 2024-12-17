@@ -19,6 +19,9 @@ const assignments = {
         ALERT: (state) => state.alert,
     },
     mutations: {
+        RESET_SELECT(state) {
+            state.selectedAssignment = initial_page_state().selectedAssignment;
+        },
         SET_ASSIGNMENTS(state, payload) {
             state.assignments = payload;
         },
@@ -43,6 +46,9 @@ const assignments = {
         },
         SHOW_ALERT_ERROR(state, payload) {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
+        },
+        RESET_ASSIGNMENT_LIST(state){
+            state.assignments = initial_page_state().assignments;
         },
         RESET_STORE(state) {
             state = initial_page_state();
