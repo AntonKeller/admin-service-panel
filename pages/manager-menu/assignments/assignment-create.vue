@@ -8,7 +8,7 @@
       >
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
-            <div>Редактор задания</div>
+            <div>Новое задание</div>
             <v-btn
                 density="comfortable"
                 color="blue-grey-darken-2"
@@ -362,34 +362,69 @@
 
         <v-card-actions>
           <my-btn-submit
-              text="Подтвердить"
-              :loading="changing"
-              @click="sendChanges"
+              text="Добавить"
+              prepend-icon="mdi-checkbox-multiple-marked-outline"
+              @click="sendAssignment"
           />
-          <my-btn-clear text="Очистить" @click="this.assignment = {}"/>
+          <my-btn-clear
+              text="Очистить"
+              @click="clear"
+          />
         </v-card-actions>
 
-        <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
+        <v-snackbar :color="snackbar.type" v-model="snackbar.isShow">
           <v-icon>mdi-alert-circle-outline</v-icon>
-          {{ snackBar.msg }}
+          {{ snackbar.msg }}
         </v-snackbar>
+
+        <!--  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  -->
+        <!--  ~~~~~~~~~~~~~~~~~~~~~~~Всплывающие окна~~~~~~~~~~~~~~~~~~~~~~~  -->
+        <!--  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  -->
+
+        <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
+          <contract-add
+              @add:success="onContractAddSuccess"
+              @click:close="contractMenuAddVisible = false"
+          />
+        </v-overlay>
+
+        <my-overlay v-model="customerMenuAddVisible">
+          <customer-add
+              @add:success="onCustomerAddSuccess"
+              @click:close="customerMenuAddVisible=false"
+          />
+        </my-overlay>
+
+        <v-overlay v-model="loanAgreementMenuAddVisible" class="d-flex justify-center align-center">
+          <loan-agreement-add
+              @add:success="onLoanAgreementAddSuccess"
+              @click:close="loanAgreementMenuAddVisible=false"
+          />
+        </v-overlay>
+
+        <v-overlay v-model="pledgeAgreementMenuAddVisible" class="d-flex justify-center align-center">
+          <pledge-agreement-add
+              @add:success="onPledgeAgreementAddSuccess"
+              @click:close="pledgeAgreementMenuAddVisible=false"
+          />
+        </v-overlay>
+
       </v-card>
     </v-sheet>
   </v-container>
 </template>
 
 <script>
-import {fetchPledgeAgreements, removePledgeAgreement} from "../../utils/api/api_pledge-agreements";
-import {fetchLoanAgreements, removeLoanAgreement} from "../../utils/api/api_loan_agreements";
-import {fetchCustomers, removeCustomer} from "../../utils/api/api_customers";
-import {fetchContracts, removeContract} from "../../utils/api/api_contracts";
-import {changeAssignment, fetchAssignmentOneById} from "../../utils/api/api_assignments";
-import {showAlert, unixDateToLongDateString} from "../../utils/functions";
-import {navigateTo} from "nuxt/app";
-import _ from "lodash";
+import {fetchPledgeAgreements, removePledgeAgreement} from "../../../utils/api/api_pledge-agreements.js";
+import {fetchLoanAgreements, removeLoanAgreement} from "../../../utils/api/api_loan_agreements.js";
+import {fetchContracts, removeContract} from "../../../utils/api/api_contracts.js";
+import {fetchCustomers, removeCustomer} from "../../../utils/api/api_customers.js";
+import {addNewAssignment} from "../../../utils/api/api_assignments.js";
+import {unixDateToLongDateString} from "../../../utils/functions.js";
+import {navigateTo} from "nuxt/app.js";
 
 export default {
-  name: "assignment-change-page",
+  name: "assignment-add-page",
 
   data() {
     return {
@@ -403,9 +438,9 @@ export default {
         pledgeAgreements: null, // Договор залога
       },
 
+      snackbar: {},
+
       formIsValid: false,
-      changing: false,
-      snackBar: {},
 
       assignmentTitleRules: [v => v && v?.length <= 50 || 'Кол-во символов должно быть <= 50'],
 
@@ -432,37 +467,13 @@ export default {
       pledgeAgreementsFetching: false,
       pledgeAgreementMenuAddVisible: false,
       pledgeAgreementRules: [v => v || 'Договор должен быть выбран'],
-    }
-  },
 
-
-  async beforeMount() {
-
-    if (!this.$store.getters['assignments/SELECTED']?._id) {
-      this.navigateBack();
-    } else {
-      await fetchAssignmentOneById(this.$store.getters['assignments/SELECTED']._id)
-          .then((resp) => {
-            this.$store.commit('assignments/SELECT', resp.data);
-            this.assignment = _.cloneDeep(resp.data);
-            sessionStorage.selectedAssignment = JSON.stringify(resp.data);
-          })
-          .catch(err => {
-            console.log('К сожалению карточка больше не существует', err);
-            sessionStorage.removeItem('selectedAssignment');
-            this.$store.commit('assignments/RESET_SELECT');
-            this.navigateBack();
-            this.$store.commit('assignments/ALERT_ERROR', 'К сожалению карточка больше не существует!');
-          });
     }
   },
 
   computed: {
     contracts() {
       return this.contractsList?.filter(contract => !contract.parent) || [];
-    },
-    assignments() {
-      return this.$store.getters['assignments/GET_ASSIGNMENTS'] || [];
     },
     subContracts() {
       return this.contractsList?.filter(contract => contract.parent) || [];
@@ -473,11 +484,9 @@ export default {
 
     unixDateToLongDateString,
 
-
     navigateBack() {
       navigateTo('/manager-menu/assignments');
     },
-
 
     onUpdateMenuCustomer(status) {
       if (status) this.fetchCustomersList();
@@ -492,7 +501,6 @@ export default {
       if (status) this.fetchPledgeAgreementsList();
     },
 
-
     customerSearchFilter(value, query, item) {
       return [
         item.raw.inn || null,
@@ -500,64 +508,61 @@ export default {
         item.raw.representativeFullName || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
+
     contractSearchFilter(value, query, item) {
       return [
         item.raw.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
+
     subContractSearchFilter(value, query, item) {
       return [
         item.raw.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
+
     loanAgreementSearchFilter(value, query, item) {
       return [
         item.raw.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
+
     pledgeAgreementSearchFilter(value, query, item) {
       return [
         item.raw.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 
-
     async onCustomerAddSuccess() {
       this.customerMenuAddVisible = false;
       await this.fetchCustomersList();
     },
+
     async onContractAddSuccess() {
       this.contractMenuAddVisible = false;
       await this.fetchContractsList();
     },
+
     async onLoanAgreementAddSuccess() {
       this.loanAgreementMenuAddVisible = false;
       await this.fetchLoanAgreementsList();
     },
+
     async onPledgeAgreementAddSuccess() {
       this.pledgeAgreementMenuAddVisible = false;
       await this.fetchPledgeAgreementsList();
     },
 
-
-    async sendChanges() {
-
+    async sendAssignment() {
       await this.$refs.form.validate();
-
       if (this.formIsValid) {
-
-        this.changing = true;
-
-        changeAssignment(this.assignment)
+        addNewAssignment(this.assignment)
             .then(() => {
-              this.snackBar = showAlert('Изменено успешно!').success();
-              this.navigateBack();
+              this.$store.dispatch('assignments/FETCH');
+              navigateTo('/manager-menu/assignments');
             })
-            .catch(err => {
-              this.snackBar = showAlert('Не удалось изменить!').error();
-            })
-            .finally(() => {
-              this.changing = false;
+            .catch((err) => {
+              console.log('Ошибка добавления задачи', err)
             })
       }
     },
@@ -654,6 +659,18 @@ export default {
             console.log('Не удалось удалить', err);
           })
     },
+
+    clear() {
+      this.assignment = {
+        _id: null, // _id - всегда null при добавлении
+        title: null, // Заголовок задачи
+        customer: null, // Заказчик
+        contract: null, // Договор
+        subContract: null, // Техническое задание
+        loanAgreements: null, // Кредитный договор
+        pledgeAgreements: null, // Договор залога
+      }
+    }
 
   }
 }

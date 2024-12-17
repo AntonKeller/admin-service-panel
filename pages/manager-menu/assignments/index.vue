@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import {slicer, unixDateToShortDateString} from "../../utils/functions";
+import {slicer, unixDateToShortDateString} from "../../../utils/functions.js";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -162,7 +162,7 @@ export default {
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },
-    alert(){
+    alert() {
       return this.$store.getters['assignments/ALERT'];
     }
   },
@@ -196,18 +196,17 @@ export default {
       this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
     },
 
-    navigateToCardMenu(assignment) {
-      this.selectAssignment(assignment);
-      navigateTo('/manager-menu/assignment-card');
-    },
 
     navigateToAddMenu() {
-      navigateTo('/manager-menu/assignment-add');
+      navigateTo('/manager-menu/assignments/assignment-create');
     },
-
+    navigateToCardMenu(assignment) {
+      this.selectAssignment(assignment);
+      navigateTo('/manager-menu/assignments/assignment');
+    },
     navigateToChangeMenu(assignment) {
       this.selectAssignment(assignment);
-      navigateTo('/manager-menu/assignment-change');
+      navigateTo('/manager-menu/assignments/assignment-change');
     }
 
   }
@@ -215,7 +214,7 @@ export default {
 </script>
 
 <style>
-.row-hover:hover{
+.row-hover:hover {
   background-color: #fffff1;
 }
 </style>

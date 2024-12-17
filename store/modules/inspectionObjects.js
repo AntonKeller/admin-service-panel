@@ -12,12 +12,8 @@ const inspectionObjects = {
     state: () => initial(),
     getters: {
         GET_OBJECTS: (state) => state.objects,
-        GET_SELECTED_OBJECT: (state) => {
-            return state.selectedObject;
-        },
-        GET_FETCHING: (state) => {
-            return state.fetching;
-        },
+        GET_SELECTED: (state) => state.selectedObject,
+        GET_FETCHING: (state) => state.fetching,
         GET_ALERT: (state) => state.alert,
     },
     mutations: {
@@ -37,7 +33,7 @@ const inspectionObjects = {
             state = Object.assign(state, initial());
         },
         RESET_OBJECT_LIST(state) {
-            state.objects = Object.assign(state.objects, initial().objects);
+            state.objects = initial().objects
         },
         RESET_SELECTED(state) {
             state.selectedObject = Object.assign(state.selectedObject, initial().selectedObject);

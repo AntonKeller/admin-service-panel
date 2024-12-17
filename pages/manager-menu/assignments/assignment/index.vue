@@ -47,7 +47,7 @@
             <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-plus-box-multiple-outline"
-                  @click="blockMenuAddVisibility = true"
+                  @click="navigateToBlockCreate"
               >
                 Добавить адрес
                 <v-tooltip activator="parent">
@@ -94,11 +94,11 @@
               <tr
                   v-for="block of blocksSLice"
                   :key="block._id"
-                  @click="selectBlock(block)"
+                  @click="navigateToBlockCard(block)"
               >
                 <td>{{ block?.address }}</td>
                 <td style="min-width: 190px; width: 190px; max-width: 190px">
-                  {{ stringToDate(block?.startDate) }}
+                  {{ unixDateToMiddleDateString(block?.startDate) }}
                 </td>
                 <td>
                   {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
@@ -111,8 +111,11 @@
                     {{ block?.inspector?.email || '-' }}
                   </div>
                 </td>
-                <td style="min-width: 50px; max-width: 50px">
-                  <c-remove-btn prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+                <td style="min-width: 90px; width: 90px; max-width: 90px">
+                  <div class="d-flex ga-2">
+                    <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToBlockChange(block)"/>
+                    <c-remove-btn prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -131,28 +134,21 @@
           </v-sheet>
         </v-card-text>
 
-        <!--    Block Menu Add-->
-        <v-overlay v-model="blockMenuAddVisibility" class="d-flex justify-center align-center">
-          <block-add @add:success="onAddBlockSuccess" @click:close="blockMenuAddVisibility=false"/>
-        </v-overlay>
-
-        <!--    Block Page Card-->
-        <nuxt-page/>
-
         <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
           <v-icon>mdi-alert-circle-outline</v-icon>
           {{ snackBar.msg }}
         </v-snackbar>
+
       </v-card>
     </v-sheet>
   </v-container>
 </template>
 
 <script>
-import {removeAssignmentBlock} from "../../utils/api/api_assignment_blocks";
-import {unixDateToMiddleDateString} from "../../utils/functions";
-import {navigateTo} from "nuxt/app";
-import {fetchAssignmentOneById} from "../../utils/api/api_assignments.js";
+import {removeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
+import {fetchAssignmentOneById} from "../../../../utils/api/api_assignments";
+import {unixDateToMiddleDateString} from "../../../../utils/functions";
+import {navigateTo, useRoute} from "nuxt/app";
 import _ from "lodash";
 
 export default {
@@ -165,23 +161,15 @@ export default {
       itemsPerPage: 8,
       snackBar: {},
       blockMenuAddVisibility: false,
-      timeDateConfig: {
-        weekday: 'short', // weekday: 'short',
-        // year: 'numeric',
-        month: 'short', // month: 'short',
-        day: 'numeric',
-      }
     }
   },
 
   async beforeMount() {
-
     if (!this.selectedAssignment?._id) {
       this.navigateBack();
     } else {
       await fetchAssignmentOneById(this.selectedAssignment._id)
           .then((resp) => {
-            console.log('[beforeMount] init selected assignment: req answer', resp);
             this.$store.commit('assignments/SELECT', resp.data);
             sessionStorage.selectedAssignment = JSON.stringify(resp.data);
             this.$store.dispatch('assignmentBlocks/FETCH', resp.data?._id);
@@ -196,17 +184,8 @@ export default {
     }
   },
 
-  watch: {
-    blocks(_newArray) {
-      // Определяем последний выбранный блок
-      const blockID = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
-      // Находим его в массиве
-      const foundBlock = _newArray?.find(block => block._id === blockID);
-      if (foundBlock) {
-        // Заменяем его новым
-        this.$store.commit('assignmentBlocks/SELECT', foundBlock);
-      }
-    },
+  unmounted() {
+    this.$store.commit('assignmentBlocks/RESET_BLOCK_LIST');
   },
 
   computed: {
@@ -278,52 +257,39 @@ export default {
 
     unixDateToMiddleDateString,
 
-    onAddBlockSuccess() {
-      this.blockMenuAddVisibility = false;
-      this.assignmentBlocksStoreUpdate();
+    selectBlock(block) {
+      // Записываем в session storage и в vuex store
+      sessionStorage.selectedAssignmentBlock = JSON.stringify(block);
+      this.$store.commit('assignmentBlocks/SELECT', _.cloneDeep(block));
+    },
+
+    navigateToBlockCreate() {
+      navigateTo('/manager-menu/assignments/assignment/block-create');
+    },
+
+    navigateToBlockCard(block) {
+      this.selectBlock(block);
+      navigateTo('/manager-menu/assignments/assignment/block');
+    },
+
+    navigateToBlockChange(block) {
+      this.selectBlock(block);
+      navigateTo('/manager-menu/assignments/assignment/block-change');
     },
 
     navigateBack() {
       navigateTo('/manager-menu/assignments');
     },
 
-    stringToDate(timestamp) {
-      return (new Date(parseInt(timestamp))).toLocaleDateString(undefined, this.timeDateConfig);
-    },
-
-    assignmentBlocksStoreUpdate() {
-      let assignmentId = this.$store.getters['assignments/GET_SELECTED_ITEM']?._id;
-
-      if (assignmentId) {
-        this.$store.dispatch('assignmentBlocks/FETCH', assignmentId);
-      }
-    },
-
-    selectBlock(block) {
-      // Записываем в session storage
-      sessionStorage.selectedAssignmentBlock = JSON.stringify(block);
-      // Записываем в vuex store
-      this.$store.commit('assignmentBlocks/SELECT', block);
-      // Открываем меню
-      navigateTo('/manager-menu/assignments/assignment-card/block');
-    },
-
     removeBlockById(blockID) {
-
-      console.log('Removed block')
-
       removeAssignmentBlock(blockID)
           .then(() => {
             this.$store.commit('assignmentBlocks/REMOVE_ITEM', blockID);
-            console.log('Removed block success');
           })
           .catch(err => {
             console.log('Ошибка удаления Блока', err);
           })
     },
-    back() {
-      navigateTo('/manager-menu/assignments')
-    }
   }
 }
 </script>

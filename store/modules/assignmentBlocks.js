@@ -12,6 +12,7 @@ const assignmentBlocks = {
     state: () => initial(),
     getters: {
         GET_BLOCKS: (state) => state.blocks,
+        SELECTED: (state) => state.selectedBlock,
         GET_SELECTED_ITEM: (state) => state.selectedBlock,
         GET_FETCHING: (state) => state.fetching,
         GET_ALERT: (state) => state.alert,
@@ -20,8 +21,14 @@ const assignmentBlocks = {
         SET_BLOCKS(state, payload) {
             state.blocks = payload;
         },
+        RESET_BLOCK_LIST(state) {
+            state.blocks = initial().blocks;
+        },
         SELECT(state, payload) {
             state.selectedBlock = payload || initial().selectedBlock;
+        },
+        RESET_SELECTED(state) {
+            state.selectedBlock = initial().selectedBlock;
         },
         SET_FETCHING(state, payload) {
             state.fetching = payload || initial().fetching;
@@ -29,8 +36,11 @@ const assignmentBlocks = {
         REMOVE_ITEM(state, blockID) {
             state.blocks = state.blocks.filter(block => block._id !== blockID);
         },
-        SHOW_ALERT_SUCCESS(state, payload) {
-            state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
+        ALERT_ERROR(state, message) {
+            state.alert = {type: 'red-darken-4', msg: message, isShow: true}
+        },
+        ALERT_SUCCESS(state, message) {
+            state.alert = {type: 'teal-darken-1', msg: message, isShow: true}
         },
         SHOW_ALERT_ERROR(state, payload) {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}

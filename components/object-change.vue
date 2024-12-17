@@ -88,7 +88,7 @@ import {changeInspectionObject} from "../utils/api/api_inspection_objects";
 export default {
   name: "object-change",
   mounted() {
-    this.value = _.cloneDeep(this.$store.getters['inspectionObjects/GET_SELECTED_OBJECT']);
+    this.value = _.cloneDeep(this.$store.getters['inspectionObjects/GET_SELECTED']);
   },
   data: () => ({
     value: {

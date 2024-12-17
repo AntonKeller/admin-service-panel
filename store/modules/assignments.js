@@ -31,7 +31,6 @@ const assignments = {
         ALERT_ERROR(state, payload) {
             state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
         },
-
         SELECT(state, payload) {
             state.selectedAssignment = payload || initial_page_state().selectedAssignment;
         },

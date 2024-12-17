@@ -24,7 +24,6 @@ export default {
       }
     }
 
-
     if (sessionStorage.selectedAssignmentBlock) { // Инициализация текущего активного assignment block
       try {
         const selectedAssignmentBlockParse = JSON.parse(sessionStorage.selectedAssignmentBlock);
@@ -33,7 +32,6 @@ export default {
         console.log('Не удалось распарсить selectedAssignmentBlock из session storage', err);
       }
     }
-
 
     if (sessionStorage.selectedInspectionObject) { // Инициализация текущего активного inspection object
       try {
@@ -57,7 +55,6 @@ export default {
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  /*transform: translateX(-100px);*/
   transform: scale(0.98);
 }
 </style>
