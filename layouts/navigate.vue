@@ -26,7 +26,6 @@
                 density="default"
                 variant="text"
                 rounded
-                :class="rail ? 'd-none' : ''"
                 @click.stop="rail = !rail"
             >
               <v-icon/>
