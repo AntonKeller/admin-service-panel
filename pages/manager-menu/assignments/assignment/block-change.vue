@@ -197,11 +197,6 @@
         <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
           <inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></inspector-add>
         </v-overlay>
-
-        <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-          <v-icon>mdi-alert-circle-outline</v-icon>
-          {{ snackBar.msg }}
-        </v-snackbar>
       </v-card>
     </v-sheet>
   </v-container>
@@ -212,7 +207,6 @@ import {changeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks
 import assignment_block_statuses from "../../../../configs/assignment-statuses.js";
 import {isDate, isEmpty} from "../../../../utils/validators/functions.js";
 import {fetchInspectors} from "../../../../utils/api/api_inspectors.js";
-import {showAlert} from "../../../../utils/functions.js";
 import _ from "lodash";
 import {navigateTo} from "nuxt/app";
 
@@ -240,7 +234,6 @@ export default {
     },
     inspectors: [],
     fetchingInspectors: false,
-    snackBar: {},
     formIsValid: null,
     sendingData: false,
     inspectorMenuAdd: false,
@@ -300,11 +293,11 @@ export default {
 
         changeAssignmentBlock(assignmentId, this.block)
             .then(() => {
-              this.snackBar = showAlert('Успешно').success();
+              this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно изменен');
               this.navigateBack();
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка изменения').error();
+              this.$store.commit('alert/ERROR', 'Ошибка изменения адреса осмотра');
               console.log('Ошибка изменения', err);
             })
             .finally(() => {

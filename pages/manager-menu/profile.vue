@@ -68,11 +68,6 @@
         </v-sheet>
       </v-card-item>
     </v-card>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -81,7 +76,6 @@ import image from '../../public/assets/logotype.png';
 import {downloadFile} from "../../utils/api/api_.js";
 import {serverURL} from "../../constants/constants.js";
 import {getProfile} from "../../utils/api/api_profile.js";
-
 export default {
   name: "profile-page",
   data() {
@@ -91,7 +85,6 @@ export default {
       login: null,
       password: null,
       formIsValid: false,
-      snackBar: {},
     }
   },
   mounted() {
@@ -101,8 +94,6 @@ export default {
     async getProfile() {
       const response = await getProfile();
       this.profile = response.data;
-
-
       // await this.$refs.form.validate();
       // if (this.formIsValid) {
       //   this.loading = true;

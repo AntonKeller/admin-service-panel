@@ -160,7 +160,7 @@
                   {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
                 </td>
                 <td style="min-width: 50px; width: 50px; max-width: 50px">
-                  <c-remove-btn :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
+                  <my-button-table-remove :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
                 </td>
               </tr>
               </tbody>
@@ -190,7 +190,7 @@
 <script>
 import {fetchAssignmentBlockOneById, uploadObjects} from "../../../../../utils/api/api_assignment_blocks";
 import {removeObject, removeObjects} from "../../../../../utils/api/api_inspection_objects";
-import {showAlert, unixDateToMiddleDateString} from "../../../../../utils/functions";
+import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
 import {navigateTo} from "nuxt/app";
@@ -290,10 +290,10 @@ export default {
       removeObject(ID)
           .then(() => {
             this.fetchInspectionObjects();
-            this.snackBar = showAlert('Успешно удален').success();
+            this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно удален');
           })
           .catch(() => {
-            this.snackBar = showAlert('Ошибка удаления').error();
+            this.$store.commit('alert/ERROR', 'Неудалось удалить адрес осмотра');
           })
     },
 
@@ -327,7 +327,7 @@ export default {
               this.fetchInspectionObjects();
             })
             .catch(err => {
-              this.snackBar = showAlert('Не удалось загрузить файл').error();
+              this.$store.commit('alert/ERROR', 'Не удалось загрузить файл');
               console.log('Не удалось загрузить файл', err);
             })
       }
@@ -364,11 +364,11 @@ export default {
     removeObjectsAll(blockID) {
       removeObjects(blockID)
           .then(() => {
-            this.snackBar = showAlert('Успешно удалены').success();
+            this.$store.commit('alert/ERROR', 'Объекты успешно удалены');
             this.fetchInspectionObjects();
           })
           .catch(err => {
-            this.snackBar = showAlert('Ошибка удаления').error();
+            this.$store.commit('alert/ERROR', 'Не удалось удалить объекты');
             console.log('Ошибка удаления объектов', err);
           })
     }

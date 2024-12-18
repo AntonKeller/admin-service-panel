@@ -13,7 +13,6 @@
     <v-tooltip activator="parent" location="left">
       {{ prompt ? prompt : '...' }}
     </v-tooltip>
-
     <my-overlay v-model="questionIsVisible">
       <v-card color="red-darken-4" rounded="sm">
         <v-card-text>
@@ -31,7 +30,7 @@
 
 <script>
 export default {
-  name: "c-remove-btn",
+  name: "my-button-table-remove",
 
   props: {
     prompt: String,

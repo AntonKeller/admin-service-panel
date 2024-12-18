@@ -57,7 +57,7 @@
               <td>{{ customer.phoneNumber }}</td>
               <td>{{ customer.address }}</td>
               <td style="min-width: 65px; width: 65px; max-width: 65px">
-                <c-remove-btn :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
+                <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
               </td>
             </tr>
             </tbody>
@@ -77,11 +77,6 @@
       />
     </div>
 
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
-
     <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
       <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>
     </v-overlay>
@@ -95,7 +90,6 @@
 
 <script>
 import {fetchCustomers, removeCustomer} from "../../utils/api/api_customers";
-import {showAlert} from "../../utils/functions.js";
 
 export default {
   name: "customers-page",
@@ -104,7 +98,6 @@ export default {
     return {
       customers: [],
       customerSelected: null,
-      snackBar: {},
       fetching: false,
       searchText: '',
       currentPage: 1,
@@ -175,11 +168,11 @@ export default {
     removeCustomer(id) {
       removeCustomer(id)
           .then(() => {
-            this.snackBar = showAlert('Успешно удален').success();
+            this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален');
             this.updateCustomers();
           })
           .catch((err) => {
-            this.snackBar = showAlert('Ошибка удаления').error();
+            this.$store.commit('alert/ERROR', 'Ошибка удаления заказчика');
             console.log('Ошибка удаления заказчика', err);
           })
     }

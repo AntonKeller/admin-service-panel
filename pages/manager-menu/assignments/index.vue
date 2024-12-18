@@ -70,7 +70,7 @@
                 <td style="min-width: 90px; width: 90px; max-width: 90px">
                   <div class="d-flex ga-2">
                     <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
-                    <c-remove-btn prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
+                    <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
                   </div>
                 </td>
               </tr>
@@ -91,12 +91,6 @@
             :total-visible="8"
         />
       </div>
-
-      <v-snackbar :color="alert.type" v-model="alert.isShow">
-        <v-icon>mdi-alert-circle-outline</v-icon>
-        {{ alert.msg }}
-      </v-snackbar>
-
     </v-sheet>
   </v-container>
 </template>
@@ -162,9 +156,6 @@ export default {
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
     },
-    alert() {
-      return this.$store.getters['assignments/ALERT'];
-    }
   },
 
   methods: {

@@ -32,17 +32,11 @@
           @click="changeInspector"
       />
     </v-card-actions>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
 import {changeInspector} from "../utils/api/api_inspectors";
-import {showAlert} from "../utils/functions";
 import _ from "lodash";
 import {vMaska} from "maska/vue"
 
@@ -81,7 +75,6 @@ export default {
         password: null,
       },
       formIsValid: false,
-      snackBar: {},
     }
   },
 
@@ -91,12 +84,12 @@ export default {
       if (this.formIsValid) {
         changeInspector(this.inspector)
             .then(() => {
-              this.snackBar = showAlert('Инспектор успешно изменен').success();
+              this.$store.commit('alert/SUCCESS', 'Инспектор успешно изменен');
               this.$emit('change:success');
             })
             .catch((err) => {
-              console.log('Ошибка добавление инспектора', err);
-              this.snackBar = showAlert('Ошибка изменения инспектора').error();
+              this.$store.commit('alert/ERROR', 'Ошибка изменения инспектора');
+              console.log('Ошибка изменения инспектора', err);
             })
       }
     },

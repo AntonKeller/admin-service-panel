@@ -15,6 +15,20 @@
             <v-btn
                 density="comfortable"
                 color="blue-grey-darken-2"
+                text="Тест alert"
+                variant="text"
+                rounded="lg"
+            />
+            <v-btn
+                density="comfortable"
+                color="blue-grey-darken-2"
+                text="Тест alert"
+                variant="text"
+                rounded="lg"
+            />
+            <v-btn
+                density="comfortable"
+                color="blue-grey-darken-2"
                 icon="mdi-arrow-left"
                 variant="text"
                 rounded="lg"
@@ -58,13 +72,13 @@
             <v-text-field
                 v-model="searchText"
                 prepend-inner-icon="mdi-magnify"
-                label="Поиск"
                 variant="solo-filled"
                 density="compact"
+                label="Поиск"
                 class="ml-2"
-                flat
-                single-line
                 hide-details
+                single-line
+                flat
             />
           </div>
           <v-sheet>
@@ -114,7 +128,7 @@
                 <td style="min-width: 90px; width: 90px; max-width: 90px">
                   <div class="d-flex ga-2">
                     <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToBlockChange(block)"/>
-                    <c-remove-btn prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+                    <my-button-table-remove prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
                   </div>
                 </td>
               </tr>
@@ -134,11 +148,6 @@
           </v-sheet>
         </v-card-text>
 
-        <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-          <v-icon>mdi-alert-circle-outline</v-icon>
-          {{ snackBar.msg }}
-        </v-snackbar>
-
       </v-card>
     </v-sheet>
   </v-container>
@@ -148,7 +157,7 @@
 import {removeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "../../../../utils/api/api_assignments";
 import {unixDateToMiddleDateString} from "../../../../utils/functions";
-import {navigateTo, useRoute} from "nuxt/app";
+import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
 export default {
@@ -159,7 +168,6 @@ export default {
       searchText: '',
       currentPage: 1,
       itemsPerPage: 8,
-      snackBar: {},
       blockMenuAddVisibility: false,
     }
   },
@@ -179,7 +187,7 @@ export default {
             sessionStorage.removeItem('selectedAssignment');
             this.$store.commit('assignments/RESET_SELECT');
             this.navigateBack();
-            this.$store.commit('assignments/ALERT_ERROR', 'К сожалению карточка больше не существует!');
+            this.$store.commit('alert/ERROR', 'Карточка больше не существует!');
           });
     }
   },
@@ -285,9 +293,11 @@ export default {
       removeAssignmentBlock(blockID)
           .then(() => {
             this.$store.commit('assignmentBlocks/REMOVE_ITEM', blockID);
+            this.$store.commit('alert/SUCCESS', 'Адрес успешно удален');
           })
           .catch(err => {
-            console.log('Ошибка удаления Блока', err);
+            this.$store.commit('alert/ERROR', 'Не удалось удалить адрес');+
+            console.log('Ошибка удаления адреса', err);
           })
     },
   }

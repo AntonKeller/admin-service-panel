@@ -3,6 +3,7 @@
     <nuxt-layout name="navigate">
       <div>
         <nuxt-page/>
+        <my-alert></my-alert>
       </div>
     </nuxt-layout>
   </div>

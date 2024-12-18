@@ -187,20 +187,13 @@
               :loading="sendingData"
               @click="sendBlock"
           />
-          <my-btn-clear
-              text="Очистить"
-              @click="clear"
-          />
+          <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
-
-        <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-          <v-icon>mdi-alert-circle-outline</v-icon>
-          {{ snackBar.msg }}
-        </v-snackbar>
 
         <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
           <inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></inspector-add>
         </v-overlay>
+
       </v-card>
     </v-sheet>
   </v-container>
@@ -211,7 +204,6 @@ import {sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks.j
 import assignment_block_statuses from "../../../../configs/assignment-statuses.js";
 import {fetchInspectors} from "../../../../utils/api/api_inspectors.js";
 import {isDate, isEmpty} from "../../../../utils/validators/functions.js";
-import {showAlert} from "../../../../utils/functions.js";
 import {vMaska} from "maska/vue"
 import {navigateTo} from "nuxt/app";
 
@@ -247,7 +239,6 @@ export default {
       inspectors: [],
       inspectorMenuAdd: false,
       fetchingInspectors: false,
-      snackBar: {},
       formIsValid: null,
       sendingData: false,
       options: {
@@ -334,11 +325,11 @@ export default {
         this.sendingData = true;
         sendAssignmentBlock(this._assignmentId, this.block)
             .then(() => {
-              this.snackBar = showAlert('Успешно').success();
+              this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно создан');
               this.navigateBack();
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка добавления').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавления адреса осмотра');
               console.log('Ошибка добавления', err);
             })
             .finally(() => {

@@ -100,7 +100,7 @@
 
     <v-card-actions>
       <my-btn-submit text="Принять" :loading="loading" @click="addCustomer"/>
-      <my-btn-clear text="Очистить" @click="customer = {}"/>
+      <my-button-clear text="Очистить" @click="customer = {}"/>
       <my-btn-submit
           prepend-icon="mdi-tray-arrow-down"
           text="Шаблон для заполнения"
@@ -109,12 +109,6 @@
           @click="downloadTemplate"
       />
     </v-card-actions>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
-
   </v-card>
 </template>
 
@@ -122,7 +116,6 @@
 import {addCustomer, uploadTemplate} from "../utils/api/api_customers";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
-import {showAlert} from "../utils/functions";
 import {vMaska} from "maska/vue"
 
 export default {
@@ -155,7 +148,6 @@ export default {
     },
     templateFile: null,
     loading: false,
-    snackBar: {},
     formIsValid: false,
     customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
     customerInnRules: [
@@ -178,12 +170,12 @@ export default {
         const _id = await addCustomer(this.customer)
             .then((response) => {
               this.$emit('add:success');
-              this.snackBar = showAlert('Успешно добавлен').success();
+              this.$store.commit('alert/SUCCESS', 'Успешно добавлен');
               return response.data._id;
             })
             .catch(err => {
               console.log('Ошибка добавления заказчика', err);
-              this.snackBar = showAlert('Ошибка добавления').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавления');
             })
             .finally(() => {
               this.loading = false;
@@ -197,7 +189,7 @@ export default {
                 this.$emit('add:success');
               })
               .catch(err => {
-                this.snackBar = showAlert('Не удалось отправить шаблон').success();
+                this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
                 console.log('Не удалось отправить шаблон', err);
               })
         }

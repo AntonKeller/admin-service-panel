@@ -63,8 +63,6 @@ import {showAlert} from "../utils/functions.js";
 
 export default {
   name: "c-auth-form",
-  components: {},
-
 
   data: () => ({
     snackBar: {},

@@ -366,16 +366,8 @@
               prepend-icon="mdi-checkbox-multiple-marked-outline"
               @click="sendAssignment"
           />
-          <my-btn-clear
-              text="Очистить"
-              @click="clear"
-          />
+          <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
-
-        <v-snackbar :color="snackbar.type" v-model="snackbar.isShow">
-          <v-icon>mdi-alert-circle-outline</v-icon>
-          {{ snackbar.msg }}
-        </v-snackbar>
 
         <!--  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  -->
         <!--  ~~~~~~~~~~~~~~~~~~~~~~~Всплывающие окна~~~~~~~~~~~~~~~~~~~~~~~  -->
@@ -437,8 +429,6 @@ export default {
         loanAgreements: null, // Кредитный договор
         pledgeAgreements: null, // Договор залога
       },
-
-      snackbar: {},
 
       formIsValid: false,
 

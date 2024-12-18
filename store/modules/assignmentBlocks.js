@@ -1,10 +1,9 @@
-import {fetchAssignmentBlocks, removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {fetchAssignmentBlocks} from "@/utils/api/api_assignment_blocks";
 
 export const initial = () => ({
     blocks: [],
     fetching: false,
     selectedBlock: {},
-    alert: {},
 });
 
 const assignmentBlocks = {
@@ -15,7 +14,6 @@ const assignmentBlocks = {
         SELECTED: (state) => state.selectedBlock,
         GET_SELECTED_ITEM: (state) => state.selectedBlock,
         GET_FETCHING: (state) => state.fetching,
-        GET_ALERT: (state) => state.alert,
     },
     mutations: {
         SET_BLOCKS(state, payload) {
@@ -36,24 +34,14 @@ const assignmentBlocks = {
         REMOVE_ITEM(state, blockID) {
             state.blocks = state.blocks.filter(block => block._id !== blockID);
         },
-        ALERT_ERROR(state, message) {
-            state.alert = {type: 'red-darken-4', msg: message, isShow: true}
-        },
-        ALERT_SUCCESS(state, message) {
-            state.alert = {type: 'teal-darken-1', msg: message, isShow: true}
-        },
-        SHOW_ALERT_ERROR(state, payload) {
-            state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
-        },
-        RESET_STORE(state) {
-            state = Object.assign(state, initial());
-        }
     },
     actions: {
         async FETCH({commit, getters}, assignmentID) {
 
             commit('SET_FETCHING', true);
+
             let answer = await fetchAssignmentBlocks(assignmentID);
+
             commit('SET_FETCHING', false);
 
             switch (answer.status) {
@@ -61,10 +49,10 @@ const assignmentBlocks = {
                     commit('SET_BLOCKS', answer.data);
                     break;
                 case 403:
-                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
+                    commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
                     break;
                 default:
-                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    commit('alert/ERROR', 'Ошибка запроса' || answer.statusText, {root: true});
                     break;
             }
         },

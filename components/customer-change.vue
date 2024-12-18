@@ -84,12 +84,6 @@
           @click="downloadTemplate"
       />
     </v-card-actions>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
-
   </v-card>
 </template>
 
@@ -97,9 +91,8 @@
 import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
-import {showAlert} from "../utils/functions";
-import _ from "lodash";
 import {vMaska} from "maska/vue"
+import _ from "lodash";
 
 export default {
   name: "customer-change",
@@ -137,7 +130,6 @@ export default {
       templateFile: null,
       loading: false,
       formIsValid: false,
-      snackBar: {},
     }
   },
 
@@ -158,11 +150,11 @@ export default {
         changeCustomer(this.customer)
             .then(() => {
               this.$emit('change:success');
-              this.snackBar = showAlert('Успешно изменен').success();
+              this.$store.commit('alert/SUCCESS', 'Запись о заказчике изменена');
             })
             .catch(err => {
               console.log('Ошибка изменения данных заказчика', err);
-              this.snackBar = showAlert('Ошибка изменения').error();
+              this.$store.commit('Ошибка изменения записи о заказчике');
             })
             .finally(() => {
               this.loading = false;
@@ -176,7 +168,7 @@ export default {
                 this.$emit('change:success');
               })
               .catch(err => {
-                this.snackBar = showAlert('Не удалось отправить шаблон').success();
+                this.$store.commit('Не удалось загрузить шаблон');
                 console.log('Не удалось отправить шаблон', err);
               })
         }

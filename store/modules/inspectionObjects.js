@@ -4,7 +4,6 @@ const initial = () => ({
     objects: [],
     fetching: false,
     selectedObject: null,
-    alert: {},
 });
 
 const inspectionObjects = {
@@ -13,8 +12,6 @@ const inspectionObjects = {
     getters: {
         GET_OBJECTS: (state) => state.objects,
         GET_SELECTED: (state) => state.selectedObject,
-        GET_FETCHING: (state) => state.fetching,
-        GET_ALERT: (state) => state.alert,
     },
     mutations: {
         SET_OBJECTS(state, payload) {
@@ -22,15 +19,6 @@ const inspectionObjects = {
         },
         SELECT(state, inspectionObject) {
             state.selectedObject = inspectionObject;
-        },
-        ALERT_SUCCESS(state, payload) {
-            state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
-        },
-        ALERT_ERROR(state, payload) {
-            state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
-        },
-        RESET(state) {
-            state = Object.assign(state, initial());
         },
         RESET_OBJECT_LIST(state) {
             state.objects = initial().objects
@@ -46,8 +34,11 @@ const inspectionObjects = {
                 case 200:
                     commit('SET_OBJECTS', answer.data);
                     break;
+                case 403:
+                    commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
+                    break;
                 default:
-                    commit('ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    commit('alert/ERROR', 'Ошибка запроса' || answer.statusText, {root: true});
                     break;
             }
         },

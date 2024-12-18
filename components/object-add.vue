@@ -78,19 +78,14 @@
             :loading="sending"
             @click="sendValue"
         />
-        <my-btn-clear text="Очистить" @click="this.value = {}"/>
+        <my-button-clear text="Очистить" @click="this.value = {}"/>
       </v-card-actions>
     </v-card>
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
   </v-sheet>
 </template>
 
 <script>
 import {sendInspectionObject} from "../utils/api/api_inspection_objects";
-import {showAlert} from "../utils/functions";
 
 export default {
   name: "object-add",
@@ -108,7 +103,6 @@ export default {
       },
       sending: false,
       formIsValid: false,
-      snackBar: {},
     }
   },
   computed: {
@@ -123,11 +117,11 @@ export default {
         this.sending = true;
         sendInspectionObject(this.assignmentBlock._id, this.value)
             .then(() => {
-              this.snackBar = showAlert('Успешно').success();
+              this.$store.commit('alert/SUCCESS', 'Объект успешно добавлен');
               this.$emit('add:success');
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавления объекта');
               console.log('Ошибка добавления объекта', err);
             })
             .finally(() => {

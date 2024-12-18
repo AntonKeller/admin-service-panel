@@ -103,18 +103,13 @@
             :loading="loading"
             @click="submit"
         />
-        <my-btn-clear
+        <my-button-clear
             text="Очистить"
             @click="clear"
         />
       </v-card-actions>
 
     </v-card>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
 
     <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
       <contract-add
@@ -129,7 +124,7 @@
 <script>
 import {fetchContracts, removeContract} from "@/utils/api/api_contracts";
 import {addContract} from "../utils/api/api_contracts";
-import {showAlert, unixDateToLongDateString} from "../utils/functions";
+import {unixDateToLongDateString} from "../utils/functions";
 
 export default {
   name: "contract-add",
@@ -150,8 +145,6 @@ export default {
       contractsListFetching: false,
       contractMenuAddVisible: false,
       contractRules: [v => v || 'Договор должен быть выбран'],
-
-      snackBar: {},
 
       contractNumberRules: [
         v => v?.length > 0 || 'Договора должна быть больше 0',
@@ -208,18 +201,18 @@ export default {
         this.loading = true;
         addContract(this.contract)
             .then(() => {
-              this.snackBar = showAlert('Добавлен новый договор!').success();
+              this.$store.commit('alert/SUCCESS', 'Добавлен новый договор!');
               this.$emit('add:success');
             })
             .catch(err => {
-              this.snackBar = showAlert('Не удалось добавить договор!').error();
+              this.$store.commit('alert/ERROR', 'Не удалось добавить договор!');
               console.log('Ошибка добавления договора', err);
             })
             .finally(() => {
               this.loading = false;
             })
       } else {
-        this.snackBar = showAlert('Поля не заполнены!').error();
+        this.$store.commit('alert/ERROR', 'Поля не заполнены!');
       }
     },
 

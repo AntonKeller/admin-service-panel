@@ -1,9 +1,8 @@
 import {createStore} from "vuex";
-import assignments from "./modules/assignments.js";
 import inspectionObjects from "./modules/inspectionObjects.js";
 import assignmentBlocks from "./modules/assignmentBlocks.js";
-import contracts from "./modules/contracts.js";
-import customers from "./modules/customers.js";
+import alert from "@/store/modules/alert.js";
+import assignments from "./modules/assignments.js";
 import angles from "@/store/modules/angles.js";
 
 // Вводный, короткий курс по Vuex
@@ -12,11 +11,10 @@ import angles from "@/store/modules/angles.js";
 // vuex 4 global-store
 export const vuexStore = createStore({
     modules: {
-        assignments,
-        inspectionObjects,
-        assignmentBlocks,
-        contracts,
-        customers,
         angles,
+        alert,
+        assignments,
+        assignmentBlocks,
+        inspectionObjects,
     },
 })

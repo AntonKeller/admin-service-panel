@@ -26,7 +26,7 @@
                 </v-tooltip>
               </v-btn>
             </div>
-            <my-button-close-card @click="goBack" class="align-self-start"/>
+            <my-button-close-card @click="navigateBack" class="align-self-start"/>
           </div>
         </v-card-title>
 
@@ -195,7 +195,7 @@ export default {
 
   methods: {
 
-    goBack() {
+    navigateBack() {
       navigateTo('/manager-menu/assignments/assignment-card/block');
     },
 

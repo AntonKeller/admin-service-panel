@@ -27,22 +27,14 @@
           prepend-icon="mdi-checkbox-multiple-marked-outline"
           @click="sendNewPledgeAgreement"
       />
-      <my-btn-clear
-          text="Очистить"
-          @click="clear"
-      />
+      <my-button-clear text="Очистить" @click="clear"/>
     </v-card-actions>
-    <v-snackbar :color="snackbar.type" v-model="snackbar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackbar.msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
 
 import {addPledgeAgreement} from "@/utils/api/api_pledge-agreements";
-import {showAlert} from "@/utils/functions";
 
 export default {
   name: "pledge-agreement-add",
@@ -57,7 +49,6 @@ export default {
         date: null,
       },
       formIsValid: false,
-      snackbar: {}
     }
   },
 
@@ -67,10 +58,11 @@ export default {
       if (this.formIsValid) {
         addPledgeAgreement(this.pledgeAgreement)
             .then(() => {
+              this.$store.commit('alert/SUCCESS', 'Договор залога успешно добавлен');
               this.$emit('add:success');
             })
             .catch(err => {
-              this.snackbar = showAlert('Не удалось добавить договор залога!').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавления договора залога');
               console.log('Ошибка добавления договора залога', err);
             })
       }

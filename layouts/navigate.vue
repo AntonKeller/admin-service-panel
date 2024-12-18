@@ -2,18 +2,39 @@
   <v-card height="100vh">
     <v-layout full-height>
 
-      <v-navigation-drawer permanent elevation="0" width="230">
+      <v-navigation-drawer
+          :rail="rail"
+          permanent
+          @click="rail = false"
+          elevation="0"
+      >
 
-        <v-list variant="text" density="default" nav rounded="lg" >
+        <v-list variant="text" density="default" nav rounded="lg">
 
-          <v-list-item
-              prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
-              :title="profile.fullName"
-              :subtitle="profile.email"
-              to="/manager-menu/profile"
-              @click="activeItem = 'profile'"
-              :active="activeItem === 'profile'"
-          />
+          <div class="d-flex align-center justify-space-between">
+            <v-list-item
+                prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
+                :title="profile.fullName"
+                :subtitle="profile.email"
+                to="/manager-menu/profile"
+                @click="activeItem = 'profile'"
+                :active="activeItem === 'profile'"
+            />
+            <v-btn
+                icon="mdi-arrow-collapse-left"
+                color="blue-grey-darken-3"
+                density="default"
+                variant="text"
+                rounded
+                :class="rail ? 'd-none' : ''"
+                @click.stop="rail = !rail"
+            >
+              <v-icon/>
+              <v-tooltip activator="parent">
+                Свернуть меню
+              </v-tooltip>
+            </v-btn>
+          </div>
 
           <v-divider/>
 
@@ -40,6 +61,8 @@
         </v-list>
       </v-navigation-drawer>
 
+      <v-app-bar></v-app-bar>
+
       <v-main scrollable>
         <slot/>
       </v-main>
@@ -56,11 +79,21 @@ export default {
 
   name: "navMenu",
 
-  data: () => ({
-    activeItem: null,
-    profile: {},
-    navItems,
-  }),
+  data() {
+    return {
+      drawer: true,
+      rail: true,
+      activeItem: null,
+      profile: {},
+      navItems,
+    }
+  },
+
+  watch: {
+    drawer() {
+      console.log('this.drawer:', this.drawer);
+    }
+  },
 
   beforeMount() {
     this.getProfile();

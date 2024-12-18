@@ -30,19 +30,13 @@
           prepend-icon="mdi-checkbox-multiple-marked-outline"
           @click="addInspector"
       />
-      <my-btn-clear text="Очистить" @click="clear"/>
+      <my-button-clear text="Очистить" @click="clear"/>
     </v-card-actions>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
 import {addInspector} from "../utils/api/api_inspectors";
-import {showAlert} from "../utils/functions";
 import {vMaska} from "maska/vue"
 
 export default {
@@ -72,7 +66,6 @@ export default {
         password: null,
       },
       formIsValid: false,
-      snackBar: {},
       inspectorFirstNameRules: [
         v => v?.length > 0 || 'поле не должно быть пустым',
         v => v.length <= 30 || 'поле не должно превышать 30 символов'
@@ -110,12 +103,12 @@ export default {
       if (this.formIsValid) {
         addInspector(this.inspector)
             .then(() => {
-              this.snackBar = showAlert('Инспектор успешно добавлен').success();
+              this.$store.commit('alert/SUCCESS', 'Инспектор успешно добавлен');
               this.$emit('add:success')
             })
             .catch((err) => {
               console.log('Ошибка добавление инспектора', err);
-              this.snackBar = showAlert('Ошибка добавление инспектора').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавление инспектора');
             })
       }
     },

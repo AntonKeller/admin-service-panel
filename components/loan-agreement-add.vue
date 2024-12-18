@@ -27,21 +27,13 @@
           prepend-icon="mdi-checkbox-multiple-marked-outline"
           @click="sendNewLoanAgreement"
       />
-      <my-btn-clear
-          text="Очистить"
-          @click="clear"
-      />
+      <my-button-clear text="Очистить" @click="clear"/>
     </v-card-actions>
-    <v-snackbar :color="snackbar.type" v-model="snackbar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackbar.msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
 import {addLoanAgreement} from "@/utils/api/api_loan_agreements";
-import {showAlert} from "@/utils/functions";
 
 export default {
   name: "loan-agreement-add",
@@ -56,7 +48,6 @@ export default {
         date: null,
       },
       formIsValid: false,
-      snackbar: {}
     }
   },
 
@@ -66,10 +57,11 @@ export default {
       if (this.formIsValid) {
         addLoanAgreement(this.loanAgreement)
             .then(() => {
+              this.$store.commit('alert/SUCCESS', 'Кредитный договор успешно добавлен');
               this.$emit('add:success');
             })
             .catch(err => {
-              this.snackbar = showAlert('Не удалось добавить кредитный договор!').error();
+              this.$store.commit('alert/ERROR', 'Ошибка добавления кредитного договора');
               console.log('Ошибка добавления кредитного договора', err);
             })
       }

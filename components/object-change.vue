@@ -74,7 +74,7 @@
             :loading="sending"
             @click="changeValue"
         />
-        <my-btn-clear text="Очистить" @click="value = null"/>
+        <my-button-clear text="Очистить" @click="value = null"/>
       </v-card-actions>
     </v-card>
   </v-sheet>
@@ -82,7 +82,6 @@
 
 <script>
 import _ from "lodash";
-import {showAlert} from "../utils/functions.js";
 import {changeInspectionObject} from "../utils/api/api_inspection_objects";
 
 export default {
@@ -103,7 +102,6 @@ export default {
     },
     sending: false,
     formIsValid: false,
-    snackBar: {},
   }),
   methods: {
     async changeValue() {
@@ -112,11 +110,11 @@ export default {
         this.sending = true;
         changeInspectionObject(this.value)
             .then(() => {
-              this.snackBar = showAlert('Успешно').success();
+              this.$store.commit('alert/SUCCESS', 'Объект успешно изменен');
               this.$emit('change:success');
             })
             .catch((err) => {
-              this.snackBar = showAlert('Ошибка').error();
+              this.$store.commit('alert/ERROR', 'Ошибка изменения объекта');
               console.log('Ошибка изменения', err);
             })
             .finally(() => {

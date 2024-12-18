@@ -57,7 +57,7 @@
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
               <td>
-                <c-remove-btn :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
+                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
               </td>
             </tr>
             </tbody>
@@ -90,19 +90,11 @@
           @click:close="inspectorMenuChangeVisibility=false"
       />
     </v-overlay>
-
-    <v-snackbar :color="snackBar.type" v-model="snackBar.isShow">
-      <v-icon>mdi-alert-circle-outline</v-icon>
-      {{ snackBar.msg }}
-    </v-snackbar>
-
   </v-container>
 </template>
 
 <script>
 import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors.js";
-import {showAlert} from "../../utils/functions.js";
-
 export default {
   name: "inspectors-page",
   components: {},
@@ -117,7 +109,6 @@ export default {
       itemsPerPage: 20,
       inspectorMenuAddVisibility: false,
       inspectorMenuChangeVisibility: false,
-      snackBar: {},
     }
   },
 
@@ -175,11 +166,11 @@ export default {
     removeInspector(ID) {
       removeInspector(ID)
           .then(() => {
-            this.snackBar = showAlert('Инспектор удален').success();
+            this.$store.commit('alert/SUCCESS', 'Инспектор успешно удален');
             this.updateInspectors();
           })
           .catch(() => {
-            this.snackBar = showAlert('Ошибка удаления').error();
+            this.$store.commit('alert/ERROR', 'Ошибка удаления инспектора');
           })
     },
     changeInspector(inspector) {

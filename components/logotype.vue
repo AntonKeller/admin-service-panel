@@ -50,7 +50,6 @@
       </linearGradient>
     </defs>
   </svg>
-
 </template>
 
 <script>

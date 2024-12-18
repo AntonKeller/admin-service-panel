@@ -4,7 +4,6 @@ export const initial_page_state = () => ({
     assignments: [],
     selectedAssignment: {},
     fetching: false,
-    alert: {},
 });
 
 const assignments = {
@@ -16,7 +15,6 @@ const assignments = {
         GET_SELECTED_ITEM: (state) => state.selectedAssignment,
         SELECTED: (state) => state.selectedAssignment,
         GET_FETCHING: (state) => state.fetching,
-        ALERT: (state) => state.alert,
     },
     mutations: {
         RESET_SELECT(state) {
@@ -24,12 +22,6 @@ const assignments = {
         },
         SET_ASSIGNMENTS(state, payload) {
             state.assignments = payload;
-        },
-        ALERT_SUCCESS(state, payload) {
-            state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
-        },
-        ALERT_ERROR(state, payload) {
-            state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
         },
         SELECT(state, payload) {
             state.selectedAssignment = payload || initial_page_state().selectedAssignment;
@@ -40,13 +32,7 @@ const assignments = {
         REMOVE_ITEM(state, id) {
             state.assignments = state.assignments.filter(e => e._id !== id);
         },
-        SHOW_ALERT_SUCCESS(state, payload) {
-            state.alert = {type: 'teal-darken-1', msg: payload, isShow: true}
-        },
-        SHOW_ALERT_ERROR(state, payload) {
-            state.alert = {type: 'red-darken-4', msg: payload, isShow: true}
-        },
-        RESET_ASSIGNMENT_LIST(state){
+        RESET_ASSIGNMENT_LIST(state) {
             state.assignments = initial_page_state().assignments;
         },
         RESET_STORE(state) {
@@ -69,28 +55,28 @@ const assignments = {
                     console.log('assignments:', answer.data);
                     break;
                 case 403:
-                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
+                    commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
                     break;
                 default:
-                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    commit('alert/ERROR', 'Ошибка получения списка заданий' || answer.statusText, {root: true});
                     break;
             }
         },
 
         async REMOVE_ITEM({commit, getters}, payload) {
 
-            let answer = await removeAssignment(payload, getters.GET_TOKEN);
+            let answer = await removeAssignment(payload);
 
             switch (answer.status) {
                 case 200:
                     commit('REMOVE_ITEM', payload);
-                    commit('SHOW_ALERT_SUCCESS', 'Успешно удалено' || answer.statusText);
+                    commit('alert/ERROR', 'Успешно удалено' || answer.statusText, {root: true});
                     break;
                 case 403:
-                    commit('SHOW_ALERT_ERROR', 'Отказано в доступе' || answer.statusText);
+                    commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
                     break;
                 default:
-                    commit('SHOW_ALERT_ERROR', 'Ошибка запроса' || answer.statusText);
+                    commit('alert/ERROR', 'Ошибка запроса' || answer.statusText, {root: true});
                     break;
             }
         }
