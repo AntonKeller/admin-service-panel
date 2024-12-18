@@ -1,11 +1,7 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6">
-      <v-card
-          variant="text"
-          max-width="1024"
-          :loading="getFetchingDataStatus"
-      >
+    <v-sheet class="ml-2 mt-2" max-width="1700">
+      <v-card variant="flat" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
 
@@ -36,7 +32,11 @@
               />
             </v-sheet>
           </div>
+        </v-card-item>
 
+        <v-card-item class="bg-grey-lighten-4" />
+
+        <v-card-item>
           <v-sheet style="min-height: 200px" class="mt-2">
             <v-table style="max-height: 77vh" density="default" fixed-header>
               <thead v-if="!getFetchingDataStatus">
@@ -79,18 +79,24 @@
             <v-divider/>
           </v-sheet>
         </v-card-item>
+
+        <v-card-item class="bg-grey-lighten-4" />
+
+        <v-card-item>
+          <div class="d-flex align-center mt-4">
+            <v-pagination
+                v-model="currentPage"
+                density="comfortable"
+                color="blue-grey-darken-2"
+                show-first-last-page
+                :length="totalPages"
+                :total-visible="8"
+            />
+          </div>
+        </v-card-item>
       </v-card>
 
-      <div class="d-flex align-center mt-4">
-        <v-pagination
-            v-model="currentPage"
-            density="comfortable"
-            color="blue-grey-darken-2"
-            show-first-last-page
-            :length="totalPages"
-            :total-visible="8"
-        />
-      </div>
+
     </v-sheet>
   </v-container>
 </template>

@@ -23,7 +23,8 @@
             <v-btn
                 icon="mdi-arrow-collapse-left"
                 color="blue-grey-darken-3"
-                density="default"
+                size="small"
+                density="comfortable"
                 variant="text"
                 rounded
                 @click.stop="rail = !rail"
@@ -60,9 +61,9 @@
         </v-list>
       </v-navigation-drawer>
 
-      <v-app-bar></v-app-bar>
+      <v-app-bar elevation="0"></v-app-bar>
 
-      <v-main scrollable>
+      <v-main scrollable class="bg-grey-lighten-4">
         <slot/>
       </v-main>
 
