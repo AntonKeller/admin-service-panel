@@ -16,17 +16,14 @@
                 prepend-avatar="https://randomuser.me/api/portraits/men/1.jpg"
                 :title="profile.fullName"
                 :subtitle="profile.email"
-                to="/manager-menu/profile"
-                @click="activeItem = 'profile'"
-                :active="activeItem === 'profile'"
             />
             <v-btn
                 icon="mdi-arrow-collapse-left"
                 color="blue-grey-darken-3"
                 size="small"
-                density="comfortable"
                 variant="text"
                 rounded
+                :class="rail ? 'd-none' : ''"
                 @click.stop="rail = !rail"
             >
               <v-icon/>
@@ -58,12 +55,32 @@
               />
             </template>
           </v-list-item>
+
         </v-list>
+
+        <template #append>
+          <v-btn
+              color="blue-grey-darken-3"
+              append-icon="mdi-logout"
+              variant="tonal"
+              text="Выйти"
+              block
+              @click="logout"
+          />
+        </template>
       </v-navigation-drawer>
 
-      <v-app-bar elevation="0"></v-app-bar>
+      <v-app-bar elevation="0">
+        <v-card class="d-flex justify-end bg-grey-lighten-4" style="min-width: 100%">
+          <v-card-item>
+            <v-btn icon="mdi-cog-outline" class="ml-auto" rounded @click="navigateToProfile">
+              <v-icon/>
+            </v-btn>
+          </v-card-item>
+        </v-card>
+      </v-app-bar>
 
-      <v-main scrollable class="bg-grey-lighten-4">
+      <v-main>
         <slot/>
       </v-main>
 
@@ -74,6 +91,7 @@
 <script>
 import {navItems} from '../configs/./navigate-items';
 import {getProfile} from "../utils/api/api_profile";
+import {navigateTo} from "nuxt/app";
 
 export default {
 
@@ -82,16 +100,10 @@ export default {
   data() {
     return {
       drawer: true,
-      rail: true,
+      rail: false,
       activeItem: null,
       profile: {},
       navItems,
-    }
-  },
-
-  watch: {
-    drawer() {
-      console.log('this.drawer:', this.drawer);
     }
   },
 
@@ -107,9 +119,18 @@ export default {
     whichRouteIsActive() {
       return this.navItems?.find(item => this.$route.fullPath.indexOf(item.route) !== -1)?._id;
     },
+
+    navigateToProfile() {
+      navigateTo('/manager-menu/profile');
+    },
+
     async getProfile() {
       const response = await getProfile();
       this.profile = response.data;
+    },
+
+    logout() {
+      localStorage.removeItem('accessToken');
     }
   }
 

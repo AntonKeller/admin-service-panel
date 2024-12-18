@@ -1,81 +1,88 @@
 <template>
   <v-container fluid>
-    <v-card class="mx-auto" variant="text" :loading="fetching">
+    <v-sheet class="ml-2 mt-2 " max-width="1280">
+      <v-card variant="flat" class="bg-grey-lighten-5" :loading="fetching">
 
-      <v-card-title>Заказчики</v-card-title>
+        <v-card-title>Заказчики</v-card-title>
 
-      <v-card-item>
+        <v-card-item>
 
-        <div class="d-flex align-center">
-          <v-btn
-              variant="tonal"
-              color="blue-darken-4"
-              prepend-icon="mdi-plus-box-multiple-outline"
-              @click="menuAddCustomerIsShow = true"
-          >
-            Добавить
-            <v-tooltip activator="parent">
-              Добавить нового заказчика
-            </v-tooltip>
-          </v-btn>
-          <v-sheet width="550">
-            <v-text-field
-                v-model="searchText"
-                prepend-inner-icon="mdi-magnify"
-                variant="solo-filled"
-                label="Поиск заказчика"
-                density="compact"
-                class="ml-2"
-                flat
-                hide-details
-                single-line
-            />
-          </v-sheet>
-        </div>
-
-        <v-sheet style="min-height: 600px" class="mt-2">
-          <v-table height="77vh" density="comfortable" fixed-header>
-            <thead v-if="!fetching">
-            <tr>
-              <th>Наименование</th>
-              <th>ИНН</th>
-              <th>Email</th>
-              <th>Номер тел.</th>
-              <th>Юридический адрес</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody v-if="!fetching">
-            <tr
-                v-for="(customer, i) of customersSlice"
-                :key="customer._id"
-                @click="menuChangeCustomerShow(customer)"
+          <div class="d-flex align-center">
+            <v-btn
+                variant="tonal"
+                color="blue-darken-4"
+                prepend-icon="mdi-plus-box-multiple-outline"
+                @click="menuAddCustomerIsShow = true"
             >
-              <td>{{ customer.fullName }}</td>
-              <td>{{ customer.inn }}</td>
-              <td>{{ customer.email }}</td>
-              <td>{{ customer.phoneNumber }}</td>
-              <td>{{ customer.address }}</td>
-              <td style="min-width: 65px; width: 65px; max-width: 65px">
-                <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
-              </td>
-            </tr>
-            </tbody>
-          </v-table>
-        </v-sheet>
-      </v-card-item>
-    </v-card>
+              Добавить
+              <v-tooltip activator="parent">
+                Добавить нового заказчика
+              </v-tooltip>
+            </v-btn>
+            <v-sheet width="550">
+              <v-text-field
+                  v-model="searchText"
+                  prepend-inner-icon="mdi-magnify"
+                  variant="solo-filled"
+                  label="Поиск заказчика"
+                  density="compact"
+                  class="ml-2"
+                  flat
+                  hide-details
+                  single-line
+              />
+            </v-sheet>
+          </div>
 
-    <div class="d-flex align-center mt-4">
-      <v-pagination
-          v-model="currentPage"
-          density="comfortable"
-          color="blue-grey-darken-2"
-          show-first-last-page
-          :length="totalPages"
-          :total-visible="8"
-      />
-    </div>
+          <v-sheet style="min-height: 200px" class="mt-2">
+            <v-table max-height="77vh" density="default" fixed-header>
+              <thead v-if="!fetching">
+              <tr>
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>Email</th>
+                <th>Номер тел.</th>
+                <th>Юридический адрес</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody v-if="!fetching">
+              <tr
+                  v-for="(customer, i) of customersSlice"
+                  :key="customer._id"
+                  @click="menuChangeCustomerShow(customer)"
+                  class="text-caption row-hover"
+              >
+                <td>{{ customer.fullName }}</td>
+                <td>{{ customer.inn }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phoneNumber }}</td>
+                <td>{{ customer.address }}</td>
+                <td style="min-width: 65px; width: 65px; max-width: 65px">
+                  <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
+                </td>
+              </tr>
+              </tbody>
+            </v-table>
+          </v-sheet>
+        </v-card-item>
+
+        <v-card-item>
+          <div class="d-flex align-center mt-4">
+            <v-pagination
+                v-model="currentPage"
+                density="comfortable"
+                color="blue-grey-darken-2"
+                show-first-last-page
+                :length="totalPages"
+                :total-visible="8"
+            />
+          </div>
+        </v-card-item>
+      </v-card>
+    </v-sheet>
+
+
 
     <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
       <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>

@@ -38,7 +38,12 @@ body::-webkit-scrollbar {
   border-radius: 6px;
 }
 
-tr:hover > td:not(:last-child) {
-  text-decoration: underline;
+.row-hover:hover {
+  background-color: #fffff1;
   cursor: pointer;
 }
+
+//tr:hover > td:not(:last-child) {
+//  text-decoration: underline;
+//  cursor: pointer;
+//}

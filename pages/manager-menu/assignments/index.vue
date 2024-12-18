@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-2 mt-2" max-width="1700">
+    <v-sheet class="ml-2 mt-2" max-width="1280">
       <v-card variant="flat" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
@@ -8,6 +8,7 @@
         <v-card-item>
           <div class="d-flex align-center">
             <v-btn
+                density="default"
                 variant="tonal"
                 color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
@@ -25,7 +26,7 @@
                   variant="solo-filled"
                   label="Поиск заданий"
                   density="compact"
-                  class="ml-2"
+                  class="ml-4"
                   flat
                   hide-details
                   single-line
@@ -34,11 +35,9 @@
           </div>
         </v-card-item>
 
-        <v-card-item class="bg-grey-lighten-4" />
-
         <v-card-item>
           <v-sheet style="min-height: 200px" class="mt-2">
-            <v-table style="max-height: 77vh" density="default" fixed-header>
+            <v-table max-height="77vh" density="default" fixed-header>
               <thead v-if="!getFetchingDataStatus">
               <tr>
                 <th>Заголовок</th>
@@ -79,8 +78,6 @@
             <v-divider/>
           </v-sheet>
         </v-card-item>
-
-        <v-card-item class="bg-grey-lighten-4" />
 
         <v-card-item>
           <div class="d-flex align-center mt-4">
@@ -209,9 +206,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.row-hover:hover {
-  background-color: #fffff1;
-}
-</style>

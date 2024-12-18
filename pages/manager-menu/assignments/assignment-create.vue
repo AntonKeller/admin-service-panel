@@ -1,11 +1,7 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6">
-      <v-card
-          variant="text"
-          min-width="400"
-          max-width="1024"
-      >
+    <v-sheet class="ml-2 mt-2" min-width="400" max-width="1024">
+      <v-card variant="flat">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div>Новое задание</div>
@@ -413,7 +409,7 @@ import {fetchContracts, removeContract} from "../../../utils/api/api_contracts.j
 import {fetchCustomers, removeCustomer} from "../../../utils/api/api_customers.js";
 import {addNewAssignment} from "../../../utils/api/api_assignments.js";
 import {unixDateToLongDateString} from "../../../utils/functions.js";
-import {navigateTo} from "nuxt/app.js";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "assignment-add-page",
