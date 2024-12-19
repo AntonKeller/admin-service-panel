@@ -2,7 +2,6 @@
   <v-container fluid>
     <v-sheet min-width="400" max-width="1024">
       <v-card variant="text">
-
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div class="d-flex ga-1 align-center">
@@ -37,10 +36,9 @@
                 <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
               </v-label>
             </div>
-            <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
+            <v-sheet class="rounded-lg pr-1" style="height: 100px; overflow-y: scroll">
               {{ selectedAssignment?.description }}
             </v-sheet>
-            <v-divider class="my-1"/>
             <div class="d-flex ga-4 align-center py-1">
               <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
                 <v-btn

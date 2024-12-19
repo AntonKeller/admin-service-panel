@@ -27,9 +27,9 @@
                   variant="solo-filled"
                   density="compact"
                   class="ml-4"
-                  flat
                   hide-details
                   single-line
+                  flat
               />
             </v-sheet>
           </div>

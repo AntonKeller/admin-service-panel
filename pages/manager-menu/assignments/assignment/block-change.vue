@@ -1,11 +1,7 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6">
-      <v-card
-          variant="text"
-          min-width="400"
-          max-width="1024"
-      >
+    <v-sheet min-width="400" max-width="1024">
+      <v-card variant="text">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div>Редактирование адреса ТЗ</div>

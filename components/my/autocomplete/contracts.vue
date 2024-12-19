@@ -2,8 +2,8 @@
   <div class="d-flex ga-1">
     <v-autocomplete
         v-bind="$attrs"
-        :loading="contractsFetching"
         :items="contracts"
+        :loading="contractsFetching"
         :custom-filter="contractSearchFilter"
         @update:menu="onUpdateMenuContracts"
         prepend-inner-icon="mdi-file-document-edit"
