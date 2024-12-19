@@ -1,31 +1,13 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6">
-      <v-card
-          variant="text"
-          min-width="400"
-          max-width="1024"
-      >
+    <v-sheet class="ml-8 mt-6" min-width="400" max-width="1024">
+      <v-card variant="flat">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div class="d-flex ga-1 align-center">
               {{ selectedAssignment?.title }}
               [ Техническое задание ]
             </div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                text="Тест alert"
-                variant="text"
-                rounded="lg"
-            />
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                text="Тест alert"
-                variant="text"
-                rounded="lg"
-            />
             <v-btn
                 density="comfortable"
                 color="blue-grey-darken-2"
@@ -296,8 +278,9 @@ export default {
             this.$store.commit('alert/SUCCESS', 'Адрес успешно удален');
           })
           .catch(err => {
-            this.$store.commit('alert/ERROR', 'Не удалось удалить адрес');+
-            console.log('Ошибка удаления адреса', err);
+            this.$store.commit('alert/ERROR', 'Не удалось удалить адрес');
+            +
+                console.log('Ошибка удаления адреса', err);
           })
     },
   }

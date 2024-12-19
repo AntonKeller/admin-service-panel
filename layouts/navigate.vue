@@ -59,12 +59,11 @@
         </v-list>
 
         <template #append>
-          <v-btn
-              color="blue-grey-darken-3"
-              append-icon="mdi-logout"
-              variant="tonal"
-              text="Выйти"
-              block
+          <v-list-item
+              prepend-icon="mdi-logout"
+              title="Выход"
+              variant="text"
+              class="bg-grey-darken-3 mb-1"
               @click="logout"
           />
         </template>
@@ -91,7 +90,7 @@
 <script>
 import {navItems} from '../configs/./navigate-items';
 import {getProfile} from "../utils/api/api_profile";
-import {navigateTo} from "nuxt/app";
+import {navigateTo, reloadNuxtApp} from "nuxt/app";
 
 export default {
 
@@ -131,6 +130,7 @@ export default {
 
     logout() {
       localStorage.removeItem('accessToken');
+      reloadNuxtApp();
     }
   }
 
