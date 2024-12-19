@@ -243,7 +243,7 @@ export default {
 
     unixDateToMiddleDateString,
 
-    selectBlock(block) {
+    selectAssignmentBlock(block) {
       // Записываем в session storage и в vuex store
       sessionStorage.selectedAssignmentBlock = JSON.stringify(block);
       this.$store.commit('assignmentBlocks/SELECT', _.cloneDeep(block));
@@ -254,12 +254,12 @@ export default {
     },
 
     navigateToBlockCard(block) {
-      this.selectBlock(block);
+      this.selectAssignmentBlock(block);
       navigateTo('/manager-menu/assignments/assignment/block');
     },
 
     navigateToBlockChange(block) {
-      this.selectBlock(block);
+      this.selectAssignmentBlock(block);
       navigateTo('/manager-menu/assignments/assignment/block-change');
     },
 

@@ -26,9 +26,7 @@
                 @click.stop="rail = !rail"
             >
               <v-icon/>
-              <v-tooltip activator="parent">
-                Свернуть меню
-              </v-tooltip>
+              <v-tooltip activator="parent">Свернуть меню</v-tooltip>
             </v-btn>
           </div>
 
@@ -46,6 +44,7 @@
               @click="activeItem = item._id"
           >
             <template v-slot:append>
+              <v-tooltip activator="parent">...</v-tooltip>
               <v-badge
                   v-show="item.badge.show"
                   :color="item.badge.color"
@@ -58,13 +57,17 @@
         </v-list>
 
         <template #append>
-          <v-list-item
-              class="bg-grey-darken-3 mb-1"
-              prepend-icon="mdi-logout"
-              variant="text"
-              title="Выход"
-              @click="logout"
-          />
+          <v-list variant="text" density="default" nav rounded="lg">
+            <v-list-item
+                class="bg-grey-lighten-4"
+                prepend-icon="mdi-logout"
+                variant="text"
+                title="Выход"
+                @click="logout"
+            >
+              <v-tooltip activator="parent">Выйти из системы</v-tooltip>
+            </v-list-item>
+          </v-list>
         </template>
       </v-navigation-drawer>
 
