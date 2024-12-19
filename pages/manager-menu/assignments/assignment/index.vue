@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6" min-width="400" max-width="1024">
-      <v-card variant="flat">
+    <v-sheet min-width="400" max-width="1024">
+      <v-card variant="text">
+
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div class="d-flex ga-1 align-center">
@@ -24,112 +25,107 @@
           </div>
         </v-card-title>
 
-        <v-card-text class="d-flex flex-column ga-4 mt-2">
-          <div class="d-flex ga-4 flex-wrap">
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-file-sign"/>
-              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
-            </v-label>
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-account-tie"/>
-              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-            </v-label>
-          </div>
-          <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
-            {{ selectedAssignment?.description }}
-          </v-sheet>
-          <v-divider class="my-1"/>
-          <div class="d-flex ga-4 align-center py-1">
-            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-              <v-btn
-                  prepend-icon="mdi-plus-box-multiple-outline"
-                  @click="navigateToBlockCreate"
-              >
-                Добавить адрес
-                <v-tooltip activator="parent">
-                  Добавить новый адрес нас осмотр
-                </v-tooltip>
-              </v-btn>
-            </v-btn-group>
-            <v-text-field
-                v-model="searchText"
-                prepend-inner-icon="mdi-magnify"
-                variant="solo-filled"
-                density="compact"
-                label="Поиск"
-                class="ml-2"
-                hide-details
-                single-line
-                flat
-            />
-          </div>
-          <v-sheet>
-            <v-divider/>
-            <div v-if="fetching" class="d-flex align-center justify-center h-100">
-              <v-progress-circular
-                  :size="140"
-                  :width="3"
-                  color="teal"
-                  indeterminate
-              >
-                загрузка...
-              </v-progress-circular>
+        <v-card-item>
+          <v-sheet class="d-flex flex-column ga-4 mt-2">
+            <div class="d-flex ga-4 flex-wrap">
+              <v-label class="text-body-2">
+                <v-icon icon="mdi-file-sign"/>
+                <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
+              </v-label>
+              <v-label class="text-body-2">
+                <v-icon icon="mdi-account-tie"/>
+                <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+              </v-label>
             </div>
-            <v-table v-if="!fetching" height="31vh" density="comfortable" fixed-header
-                     class="bg-grey-lighten-4 text-caption">
-              <thead>
-              <tr>
-                <th>Адрес</th>
-                <th>Начало</th>
-                <th>Инспектор</th>
-                <th>Контакты инспектора</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                  v-for="block of blocksSLice"
-                  :key="block._id"
-                  @click="navigateToBlockCard(block)"
-              >
-                <td>{{ block?.address }}</td>
-                <td style="min-width: 190px; width: 190px; max-width: 190px">
-                  {{ unixDateToMiddleDateString(block?.startDate) }}
-                </td>
-                <td>
-                  {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
-                </td>
-                <td>
-                  <div>
-                    {{ block?.inspector?.phoneNumber || '-' }}
-                  </div>
-                  <div>
-                    {{ block?.inspector?.email || '-' }}
-                  </div>
-                </td>
-                <td style="min-width: 90px; width: 90px; max-width: 90px">
-                  <div class="d-flex ga-2">
-                    <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToBlockChange(block)"/>
-                    <my-button-table-remove prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
-            <v-divider/>
-            <div class="d-flex align-center mt-4">
-              <v-pagination
-                  v-model="currentPage"
-                  color="blue-grey-darken-2"
-                  density="comfortable"
-                  show-first-last-page
-                  :length="totalPages"
-                  :total-visible="8"
+            <v-sheet class="rounded-lg pr-1" style="height: 140px; overflow-y: scroll">
+              {{ selectedAssignment?.description }}
+            </v-sheet>
+            <v-divider class="my-1"/>
+            <div class="d-flex ga-4 align-center py-1">
+              <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+                <v-btn
+                    prepend-icon="mdi-plus-box-multiple-outline"
+                    @click="navigateToBlockCreate"
+                >
+                  Добавить адрес
+                  <v-tooltip activator="parent">
+                    Добавить новый адрес нас осмотр
+                  </v-tooltip>
+                </v-btn>
+              </v-btn-group>
+              <v-text-field
+                  v-model="searchText"
+                  prepend-inner-icon="mdi-magnify"
+                  variant="solo-filled"
+                  density="compact"
+                  label="Поиск"
+                  class="ml-2"
+                  hide-details
+                  single-line
+                  flat
               />
             </div>
           </v-sheet>
-        </v-card-text>
+        </v-card-item>
 
+        <v-card-item>
+          <v-divider/>
+          <v-table v-if="!fetching" style="max-height: 31vh" density="comfortable" fixed-header>
+            <thead>
+            <tr>
+              <th>Адрес</th>
+              <th>Начало</th>
+              <th>Инспектор</th>
+              <th>Контакты инспектора</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="block of blocksSLice"
+                :key="block._id"
+                class="text-caption row-hover"
+                @click="navigateToBlockCard(block)"
+            >
+              <td>{{ block?.address }}</td>
+              <td style="min-width: 190px; width: 190px; max-width: 190px">
+                {{ unixDateToMiddleDateString(block?.startDate) }}
+              </td>
+              <td>
+                {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
+              </td>
+              <td>
+                <div>
+                  {{ block?.inspector?.phoneNumber || '-' }}
+                </div>
+                <div>
+                  {{ block?.inspector?.email || '-' }}
+                </div>
+              </td>
+              <td style="min-width: 90px; width: 90px; max-width: 90px">
+                <div class="d-flex ga-2">
+                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToBlockChange(block)"/>
+                  <my-button-table-remove prompt="Удалить" @click:yes="removeBlockById(block._id)"/>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+          <v-divider/>
+        </v-card-item>
+
+        <v-card-item>
+          <div class="d-flex align-center">
+            <v-pagination
+                v-model="currentPage"
+                color="blue-grey-darken-2"
+                density="comfortable"
+                show-first-last-page
+                :length="totalPages"
+                :total-visible="8"
+            />
+          </div>
+        </v-card-item>
       </v-card>
     </v-sheet>
   </v-container>

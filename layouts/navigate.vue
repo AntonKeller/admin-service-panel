@@ -8,7 +8,6 @@
           @click="rail = false"
           elevation="0"
       >
-
         <v-list variant="text" density="default" nav rounded="lg">
 
           <div class="d-flex align-center justify-space-between">
@@ -60,10 +59,10 @@
 
         <template #append>
           <v-list-item
-              prepend-icon="mdi-logout"
-              title="Выход"
-              variant="text"
               class="bg-grey-darken-3 mb-1"
+              prepend-icon="mdi-logout"
+              variant="text"
+              title="Выход"
               @click="logout"
           />
         </template>

@@ -1,17 +1,17 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-2 mt-2" max-width="1280">
-      <v-card variant="flat" :loading="getFetchingDataStatus">
+    <v-sheet min-width="400" max-width="1280">
+      <v-card variant="text" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
 
         <v-card-item>
           <div class="d-flex align-center">
             <v-btn
+                prepend-icon="mdi-plus-box-multiple-outline"
+                color="blue-darken-4"
                 density="default"
                 variant="tonal"
-                color="blue-darken-4"
-                prepend-icon="mdi-plus-box-multiple-outline"
                 @click="navigateToAddMenu"
             >
               Добавить
@@ -23,8 +23,8 @@
               <v-text-field
                   v-model="searchText"
                   prepend-inner-icon="mdi-magnify"
-                  variant="solo-filled"
                   label="Поиск заданий"
+                  variant="solo-filled"
                   density="compact"
                   class="ml-4"
                   flat
@@ -36,51 +36,50 @@
         </v-card-item>
 
         <v-card-item>
-          <v-sheet style="min-height: 200px" class="mt-2">
-            <v-table max-height="77vh" density="default" fixed-header>
-              <thead v-if="!getFetchingDataStatus">
-              <tr>
-                <th>Заголовок</th>
-                <th>Договор с заказчиком</th>
-                <th>Заказчик</th>
-                <th>Описание</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody v-if="!getFetchingDataStatus">
-              <tr
-                  v-for="(assignment, i) of assignmentsSLice"
-                  :key="assignment._id"
-                  class="text-caption row-hover"
-                  @click="navigateToCardMenu(assignment)"
-              >
-                <td>{{ assignment.title }}</td>
-                <td>
-                  <v-chip color="deep-purple-darken-2" density="comfortable" label>
-                    {{ getContractString(assignment.contract) }}
-                  </v-chip>
-                </td>
-                <td>
-                  <v-chip color="blue-darken-3" density="comfortable" label>
-                    {{ assignment?.customer?.shortName || '-' }}
-                  </v-chip>
-                </td>
-                <td>{{ slicer(assignment.description, 50) }}</td>
-                <td style="min-width: 90px; width: 90px; max-width: 90px">
-                  <div class="d-flex ga-2">
-                    <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
-                    <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
-            <v-divider/>
-          </v-sheet>
+          <v-divider/>
+          <v-table style="max-height: 77vh" density="default" fixed-header>
+            <thead v-if="!getFetchingDataStatus">
+            <tr>
+              <th>Заголовок</th>
+              <th>Договор с заказчиком</th>
+              <th>Заказчик</th>
+              <th>Описание</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody v-if="!getFetchingDataStatus">
+            <tr
+                v-for="(assignment, i) of assignmentsSLice"
+                :key="assignment._id"
+                class="text-caption row-hover"
+                @click="navigateToCardMenu(assignment)"
+            >
+              <td>{{ assignment.title }}</td>
+              <td>
+                <v-chip color="deep-purple-darken-2" density="comfortable" label>
+                  {{ getContractString(assignment.contract) }}
+                </v-chip>
+              </td>
+              <td>
+                <v-chip color="blue-darken-3" density="comfortable" label>
+                  {{ assignment?.customer?.shortName || '-' }}
+                </v-chip>
+              </td>
+              <td>{{ slicer(assignment.description, 50) }}</td>
+              <td style="min-width: 90px; width: 90px; max-width: 90px">
+                <div class="d-flex ga-2">
+                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
+                  <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+          <v-divider/>
         </v-card-item>
 
         <v-card-item>
-          <div class="d-flex align-center mt-4">
+          <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
                 density="comfortable"
