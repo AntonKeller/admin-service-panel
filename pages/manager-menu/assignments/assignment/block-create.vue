@@ -24,46 +24,50 @@
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
-          <v-sheet min-height="200px" height="60vh" class="pr-2" style="overflow-y: scroll">
-            <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+          <!--          <v-sheet min-height="200px" height="60vh" class="pr-2" style="overflow-y: scroll">-->
+          <!--          </v-sheet>-->
+          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
 
-              <v-row no-gutters>
-                <v-col :cols="6">
-                  <!--              Котактное заголовок-->
-                  <my-text-field
-                      v-model="block.title"
-                      label="Заголовок"
-                  />
-                </v-col>
-                <v-col :cols="6">
-                  <!--              Котактное адрес-->
-                  <my-text-field
-                      v-model="block.address"
-                      label="Адрес осмотра"
-                  />
-                </v-col>
-              </v-row>
-
-              <v-col :cols="12">
+            <v-row no-gutters>
+              <v-col :cols="6">
+                <my-text-field
+                    v-model="block.title"
+                    label="Заголовок"
+                />
+              </v-col>
+              <v-col :cols="6">
                 <my-date-picker v-model="block.startDate" label="Дата начала"/>
               </v-col>
+            </v-row>
 
+            <v-row no-gutters>
               <v-col :cols="12">
+                <my-text-field
+                    v-model="block.address"
+                    label="Адрес осмотра"
+                />
+              </v-col>
+            </v-row>
 
+            <v-row no-gutters>
+              <v-col :cols="6">
+                <myAutocompletePledgers v-model="block.pledger"/>
               </v-col>
 
-              <v-col :cols="12">
+              <v-col :cols="6">
                 <!--              Котактное лицо TODO: создать-->
-                <!--                <myAutocompleteContact v-model="block.contact"/>-->
+<!--                                <myAutocompleteContacts v-model="block.contact"/>-->
               </v-col>
+            </v-row>
 
+            <v-row no-gutters>
               <v-col :cols="12">
                 <!--              Инспектор TODO: создать-->
-                <!--                <myAutocompleteInspector v-model="block.inspector"/>-->
+<!--                                <myAutocompleteInspectors v-model="block.inspector"/>-->
               </v-col>
+            </v-row>
 
-            </v-form>
-          </v-sheet>
+          </v-form>
         </v-card-item>
 
         <v-card-actions>
@@ -104,31 +108,6 @@ export default {
   data() {
     return {
 
-      pledger: {
-        _id: null,
-        firstName: null,
-        surName: null,
-        lastName: null,
-        inn: null,
-        phoneNumber: null,
-      },
-
-      contact: {
-        _id: null,
-        firstName: null,
-        surName: null,
-        lastName: null,
-        phoneNumber: null,
-      },
-
-      inspector: {
-        _id: null,
-        firstName: null,
-        surName: null,
-        lastName: null,
-        phoneNumber: null,
-      },
-
       block: {
         _id: null,
         title: null, // Заголовок
@@ -163,33 +142,6 @@ export default {
     }
   },
 
-  computed: {
-    pledger: {
-      get() {
-
-      },
-      set(value) {
-
-      }
-    },
-    contact: {
-      get() {
-
-      },
-      set(value) {
-
-      }
-    },
-    inspector: {
-      get() {
-
-      },
-      set(value) {
-
-      }
-    },
-  },
-
   mounted() {
     this.clear();
     this.fetchInspectors();
@@ -202,6 +154,7 @@ export default {
         _id: null,
         title: null,
         startDate: null,
+
         loanAgreement: null,
         loanAgreementDate: null,
         pledgeAgreement: null,

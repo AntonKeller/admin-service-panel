@@ -3,10 +3,19 @@ import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify';
 export default defineNuxtConfig({
 
     devtools: {
-        enabled: true
+        enabled: false
     },
 
     ssr: false,
+
+    // routeRules: {
+        // '/manager-menu/assignments': {
+        //     prerender: true,
+        // },
+        // '/manager-menu/assignments': {
+        //     swr: true,
+        // }
+    // },
 
     app: {
         // mode: "default",
@@ -14,15 +23,11 @@ export default defineNuxtConfig({
             name: 'page',
             mode: 'out-in'
         },
-
         head: {
-
             title: '',
-
             htmlAttrs: {
                 lang: 'ru'
             },
-
             meta: [
                 {
                     name: 'viewport',
@@ -40,7 +45,6 @@ export default defineNuxtConfig({
                     content: 'ООО "Рога и копыта"'
                 }
             ],
-
             link: [
                 {
                     rel: "preconnect",
@@ -57,7 +61,7 @@ export default defineNuxtConfig({
                 {
                     rel: 'icon',
                     type: 'image/x-icon',
-                    href: '/favicon_16x16.ico'
+                    // href: '/favicon_16x16.ico'
                 },
                 {
                     rel: "stylesheet",
@@ -71,42 +75,21 @@ export default defineNuxtConfig({
         typeCheck: true
     },
 
+    build: {
+        transpile: ['vuetify'],
+    },
+
     css: [
-        '/assets/css/main.scss'
+        '/assets/css/main.scss',
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [],
 
-    // '~/plugins/v-mask-plugin.js',   // плагин для масок
-
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
-    // build: {
-    //     transpile: ['vuetify'],
-    //     vue: {
-    //         compilerOptions: {
-    //             isCustomElement: tag => {
-    //                 // Указываем условия для кастомных элементов
-    //                 return ['assignment-add', 'component-assignment-change'].includes(tag)
-    //             }
-    //         }
-    //     }
-    // },
-
     vite: {
-        // ssr: {
-        //     noExternal: ["moment"]
-        // },
-        // rollup: {
-        //     external: ['moment'],
-        //     output: {
-        //         globals: {
-        //             moment: 'moment'
-        //         }
-        //     },
-        // },
         vue: {
             template: {
                 transformAssetUrls,
