@@ -1,38 +1,42 @@
 <template>
   <v-container fluid>
-    <v-card variant="text">
-      <v-card-title>Инспекторы</v-card-title>
-      <v-card-item>
+    <v-sheet min-width="400" max-width="1280">
+      <v-card variant="text">
 
-        <div class="d-flex align-center">
-          <v-btn
-              variant="tonal"
-              color="blue-darken-4"
-              prepend-icon="mdi-plus-box-multiple-outline"
-              @click="inspectorMenuAddVisibility = true"
-          >
-            Добавить
-            <v-tooltip activator="parent">
-              Добавить нового инспектора
-            </v-tooltip>
-          </v-btn>
-          <v-sheet width="550">
-            <v-text-field
-                v-model="searchText"
-                prepend-inner-icon="mdi-magnify"
-                variant="solo-filled"
-                label="Поиск инспектора"
-                density="compact"
-                class="ml-2"
-                flat
-                hide-details
-                single-line
-            />
-          </v-sheet>
-        </div>
+        <v-card-title>Инспекторы</v-card-title>
 
-        <v-sheet style="min-height: 600px" class="mt-2">
-          <v-table height="77vh" density="comfortable" fixed-header>
+        <v-card-item>
+          <div class="d-flex align-center">
+            <v-btn
+                variant="tonal"
+                color="blue-darken-4"
+                prepend-icon="mdi-plus-box-multiple-outline"
+                @click="inspectorMenuAddVisibility = true"
+            >
+              Добавить
+              <v-tooltip activator="parent">
+                Добавить нового инспектора
+              </v-tooltip>
+            </v-btn>
+            <v-sheet width="550">
+              <v-text-field
+                  v-model="searchText"
+                  prepend-inner-icon="mdi-magnify"
+                  variant="solo-filled"
+                  label="Поиск инспектора"
+                  density="compact"
+                  class="ml-2"
+                  flat
+                  hide-details
+                  single-line
+              />
+            </v-sheet>
+          </div>
+        </v-card-item>
+
+        <v-card-item>
+          <v-divider/>
+          <v-table style="max-height: 77vh" density="comfortable" fixed-header>
             <thead v-if="!fetching">
             <tr>
               <th>№</th>
@@ -62,20 +66,23 @@
             </tr>
             </tbody>
           </v-table>
-        </v-sheet>
-      </v-card-item>
-    </v-card>
+          <v-divider/>
+        </v-card-item>
 
-    <div class="d-flex align-center mt-4">
-      <v-pagination
-          v-model="currentPage"
-          density="comfortable"
-          color="blue-grey-darken-2"
-          show-first-last-page
-          :length="totalPages"
-          :total-visible="8"
-      />
-    </div>
+        <v-card-item>
+          <div class="d-flex align-center">
+            <v-pagination
+                v-model="currentPage"
+                density="comfortable"
+                color="blue-grey-darken-2"
+                show-first-last-page
+                :length="totalPages"
+                :total-visible="8"
+            />
+          </div>
+        </v-card-item>
+      </v-card>
+    </v-sheet>
 
     <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
       <inspector-add @add:success="onInspectorAddSuccess"

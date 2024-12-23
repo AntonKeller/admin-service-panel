@@ -1,12 +1,11 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-2 mt-2 " max-width="1280">
-      <v-card variant="flat" class="bg-grey-lighten-5" :loading="fetching">
+    <v-sheet min-width="400" max-width="1280">
+      <v-card variant="text" :loading="fetching">
 
         <v-card-title>Заказчики</v-card-title>
 
         <v-card-item>
-
           <div class="d-flex align-center">
             <v-btn
                 variant="tonal"
@@ -33,42 +32,42 @@
               />
             </v-sheet>
           </div>
-
-          <v-sheet style="min-height: 200px" class="mt-2">
-            <v-table max-height="77vh" density="default" fixed-header>
-              <thead v-if="!fetching">
-              <tr>
-                <th>Наименование</th>
-                <th>ИНН</th>
-                <th>Email</th>
-                <th>Номер тел.</th>
-                <th>Юридический адрес</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody v-if="!fetching">
-              <tr
-                  v-for="(customer, i) of customersSlice"
-                  :key="customer._id"
-                  @click="menuChangeCustomerShow(customer)"
-                  class="text-caption row-hover"
-              >
-                <td>{{ customer.fullName }}</td>
-                <td>{{ customer.inn }}</td>
-                <td>{{ customer.email }}</td>
-                <td>{{ customer.phoneNumber }}</td>
-                <td>{{ customer.address }}</td>
-                <td style="min-width: 65px; width: 65px; max-width: 65px">
-                  <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
-          </v-sheet>
         </v-card-item>
 
         <v-card-item>
-          <div class="d-flex align-center mt-4">
+          <v-table style="max-height: 77vh" density="default" fixed-header>
+            <thead v-if="!fetching">
+            <tr>
+              <th>Наименование</th>
+              <th>ИНН</th>
+              <th>Email</th>
+              <th>Номер тел.</th>
+              <th>Юридический адрес</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody v-if="!fetching">
+            <tr
+                v-for="(customer, i) of customersSlice"
+                :key="customer._id"
+                @click="menuChangeCustomerShow(customer)"
+                class="text-caption row-hover"
+            >
+              <td>{{ customer.fullName }}</td>
+              <td>{{ customer.inn }}</td>
+              <td>{{ customer.email }}</td>
+              <td>{{ customer.phoneNumber }}</td>
+              <td>{{ customer.address }}</td>
+              <td style="min-width: 65px; width: 65px; max-width: 65px">
+                <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+        </v-card-item>
+
+        <v-card-item>
+          <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
                 density="comfortable"
