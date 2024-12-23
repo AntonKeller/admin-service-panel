@@ -28,7 +28,7 @@
           <!--          </v-sheet>-->
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
 
-            <v-row no-gutters>
+            <v-row>
               <v-col :cols="6">
                 <my-text-field
                     v-model="block.title"
@@ -56,14 +56,14 @@
 
               <v-col :cols="6">
                 <!--              Котактное лицо TODO: создать-->
-<!--                                <myAutocompleteContacts v-model="block.contact"/>-->
+                <myAutocompleteContacts v-model="block.contact"/>
               </v-col>
             </v-row>
 
             <v-row no-gutters>
               <v-col :cols="12">
                 <!--              Инспектор TODO: создать-->
-<!--                                <myAutocompleteInspectors v-model="block.inspector"/>-->
+                <myAutocompleteInspectors v-model="block.inspector"/>
               </v-col>
             </v-row>
 

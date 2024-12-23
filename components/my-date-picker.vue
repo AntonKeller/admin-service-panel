@@ -13,10 +13,10 @@
         density="compact"
         v-bind="$attrs"
     />
-    <v-btn icon="mdi-dots-horizontal" size="small" variant="text" rounded="lg">
+    <v-btn icon="mdi-calendar" size="small" variant="text" rounded="lg">
       <v-icon/>
-      <v-tooltip activator="parent" location="right">
-        Календарь
+      <v-tooltip activator="parent" location="left">
+        Открыть календарь
       </v-tooltip>
       <v-menu v-model="isVisibleMenu" activator="parent" location="bottom" transition="slide-x-transition">
         <v-locale-provider locale="ru">

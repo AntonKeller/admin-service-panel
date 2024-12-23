@@ -101,10 +101,9 @@
 </template>
 
 <script>
-import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors.js";
+import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors";
 export default {
   name: "inspectors-page",
-  components: {},
 
   data() {
     return {
