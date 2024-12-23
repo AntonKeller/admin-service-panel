@@ -85,7 +85,7 @@
     </v-sheet>
 
     <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
-      <inspector-add @add:success="onInspectorAddSuccess"
+      <my-form-inspector-add @add:success="onInspectorAddSuccess"
                      @click:close="inspectorMenuAddVisibility=false"/>
     </v-overlay>
 

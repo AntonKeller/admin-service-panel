@@ -24,49 +24,38 @@
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
-          <!--          <v-sheet min-height="200px" height="60vh" class="pr-2" style="overflow-y: scroll">-->
-          <!--          </v-sheet>-->
-          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
-
-            <v-row>
-              <v-col :cols="6">
+          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
+            <v-row dense>
+              <v-col :cols="12">
                 <my-text-field
                     v-model="block.title"
                     label="Заголовок"
                 />
               </v-col>
+
+              <v-col :cols="6">
+                <myAutocompletePledgers v-model="block.pledger"/>
+              </v-col>
+
               <v-col :cols="6">
                 <my-date-picker v-model="block.startDate" label="Дата начала"/>
               </v-col>
-            </v-row>
 
-            <v-row no-gutters>
               <v-col :cols="12">
                 <my-text-field
                     v-model="block.address"
                     label="Адрес осмотра"
                 />
               </v-col>
-            </v-row>
-
-            <v-row no-gutters>
-              <v-col :cols="6">
-                <myAutocompletePledgers v-model="block.pledger"/>
-              </v-col>
 
               <v-col :cols="6">
-                <!--              Котактное лицо TODO: создать-->
                 <myAutocompleteContacts v-model="block.contact"/>
               </v-col>
-            </v-row>
 
-            <v-row no-gutters>
-              <v-col :cols="12">
-                <!--              Инспектор TODO: создать-->
+              <v-col :cols="6">
                 <myAutocompleteInspectors v-model="block.inspector"/>
               </v-col>
             </v-row>
-
           </v-form>
         </v-card-item>
 
@@ -79,11 +68,6 @@
           />
           <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
-
-        <!--        <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">-->
-        <!--          <inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></inspector-add>-->
-        <!--        </v-overlay>-->
-
       </v-card>
     </v-sheet>
   </v-container>
@@ -92,7 +76,6 @@
 <script>
 import {sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks.js";
 import {fetchInspectors} from "../../../../utils/api/api_inspectors.js";
-import {isDate, isEmpty} from "../../../../utils/validators/functions.js";
 import {vMaska} from "maska/vue"
 import {navigateTo} from "nuxt/app";
 
@@ -121,24 +104,16 @@ export default {
       formIsValid: null,
       sendingAssignmentBlock: false,
 
-
-      pledgerList: [],
-      pledgerListFetching: false,
-      pledgerRules: [v => v && v.length > 0],
-
-      contactList: [],
-      contactListFetching: false,
-      contactRules: [v => v && v.length > 0],
-
-      inspectorList: [],
-      inspectorListFetching: false,
-      inspectorRules: [v => v && v.length > 0],
-
-
       options: {
         mask: "+7 (###) ###-##-##",
         eager: true
       },
+    }
+  },
+
+  computed: {
+    _assignmentId() {
+      return this.$store.getters['assignments/SELECTED']?._id;
     }
   },
 
@@ -152,22 +127,12 @@ export default {
     clear() {
       this.block = {
         _id: null,
-        title: null,
-        startDate: null,
-
-        loanAgreement: null,
-        loanAgreementDate: null,
-        pledgeAgreement: null,
-        pledgeAgreementDate: null,
-        inspector: null,
-        status: null,
-        pledgeAgreementName: null,
-        pledgeAgreementPosition: null,
-        pledgeAgreementCompany: null,
-        address: null,
-        contactFullName: null,
-        contactPhoneNumber: null,
-        description: null,
+        title: null, // Заголовок
+        address: null, // Адрес
+        startDate: null, // Дата начала
+        pledger: null, // Залогодатель
+        contact: null, // Контакт
+        inspector: null, // Инспектор
       }
     },
 
@@ -190,22 +155,33 @@ export default {
     },
 
     async sendBlock() {
+
       await this.$refs.form.validate();
-      if (this.formIsValid) {
-        this.sendingAssignmentBlock = true;
-        sendAssignmentBlock(this._assignmentId, this.block)
-            .then(() => {
-              this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно создан');
-              this.navigateBack();
-            })
-            .catch((err) => {
-              this.$store.commit('alert/ERROR', 'Ошибка добавления адреса осмотра');
-              console.log('Ошибка добавления', err);
-            })
-            .finally(() => {
-              this.sendingAssignmentBlock = false;
-            })
+
+      if (!this.formIsValid) {
+        this.$store.commit('alert/ERROR', 'Заполните обязательные поля!');
+        return;
       }
+
+      if (!this._assignmentId) {
+        this.$store.commit('alert/ERROR', 'Не выбранно задание для добавления блока');
+        return;
+      }
+
+      this.sendingAssignmentBlock = true;
+
+      sendAssignmentBlock(this._assignmentId, this.block)
+          .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно создан');
+            this.navigateBack();
+          })
+          .catch((err) => {
+            this.$store.commit('alert/ERROR', 'Ошибка добавления адреса осмотра');
+            console.log('Ошибка добавления', err);
+          })
+          .finally(() => {
+            this.sendingAssignmentBlock = false;
+          })
     }
   }
 }

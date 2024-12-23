@@ -11,10 +11,12 @@
     <v-card-subtitle>Заполните поля</v-card-subtitle>
 
     <v-card-item>
-      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-2 mt-2">
+      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
+
         <my-text-field v-model="inspector.firstName" label="Имя"/>
         <my-text-field v-model="inspector.surName" label="Фамилия"/>
         <my-text-field v-model="inspector.lastName" label="Отчество"/>
+
         <div class="d-flex ga-2">
           <my-text-field v-model="inspector.phoneNumber" v-mask="options" label="Номер телефона"
                          placeholder="+7 (___) ___-__-__"/>

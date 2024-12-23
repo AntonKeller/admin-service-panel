@@ -56,18 +56,22 @@
         variant="text"
         rounded="lg"
         size="small"
-        @click="contactMenuAddVisible = true"
+        @click="contactFormAddVisible = true"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить новое контактное лицо
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="contactFormAddVisible" class="d-flex align-center justify-center">
+      <my-form-contact-add @add:success="onContactAddSuccess" @click:close="contactFormAddVisible=false"/>
+    </v-overlay>
+
   </div>
 </template>
 
 <script>
-import {unixDateToLongDateString} from "../../../utils/functions.js";
 import {fetchContacts, removeContact} from "../../../utils/api/api_contacts";
 
 export default {
@@ -75,9 +79,9 @@ export default {
 
   data() {
     return {
-      contactsList: [], // TODO: Запросы и Vue вывод полей
+      contactsList: [],
       contactsFetching: false,
-      contactMenuAddVisible: false,
+      contactFormAddVisible: false,
       contactRules: [v => v || 'Выберите контактное лицо'],
     }
   },
@@ -88,7 +92,10 @@ export default {
   },
   methods: {
 
-    unixDateToLongDateString,
+    onContactAddSuccess() {
+      this.fetchContactsList();
+      this.contactFormAddVisible = false;
+    },
 
     onUpdateMenuContacts(status) {
       if (status) this.fetchContactsList();

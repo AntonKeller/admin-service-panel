@@ -50,18 +50,23 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
         icon="mdi-plus"
         variant="text"
         rounded="lg"
         size="small"
-        @click="pledgerMenuAddVisible = true"
+        @click="pledgerFormAddVisible = true"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить нового залогодателя
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="pledgerFormAddVisible" class="d-flex align-center justify-center">
+      <my-form-pledger-add @add:success="onPledgerAddSuccess" @click:close="pledgerFormAddVisible=false"/>
+    </v-overlay>
   </div>
 </template>
 
@@ -75,12 +80,18 @@ export default {
     return {
       pledgerList: [],
       pledgersFetching: false,
-      pledgerMenuAddVisible: false,
+      pledgerFormAddVisible: false,
       pledgerRules: [v => v || 'Выберите залогодателя'],
     }
   },
 
   methods: {
+
+    onPledgerAddSuccess() {
+      this.fetchPledgerList();
+      this.pledgerFormAddVisible = false;
+    },
+
     onUpdateMenuPledgers(status) {
       if (status) this.fetchPledgerList();
     },

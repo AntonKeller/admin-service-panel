@@ -56,13 +56,16 @@
         variant="text"
         rounded="lg"
         size="small"
-        @click="inspectorMenuAddVisible = true"
+        @click="inspectorFormAddVisible = true"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить инспектора
       </v-tooltip>
     </v-btn>
+    <v-overlay v-model="inspectorFormAddVisible" class="d-flex align-center justify-center">
+      <my-form-inspector-add @add:success="onInspectorAddSuccess" @click:close="inspectorFormAddVisible=false"/>
+    </v-overlay>
   </div>
 </template>
 
@@ -76,7 +79,7 @@ export default {
     return {
       inspectorsList: [], // TODO: Запросы и Vue вывод полей
       inspectorsFetching: false,
-      inspectorMenuAddVisible: false,
+      inspectorFormAddVisible: false,
       inspectorRules: [v => v || 'Выберите инспектора'],
     }
   },
@@ -86,6 +89,11 @@ export default {
     },
   },
   methods: {
+
+    onInspectorAddSuccess() {
+      this.fetchInspectorsList();
+      this.inspectorFormAddVisible = false;
+    },
 
     onUpdateMenuInspectors(status) {
       if (status) this.fetchInspectorsList();

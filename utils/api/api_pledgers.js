@@ -17,13 +17,13 @@ export async function fetchPledgers(query) {
 }
 
 export async function addPledger(pledger, query) {
-    return axios.post(serverURL + '/pledger/add' + (query ?? ''), pledger, createConfig());
+    return axios.post(serverURL + '/pledgers/add' + (query ?? ''), pledger, createConfig());
 }
 
 export async function changePledger(pledger, query) {
-    return axios.put(serverURL + '/pledger/update/:id' + pledger._id + (query ?? ''), pledger, createConfig());
+    return axios.put(serverURL + '/pledgers/update/:id' + pledger._id + (query ?? ''), pledger, createConfig());
 }
 
 export async function removePledger(pledgerID, query) {
-    return axios.delete(serverURL + '/pledger/remove/:id' + pledgerID + (query ?? ''), createConfig());
+    return axios.delete(serverURL + '/pledgers/remove/:id' + pledgerID + (query ?? ''), createConfig());
 }

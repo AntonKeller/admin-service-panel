@@ -17,13 +17,13 @@ export async function fetchContacts(query) {
 }
 
 export async function addContact(contact, query) {
-    return axios.post(serverURL + '/contact/add' + (query ?? ''), contact, createConfig());
+    return axios.post(serverURL + '/contacts/add' + (query ?? ''), contact, createConfig());
 }
 
 export async function changeContact(contact, query) {
-    return axios.put(serverURL + '/contact/update/:id' + contact._id + (query ?? ''), contact, createConfig());
+    return axios.put(serverURL + '/contacts/update/:id' + contact._id + (query ?? ''), contact, createConfig());
 }
 
 export async function removeContact(contactID, query) {
-    return axios.delete(serverURL + '/contact/remove/:id' + contactID + (query ?? ''), createConfig());
+    return axios.delete(serverURL + '/contacts/remove/:id' + contactID + (query ?? ''), createConfig());
 }

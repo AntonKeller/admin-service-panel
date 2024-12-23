@@ -191,7 +191,7 @@
         </v-card-actions>
 
         <v-overlay v-model="inspectorMenuAdd" class="d-flex justify-center align-center">
-          <inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></inspector-add>
+          <my-form-inspector-add @add:success="fetchInspectors" @click:close="inspectorMenuAdd=false"></my-form-inspector-add>
         </v-overlay>
       </v-card>
     </v-sheet>
