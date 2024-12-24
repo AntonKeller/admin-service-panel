@@ -1,4 +1,5 @@
 <template>
+  <!--  TODO: Сверить или заменить с формой block-create-->
   <v-container fluid>
     <v-sheet min-width="400" max-width="1024">
       <v-card variant="text">
