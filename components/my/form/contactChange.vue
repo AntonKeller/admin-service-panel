@@ -1,8 +1,8 @@
 <template>
-  <v-card :loading="sending" :disabled="sending"  elevation="6" width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Создание новый записи контакт</div>
+        <div>Редактирование контакта</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -29,7 +29,7 @@
     </v-card-item>
     <v-card-actions>
       <my-btn-submit
-          text="Добавить"
+          text="Принять"
           prepend-icon="mdi-checkbox-multiple-marked-outline"
           :loading="sending"
           @click="send"
@@ -40,12 +40,21 @@
 </template>
 
 <script>
-import {addContact} from "../../../utils/api/api_contacts";
+import {changeContact} from "../../../utils/api/api_contacts";
+import _ from "lodash";
 
 export default {
-  name: "contactAdd",
+  name: "contactChange",
 
-  emits: ['add:success', 'click:close'],
+  emits: ['change:success', 'click:close'],
+
+  props: {
+    _contact: Object,
+  },
+
+  beforeMount() {
+    this.contact = _.cloneDeep(this._contact);
+  },
 
   data() {
     return {
@@ -74,14 +83,14 @@ export default {
 
       this.sending = true;
 
-      addContact(this.contact)
+      changeContact(this.contact)
           .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Контакт успешно добавлен');
-            this.$emit('add:success');
+            this.$store.commit('alert/SUCCESS', 'Контакт успешно изменен!');
+            this.$emit('change:success');
           })
           .catch(err => {
             console.log('Ошибка добавления контакта', err);
-            this.$store.commit('alert/ERROR', 'Ошибка добавления контакта');
+            this.$store.commit('alert/ERROR', 'Ошибка изменения контакта');
           })
           .finally(() => {
             this.sending = false;

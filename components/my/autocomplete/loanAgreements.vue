@@ -52,6 +52,7 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
         icon="mdi-plus"
         variant="text"
@@ -64,6 +65,13 @@
         Добавить новый кредитный договор
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="loanAgreementMenuAddVisible" class="d-flex justify-center align-center">
+      <loan-agreement-add
+          @add:success="onLoanAgreementAddSuccess"
+          @click:close="loanAgreementMenuAddVisible=false"
+      />
+    </v-overlay>
   </div>
 </template>
 
@@ -84,6 +92,11 @@ export default {
   methods: {
 
     unixDateToLongDateString,
+
+    onLoanAgreementAddSuccess() {
+      this.fetchLoanAgreementsList();
+      this.loanAgreementMenuAddVisible = false;
+    },
 
     loanAgreementSearchFilter(value, query, item) {
       return [

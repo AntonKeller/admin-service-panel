@@ -1,7 +1,6 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
         :loading="pledgeAgreementsFetching"
         :items="pledgeAgreementsList"
         :custom-filter="pledgeAgreementSearchFilter"
@@ -16,6 +15,7 @@
         hide-selected
         multiple
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -52,6 +52,7 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
         icon="mdi-plus"
         variant="text"
@@ -64,15 +65,23 @@
         Добавить новый договор залога
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="pledgeAgreementMenuAddVisible" class="d-flex justify-center align-center">
+      <pledge-agreement-add
+          @add:success="onPledgeAgreementAddSuccess"
+          @click:close="pledgeAgreementMenuAddVisible=false"
+      />
+    </v-overlay>
   </div>
 </template>
 
 <script>
 import {unixDateToLongDateString} from "../../../utils/functions.js";
-import {removePledgeAgreement, fetchPledgeAgreements} from "../../../utils/api/api_pledge-agreements.js";
+import {removePledgeAgreement, fetchPledgeAgreements} from "../../../utils/api/api_pledge-agreements";
 
 export default {
   name: "pledgeAgreements",
+
   data() {
     return {
       pledgeAgreementsList: [], // TODO: Запросы и Vue вывод полей
@@ -81,7 +90,14 @@ export default {
       pledgeAgreementRules: [v => v || 'Договор должен быть выбран'],
     }
   },
+
   methods: {
+
+    onPledgeAgreementAddSuccess() {
+      this.fetchPledgeAgreementsList();
+      this.pledgeAgreementMenuAddVisible = false;
+    },
+
     pledgeAgreementSearchFilter(value, query, item) {
       return [
         item.raw.number || null,

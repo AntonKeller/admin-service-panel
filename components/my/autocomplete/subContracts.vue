@@ -63,15 +63,18 @@
         Добавить новый договор
       </v-tooltip>
     </v-btn>
+    <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
+      <my-form-contract-add @add:success="onContractAddSuccess" @click:close="contractMenuAddVisible = false"/>
+    </v-overlay>
   </div>
 </template>
 
 <script>
-import {unixDateToLongDateString} from "../../../utils/functions.js";
-import {fetchContracts, removeContract} from "../../../utils/api/api_contracts.js";
+import {unixDateToLongDateString} from "../../../utils/functions";
+import {fetchContracts, removeContract} from "../../../utils/api/api_contracts";
 
 export default {
-  name: "contracts",
+  name: "sub-contracts",
 
   data() {
     return {
@@ -81,14 +84,21 @@ export default {
       contractRules: [v => v || 'Договор должен быть выбран'],
     }
   },
+
   computed: {
     subContracts() {
       return this.contractsList?.filter(contract => contract.parent) || [];
     },
   },
+
   methods: {
 
     unixDateToLongDateString,
+
+    onContractAddSuccess() {
+      this.fetchContractsList();
+      this.contractMenuAddVisible = false;
+    },
 
     onUpdateMenuContracts(status) {
       if (status) this.fetchContractsList();

@@ -1,7 +1,6 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
         :items="contracts"
         :loading="contractsFetching"
         :custom-filter="contractSearchFilter"
@@ -15,6 +14,7 @@
         closable-chips
         hide-selected
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -52,6 +52,7 @@
       </template>
     </v-autocomplete>
     <v-btn
+        v-if="!hideButtonAdd"
         icon="mdi-plus"
         variant="text"
         rounded="lg"
@@ -63,15 +64,22 @@
         Добавить новый договор
       </v-tooltip>
     </v-btn>
+    <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
+      <my-form-contract-add @add:success="onContractAddSuccess" @click:close="contractMenuAddVisible = false"/>
+    </v-overlay>
   </div>
 </template>
 
 <script>
-import {unixDateToLongDateString} from "../../../utils/functions.js";
-import {fetchContracts, removeContract} from "../../../utils/api/api_contracts.js";
+import {unixDateToLongDateString} from "../../../utils/functions";
+import {fetchContracts, removeContract} from "../../../utils/api/api_contracts";
 
 export default {
   name: "contracts",
+
+  props: {
+    hideButtonAdd: Boolean,
+  },
 
   data() {
     return {
@@ -81,14 +89,21 @@ export default {
       contractRules: [v => v || 'Договор должен быть выбран'],
     }
   },
+
   computed: {
     contracts() {
       return this.contractsList?.filter(contract => !contract.parent) || [];
     },
   },
+
   methods: {
 
     unixDateToLongDateString,
+
+    onContractAddSuccess() {
+      this.fetchContractsList();
+      this.contractMenuAddVisible = false;
+    },
 
     onUpdateMenuContracts(status) {
       if (status) this.fetchContractsList();

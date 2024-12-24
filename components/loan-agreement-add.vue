@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {addLoanAgreement} from "@/utils/api/api_loan_agreements";
+import {addLoanAgreement} from "../utils/api/api_loan_agreements";
 
 export default {
   name: "loan-agreement-add",

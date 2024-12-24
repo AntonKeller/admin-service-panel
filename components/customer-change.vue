@@ -107,6 +107,10 @@ export default {
     mask: vMaska
   },
 
+  beforeMount() {
+    this.customer = _.cloneDeep(this._customer);
+  },
+
   data() {
     return {
 
@@ -131,10 +135,6 @@ export default {
       loading: false,
       formIsValid: false,
     }
-  },
-
-  mounted() {
-    this.customer = _.cloneDeep(this._customer);
   },
 
   methods: {

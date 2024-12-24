@@ -2,7 +2,7 @@
   <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Создание новый записи инспектор</div>
+        <div>Редактирование инспектора</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -40,10 +40,10 @@
 
     <v-card-actions>
       <my-btn-submit
-          text="Добавить"
+          text="Принять"
           prepend-icon="mdi-checkbox-multiple-marked-outline"
           :loading="sending"
-          @click="addInspector"
+          @click="send"
       />
       <my-button-clear text="Очистить" @click="clear"/>
     </v-card-actions>
@@ -51,16 +51,25 @@
 </template>
 
 <script>
-import {addInspector} from "../../../utils/api/api_inspectors";
+import {changeInspector} from "../utils/api/api_inspectors";
 import {vMaska} from "maska/vue"
+import _ from "lodash";
 
 export default {
-  name: "inspector-add",
+  name: "inspector-change",
 
-  emits: ['add:success', 'click:close'],
+  emits: ['change:success', 'click:close'],
+
+  props: {
+    _inspector: Object,
+  },
 
   directives: {
     mask: vMaska
+  },
+
+  beforeMount() {
+    this.inspector = _.cloneDeep(this._inspector);
   },
 
   data() {
@@ -86,7 +95,8 @@ export default {
   },
 
   methods: {
-    async addInspector() {
+
+    async send() {
 
       await this.$refs.form.validate();
 
@@ -97,14 +107,14 @@ export default {
 
       this.sending = true;
 
-      addInspector(this.inspector)
+      changeInspector(this.inspector)
           .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Инспектор успешно добавлен');
-            this.$emit('add:success')
+            this.$store.commit('alert/SUCCESS', 'Инспектор успешно изменен!');
+            this.$emit('change:success')
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);
-            this.$store.commit('alert/ERROR', 'Ошибка добавление инспектора');
+            this.$store.commit('alert/ERROR', 'Ошибка изменения инспектора');
           })
           .finally(() => {
             this.sending = false;

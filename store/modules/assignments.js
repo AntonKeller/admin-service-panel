@@ -35,13 +35,10 @@ const assignments = {
         RESET_ASSIGNMENT_LIST(state) {
             state.assignments = initial_page_state().assignments;
         },
-        RESET_STORE(state) {
-            state = initial_page_state();
-        }
     },
     actions: {
 
-        async FETCH({commit, getters}) {
+        async FETCH({commit}) {
 
             console.log('fetch assignments execute')
 
@@ -52,7 +49,6 @@ const assignments = {
             switch (answer.status) {
                 case 200:
                     commit('SET_ASSIGNMENTS', answer.data);
-                    console.log('assignments:', answer.data);
                     break;
                 case 403:
                     commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});

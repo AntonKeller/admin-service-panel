@@ -27,10 +27,7 @@
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
             <v-row dense>
               <v-col :cols="12">
-                <my-text-field
-                    v-model="block.title"
-                    label="Заголовок"
-                />
+                <my-text-field v-model="block.title" label="Заголовок"/>
               </v-col>
 
               <v-col :cols="6">
@@ -42,10 +39,7 @@
               </v-col>
 
               <v-col :cols="12">
-                <my-text-field
-                    v-model="block.address"
-                    label="Адрес осмотра"
-                />
+                <my-text-field v-model="block.address" label="Адрес осмотра"/>
               </v-col>
 
               <v-col :cols="6">

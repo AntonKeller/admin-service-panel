@@ -64,6 +64,9 @@
         Добавить нового заказчика
       </v-tooltip>
     </v-btn>
+    <my-overlay v-model="customerMenuAddVisible">
+      <customer-add @add:success="onCustomerAddSuccess" @click:close="customerMenuAddVisible=false"/>
+    </my-overlay>
   </div>
 </template>
 

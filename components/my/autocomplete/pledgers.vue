@@ -1,7 +1,6 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
         :items="pledgerList"
         :loading="pledgersFetching"
         :custom-filter="pledgersSearchFilter"
@@ -15,6 +14,7 @@
         closable-chips
         hide-selected
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip

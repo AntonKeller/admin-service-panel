@@ -1,9 +1,5 @@
 <template>
-  <v-card
-      width="750"
-      :loading="loading"
-      :disabled="loading"
-  >
+  <v-card width="750" :loading="loading" :disabled="loading">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Новый заказчик</div>
