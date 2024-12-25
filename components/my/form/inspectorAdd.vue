@@ -13,7 +13,7 @@
       <v-form v-model="formIsValid" ref="form" class="mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field v-model="inspector.firstName" label="Имя"/>
+            <my-text-field v-model="inspector.firstName" label="Имя" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="inspector.surName" label="Фамилия"/>
@@ -52,6 +52,7 @@
 
 <script>
 import {addInspector} from "../../../utils/api/api_inspectors";
+import {isNotEmptyRule} from '@/utils/validators/functions';
 import {vMaska} from "maska/vue"
 
 export default {
@@ -86,6 +87,9 @@ export default {
   },
 
   methods: {
+
+    isNotEmptyRule,
+
     async addInspector() {
 
       await this.$refs.form.validate();

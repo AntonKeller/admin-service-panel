@@ -4,7 +4,7 @@
       <v-card variant="text">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
-            <div>Новый адрес ТЗ</div>
+            <div>Редактирование адреса ТЗ</div>
             <v-btn
                 density="comfortable"
                 color="blue-grey-darken-2"

@@ -1,9 +1,5 @@
 <template>
-  <v-card
-      min-width="400"
-      max-width="750"
-      width="100vw"
-  >
+  <v-card elevation="6" width="100vw" max-width="900">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Новый кредитный договор</div>

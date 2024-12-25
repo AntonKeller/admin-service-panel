@@ -13,7 +13,7 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.firstName" label="Имя"/>
+            <my-text-field v-model="pledger.firstName" :rules="[isNotEmptyRule]" label="Имя"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="pledger.surname" label="Фамилия"/>
@@ -44,6 +44,7 @@
 
 <script>
 import {addPledger} from "../../../utils/api/api_pledgers";
+import {isNotEmptyRule} from '@/utils/validators/functions';
 
 export default {
   name: "pledgerAdd",
@@ -66,6 +67,9 @@ export default {
   },
 
   methods: {
+
+    isNotEmptyRule,
+
     async send() {
 
       await this.$refs.form.validate();

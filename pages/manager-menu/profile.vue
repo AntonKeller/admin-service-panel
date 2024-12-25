@@ -76,7 +76,6 @@ import image from '../../public/assets/logotype.png';
 import {downloadFile} from "../../utils/api/api_.js";
 import {serverURL} from "../../constants/constants.js";
 import {getProfile} from "../../utils/api/api_profile.js";
-import {requestTestWithAxiosConfig} from "@/utils/api/TEST.js";
 export default {
   name: "profile-page",
   data() {
@@ -92,8 +91,6 @@ export default {
     this.getProfile();
   },
   methods: {
-
-    requestTestWithAxiosConfig,
 
     async getProfile() {
       const response = await getProfile();

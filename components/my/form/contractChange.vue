@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {changeContract} from "../../../utils/api/api_contracts.js";
+import {changeContract} from "../../../utils/api/api_contracts";
 import _ from "lodash";
 
 export default {

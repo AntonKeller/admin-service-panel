@@ -24,10 +24,10 @@
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
-          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
+          <v-form v-model="formIsValid" ref="form" class="mt-2">
             <v-row dense>
               <v-col :cols="12">
-                <my-text-field v-model="block.title" label="Заголовок"/>
+                <my-text-field v-model="block.title" :rules="[isNotEmptyRule]" label="Заголовок"/>
               </v-col>
 
               <v-col :cols="6">
@@ -68,7 +68,8 @@
 </template>
 
 <script>
-import {sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks.js";
+import {sendAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {isNotEmptyRule} from '@/utils/validators/functions'
 import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 
@@ -107,6 +108,8 @@ export default {
   },
 
   methods: {
+
+    isNotEmptyRule,
 
     clear() {
       this.block = {

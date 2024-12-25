@@ -11,9 +11,9 @@ export async function addPledger(pledger, query) {
 }
 
 export async function changePledger(pledger, query) {
-    return axios.put('/pledgers/update/:id' + pledger._id + (query ?? ''), pledger, axiosConfig);
+    return axios.put('/pledgers/update/' + pledger._id + (query ?? ''), pledger, axiosConfig);
 }
 
 export async function removePledger(pledgerID, query) {
-    return axios.delete('/pledgers/remove/:id' + pledgerID + (query ?? ''), axiosConfig);
+    return axios.delete('/pledgers/remove/' + pledgerID + (query ?? ''), axiosConfig);
 }

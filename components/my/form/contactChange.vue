@@ -13,7 +13,7 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field v-model="contact.firstName" label="Имя"/>
+            <my-text-field v-model="contact.firstName" label="Имя" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="contact.surname" label="Фамилия"/>
@@ -41,6 +41,7 @@
 
 <script>
 import {changeContact} from "../../../utils/api/api_contacts";
+import {isNotEmptyRule} from '@/utils/validators/functions';
 import _ from "lodash";
 
 export default {
@@ -71,6 +72,8 @@ export default {
   },
 
   methods: {
+
+    isNotEmptyRule,
 
     async send() {
 
