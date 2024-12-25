@@ -96,7 +96,6 @@ export default {
     if (!this.selectedAssignment?._id) {
       this.navigateBack();
     } else {
-      console.log('this.selectedAssignment', this.selectedAssignment)
       await fetchAssignmentOneById(this.selectedAssignment._id)
           .then((resp) => {
             this.$store.commit('assignments/SELECT', resp.data);

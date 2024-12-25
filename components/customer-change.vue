@@ -1,9 +1,6 @@
 <template>
-  <v-card
-      rounded="sm" width="700" elevation="6"
-      :loading="loading"
-      :disabled="loading"
-  >
+  <v-card :loading="loading" :disabled="loading" elevation="6" width="100vw" max-width="900">
+
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редакторование данных заказчика</div>
@@ -14,32 +11,42 @@
     <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 
     <v-card-text>
-      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1 mt-2">
-        <my-text-field v-model="customer.fullName" label="Полное наименование"/>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
-          <my-text-field v-model="customer.inn" label="ИНН"/>
-        </div>
-        <my-text-field v-model="customer.address" label="Адрес"/>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.email" label="Email"/>
-          <my-text-field v-model="customer.phoneNumber" v-mask="options" label="Номер телефона"
-                         placeholder="+7 (___) ___-__-__"/>
-        </div>
-        <div class="d-flex ga-2">
-          <my-text-field v-model="customer.representativeFullName" label="Представитель (ФИО)"/>
-          <my-text-field v-model="customer.representativePosition" label="Представитель (Должность)"/>
-        </div>
-        <v-label>Загруженные ракурсы</v-label>
-        <v-divider/>
-        <v-sheet max-height="200" style="overflow-y: scroll">
-          <v-list max-height="200px">
-            <v-list-item v-for="item of customer.template">
-              <b>Объект:</b>{{ item.type }}<b> Кол-во ракурсов:</b>{{ item?.angles?.length }}
-            </v-list-item>
-          </v-list>
-        </v-sheet>
-        <!--        <my-text-field v-model="customer.template" label="Шаблон" disabled/>-->
+      <v-form v-model="formIsValid" ref="form">
+
+        <v-row dense>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.shortName" :rules="[isNotEmptyRule]" label="Короткое наименование"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field v-model="customer.inn" label="ИНН"/>
+          </v-col>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.fullName" label="Полное наименование"/>
+          </v-col>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.address" label="Адрес"/>
+          </v-col>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.email" label="Email"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field
+                v-model="customer.phoneNumber"
+                v-mask="options"
+                label="Номер телефона"
+                placeholder="+7 (___) ___-__-__"
+            />
+          </v-col>
+          <v-col :cols="6">
+            <my-text-field v-model="customer.representativeFullName" label="ФИО Представителя"/>
+          </v-col>
+          <v-col :cols="6" class="pl-2">
+            <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
+          </v-col>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
 
@@ -93,6 +100,7 @@ import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
+import {isNotEmptyRule} from "@/utils/validators/functions.js";
 
 export default {
   name: "customer-change",
@@ -138,9 +146,13 @@ export default {
   },
 
   methods: {
+
+    isNotEmptyRule,
+
     downloadTemplate() {
       downloadFile('angles template.xlsx', serverURL + '/customers/downloadExcelTemplates');
     },
+
     async changeCustomer() {
       await this.$refs.form.validate();
       if (this.formIsValid) {

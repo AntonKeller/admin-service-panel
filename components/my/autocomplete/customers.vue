@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {fetchCustomers, removeCustomer} from "../../../utils/api/api_customers.js";
+import {fetchCustomers, removeCustomer} from "../../../utils/api/api_customers";
 
 export default {
   name: "my-autocomplete-customers",
@@ -83,6 +83,7 @@ export default {
     }
   },
   methods: {
+
     customerSearchFilter(value, query, item) {
       return [
         item.raw.inn || null,
@@ -90,37 +91,45 @@ export default {
         item.raw.representativeFullName || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
+
     onUpdateMenuCustomer(status) {
       if (status) this.fetchCustomersList();
     },
+
     async onCustomerAddSuccess() {
       this.customerMenuAddVisible = false;
       await this.fetchCustomersList();
     },
-    removeCustomer() {
-      removeCustomer()
+
+    removeCustomer(id) {
+      removeCustomer(id)
           .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален');
+            this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален!');
             this.fetchCustomersList();
           })
           .catch(err => {
-            this.$store.commit('alert/ERROR', 'Не удалось удалить заказчика');
+            this.$store.commit('alert/ERROR', 'Ошибка удаления заказчика!');
             console.log('Не удалось удалить', err);
           })
     },
+
     async fetchCustomersList() {
+
       this.customersFetching = true;
-      const answer = await fetchCustomers();
-      switch (answer.status) {
-        case 200:
-          this.customersList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о заказчиках');
-          break;
-      }
-      this.customersFetching = false;
+
+      fetchCustomers()
+          .then(response => {
+            this.customersList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения данных о заказчиках!');
+            console.log('Ошибка получения данных о заказчиках', err);
+          })
+          .finally(() => {
+            this.customersFetching = false;
+          })
     },
+
   }
 }
 </script>

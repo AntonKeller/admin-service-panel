@@ -32,7 +32,7 @@
         <v-list-item
             v-bind="props"
             prepend-icon="mdi-file-document-edit"
-            :title="item.raw?.contractNumber"
+            :title="item.raw?.number"
             :subtitle="unixDateToLongDateString(item.raw?.date)"
         >
           <template #append>
@@ -108,28 +108,33 @@ export default {
       if (status) this.fetchLoanAgreementsList();
     },
 
-    removeLoanAgreement() {
-      removeLoanAgreement()
+    removeLoanAgreement(id) {
+      removeLoanAgreement(id)
           .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Кредитный договор успешно удален!');
             this.fetchLoanAgreementsList();
           })
           .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка удаления кредитного договора!');
             console.log('Не удалось удалить', err);
           })
     },
 
     async fetchLoanAgreementsList() {
+
       this.loanAgreementsFetching = true;
-      const answer = await fetchLoanAgreements();
-      switch (answer.status) {
-        case 200:
-          this.loanAgreementsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о кредитных договорах');
-          break;
-      }
-      this.loanAgreementsFetching = false;
+
+      fetchLoanAgreements()
+          .then((response) => {
+            this.loanAgreementsList = response.data;
+          })
+          .catch((err) => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения кредитных договоров!');
+            console.log('Ошибка получения данных о кредитных договорах', err);
+          })
+          .finally(() => {
+            this.loanAgreementsFetching = false;
+          })
     },
   }
 }

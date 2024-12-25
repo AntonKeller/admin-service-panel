@@ -1,5 +1,6 @@
 <template>
-  <v-card width="750" :loading="loading" :disabled="loading">
+  <v-card :loading="loading" :disabled="loading" elevation="6" width="100vw" max-width="900">
+
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Новый заказчик</div>
@@ -10,30 +11,21 @@
     <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 
     <v-card-text>
-      <v-form v-model="formIsValid" ref="form" class="d-flex flex-column ga-1">
+      <v-form v-model="formIsValid" ref="form">
 
-        <v-row no-gutters>
-          <v-col :cols="12">
-            <my-text-field v-model="customer.fullName" label="Полное наименование"/>
-          </v-col>
-        </v-row>
-
-        <v-row no-gutters>
+        <v-row dense>
           <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" label="Короткое наименование"/>
+            <my-text-field v-model="customer.shortName" :rules="[isNotEmptyRule]" label="Короткое наименование"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
             <my-text-field v-model="customer.inn" label="ИНН"/>
           </v-col>
-        </v-row>
-
-        <v-row no-gutters>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.fullName" label="Полное наименование"/>
+          </v-col>
           <v-col :cols="12">
             <my-text-field v-model="customer.address" label="Адрес"/>
           </v-col>
-        </v-row>
-
-        <v-row no-gutters>
           <v-col :cols="6">
             <my-text-field v-model="customer.email" label="Email"/>
           </v-col>
@@ -45,18 +37,12 @@
                 placeholder="+7 (___) ___-__-__"
             />
           </v-col>
-        </v-row>
-
-        <v-row no-gutters>
           <v-col :cols="6">
             <my-text-field v-model="customer.representativeFullName" label="ФИО Представителя"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
             <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
           </v-col>
-        </v-row>
-
-        <v-row no-gutters>
           <v-col :cols="12">
             <my-text-field v-model="customer.template" label="Шаблон" disabled/>
           </v-col>
@@ -110,6 +96,7 @@
 
 <script>
 import {addCustomer, uploadTemplate} from "../utils/api/api_customers";
+import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {vMaska} from "maska/vue"
@@ -154,6 +141,9 @@ export default {
   }),
 
   methods: {
+
+    isNotEmptyRule,
+
     downloadTemplate() {
       downloadFile('angles template.xlsx', serverURL + '/customers/downloadExcelTemplates');
     },

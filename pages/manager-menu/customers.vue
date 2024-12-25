@@ -53,11 +53,11 @@
                 @click="menuChangeCustomerShow(customer)"
                 class="text-caption row-hover"
             >
-              <td>{{ customer.fullName }}</td>
-              <td>{{ customer.inn }}</td>
-              <td>{{ customer.email }}</td>
-              <td>{{ customer.phoneNumber }}</td>
-              <td>{{ customer.address }}</td>
+              <td>{{ customer.fullName || '-' }}</td>
+              <td>{{ customer.inn || '-' }}</td>
+              <td>{{ customer.email || '-' }}</td>
+              <td>{{ customer.phoneNumber || '-' }}</td>
+              <td>{{ customer.address || '-' }}</td>
               <td style="min-width: 65px; width: 65px; max-width: 65px">
                 <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
               </td>

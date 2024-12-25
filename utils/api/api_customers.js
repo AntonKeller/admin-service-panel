@@ -1,5 +1,5 @@
 import axios from "axios";
-import axiosConfig from "@/configs/axios.js";
+import axiosConfig from "@/configs/axios";
 
 
 export function fetchCustomers(query) {

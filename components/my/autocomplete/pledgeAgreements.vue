@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {unixDateToLongDateString} from "../../../utils/functions.js";
+import {unixDateToLongDateString} from "../../../utils/functions";
 import {removePledgeAgreement, fetchPledgeAgreements} from "../../../utils/api/api_pledge-agreements";
 
 export default {
@@ -110,28 +110,33 @@ export default {
 
     unixDateToLongDateString,
 
-    removePledgeAgreement() {
-      removePledgeAgreement()
+    removePledgeAgreement(id) {
+      removePledgeAgreement(id)
           .then(() => {
-            this.fetchPledgeAgreementsList()
+            this.$store.commit('alert/SUCCESS', 'Договор залога успешно удален!');
+            this.fetchPledgeAgreementsList();
           })
           .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка удаления договора залога!');
             console.log('Не удалось удалить', err);
           })
     },
 
     async fetchPledgeAgreementsList() {
+
       this.pledgeAgreementsFetching = true;
-      const answer = await fetchPledgeAgreements();
-      switch (answer.status) {
-        case 200:
-          this.pledgeAgreementsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о договорах залога');
-          break;
-      }
-      this.pledgeAgreementsFetching = false;
+
+      fetchPledgeAgreements()
+          .then(response => {
+            this.pledgeAgreementsList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения данных кредитных договорах!');
+            console.log('Ошибка получения данных о договорах залога', err);
+          })
+          .finally(() => {
+            this.pledgeAgreementsFetching = false;
+          })
     },
   }
 }

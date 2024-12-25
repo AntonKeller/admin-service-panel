@@ -11,9 +11,9 @@ export async function addPledgeAgreement(pledgeAgreement, query) {
 }
 
 export async function changePledgeAgreement(pledgeAgreement, query) {
-    return axios.put('/pledge-agreements/update/:id' + pledgeAgreement._id + (query ?? ''), pledgeAgreement, axiosConfig);
+    return axios.put('/pledge-agreements/update/' + pledgeAgreement._id + (query ?? ''), pledgeAgreement, axiosConfig);
 }
 
 export async function removePledgeAgreement(pledgeAgreementID, query) {
-    return axios.delete('/pledge-agreements/remove/:id' + pledgeAgreementID + (query ?? ''), axiosConfig);
+    return axios.delete('/pledge-agreements/remove/' + pledgeAgreementID + (query ?? ''), axiosConfig);
 }
