@@ -1,34 +1,15 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Images
- * */
 export async function sendImg(objectId, data, query) {
-    return axios.post(serverURL + '/photos/add/' + objectId + (query ?? ''), data, createConfig());
+    return axios.post('/photos/add/' + objectId + (query ?? ''), data, axiosConfig);
 }
 
 export async function removeImg(photoId, query) {
-    return axios.delete(serverURL + '/photos/remove/' + photoId + (query ?? ''), createConfig());
+    return axios.delete('/photos/remove/' + photoId + (query ?? ''), axiosConfig);
 }
 
 export async function fetchImages(objectId, query) {
-    return axios.get(serverURL + '/photos/all/' + objectId + (query ?? ''), createConfig());
-}
-
-export async function downloadImage(url, query) {
-    return axios.get(url + (query ?? ''), {
-        responseType: "blob",
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    });
+    return axios.get('/photos/all/' + objectId + (query ?? ''), axiosConfig);
 }

@@ -1,18 +1,10 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
-
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
+import axiosConfig from "@/configs/axios";
 
 export async function getProfile(profileID, query) {
-    return axios.get(serverURL + '/auth/userByToken' + (query ?? ''), createConfig());
+    return axios.get('/auth/userByToken' + (query ?? ''), axiosConfig);
 }
 
 export async function changeProfile(profile, query) {
-    return axios.post(serverURL + '/' + (query ?? ''), profile, createConfig());
+    return axios.post('/' + (query ?? ''), profile, axiosConfig);
 }

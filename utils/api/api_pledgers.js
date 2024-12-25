@@ -1,29 +1,19 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Pledgers
- * */
 export async function fetchPledgers(query) {
-    return axios.get(serverURL + '/pledgers' + (query ?? ''), createConfig());
+    return axios.get('/pledgers' + (query ?? ''), axiosConfig);
 }
 
 export async function addPledger(pledger, query) {
-    return axios.post(serverURL + '/pledgers/add' + (query ?? ''), pledger, createConfig());
+    return axios.post('/pledgers/add' + (query ?? ''), pledger, axiosConfig);
 }
 
 export async function changePledger(pledger, query) {
-    return axios.put(serverURL + '/pledgers/update/:id' + pledger._id + (query ?? ''), pledger, createConfig());
+    return axios.put('/pledgers/update/:id' + pledger._id + (query ?? ''), pledger, axiosConfig);
 }
 
 export async function removePledger(pledgerID, query) {
-    return axios.delete(serverURL + '/pledgers/remove/:id' + pledgerID + (query ?? ''), createConfig());
+    return axios.delete('/pledgers/remove/:id' + pledgerID + (query ?? ''), axiosConfig);
 }

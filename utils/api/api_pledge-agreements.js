@@ -1,29 +1,19 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Pledge Agreements
- * */
 export async function fetchPledgeAgreements(query) {
-    return axios.get(serverURL + '/pledge-agreements' + (query ?? ''), createConfig());
+    return axios.get('/pledge-agreements' + (query ?? ''), axiosConfig);
 }
 
 export async function addPledgeAgreement(pledgeAgreement, query) {
-    return axios.post(serverURL + '/pledge-agreements/add' + (query ?? ''), pledgeAgreement, createConfig());
+    return axios.post('/pledge-agreements/add' + (query ?? ''), pledgeAgreement, axiosConfig);
 }
 
 export async function changePledgeAgreement(pledgeAgreement, query) {
-    return axios.put(serverURL + '/pledge-agreements/update/:id' + pledgeAgreement._id + (query ?? ''), pledgeAgreement, createConfig());
+    return axios.put('/pledge-agreements/update/:id' + pledgeAgreement._id + (query ?? ''), pledgeAgreement, axiosConfig);
 }
 
 export async function removePledgeAgreement(pledgeAgreementID, query) {
-    return axios.delete(serverURL + '/pledge-agreements/remove/:id' + pledgeAgreementID + (query ?? ''), createConfig());
+    return axios.delete('/pledge-agreements/remove/:id' + pledgeAgreementID + (query ?? ''), axiosConfig);
 }

@@ -1,41 +1,31 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Inspection objects
- * */
 export async function fetchInspectionObjects(blockID, query) {
-    return axios.get(serverURL + '/inspection-objects/blockId/' + (blockID || '') + (query ?? ''), createConfig());
+    return axios.get('/inspection-objects/blockId/' + (blockID || '') + (query ?? ''), axiosConfig);
 }
 
 export function fetchInspectionObjectOneById(inspectionObjectID, query) {
-    return axios.get(serverURL + '/inspection-objects/findOneById/' + (inspectionObjectID ?? '') + (query ?? ''), createConfig());
+    return axios.get('/inspection-objects/findOneById/' + (inspectionObjectID ?? '') + (query ?? ''), axiosConfig);
 }
 
 export async function sendInspectionObject(blockId, inspectionObject, query) {
-    return axios.post(serverURL + '/inspection-objects/add/' + blockId + (query ?? ''), inspectionObject, createConfig());
+    return axios.post('/inspection-objects/add/' + blockId + (query ?? ''), inspectionObject, axiosConfig);
 }
 
 export async function changeInspectionObject(inspectionObject, query) {
-    return axios.put(serverURL + '/inspection-objects/' + inspectionObject._id + (query ?? ''), inspectionObject, createConfig());
+    return axios.put('/inspection-objects/' + inspectionObject._id + (query ?? ''), inspectionObject, axiosConfig);
 }
 
 export async function uploadObjects(blockID, file, query) {
-    return axios.post(serverURL + '/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, createConfig());
+    return axios.post('/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, axiosConfig);
 }
 
 export async function removeObject(objectID, query) {
-    return axios.delete(serverURL + '/inspection-objects/removeObject/' + (objectID ?? '') + (query ?? ''), createConfig());
+    return axios.delete('/inspection-objects/removeObject/' + (objectID ?? '') + (query ?? ''), axiosConfig);
 }
 
 export function removeObjects(blockID, query) {
-    return axios.delete(serverURL + '/assignment-blocks/deleteAll/' + (blockID ?? '') + (query ?? ''), createConfig());
+    return axios.delete('/assignment-blocks/deleteAll/' + (blockID ?? '') + (query ?? ''), axiosConfig);
 }

@@ -1,29 +1,19 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Inspectors
- * */
 export async function fetchInspectors(query) {
-    return axios.get(serverURL + '/inspectors' + (query ?? ''), createConfig());
+    return axios.get('/inspectors' + (query ?? ''), axiosConfig);
 }
 
 export async function addInspector(inspector, query) {
-    return axios.post(serverURL + '/inspectors/add' + (query ?? ''), inspector, createConfig());
+    return axios.post('/inspectors/add' + (query ?? ''), inspector, axiosConfig);
 }
 
 export async function changeInspector(inspector, query) {
-    return axios.put(serverURL + '/inspectors/' + inspector._id + (query ?? ''), inspector, createConfig());
+    return axios.put('/inspectors/' + inspector._id + (query ?? ''), inspector, axiosConfig);
 }
 
 export async function removeInspector(inspectorID, query) {
-    return axios.delete(serverURL + '/inspectors/' + inspectorID + (query ?? ''), createConfig());
+    return axios.delete('/inspectors/' + inspectorID + (query ?? ''), axiosConfig);
 }

@@ -1,17 +1,7 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants.js";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Reports api
- * */
 export function fetchReports(query) {
-    return axios.get(serverURL + '/reports' + (query ?? ''), createConfig());
+    return axios.get('/reports' + (query ?? ''), axiosConfig);
 }

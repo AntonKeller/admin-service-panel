@@ -1,20 +1,13 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
 export function fetchContractExecutors(query) {
-    return axios.get(serverURL + '/contracts/contract-executors' + (query ?? ''), createConfig());
+    return axios.get('/contracts/contract-executors' + (query ?? ''), axiosConfig);
 }
 
 export function addContractExecutor(contractExecutor, query) {
-    return axios.post(serverURL + '/contracts/contract-executor-add' + (query ?? ''), contractExecutor, createConfig());
+    return axios.post('/contracts/contract-executor-add' + (query ?? ''), contractExecutor, axiosConfig);
 }
 
 

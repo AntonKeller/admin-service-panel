@@ -1,33 +1,23 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants.js";
+import axiosConfig from "@/configs/axios";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
-}
 
-/**
- * Contract
- * */
 export async function fetchContracts(query) {
-    return axios.get(serverURL + '/contracts' + (query ?? ''), createConfig());
+    return axios.get('/contracts' + (query ?? ''), axiosConfig);
 }
 
 export async function fetchContractsAll(query) {
-    return axios.get(serverURL + '/contracts/all' + (query ?? ''), createConfig());
+    return axios.get('/contracts/all' + (query ?? ''), axiosConfig);
 }
 
 export async function addContract(contract, query) {
-    return axios.post(serverURL + '/contracts/add' + (query ?? ''), contract, createConfig());
+    return axios.post('/contracts/add' + (query ?? ''), contract, axiosConfig);
 }
 
 export async function changeContract(contract, query) {
-    return axios.put(serverURL + '/contracts/' + contract._id + (query ?? ''), contract, createConfig());
+    return axios.put('/contracts/' + contract._id + (query ?? ''), contract, axiosConfig);
 }
 
 export async function removeContract(id, query) {
-    return axios.delete(serverURL + '/contracts/' + id + (query ?? ''), createConfig());
+    return axios.delete('/contracts/' + id + (query ?? ''), axiosConfig);
 }

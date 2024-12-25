@@ -1,37 +1,27 @@
 import axios from "axios";
-import {serverURL} from "@/constants/constants";
+import axiosConfig from "@/configs/axios.js";
 
-function createConfig() {
-    return {
-        headers: {
-            authorization: localStorage.accessToken ?? '',
-        }
-    }
+
+export function fetchCustomers(query) {
+    return axios.get('/customers' + (query ?? ''), axiosConfig);
 }
 
-/**
- * Customers
- * */
-export async function fetchCustomers(query) {
-    return axios.get(serverURL + '/customers' + (query ?? ''), createConfig());
+export function fetchCustomersAll(query) {
+    return axios.get('/customers/all' + (query ?? ''), axiosConfig);
 }
 
-export async function fetchCustomersAll(query) {
-    return axios.get(serverURL + '/customers/all' + (query ?? ''), createConfig());
+export function addCustomer(customer, query) {
+    return axios.post('/customers/add' + (query ?? ''), customer, axiosConfig);
 }
 
-export async function addCustomer(customer, query) {
-    return axios.post(serverURL + '/customers/add' + (query ?? ''), customer, createConfig());
+export function changeCustomer(customer, query) {
+    return axios.put('/customers/change' + (query ?? ''), customer, axiosConfig);
 }
 
-export async function changeCustomer(customer, query) {
-    return axios.put(serverURL + '/customers/change' + (query ?? ''), customer, createConfig());
+export function removeCustomer(customerID, query) {
+    return axios.delete('/customers/' + (customerID ?? '') + (query ?? ''), axiosConfig);
 }
 
-export async function removeCustomer(customerID, query) {
-    return axios.delete(serverURL + '/customers/' + (customerID ?? '') + (query ?? ''), createConfig());
-}
-
-export async function uploadTemplate(customerID, file, query) {
-    return axios.post(serverURL + '/customers/uploadTemplates/' + (customerID ?? '') + (query ?? ''), file, createConfig());
+export function uploadTemplate(customerID, file, query) {
+    return axios.post('/customers/uploadTemplates/' + (customerID ?? '') + (query ?? ''), file, axiosConfig);
 }
