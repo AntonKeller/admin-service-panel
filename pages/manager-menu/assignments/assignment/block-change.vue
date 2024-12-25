@@ -200,10 +200,10 @@
 </template>
 
 <script>
-import {changeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks.js";
-import assignment_block_statuses from "../../../../configs/assignment-statuses.js";
-import {isDate, isEmpty} from "../../../../utils/validators/functions.js";
-import {fetchInspectors} from "../../../../utils/api/api_inspectors.js";
+import {changeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import assignment_block_statuses from "@/configs/assignment-statuses";
+import {isDate, isEmpty} from "@/utils/validators/functions";
+import {fetchInspectors} from "@/utils/api/api_inspectors";
 import _ from "lodash";
 import {navigateTo} from "nuxt/app";
 
