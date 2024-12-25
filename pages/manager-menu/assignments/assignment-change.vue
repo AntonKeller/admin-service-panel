@@ -1,11 +1,10 @@
 <template>
-<!--  TODO: Сверить или заменить с формой assignment-create-->
   <v-container fluid>
-    <v-sheet class="ml-2 mt-2" min-width="400" max-width="1024">
-      <v-card variant="flat">
+    <v-sheet min-width="400" max-width="1024">
+      <v-card variant="flat" :loading="sending" :disabled="sending">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
-            <div>Редактор задания</div>
+            <div>Редактирование задания</div>
             <v-btn
                 density="comfortable"
                 color="blue-grey-darken-2"
@@ -26,28 +25,41 @@
 
         <v-card-item>
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
-            <my-text-field
-                v-model="assignment.title"
-                :rules="assignmentTitleRules"
-                label="Заголовок задания"
-                prepend-inner-icon="mdi-label-variant-outline"
-            />
-            <myAutocompleteCustomers v-model="assignment.customer"/>
-            <myAutocompleteContracts v-model="assignment.contract"/>
-            <myAutocompleteSubContracts v-model="assignment.subContract"/>
-            <myAutocompleteLoanAgreements v-model="assignment.loanAgreements"/>
-            <myAutocompletePledgeAgreements v-model="assignment.pledgeAgreements"/>
+            <v-row dense>
+              <v-col :cols="12">
+                <my-text-field
+                    v-model="assignment.title"
+                    :rules="assignmentTitleRules"
+                    label="Заголовок задания"
+                    prepend-inner-icon="mdi-label-variant-outline"
+                />
+              </v-col>
+              <v-col :cols="12">
+                <my-autocomplete-customers v-model="assignment.customer"/>
+              </v-col>
+              <v-col :cols="12">
+                <my-autocomplete-contracts v-model="assignment.contract"/>
+              </v-col>
+              <v-col :cols="12">
+                <my-autocomplete-subContracts v-model="assignment.subContract"/>
+              </v-col>
+              <v-col :cols="12">
+                <my-autocomplete-loanAgreements v-model="assignment.loanAgreements"/>
+              </v-col>
+              <v-col :cols="12">
+                <my-autocomplete-pledgeAgreements v-model="assignment.pledgeAgreements"/>
+              </v-col>
+            </v-row>
           </v-form>
         </v-card-item>
 
         <v-card-actions>
           <my-btn-submit
-              text="Подтвердить"
-              :loading="changing"
-              @click="sendChanges"
+              text="Принять"
+              prepend-icon="mdi-checkbox-multiple-marked-outline"
+              @click="sendAssignment"
           />
-          <my-button-clear text="Очистить" @click="this.assignment = {}"/>
-          <v-btn density="compact" size="small" text="print object" @click="console.log(assignment)"/>
+          <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
       </v-card>
     </v-sheet>
@@ -61,6 +73,7 @@ import _ from "lodash";
 
 export default {
   name: "assignment-change-page",
+
   data() {
     return {
       assignment: {
@@ -74,17 +87,17 @@ export default {
       },
 
       formIsValid: false,
-      changing: false,
-
+      sending: false,
       assignmentTitleRules: [v => v && v?.length <= 50 || 'Кол-во символов должно быть <= 50'],
     }
   },
 
   async beforeMount() {
-    if (!this.$store.getters['assignments/SELECTED']?._id) {
+    if (!this.selectedAssignment?._id) {
       this.navigateBack();
     } else {
-      await fetchAssignmentOneById(this.$store.getters['assignments/SELECTED']._id)
+      console.log('this.selectedAssignment', this.selectedAssignment)
+      await fetchAssignmentOneById(this.selectedAssignment._id)
           .then((resp) => {
             this.$store.commit('assignments/SELECT', resp.data);
             this.assignment = _.cloneDeep(resp.data);
@@ -95,7 +108,7 @@ export default {
             sessionStorage.removeItem('selectedAssignment');
             this.$store.commit('assignments/RESET_SELECT');
             this.navigateBack();
-            this.$store.commit('assignments/ALERT_ERROR', 'Карточка больше не существует!');
+            this.$store.commit('alert/ERROR', 'Карточка больше не существует!');
           });
     }
   },
@@ -103,6 +116,9 @@ export default {
   computed: {
     assignments() {
       return this.$store.getters['assignments/GET_ASSIGNMENTS'] || [];
+    },
+    selectedAssignment() {
+      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     },
   },
 
@@ -112,23 +128,41 @@ export default {
       navigateTo('/manager-menu/assignments');
     },
 
-    async sendChanges() {
+    async sendAssignment() {
+
       await this.$refs.form.validate();
-      if (this.formIsValid) {
-        this.changing = true;
-        changeAssignment(this.assignment)
-            .then(() => {
-              this.$store.commit('alert/SUCCESS', 'Задание успешно изменено');
-              this.navigateBack();
-            })
-            .catch(err => {
-              this.$store.commit('alert/SUCCESS', 'Ошибка изменения задания');
-            })
-            .finally(() => {
-              this.changing = false;
-            })
+
+      if (!this.formIsValid) {
+        this.$store.commit('alert/ERROR', 'Не все поля заполнены!');
+        return;
       }
+
+      this.sending = true;
+
+      changeAssignment(this.assignment)
+          .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Задание успешно изменено');
+            this.navigateBack();
+          })
+          .catch(err => {
+            this.$store.commit('alert/SUCCESS', 'Ошибка изменения задания');
+          })
+          .finally(() => {
+            this.sending = false;
+          })
     },
+
+    clear() {
+      this.assignment = {
+        _id: null, // _id - всегда null при добавлении
+        title: null, // Заголовок задачи
+        customer: null, // Заказчик
+        contract: null, // Договор
+        subContract: null, // Техническое задание
+        loanAgreements: null, // Кредитный договор
+        pledgeAgreements: null, // Договор залога
+      }
+    }
   }
 }
 </script>

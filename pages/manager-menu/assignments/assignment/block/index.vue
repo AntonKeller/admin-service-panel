@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1024">
+    <v-sheet min-width="400" max-width="1280">
       <v-card variant="text">
         <v-card-title>
           <div class="d-flex align-center justify-space-between">

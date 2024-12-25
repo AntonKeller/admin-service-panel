@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-2 mt-2" min-width="400" max-width="1024">
-      <v-card variant="flat">
+    <v-sheet min-width="400" max-width="1024">
+      <v-card variant="flat" :loading="sending" :disabled="sending">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div>Новое задание</div>
@@ -25,7 +25,6 @@
 
         <v-card-item>
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
-
             <v-row dense>
               <v-col :cols="12">
                 <my-text-field
@@ -87,7 +86,7 @@ export default {
       },
 
       formIsValid: false,
-
+      sending: false,
       assignmentTitleRules: [v => v && v?.length <= 50 || 'Кол-во символов должно быть <= 50'],
     }
   },
@@ -107,6 +106,8 @@ export default {
         return;
       }
 
+      this.sending = true;
+
       addNewAssignment(this.assignment)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Задание успешно добавлено!');
@@ -114,8 +115,9 @@ export default {
             navigateTo('/manager-menu/assignments');
           })
           .catch((err) => {
+            this.sending = false;
             this.$store.commit('alert/ERROR', 'Ошибка добавления задания!');
-            console.log('Ошибка добавления задачи', err)
+            console.log('Ошибка добавления задачи', err);
           })
     },
 

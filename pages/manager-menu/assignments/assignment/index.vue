@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1024">
+    <v-sheet min-width="400" max-width="1280">
       <v-card variant="text">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
@@ -90,15 +90,10 @@
                 {{ unixDateToMiddleDateString(block?.startDate) }}
               </td>
               <td>
-                {{ block?.inspector?.surName + ' ' + block?.inspector?.firstName + ' ' + block?.inspector?.lastName }}
+                {{ getInspector(block?.inspector) }}
               </td>
               <td>
-                <div>
-                  {{ block?.inspector?.phoneNumber || '-' }}
-                </div>
-                <div>
-                  {{ block?.inspector?.email || '-' }}
-                </div>
+                {{getInspectorContacts(block?.inspector)}}
               </td>
               <td style="min-width: 90px; width: 90px; max-width: 90px">
                 <div class="d-flex ga-2">
@@ -234,10 +229,26 @@ export default {
 
     fetching() {
       return this.$store.getters['assignmentBlocks/GET_FETCHING'];
-    }
+    },
   },
 
   methods: {
+
+    // table fields
+    getInspector(inspector) {
+      if (!inspector?.surName && !inspector?.firstName && !inspector?.lastName) {
+        return 'Отсутствует'
+      }
+      return `${inspector?.surName || ''} ${inspector?.firstName || ''} ${inspector?.lastName || ''}`
+    },
+
+    getInspectorContacts(inspector) {
+      if (!inspector?.phoneNumber && !inspector?.email) {
+        return 'Отсутствуют'
+      }
+      return `${inspector?.phoneNumber} | ${inspector?.email}`;
+    },
+    //...............
 
     unixDateToMiddleDateString,
 

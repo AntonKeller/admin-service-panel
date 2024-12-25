@@ -69,14 +69,11 @@
 
 <script>
 import {sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks.js";
-import {fetchInspectors} from "../../../../utils/api/api_inspectors.js";
-import {vMaska} from "maska/vue"
 import {navigateTo} from "nuxt/app";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "block-add",
-
-  emits: ['add:success'],
 
   directives: {
     mask: vMaska
@@ -105,15 +102,8 @@ export default {
     }
   },
 
-  computed: {
-    _assignmentId() {
-      return this.$store.getters['assignments/SELECTED']?._id;
-    }
-  },
-
   mounted() {
     this.clear();
-    this.fetchInspectors();
   },
 
   methods: {
@@ -134,20 +124,6 @@ export default {
       navigateTo('/manager-menu/assignments/assignment');
     },
 
-    fetchInspectors() {
-      this.fetchingInspectors = true;
-      fetchInspectors()
-          .then(response => {
-            this.inspectors = response.data;
-          })
-          .catch((err) => {
-            console.log('Ошибка получения инспекторов', err);
-          })
-          .finally(() => {
-            this.fetchingInspectors = false;
-          })
-    },
-
     async sendBlock() {
 
       await this.$refs.form.validate();
@@ -157,14 +133,14 @@ export default {
         return;
       }
 
-      if (!this._assignmentId) {
+      if (!this.$store.getters['assignments/SELECTED']?._id) {
         this.$store.commit('alert/ERROR', 'Не выбранно задание для добавления блока');
         return;
       }
 
       this.sendingAssignmentBlock = true;
 
-      sendAssignmentBlock(this._assignmentId, this.block)
+      sendAssignmentBlock(this.$store.getters['assignments/SELECTED']._id, this.block)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно создан');
             this.navigateBack();
