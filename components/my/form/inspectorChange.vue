@@ -16,7 +16,7 @@
             <my-text-field v-model="inspector.firstName" label="Имя" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="inspector.surName" label="Фамилия"/>
+            <my-text-field v-model="inspector.surname" label="Фамилия"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="inspector.lastName" label="Отчество"/>
@@ -77,7 +77,7 @@ export default {
     return {
       inspector: {
         firstName: null,
-        surName: null,
+        surname: null,
         lastName: null,
         phoneNumber: null,
         email: null,
@@ -127,7 +127,7 @@ export default {
     clear() {
       this.inspector = {
         firstName: null,
-        surName: null,
+        surname: null,
         lastName: null,
         phoneNumber: null,
         email: null,

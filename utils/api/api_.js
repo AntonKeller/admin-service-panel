@@ -1,5 +1,7 @@
 import axios from "axios";
 import {serverURL} from "@/constants/constants";
+import {vuexStore} from "@/store/vuexStore";
+
 
 function createConfig() {
     return {
@@ -8,6 +10,10 @@ function createConfig() {
             authorization: localStorage.accessToken ?? '',
         }
     }
+}
+
+export function storeAlertTest() {
+    vuexStore.commit('alert/ERROR', 'Тестовое сообщение');
 }
 
 /**

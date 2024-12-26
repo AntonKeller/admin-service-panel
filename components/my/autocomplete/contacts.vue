@@ -1,7 +1,6 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
         :items="contacts"
         :loading="contactsFetching"
         :custom-filter="contactSearchFilter"
@@ -9,17 +8,18 @@
         prepend-inner-icon="mdi-file-document-edit"
         no-data-text="нет данных"
         color="yellow-darken-3"
+        label="Контактное лицо"
         variant="outlined"
         density="compact"
-        label="Контактное лицо"
         closable-chips
         hide-selected
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
             v-bind="props"
-            :text="`${item.raw?.firstName || ''} ${item.raw?.surName || ''} ${item.raw?.lastName || ''}`"
+            :text="`${item.raw?.firstName || ''} ${item.raw?.surname || ''} ${item.raw?.lastName || ''}`"
             prepend-icon="mdi-file-document-edit"
             color="blue-grey-darken-3"
             density="comfortable"
@@ -31,8 +31,8 @@
         <v-list-item
             v-bind="props"
             prepend-icon="mdi-file-document-edit"
-            :title="`${item.raw?.firstName || ''} ${item.raw?.surName || ''} ${item.raw?.lastName || ''}`"
-            :subtitle="`${item.raw?.phoneNumber} / ${item.raw?.email}`"
+            :title="`${item.raw?.firstName || ''} ${item.raw?.surname || ''} ${item.raw?.lastName || ''}`"
+            :subtitle="`${item.raw?.email || ''}`"
         >
           <template #append>
             <v-btn
@@ -51,6 +51,7 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
         icon="mdi-plus"
         variant="text"
@@ -76,6 +77,7 @@ import {fetchContacts, removeContact} from "../../../utils/api/api_contacts";
 
 export default {
   name: "contacts",
+  inheritAttrs: false,
 
   data() {
     return {
@@ -85,11 +87,19 @@ export default {
       contactRules: [v => v || 'Выберите контактное лицо'],
     }
   },
+
+  beforeMount() {
+    console.log('this.$attrs:', this.$attrs);
+  },
+
+
   computed: {
     contacts() {
       return this.contactsList?.filter(contact => !contact.parent) || [];
     },
   },
+
+
   methods: {
 
     onContactAddSuccess() {
@@ -102,8 +112,12 @@ export default {
     },
 
     contactSearchFilter(value, query, item) {
+      console.log('value', value)
       return [
-        item.raw.number || null,
+        item.raw?.firstName || null,
+        item.raw?.surname || null,
+        item.raw?.lastName || null,
+        item.raw?.email || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 

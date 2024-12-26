@@ -56,7 +56,7 @@
             >
               <td>{{ i + 1 }}</td>
               <td>{{ inspector?.firstName || '' }}</td>
-              <td>{{ inspector?.surName || '' }}</td>
+              <td>{{ inspector?.surname || '' }}</td>
               <td>{{ inspector?.lastName || '' }}</td>
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
@@ -102,6 +102,8 @@
 
 <script>
 import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors";
+import {storeAlertTest} from '../../utils/api/api_'
+
 export default {
   name: "inspectors-page",
 
@@ -139,7 +141,7 @@ export default {
         return this.inspectors.filter(e => {
           return (new RegExp(this.searchText, 'ig')).test([
             e?.firstName || null,
-            e?.surName || null,
+            e?.surname || null,
             e?.lastName || null,
             e?.phoneNumber || null,
             e?.email || null
@@ -152,6 +154,8 @@ export default {
   },
 
   methods: {
+
+    storeAlertTest,
 
     onInspectorAddSuccess() {
       this.inspectorMenuAddVisibility = false;

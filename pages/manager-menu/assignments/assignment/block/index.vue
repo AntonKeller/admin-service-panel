@@ -304,7 +304,7 @@ export default {
     downloadReport() {
       this.reportDownloading = true;
       const assignmentBlockId = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
-      downloadFile('Отчет.docx', `${serverURL}/report/${assignmentBlockId}/commercial-proposal`)
+      downloadFile('Отчет.docx', `${serverURL}/reports/${assignmentBlockId}/commercial-proposal`)
           .catch(err => {
             console.log('Ошибка загрузки отчета', err);
           })

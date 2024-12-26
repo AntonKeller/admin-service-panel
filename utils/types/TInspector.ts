@@ -1,7 +1,7 @@
 export interface TInspector {
     _id: string,
     firstName: string,
-    surName: string,
+    surname: string,
     lastName: string,
     email: string,
     phoneNumber: string,

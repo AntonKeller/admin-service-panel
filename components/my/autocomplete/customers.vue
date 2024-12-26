@@ -6,7 +6,6 @@
         :items="customersList"
         :custom-filter="customerSearchFilter"
         @update:menu="onUpdateMenuCustomer"
-        auto-select-first
         prepend-inner-icon="mdi-account-tie"
         no-data-text="нет данных"
         color="yellow-darken-3"
@@ -31,8 +30,8 @@
       <template #item="{ props, item }">
         <v-list-item
             v-bind="props"
-            :title="item.raw.shortName"
-            :subtitle="item.raw.inn"
+            :title="item.raw?.shortName"
+            :subtitle="item.raw?.inn"
             prepend-icon="mdi-file-document-edit"
         >
           <template #append>

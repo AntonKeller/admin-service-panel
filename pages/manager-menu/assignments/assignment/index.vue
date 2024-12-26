@@ -236,10 +236,10 @@ export default {
 
     // table fields
     getInspector(inspector) {
-      if (!inspector?.surName && !inspector?.firstName && !inspector?.lastName) {
+      if (!inspector?.surname && !inspector?.firstName && !inspector?.lastName) {
         return 'Отсутствует'
       }
-      return `${inspector?.surName || ''} ${inspector?.firstName || ''} ${inspector?.lastName || ''}`
+      return `${inspector?.surname || ''} ${inspector?.firstName || ''} ${inspector?.lastName || ''}`
     },
 
     getInspectorContacts(inspector) {

@@ -19,7 +19,7 @@
       <template #chip="{ props, item }">
         <v-chip
             v-bind="props"
-            :text="`${item.raw?.firstName || ''} ${item.raw?.surName || ''} ${item.raw?.lastName || ''}`"
+            :text="`${item.raw?.firstName || ''} ${item.raw?.surname || ''} ${item.raw?.lastName || ''}`"
             prepend-icon="mdi-file-document-edit"
             color="blue-grey-darken-3"
             density="comfortable"
@@ -31,7 +31,7 @@
         <v-list-item
             v-bind="props"
             prepend-icon="mdi-file-document-edit"
-            :title="`${item.raw?.firstName || ''} ${item.raw?.surName || ''} ${item.raw?.lastName || ''}`"
+            :title="`${item.raw?.firstName || ''} ${item.raw?.surname || ''} ${item.raw?.lastName || ''}`"
             :subtitle="`${item.raw?.phoneNumber} / ${item.raw?.email}`"
         >
           <template #append>
@@ -101,7 +101,10 @@ export default {
 
     inspectorSearchFilter(value, query, item) {
       return [
-        item.raw.number || null,
+        item.raw?.firstName || null,
+        item.raw?.surname || null,
+        item.raw?.lastName || null,
+        item.raw?.email || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 

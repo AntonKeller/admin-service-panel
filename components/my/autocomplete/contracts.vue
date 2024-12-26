@@ -111,7 +111,7 @@ export default {
 
     contractSearchFilter(value, query, item) {
       return [
-        item.raw.number || null,
+        item.raw?.number || null,
       ].some(value => (new RegExp(query, 'ig')).test(value));
     },
 
