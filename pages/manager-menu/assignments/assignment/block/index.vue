@@ -35,9 +35,9 @@
           <div class="d-flex flex-column ga-1  py-1">
             <v-btn-group variant="text" color="blue-darken-4" density="compact">
               <v-btn
+                  prepend-icon="mdi-file-download-outline"
                   color="blue-grey-darken-2"
                   size="small"
-                  prepend-icon="mdi-file-download-outline"
                   @click="downloadObjectsTemplate"
               >
                 Скачать шаблон
@@ -47,8 +47,8 @@
               </v-btn>
               <v-divider vertical/>
               <v-btn
-                  color="blue-grey-darken-2"
                   prepend-icon="mdi-table-arrow-up"
+                  color="blue-grey-darken-2"
                   size="small"
                   @click="clickExcelInputFile"
               >
@@ -74,6 +74,20 @@
               <v-divider vertical/>
               <v-btn
                   prepend-icon="mdi-file-document-arrow-right-outline"
+                  color="blue-darken-2"
+                  size="small"
+                  :disabled="downloadingPhotos"
+                  :loading="downloadingPhotos"
+                  @click="downloadPhotos"
+              >
+                Скачать фотоматериалы
+                <v-tooltip activator="parent" location="top">
+                  Скачать фотоматериалы
+                </v-tooltip>
+              </v-btn>
+              <v-divider vertical/>
+              <v-btn
+                  prepend-icon="mdi-file-document-arrow-right-outline"
                   color="red-darken-2"
                   size="small"
                   @click="removeObjectsAll"
@@ -89,10 +103,10 @@
               <v-col :cols="8">
                 <v-text-field
                     v-model="searchText"
-                    density="compact"
-                    label="Поиск объектов"
                     prepend-inner-icon="mdi-magnify"
+                    label="Поиск объектов"
                     variant="solo-filled"
+                    density="compact"
                     hide-details
                     single-line
                     flat
@@ -108,16 +122,16 @@
                         <div class="px-2">
                           <v-switch
                               v-model="filter.objectIsMissing"
-                              density="compact"
-                              label="Отсутствующие"
                               color="blue-darken-3"
+                              label="Отсутствующие"
+                              density="compact"
                               hide-details
                           />
                           <v-switch
                               v-model="filter.objectWithDefect"
-                              density="compact"
-                              label="С дефектами"
                               color="blue-darken-3"
+                              label="С дефектами"
+                              density="compact"
                               hide-details
                           />
                         </div>
@@ -130,52 +144,48 @@
           </div>
 
           <v-divider/>
-
-          <v-sheet>
-
-            <v-table height="350" density="compact" fixed-header class="text-caption elevation-0">
-              <thead>
-              <tr class="text-blue-darken-4">
-                <th class="text-left">№ п/п</th>
-                <th class="text-left">Наименование</th>
-                <th class="text-left">Инв. №</th>
-                <th class="text-left">Наличие объекта</th>
-                <th class="text-left">Наличие дефекта</th>
-                <th class="text-left">Описание дефекта</th>
-                <th class="text-left"></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                  v-for="(inspectionObject, i) in objectsSlice"
-                  :key="inspectionObject._id"
-                  @click.stop="navigateToObject(inspectionObject)"
-                  :class="getColorByStatus(inspectionObject)"
-              >
-                <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
-                <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ textSlicer(inspectionObject?.name, 100) || '' }}
-                </td>
-                <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '' }}
-                </td>
-                <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ inspectionObject.hasSelf ? 'Да' : 'Нет' }}
-                </td>
-                <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ inspectionObject.hasDefect ? 'Да' : 'Нет' }}
-                </td>
-                <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ textSlicer(inspectionObject.description, 20) || '-' }}
-                </td>
-                <td style="min-width: 50px; width: 50px; max-width: 50px">
-                  <my-button-table-remove :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
-            <v-divider/>
-          </v-sheet>
+          <v-table style="max-height: 77vh" density="compact" fixed-header class="text-caption elevation-0">
+            <thead>
+            <tr class="text-blue-darken-4">
+              <th class="text-left">№ п/п</th>
+              <th class="text-left">Наименование</th>
+              <th class="text-left">Инв. №</th>
+              <th class="text-left">Наличие объекта</th>
+              <th class="text-left">Наличие дефекта</th>
+              <th class="text-left">Описание дефекта</th>
+              <th class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                v-for="(inspectionObject, i) in objectsSlice"
+                :key="inspectionObject._id"
+                @click.stop="navigateToObject(inspectionObject)"
+                :class="getColorByStatus(inspectionObject)"
+            >
+              <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.name, 100) || '' }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '' }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ inspectionObject.hasSelf ? 'Да' : 'Нет' }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ inspectionObject.hasDefect ? 'Да' : 'Нет' }}
+              </td>
+              <td style="min-width: 100px; width: 100px; max-width: 100px">
+                {{ textSlicer(inspectionObject.description, 20) || '-' }}
+              </td>
+              <td style="min-width: 50px; width: 50px; max-width: 50px">
+                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
+              </td>
+            </tr>
+            </tbody>
+          </v-table>
+          <v-divider/>
 
           <div class="d-flex align-center mt-2">
             <v-pagination
@@ -197,7 +207,11 @@
 </template>
 
 <script>
-import {fetchAssignmentBlockOneById, uploadObjects} from "../../../../../utils/api/api_assignment_blocks";
+import {
+  fetchAssignmentBlockOneById,
+  uploadObjects,
+  downloadPhotos
+} from "../../../../../utils/api/api_assignment_blocks";
 import {removeObject, removeObjects} from "../../../../../utils/api/api_inspection_objects";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
@@ -218,6 +232,7 @@ export default {
       reportDownloading: false,
       blockMenuChangeVisibility: false,
       filterMenuVisible: false,
+      downloadingPhotos: false,
       filter: {
         objectIsMissing: null,
         objectWithDefect: null,
@@ -297,7 +312,7 @@ export default {
       }
     },
     objectsSlice() {
-      return this.objectsSearchFiltered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      return this.objectsSearchFiltered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage);
     },
     totalObjects() {
       return this.objectsSearchFiltered.length;
@@ -313,6 +328,12 @@ export default {
   },
 
   methods: {
+
+    async downloadPhotos() {
+      this.downloadingPhotos = true;
+      await downloadPhotos(this.$store.getters['assignmentBlocks/SELECTED']?._id);
+      this.downloadingPhotos = false;
+    },
 
     getColorByStatus(inspectionObject) {
       if (!inspectionObject.hasSelf) return 'bg-pink-lighten-5';

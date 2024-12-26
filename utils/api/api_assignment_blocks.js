@@ -1,5 +1,7 @@
 import axios from "axios";
 import axiosConfig from "@/configs/axios";
+import {vuexStore} from "@/store/vuexStore";
+import logger from "@nuxt/fonts/dist/module.mjs";
 
 
 export function fetchAssignmentBlocks(assignmentID, query) {
@@ -25,4 +27,30 @@ export function removeAssignmentBlock(blockId, query) {
 // Загружает на сервер файл Excel со списокм объектов
 export function uploadObjects(blockID, objectsExcelBlob, query) {
     return axios.post('/inspection-objects/uploadObjects/' + (blockID ?? '') + (query ?? ''), objectsExcelBlob, axiosConfig);
+}
+
+
+export async function downloadPhotos(assignmentBlockID, query) {
+    try {
+
+        const response = await axios.get('/assignment-blocks/archivePhoto/' + (assignmentBlockID ?? '') + (query ?? ''), {
+            ...axiosConfig,
+            responseType: 'blob',
+        }).catch(err => {
+            vuexStore.commit('alert/ERROR', 'Ошибка загрузки. Фотографии отсутствуют');
+            console.log('Ошибка загрузки. Фотографии отсутствуют', err);
+        })
+
+        if (!response.data) return;
+
+        const oURL = window.URL.createObjectURL(new Blob([response.data]));
+        const selectorA = document.createElement('a');
+        selectorA.download = 'address_photos.zip';
+        selectorA.href = oURL;
+        document.body.appendChild(selectorA);
+        selectorA.click();
+        selectorA.parentNode.removeChild(selectorA);
+    } catch (err) {
+
+    }
 }
