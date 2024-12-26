@@ -1,8 +1,6 @@
 import axios from "axios";
 import axiosConfig from "@/configs/axios";
 import {vuexStore} from "@/store/vuexStore";
-import logger from "@nuxt/fonts/dist/module.mjs";
-
 
 export function fetchAssignmentBlocks(assignmentID, query) {
     return axios.get('/assignment-blocks/' + assignmentID + (query ?? ''), axiosConfig);
@@ -50,7 +48,8 @@ export async function downloadPhotos(assignmentBlockID, query) {
         document.body.appendChild(selectorA);
         selectorA.click();
         selectorA.parentNode.removeChild(selectorA);
-    } catch (err) {
 
+    } catch (err) {
+        console.log('Ошибка загрузки')
     }
 }

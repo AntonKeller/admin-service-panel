@@ -1,11 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet class="ml-8 mt-6">
-      <v-card
-          variant="text"
-          min-width="400"
-          max-width="1024"
-      >
+      <v-card variant="text" min-width="400" max-width="1024">
         <v-card-title>
           <div class="d-flex align-center justify-space-between">
             <div class="text-wrap mr-6">
@@ -122,7 +118,6 @@ export default {
 
   data() {
     return {
-      visibility: false,
       files: [],
       photos: [],
       selectedImg: null,
@@ -136,11 +131,6 @@ export default {
   },
 
   async mounted() {
-
-    const timeoutID = setTimeout(() => {
-      this.visibility = true;
-      clearTimeout(timeoutID);
-    }, 1);
 
     if (this.inspectionObject?._id) {
       // Загружаем картинки в Store
