@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
-    <v-sheet class="ml-8 mt-6">
-      <v-card variant="text" min-width="400" max-width="1024">
+    <v-sheet>
+      <v-card variant="text">
+
         <v-card-title>
           <div class="d-flex align-center justify-space-between">
             <div class="text-wrap mr-6">
@@ -26,10 +27,15 @@
           </div>
         </v-card-title>
 
-        <v-card-text class="d-flex flex-column ga-1">
-          <span><b>Адрес: </b>{{ inspectionObject?.address || 'Адрес отсутствует' }}</span>
-          <span>{{ inspectionObject?.description || 'Описание отсутствует' }}</span>
-        </v-card-text>
+        <v-card-subtitle>
+          {{ inspectionObject?.address || 'Адрес отсутствует' }}
+        </v-card-subtitle>
+
+        <v-card-item>
+          <div class="text-caption">
+            {{ inspectionObject?.description || 'Описание отсутствует' }}
+          </div>
+        </v-card-item>
 
         <v-file-input
             v-model="files"
@@ -44,44 +50,29 @@
         />
 
         <v-card-item>
-          <v-sheet style="overflow-y: scroll" height="400">
+          <v-sheet style="overflow-y: scroll" max-height="700" class="pr-8">
             <div v-for="(angleT, i) of anglesTransformed">
               <div class="py-2 font-bold d-flex align-center" :class="i !== 0 ? 'mt-2' : ''">
-                <!--              <v-divider style="max-width: 20px"/>-->
-                <span>{{ angleT.angleName }}</span>
+                <v-chip label color="blue-darken-4" density="comfortable">
+                  {{ angleT.angleName }}
+                </v-chip>
               </div>
-              <v-sheet style="overflow-y: scroll" height="100" class="d-flex">
+              <v-sheet style="overflow-y: scroll" height="120" class="d-flex pb-2">
                 <v-img
                     v-for="img of angleT.photos"
                     @click="selectImage(img)"
                     :min-width="150"
-                    :height="100"
+                    :max-width="150"
+                    :height="120"
                     aspect-ratio="1/1"
                     cover
                     :src="img.src"
-                    class="border-sm"
+                    class="border-sm rounded mr-2"
                 />
               </v-sheet>
             </div>
           </v-sheet>
         </v-card-item>
-
-        <!--      <v-card-actions>-->
-        <!--        <v-btn-->
-        <!--            text="Добавить фото в ракурс"-->
-        <!--            icon="mdi-camera-outline"-->
-        <!--            color="blue-darken-3"-->
-        <!--            variant="text"-->
-        <!--            rounded-->
-        <!--        >-->
-        <!--          <v-icon/>-->
-        <!--          <v-tooltip activator="parent" location="right">-->
-        <!--            Добавить фото в ракурс-->
-        <!--          </v-tooltip>-->
-        <!--        </v-btn>-->
-        <!--        <v-divider class="my-2"/>-->
-        <!--      </v-card-actions>-->
-
 
         <my-overlay v-model="imgFullWindowIsShow">
           <v-sheet class="bg-transparent d-flex flex-column">

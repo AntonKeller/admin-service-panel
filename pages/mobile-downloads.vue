@@ -54,7 +54,7 @@ export default {
     iosAppDownload() {
       this.downloadingIos = true;
       let timeoutID = setTimeout(() => {
-        downloadFile('mobileInspector.apk', `${serverURL}/reports/downloadMobileApplication`);
+        // downloadFile('mobileInspector.apk', `${serverURL}/reports/downloadMobileApplication`);
         this.downloadingIos = false;
         clearTimeout(timeoutID);
       }, 2000)
@@ -62,7 +62,7 @@ export default {
     androidAppDownload() {
       this.downloadingAndroid = true;
       let timeoutID = setTimeout(() => {
-        downloadFile('mobileInspector.apk', `${serverURL}/reports/downloadMobileApplication`);
+        downloadFile('mobileInspector.apk', `${serverURL}/applications/androidApplication`);
         this.downloadingAndroid = false;
         clearTimeout(timeoutID);
       }, 2000)

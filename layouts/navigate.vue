@@ -74,8 +74,11 @@
       <v-app-bar elevation="0">
         <v-card class="d-flex justify-end bg-blue-darken-3" style="min-width: 100%">
           <v-card-item>
-            <v-btn icon="mdi-cog-outline" class="ml-auto" rounded @click="navigateToProfile">
+            <v-btn icon="mdi-account-cog-outline" class="ml-auto" rounded @click="navigateToProfile">
               <v-icon/>
+              <v-tooltip activator="parent" >
+                Настройки профиля
+              </v-tooltip>
             </v-btn>
           </v-card-item>
         </v-card>

@@ -62,7 +62,7 @@
               </td>
               <td>
                 <v-chip color="blue-darken-3" density="comfortable" label>
-                  {{ assignment?.customer?.shortName || '-' }}
+                  {{ assignment.customer|| '-' }}
                 </v-chip>
               </td>
               <td>{{ slicer(assignment.description, 50) }}</td>
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import {slicer, unixDateToShortDateString} from "../../../utils/functions.js";
+import {slicer, unixDateToShortDateString} from "../../../utils/functions";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -191,10 +191,12 @@ export default {
     navigateToAddMenu() {
       navigateTo('/manager-menu/assignments/assignment-create');
     },
+
     navigateToCardMenu(assignment) {
       this.selectAssignment(assignment);
       navigateTo('/manager-menu/assignments/assignment');
     },
+
     navigateToChangeMenu(assignment) {
       this.selectAssignment(assignment);
       navigateTo('/manager-menu/assignments/assignment-change');

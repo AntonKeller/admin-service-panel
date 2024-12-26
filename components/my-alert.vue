@@ -1,7 +1,7 @@
 <template>
   <v-snackbar v-model="visible" :color="color">
     <v-icon>mdi-alert-circle-outline</v-icon>
-    {{ message }}
+    <span class="ml-3">{{ message }}</span>
   </v-snackbar>
 </template>
 
