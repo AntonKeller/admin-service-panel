@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        :loading="pledgeAgreementsFetching"
+        :loading="fetching"
         :items="pledgeAgreementsList"
         :custom-filter="pledgeAgreementSearchFilter"
         @update:menu="onUpdateMenuPledgeAgreements"
@@ -85,7 +85,7 @@ export default {
   data() {
     return {
       pledgeAgreementsList: [], // TODO: Запросы и Vue вывод полей
-      pledgeAgreementsFetching: false,
+      fetching: false,
       pledgeAgreementMenuAddVisible: false,
       pledgeAgreementRules: [v => v || 'Договор должен быть выбран'],
     }
@@ -124,18 +124,18 @@ export default {
 
     async fetchPledgeAgreementsList() {
 
-      this.pledgeAgreementsFetching = true;
+      this.fetching = true;
 
       fetchPledgeAgreements()
           .then(response => {
             this.pledgeAgreementsList = response.data;
           })
           .catch(err => {
-            this.$store.commit('alert/ERROR', 'Ошибка получения данных кредитных договорах!');
+            this.$store.commit('alert/ERROR', 'Ошибка получения списка кредитных договоров');
             console.log('Ошибка получения данных о договорах залога', err);
           })
           .finally(() => {
-            this.pledgeAgreementsFetching = false;
+            this.fetching = false;
           })
     },
   }

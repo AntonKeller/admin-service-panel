@@ -41,7 +41,8 @@
                 <my-autocomplete-contracts v-model="assignment.contract"/>
               </v-col>
               <v-col :cols="12">
-                <my-autocomplete-subContracts v-model="assignment.subContract"/>
+                <my-autocomplete-subContracts v-model="assignment.subContract"
+                                              :parentID="assignment.contract?._id || null"/>
               </v-col>
               <v-col :cols="12">
                 <my-autocomplete-loanAgreements v-model="assignment.loanAgreements"/>
@@ -60,6 +61,7 @@
               @click="sendAssignment"
           />
           <my-button-clear text="Очистить" @click="clear"/>
+          <v-btn density="compact" variant="text" text="print" @click="console.log(this.assignment.contract)"/>
         </v-card-actions>
       </v-card>
     </v-sheet>
@@ -75,6 +77,7 @@ export default {
 
   data() {
     return {
+
       assignment: {
         _id: null, // _id - всегда null при добавлении
         title: null, // Заголовок задачи
@@ -88,6 +91,14 @@ export default {
       formIsValid: false,
       sending: false,
       assignmentTitleRules: [v => v && v?.length <= 50 || 'Кол-во символов должно быть <= 50'],
+    }
+  },
+
+  watch: {
+    ['assignment.contract'](newValue) {
+      if (!newValue) {
+        this.assignment.subContract = null;
+      }
     }
   },
 

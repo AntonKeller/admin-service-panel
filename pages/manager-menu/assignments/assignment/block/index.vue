@@ -139,6 +139,9 @@
                 <th class="text-left">№ п/п</th>
                 <th class="text-left">Наименование</th>
                 <th class="text-left">Инв. №</th>
+                <th class="text-left">Наличие объекта</th>
+                <th class="text-left">Наличие дефекта</th>
+                <th class="text-left">Описание дефекта</th>
                 <th class="text-left"></th>
               </tr>
               </thead>
@@ -147,13 +150,23 @@
                   v-for="(inspectionObject, i) in objectsSlice"
                   :key="inspectionObject._id"
                   @click.stop="navigateToObject(inspectionObject)"
+                  :class="getColorByStatus(inspectionObject)"
               >
                 <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
                 <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ textSlicer(inspectionObject?.name, 100) }}
+                  {{ textSlicer(inspectionObject?.name, 100) || '' }}
                 </td>
                 <td style="min-width: 100px; width: 100px; max-width: 100px">
-                  {{ textSlicer(inspectionObject?.inventoryNumber, 25) }}
+                  {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '' }}
+                </td>
+                <td style="min-width: 100px; width: 100px; max-width: 100px">
+                  {{ inspectionObject.hasSelf ? 'Да' : 'Нет' }}
+                </td>
+                <td style="min-width: 100px; width: 100px; max-width: 100px">
+                  {{ inspectionObject.hasDefect ? 'Да' : 'Нет' }}
+                </td>
+                <td style="min-width: 100px; width: 100px; max-width: 100px">
+                  {{ textSlicer(inspectionObject.description, 20) || '-' }}
                 </td>
                 <td style="min-width: 50px; width: 50px; max-width: 50px">
                   <my-button-table-remove :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
@@ -278,9 +291,16 @@ export default {
       const {startDate} = this.selectedAssignmentBlock;
       return unixDateToMiddleDateString(startDate);
     },
+
   },
 
   methods: {
+
+    getColorByStatus(inspectionObject) {
+      if (!inspectionObject.hasSelf) return 'bg-pink-lighten-5';
+      if (!inspectionObject.hasDefect) return 'bg-amber-lighten-4';
+      return '';
+    },
 
     removeOneObject(ID) {
       removeObject(ID)

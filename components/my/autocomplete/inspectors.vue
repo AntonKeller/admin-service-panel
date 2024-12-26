@@ -1,9 +1,8 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
         :items="inspectors"
-        :loading="inspectorsFetching"
+        :loading="fetching"
         :custom-filter="inspectorSearchFilter"
         @update:menu="onUpdateMenuInspectors"
         prepend-inner-icon="mdi-file-document-edit"
@@ -15,6 +14,7 @@
         closable-chips
         hide-selected
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -71,6 +71,7 @@
 
 <script>
 import {fetchInspectors, removeInspector} from "../../../utils/api/api_inspectors";
+import alert from "../../../store/modules/alert.js";
 
 export default {
   name: "inspectors",
@@ -78,7 +79,7 @@ export default {
   data() {
     return {
       inspectorsList: [], // TODO: Запросы и Vue вывод полей
-      inspectorsFetching: false,
+      fetching: false,
       inspectorFormAddVisible: false,
       inspectorRules: [v => v || 'Выберите инспектора'],
     }
@@ -119,17 +120,20 @@ export default {
     },
 
     async fetchInspectorsList() {
-      this.inspectorsFetching = true;
-      const answer = await fetchInspectors();
-      switch (answer.status) {
-        case 200:
-          this.inspectorsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о инспекторах');
-          break;
-      }
-      this.inspectorsFetching = false;
+
+      this.fetching = true;
+
+      fetchInspectors()
+          .then(response => {
+            this.inspectorsList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения списка инспекторов');
+            console.log('Ошибка получения списка инспекторов', err);
+          })
+          .finally(() => {
+            this.fetching = false;
+          })
     },
   }
 }

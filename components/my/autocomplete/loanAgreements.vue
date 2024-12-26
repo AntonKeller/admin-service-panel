@@ -1,8 +1,7 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
-        :loading="loanAgreementsFetching"
+        :loading="fetching"
         :items="loanAgreementsList"
         :custom-filter="loanAgreementSearchFilter"
         @update:menu="onUpdateMenuLoanAgreements"
@@ -16,6 +15,7 @@
         hide-selected
         multiple
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -84,7 +84,7 @@ export default {
   data() {
     return {
       loanAgreementsList: [], // TODO: Запросы и Vue вывод полей
-      loanAgreementsFetching: false,
+      fetching: false,
       loanAgreementMenuAddVisible: false,
       loanAgreementRules: [v => v || 'Договор должен быть выбран'],
     }
@@ -122,7 +122,7 @@ export default {
 
     async fetchLoanAgreementsList() {
 
-      this.loanAgreementsFetching = true;
+      this.fetching = true;
 
       fetchLoanAgreements()
           .then((response) => {
@@ -133,7 +133,7 @@ export default {
             console.log('Ошибка получения данных о кредитных договорах', err);
           })
           .finally(() => {
-            this.loanAgreementsFetching = false;
+            this.fetching = false;
           })
     },
   }

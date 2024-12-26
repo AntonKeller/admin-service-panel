@@ -2,7 +2,7 @@
   <div class="d-flex ga-1">
     <v-autocomplete
         :items="pledgerList"
-        :loading="pledgersFetching"
+        :loading="fetching"
         :custom-filter="pledgersSearchFilter"
         @update:menu="onUpdateMenuPledgers"
         prepend-inner-icon="mdi-file-document-edit"
@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       pledgerList: [],
-      pledgersFetching: false,
+      fetching: false,
       pledgerFormAddVisible: false,
       pledgerRules: [v => v || 'Выберите залогодателя'],
     }
@@ -123,16 +123,19 @@ export default {
     },
 
     async fetchPledgerList() {
-      this.pledgersFetching = true;
+
+      this.fetching = true;
+
       fetchPledgers()
           .then(response => {
             this.pledgerList = response.data;
           })
           .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения списка залогодателей');
             console.log('Ошибка получения списка залогодателей', err);
           })
           .finally(() => {
-            this.pledgersFetching = false;
+            this.fetching = false;
           })
     },
 

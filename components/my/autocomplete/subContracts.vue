@@ -1,13 +1,12 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
-        :loading="contractsFetching"
+        :loading="fetching"
         :items="subContracts"
         :custom-filter="contractSearchFilter"
         @update:menu="onUpdateMenuContracts"
         prepend-inner-icon="mdi-file-document-edit"
-        no-data-text="нет данных"
+        :no-data-text="noDataText"
         color="yellow-darken-3"
         variant="outlined"
         density="compact"
@@ -15,6 +14,7 @@
         closable-chips
         hide-selected
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -76,10 +76,16 @@ import {fetchContracts, removeContract} from "../../../utils/api/api_contracts";
 export default {
   name: "sub-contracts",
 
+  inheritAttrs: false,
+
+  props: {
+    parentID: String,
+  },
+
   data() {
     return {
       contractsList: [], // TODO: Запросы и Vue вывод полей
-      contractsFetching: false,
+      fetching: false,
       contractMenuAddVisible: false,
       contractRules: [v => v || 'Договор должен быть выбран'],
     }
@@ -87,8 +93,17 @@ export default {
 
   computed: {
     subContracts() {
-      return this.contractsList?.filter(contract => contract.parent) || [];
+      return this.contractsList?.filter(contract => contract.parent?._id === this.parentID);
     },
+    noDataText() {
+      if (this.parentID && this.subContracts.length === 0) {
+        return 'Нет субдоговоров по текущему договору';
+      }
+      if (!this.parentID) {
+        return 'Выберите рамочный договор';
+      }
+      return '';
+    }
   },
 
   methods: {
@@ -101,7 +116,10 @@ export default {
     },
 
     onUpdateMenuContracts(status) {
-      if (status) this.fetchContractsList();
+      if (status) {
+        this.fetchContractsList();
+        console.log('this.parentID:', this.parentID);
+      }
     },
 
     contractSearchFilter(value, query, item) {
@@ -121,17 +139,20 @@ export default {
     },
 
     async fetchContractsList() {
-      this.contractsFetching = true;
-      const answer = await fetchContracts();
-      switch (answer.status) {
-        case 200:
-          this.contractsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о договорах');
-          break;
-      }
-      this.contractsFetching = false;
+
+      this.fetching = true;
+
+      fetchContracts()
+          .then(response => {
+            this.contractsList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения списка субдогвооров');
+            console.log('Ошибка получения списка субдогвооров', err)
+          })
+          .finally(() => {
+            this.fetching = false;
+          })
     },
   }
 }

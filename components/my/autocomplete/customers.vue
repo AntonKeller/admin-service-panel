@@ -1,8 +1,7 @@
 <template>
   <div class="d-flex ga-1">
     <v-autocomplete
-        v-bind="$attrs"
-        :loading="customersFetching"
+        :loading="fetching"
         :items="customersList"
         :custom-filter="customerSearchFilter"
         @update:menu="onUpdateMenuCustomer"
@@ -15,6 +14,7 @@
         hide-selected
         closable-chips
         chips
+        v-bind="$attrs"
     >
       <template #chip="{ props, item }">
         <v-chip
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       customerMenuAddVisible: false,
-      customersFetching: false,
+      fetching: false,
       customersList: [],
     }
   },
@@ -114,7 +114,7 @@ export default {
 
     async fetchCustomersList() {
 
-      this.customersFetching = true;
+      this.fetching = true;
 
       fetchCustomers()
           .then(response => {
@@ -125,7 +125,7 @@ export default {
             console.log('Ошибка получения данных о заказчиках', err);
           })
           .finally(() => {
-            this.customersFetching = false;
+            this.fetching = false;
           })
     },
 

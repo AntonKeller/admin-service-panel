@@ -2,7 +2,7 @@
   <div class="d-flex ga-1">
     <v-autocomplete
         :items="contracts"
-        :loading="contractsFetching"
+        :loading="fetching"
         :custom-filter="contractSearchFilter"
         @update:menu="onUpdateMenuContracts"
         prepend-inner-icon="mdi-file-document-edit"
@@ -76,6 +76,7 @@ import {fetchContracts, removeContract} from "../../../utils/api/api_contracts";
 
 export default {
   name: "contracts",
+  inheritAttrs: false,
 
   props: {
     hideButtonAdd: Boolean,
@@ -84,7 +85,7 @@ export default {
   data() {
     return {
       contractsList: [], // TODO: Запросы и Vue вывод полей
-      contractsFetching: false,
+      fetching: false,
       contractMenuAddVisible: false,
       contractRules: [v => v || 'Договор должен быть выбран'],
     }
@@ -126,17 +127,20 @@ export default {
     },
 
     async fetchContractsList() {
-      this.contractsFetching = true;
-      const answer = await fetchContracts();
-      switch (answer.status) {
-        case 200:
-          this.contractsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о договорах');
-          break;
-      }
-      this.contractsFetching = false;
+
+      this.fetching = true;
+
+      fetchContracts()
+          .then(response => {
+            this.contractsList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Ошибка получения списка договоров');
+            console.log('Ошибка получения списка договоров', err);
+          })
+          .finally(() => {
+            this.fetching = false;
+          })
     },
   }
 }

@@ -28,19 +28,16 @@ const inspectionObjects = {
         }
     },
     actions: {
-        async FETCH({commit, getters}, currentObjectID) {
-            const answer = await fetchInspectionObjects(currentObjectID);
-            switch (answer.status) {
-                case 200:
-                    commit('SET_OBJECTS', answer.data);
-                    break;
-                case 403:
-                    commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
-                    break;
-                default:
-                    commit('alert/ERROR', 'Ошибка запроса' || answer.statusText, {root: true});
-                    break;
-            }
+        FETCH({commit, getters}, currentObjectID) {
+            fetchInspectionObjects(currentObjectID)
+                .then(response => {
+                    console.log('objects:', response.data);
+                    commit('SET_OBJECTS', response.data);
+                })
+                .catch(err => {
+                    commit('alert/ERROR', 'Ошибка загрузки инспектируемых объектов', {root: true});
+                    console.log('Ошибка загрузки инспектируемых объектов', err);
+                });
         },
     },
 }

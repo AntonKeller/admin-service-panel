@@ -2,7 +2,7 @@
   <div class="d-flex ga-1">
     <v-autocomplete
         :items="contacts"
-        :loading="contactsFetching"
+        :loading="fetching"
         :custom-filter="contactSearchFilter"
         @update:menu="onUpdateMenuContacts"
         prepend-inner-icon="mdi-file-document-edit"
@@ -82,7 +82,7 @@ export default {
   data() {
     return {
       contactsList: [],
-      contactsFetching: false,
+      fetching: false,
       contactFormAddVisible: false,
       contactRules: [v => v || 'Выберите контактное лицо'],
     }
@@ -132,17 +132,20 @@ export default {
     },
 
     async fetchContactsList() {
-      this.contactsFetching = true;
-      const answer = await fetchContacts();
-      switch (answer.status) {
-        case 200:
-          this.contactsList = answer.data;
-          break;
-        default:
-          console.log('Ошибка получения данных о контактах');
-          break;
-      }
-      this.contactsFetching = false;
+
+      this.fetching = true;
+
+      fetchContacts()
+          .then(response => {
+            this.contactsList = response.data;
+          })
+          .catch(err => {
+            this.$store.commit("alert/ERROR", 'Ошибка получения списка контактов');
+            console.log('Ошибка получения списка контактов', err);
+          })
+          .finally(() => {
+            this.fetching = false;
+          })
     },
   }
 }
