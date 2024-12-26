@@ -114,7 +114,7 @@
                               hide-details
                           />
                           <v-switch
-                              v-model="filter.objectWithDefects"
+                              v-model="filter.objectWithDefect"
                               density="compact"
                               label="С дефектами"
                               color="blue-darken-3"
@@ -220,7 +220,7 @@ export default {
       filterMenuVisible: false,
       filter: {
         objectIsMissing: null,
-        objectWithDefects: null,
+        objectWithDefect: null,
       },
     }
   },
@@ -261,8 +261,26 @@ export default {
       return this.$store.getters['inspectionObjects/GET_OBJECTS'];
     },
     objectsFiltered() {
+
+      if (this.filter.objectIsMissing && this.filter.objectWithDefect) {
+        return this.inspectionObjects
+            .filter(item => !item.hasSelf)
+            .filter(item => item.hasDefect);
+      }
+
+      if (this.filter.objectIsMissing && !this.filter.objectWithDefect) {
+        return this.inspectionObjects.filter(item => !item.hasSelf);
+      }
+
+      if (!this.filter.objectIsMissing && this.filter.objectWithDefect) {
+        return this.inspectionObjects.filter(item => item.hasDefect);
+      }
+
+      return this.inspectionObjects;
+    },
+    objectsSearchFiltered() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
-        return this.inspectionObjects.filter(object => {
+        return this.objectsFiltered.filter(object => {
           return [
             object?.address,
             object?.description,
@@ -275,14 +293,14 @@ export default {
           ].filter(e => !!e).find(value => (new RegExp(this.searchText, "ig")).test(value));
         })
       } else {
-        return this.inspectionObjects;
+        return this.objectsFiltered;
       }
     },
     objectsSlice() {
-      return this.objectsFiltered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      return this.objectsSearchFiltered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
     },
     totalObjects() {
-      return this.objectsFiltered.length;
+      return this.objectsSearchFiltered.length;
     },
     totalPages() {
       return Math.ceil(this.totalObjects / this.itemsPerPage);
