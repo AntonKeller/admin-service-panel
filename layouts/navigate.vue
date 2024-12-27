@@ -10,20 +10,30 @@
             style="min-width: 100%;"
         >
           <v-card-item>
-            <div class="d-flex justify-start align-center">
-              <v-btn
-                  icon="mdi-account-cog-outline"
-                  color="blue-lighten-5"
-                  variant="text"
-                  class="ml-auto"
-                  rounded="lg"
-                  @click="navigateToProfile"
+            <div class="d-flex justify-end align-center ga-4">
+              <v-list-item
+                  prepend-icon="mdi-bell"
+                  variant="tonal"
+                  title="Оповещения"
+                  nav
+                  @click=""
               >
-                <v-icon/>
-                <v-tooltip activator="parent">
-                  Настройки профиля
+                <v-tooltip activator="parent" location="bottom">
+                  Проверить оповещения
                 </v-tooltip>
-              </v-btn>
+              </v-list-item>
+                <v-list-item
+                    prepend-icon="mdi-account-cog-outline"
+                    variant="tonal"
+                    :title="profile.fullName"
+                    :subtitle="profile.email"
+                    nav
+                    @click="navigateToProfile"
+                >
+                  <v-tooltip activator="parent" location="bottom">
+                    Настройки профиля
+                  </v-tooltip>
+                </v-list-item>
             </div>
           </v-card-item>
         </v-card>
@@ -58,7 +68,7 @@
             </template>
           </v-list-item>
 
-          <v-divider class="my-1"/>
+          <v-divider class="mb-1 mt-2"/>
 
           <v-list-item
               v-for="item of navItems"
@@ -68,7 +78,7 @@
               :active="item._id === activeItem"
               :value="item.value"
               :title="item.title"
-              color="grey-darken-2"
+              color="grey-darken-3"
               density="compact"
               rounded="lg"
               @click="activeItem = item._id"
