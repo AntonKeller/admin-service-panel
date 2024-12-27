@@ -72,9 +72,10 @@
       </v-navigation-drawer>
 
       <v-app-bar elevation="0">
-        <v-card class="d-flex justify-end bg-blue-darken-3" style="min-width: 100%">
+        <v-card class="d-flex justify-end" style="min-width: 100%; background-color: rgb(234, 238, 250)">
           <v-card-item>
-            <v-btn icon="mdi-account-cog-outline" class="ml-auto" rounded @click="navigateToProfile">
+<!--            style="color: rgb(0, 95, 185)"-->
+            <v-btn icon="mdi-account-cog-outline" class="ml-auto" rounded @click="navigateToProfile" color="blue-darken-3">
               <v-icon/>
               <v-tooltip activator="parent" >
                 Настройки профиля

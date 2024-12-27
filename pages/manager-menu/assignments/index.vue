@@ -130,9 +130,9 @@ export default {
       return this.$store.getters['assignments/GET_ASSIGNMENTS'];
     },
     assignmentTotalCount() {
-      return this.assignmentList.length;
+      return this.assignmentSearchFilter.length;
     },
-    assignmentFoundList() {
+    assignmentSearchFilter() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
         return this.assignmentList.filter(item => {
           return [
@@ -151,7 +151,7 @@ export default {
     assignmentsSLice() {
       const from = (this.currentPage - 1) * this.itemsPerPage;
       const to = this.currentPage * this.itemsPerPage;
-      return this.assignmentFoundList.slice(from, to);
+      return this.assignmentSearchFilter.slice(from, to);
     },
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];
