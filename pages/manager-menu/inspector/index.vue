@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
-      <v-card variant="text">
+      <v-card variant="text" :loading="fetchingInspectors">
 
         <v-card-title>Инспекторы</v-card-title>
 
@@ -11,7 +11,7 @@
                 variant="tonal"
                 color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
-                @click="inspectorMenuAddVisibility = true"
+                @click="navigateToInspectorAdd"
             >
               Добавить
               <v-tooltip activator="parent">
@@ -37,7 +37,7 @@
         <v-card-item>
           <v-divider/>
           <v-table style="max-height: 77vh" density="comfortable" fixed-header>
-            <thead v-if="!fetching">
+            <thead>
             <tr>
               <th>№</th>
               <th>Имя</th>
@@ -48,11 +48,10 @@
               <th></th>
             </tr>
             </thead>
-            <tbody v-if="!fetching">
+            <tbody>
             <tr
                 v-for="(inspector, i) of inspectorsSlice"
                 :key="inspector._id"
-                @click="changeInspector(inspector)"
             >
               <td>{{ i + 1 }}</td>
               <td>{{ inspector?.firstName || '' }}</td>
@@ -61,7 +60,10 @@
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
               <td>
-                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
+                <div class="d-flex ga-2">
+                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(inspector)"/>
+                  <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
+                </div>
               </td>
             </tr>
             </tbody>
@@ -83,35 +85,18 @@
         </v-card-item>
       </v-card>
     </v-sheet>
-
-    <v-overlay v-model="inspectorMenuAddVisibility" class="d-flex justify-center align-center">
-      <my-form-inspector-add @add:success="onInspectorAddSuccess"
-                     @click:close="inspectorMenuAddVisibility=false"/>
-    </v-overlay>
-
-
-    <v-overlay v-model="inspectorMenuChangeVisibility" class="d-flex justify-center align-center">
-      <inspector-change
-          :_inspector="inspectorSelected"
-          @change:success="onInspectorChangeSuccess"
-          @click:close="inspectorMenuChangeVisibility=false"
-      />
-    </v-overlay>
   </v-container>
 </template>
 
 <script>
-import {fetchInspectors, removeInspector} from "../../utils/api/api_inspectors";
-import {storeAlertTest} from '../../utils/api/api_'
+import {removeInspector} from "../../../utils/api/api_inspectors";
+import _ from "lodash";
 
 export default {
   name: "inspectors-page",
 
   data() {
     return {
-      inspectors: [],
-      inspectorSelected: null,
-      fetching: false,
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,
@@ -121,22 +106,17 @@ export default {
   },
 
   mounted() {
-    this.updateInspectors();
+    this.$store.dispatch('inspectors/FETCH');
   },
 
   computed: {
-    totalPages() {
-      return Math.ceil(this.inspectorsFoundCount / this.itemsPerPage);
+    inspectors() {
+      return this.$store.getters['inspectors/GET_INSPECTORS'];
     },
-    inspectorsFoundCount() {
-      return this.inspectorsFound.length;
+    fetchingInspectors() {
+      return this.$store.getters['inspectors/GET_FETCHING'];
     },
-    inspectorsSlice() {
-      const from = (this.currentPage - 1) * this.itemsPerPage;
-      const to = this.currentPage * this.itemsPerPage;
-      return this.inspectorsFound.slice(from, to);
-    },
-    inspectorsFound() {
+    inspectorsSearchFilter() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
         return this.inspectors.filter(e => {
           return (new RegExp(this.searchText, 'ig')).test([
@@ -150,42 +130,45 @@ export default {
       } else {
         return this.inspectors;
       }
-    }
+    },
+    totalPages() {
+      return Math.ceil(this.inspectorsFoundCount / this.itemsPerPage);
+    },
+    inspectorsFoundCount() {
+      return this.inspectorsSearchFilter.length;
+    },
+    inspectorsSlice() {
+      const from = (this.currentPage - 1) * this.itemsPerPage;
+      const to = this.currentPage * this.itemsPerPage;
+      return this.inspectorsSearchFilter.slice(from, to);
+    },
+
   },
 
   methods: {
 
-    storeAlertTest,
-
-    onInspectorAddSuccess() {
-      this.inspectorMenuAddVisibility = false;
-      this.updateInspectors();
+    selectInspector(inspector) {
+      this.$store.commit('inspectors/SELECT', _.cloneDeep(inspector));
     },
 
-    onInspectorChangeSuccess() {
-      this.inspectorMenuChangeVisibility = false;
-      this.updateInspectors();
+    navigateToInspectorAdd() {
+      navigateTo('/manager-menu/inspectors/inspector-add');
     },
 
-    updateInspectors() {
-      fetchInspectors().then((response) => {
-        this.inspectors = response.data;
-      })
+    navigateToInspectorChange(inspector) {
+      this.selectInspector(inspector);
+      navigateTo('/manager-menu/inspectors/inspector-change');
     },
 
     removeInspector(ID) {
       removeInspector(ID)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно удален');
-            this.updateInspectors();
+            this.$store.dispatch('inspectors/FETCH');
           })
           .catch(() => {
             this.$store.commit('alert/ERROR', 'Ошибка удаления инспектора');
           })
-    },
-    changeInspector(inspector) {
-      this.inspectorSelected = inspector;
-      this.inspectorMenuChangeVisibility = true;
     },
   }
 }
