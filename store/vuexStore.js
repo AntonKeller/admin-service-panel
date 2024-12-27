@@ -5,6 +5,7 @@ import alert from "@/store/modules/alert.js";
 import assignments from "./modules/assignments.js";
 import angles from "@/store/modules/angles.js";
 import customers from "@/store/modules/customers.js";
+import inspectors from "@/store/modules/inspectors.js";
 
 // Вводный, короткий курс по Vuex
 // https://habr.com/ru/articles/421551/
@@ -17,6 +18,7 @@ export const vuexStore = createStore({
         assignments,
         assignmentBlocks,
         inspectionObjects,
-        customers
+        customers,
+        inspectors
     },
 })

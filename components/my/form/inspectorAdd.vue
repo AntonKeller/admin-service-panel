@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="0" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Создание новый записи инспектор</div>
@@ -58,7 +58,7 @@ import {vMaska} from "maska/vue"
 export default {
   name: "inspector-add",
 
-  emits: ['add:success', 'click:close'],
+  emits: ['add:success'],
 
   directives: {
     mask: vMaska
@@ -103,8 +103,9 @@ export default {
 
       addInspector(this.inspector)
           .then(() => {
+            this.$store.dispatch('inspectors/FETCH');
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно добавлен');
-            this.$emit('add:success')
+            this.$emit('add:success');
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);

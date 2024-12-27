@@ -2,6 +2,40 @@
   <v-card height="100vh">
     <v-layout full-height>
 
+      <v-app-bar elevation="0" :rounded="0" class="border-b-sm">
+        <v-card
+            class="bg-blue-darken-4"
+            variant="flat"
+            :rounded="0"
+            style="min-width: 100%;"
+        >
+          <v-card-item>
+            <div class="d-flex justify-start align-center">
+              <v-img
+                  src="/assets/images/logotype.png"
+                  aspect-ratio="1/1"
+                  max-width="50"
+                  height="45"
+              />
+              <div class="ml-2">Mobile inspector</div>
+              <v-btn
+                  icon="mdi-account-cog-outline"
+                  color="blue-lighten-5"
+                  variant="text"
+                  class="ml-auto"
+                  rounded="lg"
+                  @click="navigateToProfile"
+              >
+                <v-icon/>
+                <v-tooltip activator="parent">
+                  Настройки профиля
+                </v-tooltip>
+              </v-btn>
+            </div>
+          </v-card-item>
+        </v-card>
+      </v-app-bar>
+
       <v-navigation-drawer
           :rail="rail"
           permanent
@@ -9,7 +43,6 @@
           elevation="0"
       >
         <v-list variant="text" density="default" nav rounded="lg">
-
           <div class="d-flex align-center justify-space-between">
             <v-list-item
                 prepend-icon="mdi-account"
@@ -70,20 +103,6 @@
           </v-list>
         </template>
       </v-navigation-drawer>
-
-      <v-app-bar elevation="0">
-        <v-card class="d-flex justify-end" style="min-width: 100%; background-color: rgb(234, 238, 250)">
-          <v-card-item>
-<!--            style="color: rgb(0, 95, 185)"-->
-            <v-btn icon="mdi-account-cog-outline" class="ml-auto" rounded @click="navigateToProfile" color="blue-darken-3">
-              <v-icon/>
-              <v-tooltip activator="parent" >
-                Настройки профиля
-              </v-tooltip>
-            </v-btn>
-          </v-card-item>
-        </v-card>
-      </v-app-bar>
 
       <v-main>
         <slot/>

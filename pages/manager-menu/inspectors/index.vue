@@ -39,7 +39,6 @@
           <v-table style="max-height: 77vh" density="comfortable" fixed-header>
             <thead>
             <tr>
-              <th>№</th>
               <th>Имя</th>
               <th>Фамилия</th>
               <th>Отчество</th>
@@ -53,7 +52,6 @@
                 v-for="(inspector, i) of inspectorsSlice"
                 :key="inspector._id"
             >
-              <td>{{ i + 1 }}</td>
               <td>{{ inspector?.firstName || '' }}</td>
               <td>{{ inspector?.surname || '' }}</td>
               <td>{{ inspector?.lastName || '' }}</td>

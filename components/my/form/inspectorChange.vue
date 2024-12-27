@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="0" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редактирование инспектора</div>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import {changeInspector} from "../utils/api/api_inspectors";
+import {changeInspector} from "@/utils/api/api_inspectors";
 import {isNotEmptyRule} from '@/utils/validators/functions';
 import {vMaska} from "maska/vue"
 import _ from "lodash";
@@ -61,16 +61,12 @@ export default {
 
   emits: ['change:success', 'click:close'],
 
-  props: {
-    _inspector: Object,
-  },
-
   directives: {
     mask: vMaska
   },
 
   beforeMount() {
-    this.inspector = _.cloneDeep(this._inspector);
+    this.inspector = _.cloneDeep(this.$store.getters['inspectors/GET_SELECTED']);
   },
 
   data() {
@@ -112,8 +108,9 @@ export default {
 
       changeInspector(this.inspector)
           .then(() => {
+            this.$store.dispatch('inspectors/FETCH');
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно изменен!');
-            this.$emit('change:success')
+            this.$emit('change:success');
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);

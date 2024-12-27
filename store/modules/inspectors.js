@@ -34,19 +34,21 @@ const inspectors = {
     actions: {
         FETCH({commit}) {
 
-            commit('inspectors/SET_FETCHING', true);
+            commit('SET_FETCHING', true);
 
             fetchInspectors()
                 .then(response => {
-                    commit('inspectors/SET_INSPECTORS', response.data);
+                    commit('SET_INSPECTORS', response.data);
                 })
                 .catch(err => {
                     commit('alert/ERROR', 'Ошибка получения списка инспекторов', {root: true});
                     console.log('Ошибка получения списка инспекторов', err);
                 })
                 .finally(() => {
-                    commit('inspectors/SET_FETCHING', false);
+                    commit('SET_FETCHING', false);
                 })
         }
     }
 }
+
+export default inspectors;
