@@ -1,10 +1,22 @@
 <template>
-  <v-card :loading="loading" :disabled="loading" width="100vw" max-width="900">
+  <v-card :loading="loading" :disabled="loading" variant="flat" width="100vw" max-width="900">
 
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редакторование данных заказчика</div>
-        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
+        <v-btn
+            density="comfortable"
+            color="blue-grey-darken-2"
+            icon="mdi-arrow-left"
+            variant="text"
+            rounded="lg"
+            @click="navigateBack"
+        >
+          <v-icon/>
+          <v-tooltip activator="parent" location="left">
+            Назад
+          </v-tooltip>
+        </v-btn>
       </div>
     </v-card-title>
 
@@ -101,6 +113,7 @@ import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "customer-change",
@@ -145,6 +158,10 @@ export default {
   methods: {
 
     isNotEmptyRule,
+
+    navigateBack(){
+      navigateTo('/manager-menu/customers');
+    },
 
     downloadTemplate() {
       downloadFile('angles template.xlsx', serverURL + '/customers/downloadExcelTemplates');

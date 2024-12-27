@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-      <customer-add />
+    <customer-add/>
   </v-container>
 </template>
 
