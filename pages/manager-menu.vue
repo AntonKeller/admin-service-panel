@@ -43,6 +43,15 @@ export default {
       }
     }
 
+    if (sessionStorage.selectedCustomer) { // Инициализация текущего активного Customer
+      try {
+        const selectedCustomerParse = JSON.parse(sessionStorage.selectedCustomer);
+        this.$store.commit('customers/SELECT', selectedCustomerParse);
+      } catch (err) {
+        console.log('Не удалось распарсить selectedCustomer из session storage', err);
+      }
+    }
+
   },
 }
 </script>

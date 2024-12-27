@@ -11,7 +11,7 @@
                 variant="tonal"
                 color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
-                @click="menuAddCustomerIsShow = true"
+                @click="navigateToCustomerAdd"
             >
               Добавить
               <v-tooltip activator="parent">
@@ -50,7 +50,7 @@
             <tr
                 v-for="(customer, i) of customersSlice"
                 :key="customer._id"
-                @click="menuChangeCustomerShow(customer)"
+                @click="navigateToCustomerChange(customer)"
                 class="text-caption row-hover"
             >
               <td>{{ customer.fullName || '-' }}</td>
@@ -80,44 +80,35 @@
         </v-card-item>
       </v-card>
     </v-sheet>
-
-
-
-    <v-overlay v-model="menuAddCustomerIsShow" class="d-flex justify-center align-center">
-      <customer-add @add:success="onCustomerAddSuccess" @click:close="menuAddCustomerIsShow=false"/>
-    </v-overlay>
-
-    <v-overlay v-model="menuChangeCustomerIsShow" class="d-flex justify-center align-center">
-      <customer-change :_customer="customerSelected" @change:success="onCustomerChangeSuccess"
-                       @click:close="menuChangeCustomerIsShow=false"></customer-change>
-    </v-overlay>
   </v-container>
 </template>
 
 <script>
-import {fetchCustomers, removeCustomer} from "../../utils/api/api_customers";
+import {removeCustomer} from "../../../utils/api/api_customers";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "customers-page",
 
   data() {
     return {
-      customers: [],
-      customerSelected: null,
-      fetching: false,
       searchText: '',
       currentPage: 1,
-      itemsPerPage: 25,
-      menuAddCustomerIsShow: false,
-      menuChangeCustomerIsShow: false,
+      itemsPerPage: 20,
     }
   },
 
-  mounted() {
-    this.updateCustomers();
+  beforeMount() {
+    this.$store.dispatch('customers/FETCH_CUSTOMERS');
   },
 
   computed: {
+    customers() {
+      return this.$store.getters['customers/GET_CUSTOMERS'];
+    },
+    fetching() {
+      return this.$store.getters['customers/GET_FETCHING'];
+    },
     totalPages() {
       return Math.ceil(this.customersFoundCount / this.itemsPerPage);
     },
@@ -146,36 +137,26 @@ export default {
   },
 
   methods: {
-    updateCustomers() {
-      this.fetching = true;
-      fetchCustomers()
-          .then(response => {
-            this.customers = response.data;
-          })
-          .catch(err => {
-            console.log('Ошибка загрузки заказчиков', err);
-          })
-          .finally(() => {
-            this.fetching = false;
-          })
+
+    navigateToCustomerAdd() {
+      navigateTo('/manager-menu/customers/customer-add');
     },
-    onCustomerAddSuccess() {
-      this.menuAddCustomerIsShow = false;
-      this.updateCustomers();
+
+    navigateToCustomerChange(customer) {
+      this.customerSelect(customer);
+      navigateTo('/manager-menu/customers/customer-change');
     },
-    onCustomerChangeSuccess() {
-      this.menuChangeCustomerIsShow = false;
-      this.updateCustomers();
+
+    customerSelect(customer) {
+      this.$store.commit('customers/SELECT', customer);
+      sessionStorage.selectedCustomer = JSON.stringify(customer);
     },
-    menuChangeCustomerShow(customer) {
-      this.customerSelected = customer;
-      this.menuChangeCustomerIsShow = true;
-    },
+
     removeCustomer(id) {
       removeCustomer(id)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален');
-            this.updateCustomers();
+            this.$store.dispatch('customers/FETCH_CUSTOMERS');
           })
           .catch((err) => {
             this.$store.commit('alert/ERROR', 'Ошибка удаления заказчика');

@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="loading" :disabled="loading" elevation="6" width="100vw" max-width="900">
+  <v-card :loading="loading" :disabled="loading" width="100vw" max-width="900">
 
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
@@ -96,27 +96,23 @@
 
 <script>
 import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
+import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
-import {isNotEmptyRule} from "@/utils/validators/functions.js";
 
 export default {
   name: "customer-change",
 
   emits: ['change:success'],
 
-  props: {
-    _customer: Object,
-  },
-
   directives: {
     mask: vMaska
   },
 
   beforeMount() {
-    this.customer = _.cloneDeep(this._customer);
+    this.customer = _.cloneDeep(this.$store.getters['customers/GET_SELECTED']);
   },
 
   data() {
@@ -139,6 +135,7 @@ export default {
         representativePosition: null,
         template: null,
       },
+
       templateFile: null,
       loading: false,
       formIsValid: false,
@@ -154,38 +151,44 @@ export default {
     },
 
     async changeCustomer() {
+
       await this.$refs.form.validate();
-      if (this.formIsValid) {
 
-        this.loading = true;
-
-        changeCustomer(this.customer)
-            .then(() => {
-              this.$emit('change:success');
-              this.$store.commit('alert/SUCCESS', 'Запись о заказчике изменена');
-            })
-            .catch(err => {
-              console.log('Ошибка изменения данных заказчика', err);
-              this.$store.commit('Ошибка изменения записи о заказчике');
-            })
-            .finally(() => {
-              this.loading = false;
-            })
-
-        if (this.templateFile && this.customer._id) {
-          const formData = new FormData()
-          formData.append('photoAngles', this.templateFile);
-          uploadTemplate(this.customer._id, formData)
-              .then(() => {
-                this.$emit('change:success');
-              })
-              .catch(err => {
-                this.$store.commit('Не удалось загрузить шаблон');
-                console.log('Не удалось отправить шаблон', err);
-              })
-        }
+      if (!this.formIsValid) {
+        this.$store.commit('alert/ERROR', 'Не заполнены обязательные поля');
+        return;
       }
+
+      this.loading = true;
+
+      changeCustomer(this.customer)
+          .then(() => {
+            this.$emit('change:success');
+            this.$store.dispatch('customers/FETCH_CUSTOMERS');
+            this.$store.commit('alert/SUCCESS', 'Запись о заказчике изменена');
+          })
+          .catch(err => {
+            console.log('Ошибка изменения данных заказчика', err);
+            this.$store.commit('alert/ERROR', 'Ошибка изменения записи о заказчике');
+          })
+          .finally(() => {
+            this.loading = false;
+          })
+
+      if (!this.templateFile) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('photoAngles', this.templateFile);
+      uploadTemplate(this.customer._id, formData)
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
+            console.log('Не удалось отправить шаблон', err);
+          })
+
     },
+
     // Программно вызываем клик по скрытому input
     templateUpload() {
       if (this.templateFile) {
@@ -195,6 +198,7 @@ export default {
         this.$refs.templateInput.click();
       }
     },
+
     // Событие загрузки файла
     onFileChange(event) {
       const file = event.target.files[0];

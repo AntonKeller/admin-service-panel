@@ -1,6 +1,5 @@
 <template>
-  <v-card :loading="loading" :disabled="loading" elevation="6" width="100vw" max-width="900">
-
+  <v-card :loading="loading" :disabled="loading" width="100vw" max-width="900">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Новый заказчик</div>
@@ -129,6 +128,7 @@ export default {
       representativePosition: null,
       template: null,
     },
+
     templateFile: null,
     loading: false,
     formIsValid: false,
@@ -147,40 +147,51 @@ export default {
     downloadTemplate() {
       downloadFile('angles template.xlsx', serverURL + '/customers/downloadExcelTemplates');
     },
+
     async addCustomer() {
+
       await this.$refs.form.validate();
-      if (this.formIsValid) {
 
-        this.loading = true;
+      if (!this.formIsValid) {
+        this.$store.commit('alert/ERROR', 'Не заполнены обязательные поля');
+        return;
+      }
 
-        const _id = await addCustomer(this.customer)
-            .then((response) => {
+      this.loading = true;
+
+      const _id = await addCustomer(this.customer)
+          .then((response) => {
+            this.$emit('add:success');
+            this.$store.dispatch('customers/FETCH_CUSTOMERS');
+            this.$store.commit('alert/SUCCESS', 'Успешно добавлен');
+            return response.data._id;
+          })
+          .catch(err => {
+            console.log('Ошибка добавления заказчика', err);
+            this.$store.commit('alert/ERROR', 'Ошибка добавления');
+          })
+          .finally(() => {
+            this.loading = false;
+          })
+
+      if (!this.templateFile) {
+        return;
+      }
+
+      if (_id) {
+        const formData = new FormData();
+        formData.append('photoAngles', this.templateFile);
+        uploadTemplate(_id, formData)
+            .then(() => {
               this.$emit('add:success');
-              this.$store.commit('alert/SUCCESS', 'Успешно добавлен');
-              return response.data._id;
             })
             .catch(err => {
-              console.log('Ошибка добавления заказчика', err);
-              this.$store.commit('alert/ERROR', 'Ошибка добавления');
+              this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
+              console.log('Не удалось загрузить шаблон', err);
             })
-            .finally(() => {
-              this.loading = false;
-            })
-
-        if (this.templateFile && _id) {
-          const formData = new FormData();
-          formData.append('photoAngles', this.templateFile);
-          uploadTemplate(_id, formData)
-              .then(() => {
-                this.$emit('add:success');
-              })
-              .catch(err => {
-                this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
-                console.log('Не удалось отправить шаблон', err);
-              })
-        }
       }
     },
+
     // Программно вызываем клик по скрытому input
     templateUpload() {
       if (this.templateFile) {
