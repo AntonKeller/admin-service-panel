@@ -4,20 +4,13 @@
 
       <v-app-bar elevation="0" :rounded="0" class="border-b-sm">
         <v-card
-            class="bg-blue-darken-4"
+            class="bg-blue-darken-3"
             variant="flat"
             :rounded="0"
             style="min-width: 100%;"
         >
           <v-card-item>
             <div class="d-flex justify-start align-center">
-              <v-img
-                  src="/assets/images/logotype.png"
-                  aspect-ratio="1/1"
-                  max-width="50"
-                  height="45"
-              />
-              <div class="ml-2">Mobile inspector</div>
               <v-btn
                   icon="mdi-account-cog-outline"
                   color="blue-lighten-5"
@@ -43,27 +36,29 @@
           elevation="0"
       >
         <v-list variant="text" density="default" nav rounded="lg">
-          <div class="d-flex align-center justify-space-between">
-            <v-list-item
-                prepend-icon="mdi-account"
-                :title="profile.fullName"
-                :subtitle="profile.email"
-            />
-            <v-btn
-                icon="mdi-arrow-collapse-left"
-                color="blue-grey-darken-3"
-                size="small"
-                variant="text"
-                rounded
-                :class="rail ? 'd-none' : ''"
-                @click.stop="rail = !rail"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent">Свернуть меню</v-tooltip>
-            </v-btn>
-          </div>
+          <v-list-item
+              prepend-avatar="/assets/images/logotype.png"
+              class="bg-blue-darken-3"
+              rounded="lg"
+              title="GK Breeze"
+              subtitle="Inspector service"
+          >
+            <template #append>
+              <v-btn
+                  icon="mdi-arrow-collapse-left"
+                  size="small"
+                  variant="text"
+                  rounded="lg"
+                  :class="rail ? 'd-none' : ''"
+                  @click.stop="rail = !rail"
+              >
+                <v-icon/>
+                <v-tooltip activator="parent">Свернуть меню</v-tooltip>
+              </v-btn>
+            </template>
+          </v-list-item>
 
-          <v-divider/>
+          <v-divider class="my-1"/>
 
           <v-list-item
               v-for="item of navItems"
@@ -71,26 +66,18 @@
               :to="item.route"
               :prepend-icon="item.prependIcon"
               :active="item._id === activeItem"
-              :color="item.color"
               :value="item.value"
               :title="item.title"
+              color="grey-darken-2"
+              density="compact"
+              rounded="lg"
               @click="activeItem = item._id"
-          >
-            <template v-slot:append>
-              <v-tooltip activator="parent">...</v-tooltip>
-              <v-badge
-                  v-show="item.badge.show"
-                  :color="item.badge.color"
-                  :content="item.badge.content"
-                  inline
-              />
-            </template>
-          </v-list-item>
+          />
 
         </v-list>
 
         <template #append>
-          <v-list variant="text" density="default" nav rounded="lg">
+          <v-list variant="text" density="compact" rounded="lg" nav>
             <v-list-item
                 class="bg-grey-lighten-4"
                 prepend-icon="mdi-logout"

@@ -9,7 +9,6 @@ export default interface TNavItem {
     title: String,
     route: String,
     prependIcon: String,
-    color: String,
     value: String,
     active: Boolean,
     badge: TNavItemBadge,
