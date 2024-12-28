@@ -31,6 +31,10 @@
               <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
             </v-label>
             <v-label class="text-body-2">
+              <v-icon icon="mdi-text-box-outline"/>
+              <div class="ml-2 align-self-end">{{ assignmentSubContract }}</div>
+            </v-label>
+            <v-label class="text-body-2">
               <v-icon icon="mdi-account-tie"/>
               <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
             </v-label>
@@ -97,7 +101,7 @@
                 {{ getInspector(block?.inspector) }}
               </td>
               <td>
-                {{getInspectorContacts(block?.inspector)}}
+                {{ getInspectorContacts(block?.inspector) }}
               </td>
               <td style="min-width: 90px; width: 90px; max-width: 90px">
                 <div class="d-flex ga-2">
@@ -220,11 +224,19 @@ export default {
     },
 
     assignmentContract() {
-      if (!this.selectedAssignment?.contract) return `Договор не задан`;
       const {number, date} = this.selectedAssignment?.contract;
+      if (!number && !date) return `Договор не задан`;
       if (number && date) return `№ ${number} от ${this.unixDateToMiddleDateString(date)}`;
       if (!number && date) return `№ [№ договора отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
       if (number && !date) return `№ ${number} от [дата договора отсутствует]`;
+    },
+
+    assignmentSubContract() {
+      const {number, date} = this.selectedAssignment?.contract;
+      if (!number && !date) return `ТЗ не задано`;
+      if (number && date) return `ТЗ № ${number} от ${this.unixDateToMiddleDateString(date)}`;
+      if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
+      if (number && !date) return `ТЗ № ${number} от [дата ТЗ отсутствует]`;
     },
 
     selectedAssignment() {

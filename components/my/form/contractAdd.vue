@@ -2,7 +2,7 @@
   <v-card :sending="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Новый договор</div>
+        <div>{{cardTitle}}</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -18,12 +18,12 @@
             <my-text-field
                 v-model="contract.number"
                 prepend-inner-icon="mdi-file-sign"
-                label="Номер договора/ТЗ"
+                :label="placeHolderContract"
                 placeholder="..../..."
             />
           </v-col>
 
-          <v-col :cols="8">
+          <v-col :cols="12" :md="8">
             <my-date-picker
                 v-model="contract.date"
                 prepend-inner-icon="mdi-calendar-range"
@@ -32,7 +32,7 @@
             />
           </v-col>
 
-          <v-col :cols="4">
+          <v-col :cols="12" :md="4">
             <v-switch
                 v-model="hideParent"
                 density="compact"
@@ -91,7 +91,20 @@ export default {
     }
   },
 
+  computed: {
+
+    cardTitle() {
+      return this.hideParent ? 'Новый рамочный договор' : 'Новое ТЗ к договору';
+    },
+
+    placeHolderContract() {
+      return this.hideParent ? 'Номер рамочного договора' : 'Номер ТЗ к договору';
+    }
+
+  },
+
   methods: {
+
     async send() {
 
       await this.$refs.form.validate();
