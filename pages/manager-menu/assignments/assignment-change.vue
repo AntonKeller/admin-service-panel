@@ -41,7 +41,8 @@
                 <my-autocomplete-contracts v-model="assignment.contract"/>
               </v-col>
               <v-col :cols="12">
-                <my-autocomplete-subContracts v-model="assignment.subContract"/>
+                <my-autocomplete-subContracts v-model="assignment.subContract"
+                                              :parentID="assignment.contract?._id || null"/>
               </v-col>
               <v-col :cols="12">
                 <my-autocomplete-loanAgreements v-model="assignment.loanAgreements"/>
@@ -121,6 +122,14 @@ export default {
     },
   },
 
+  watch: {
+    ['assignment.contract'](newValue) {
+      if (!newValue) {
+        this.assignment.subContract = null;
+      }
+    }
+  },
+
   methods: {
 
     navigateBack() {
@@ -145,6 +154,7 @@ export default {
           })
           .catch(err => {
             this.$store.commit('alert/SUCCESS', 'Ошибка изменения задания');
+            console.log('Ошибка изменения задания', err);
           })
           .finally(() => {
             this.sending = false;
