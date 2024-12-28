@@ -11,17 +11,25 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (import.meta.client) {
 
 
-        console.log('client log')
         let tokenTest = await accessTest().then(r => r.data);
-
-        if (tokenTest && /^\/$/ig.test(to?.fullPath) || /^\/manager-menu$/ig.test(to?.fullPath)) {
-            return navigateTo('/manager-menu/assignments');
-        }
 
         if (!tokenTest && !/^\/$/ig.test(to?.fullPath)) {
             return navigateTo('/');
         }
+
+        if (tokenTest) {
+
+            const isMobile = /Mobile|webOS|BlackBerry|IEMobile|MeeGo|mini|Fennec|Windows Phone|Android|iP(ad|od|hone)/i.test(navigator.userAgent);
+
+            if (isMobile && !/^\/mobile-downloads$/ig.test(to?.fullPath)) {
+                return navigateTo('/mobile-downloads');
+            }
+
+            if (/^\/$/ig.test(to?.fullPath) || /^\/manager-menu$/ig.test(to?.fullPath)) {
+                return navigateTo('/manager-menu/assignments');
+            }
+
+        }
+
     }
-
-
 })

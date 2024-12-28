@@ -66,7 +66,7 @@
                   variant="outlined"
                   class="white"
                   density="compact"
-                  title="Пополнить баланс аккаунта"
+                  title="Пополнить баланс"
                   slim
                   disabled
                   nav
