@@ -62,7 +62,7 @@
               </td>
               <td>
                 <v-chip color="blue-darken-3" density="comfortable" label>
-                  {{ assignment.customer|| '-' }}
+                  {{ assignment.customer?.shortName|| '-' }}
                 </v-chip>
               </td>
               <td>{{ slicer(assignment.description, 50) }}</td>
