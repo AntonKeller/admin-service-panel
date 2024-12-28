@@ -5,26 +5,28 @@
       <v-app-bar elevation="0">
         <v-card
             class="bg-blue-darken-3"
-            variant="flat"
+            variant="text"
+            elevation="1"
             rounded="sm"
             style="min-width: 100%;"
         >
           <v-card-item>
-            <div class="d-flex justify-end align-center ga-4">
-              <v-spacer />
+            <div class="d-flex justify-start align-center ga-4">
+
               <v-list-item
-                  prepend-icon="mdi-finance"
+                  prepend-icon="mdi-account-cog-outline"
                   variant="tonal"
-                  title="Статистика"
+                  :title="profile.fullName"
+                  :subtitle="profile.email"
                   slim
                   nav
-                  disabled
-                  @click=""
+                  @click="navigateToProfile"
               >
                 <v-tooltip activator="parent" location="bottom">
-                  Рабочая статистика
+                  Настройки профиля
                 </v-tooltip>
               </v-list-item>
+
               <v-list-item
                   prepend-icon="mdi-bell"
                   variant="tonal"
@@ -38,34 +40,54 @@
                   Проверить оповещения
                 </v-tooltip>
               </v-list-item>
-                <v-list-item
-                    prepend-icon="mdi-account-cog-outline"
-                    variant="tonal"
-                    :title="profile.fullName"
-                    :subtitle="profile.email"
-                    slim
-                    nav
-                    @click="navigateToProfile"
-                >
-                  <v-tooltip activator="parent" location="bottom">
-                    Настройки профиля
-                  </v-tooltip>
-                </v-list-item>
+
+              <v-list-item
+                  prepend-icon="mdi-finance"
+                  variant="tonal"
+                  title="Статистика"
+                  slim
+                  nav
+                  disabled
+                  @click=""
+              >
+                <v-tooltip activator="parent" location="bottom">
+                  Рабочая статистика
+                </v-tooltip>
+              </v-list-item>
+
+              <v-spacer/>
+
+              <v-label class="text-caption">
+                Текущий баланс аккаунта 1 000 объектов
+              </v-label>
+
+              <v-list-item
+                  prepend-icon=""
+                  variant="outlined"
+                  class="white"
+                  density="compact"
+                  title="Пополнить баланс аккаунта"
+                  slim
+                  disabled
+                  nav
+                  @click=""
+              >
+              </v-list-item>
+
             </div>
           </v-card-item>
         </v-card>
       </v-app-bar>
 
       <v-navigation-drawer
-          :rail="rail"
           permanent
+          :rail="rail"
           @click="rail = false"
           elevation="0"
       >
         <v-list variant="text" density="default" nav rounded="lg">
           <v-list-item
               prepend-avatar="/assets/images/logotype.png"
-              class="bg-deep-orange-darken-1"
               rounded="lg"
               title="GK Breeze"
               subtitle="Inspector service"
@@ -77,7 +99,7 @@
                   variant="text"
                   rounded="lg"
                   :class="rail ? 'd-none' : ''"
-                  @click.stop="rail = !rail"
+                  @click.stop="changeRail(!rail)"
               >
                 <v-icon/>
                 <v-tooltip activator="parent">Свернуть меню</v-tooltip>
@@ -146,6 +168,7 @@ export default {
   },
 
   beforeMount() {
+    this.rail = sessionStorage.navBarRail === 'true';
     this.getProfile();
   },
 
@@ -153,7 +176,17 @@ export default {
     this.activeItem = this.whichRouteIsActive() || null;
   },
 
+  watch: {
+    rail(_new) {
+      sessionStorage.navBarRail = _new;
+    }
+  },
+
   methods: {
+    changeRail(value) {
+      this.rail = value;
+    },
+
     whichRouteIsActive() {
       return this.navItems?.find(item => this.$route.fullPath.indexOf(item.route) !== -1)?._id;
     },
