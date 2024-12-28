@@ -133,9 +133,9 @@
 </template>
 
 <script>
-import {removeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
-import {fetchAssignmentOneById} from "../../../../utils/api/api_assignments";
-import {unixDateToMiddleDateString} from "../../../../utils/functions";
+import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
+import {unixDateToMiddleDateString} from "@/utils/functions";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -212,28 +212,30 @@ export default {
     },
 
     assignmentCustomer() {
-      if (!this.selectedAssignment?.customer) return 'Заказчик отсутствует';
-
-      const {
-        shortName, fullName, inn, phoneNumber, email, address,
-        representativePosition, representativeFullName
-      } = this.selectedAssignment.customer;
-
-      const returnName = shortName || fullName || email || phoneNumber || 'наименование отсутствует';
-      return `Компания: ${returnName} инн: ${inn}`
+      const returnName = !this.selectedAssignment?.customer?.shortName || 'наименование отсутствует';
+      const returnInn = !this.selectedAssignment?.customer?.inn || 'отсутствует';
+      return `Компания: ${returnName} инн: ${returnInn}`
     },
 
     assignmentContract() {
+      if (
+          !this.selectedAssignment?.contract?.number ||
+          !this.selectedAssignment?.contract?.date
+      ) return `Договор не задан`;
+
       const {number, date} = this.selectedAssignment?.contract;
-      if (!number && !date) return `Договор не задан`;
       if (number && date) return `№ ${number} от ${this.unixDateToMiddleDateString(date)}`;
       if (!number && date) return `№ [№ договора отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
       if (number && !date) return `№ ${number} от [дата договора отсутствует]`;
     },
 
     assignmentSubContract() {
-      const {number, date} = this.selectedAssignment?.contract;
-      if (!number && !date) return `ТЗ не задано`;
+      if (
+          !this.selectedAssignment?.subContract?.number ||
+          !this.selectedAssignment?.subContract?.date
+      ) return `ТЗ не задано`;
+
+      const {number, date} = this.selectedAssignment?.subContract;
       if (number && date) return `ТЗ № ${number} от ${this.unixDateToMiddleDateString(date)}`;
       if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
       if (number && !date) return `ТЗ № ${number} от [дата ТЗ отсутствует]`;
