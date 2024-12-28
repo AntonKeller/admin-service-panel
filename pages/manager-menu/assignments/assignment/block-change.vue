@@ -58,7 +58,7 @@
               text="Добавить"
               prepend-icon="mdi-checkbox-multiple-marked-outline"
               :loading="sendingAssignmentBlock"
-              @click="sendBlock"
+              @click="changeBlock"
           />
           <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
@@ -111,7 +111,19 @@ export default {
       navigateTo('/manager-menu/assignments/assignment');
     },
 
-    async updateBlock() {
+    clear() {
+      this.block = {
+        _id: null,
+        title: null, // Заголовок
+        address: null, // Адрес
+        startDate: null, // Дата начала
+        pledger: null, // Залогодатель
+        contact: null, // Контакт
+        inspector: null, // Инспектор
+      }
+    },
+
+    async changeBlock() {
 
       await this.$refs.form.validate();
 

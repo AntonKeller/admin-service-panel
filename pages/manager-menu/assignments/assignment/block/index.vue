@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
       <v-card variant="text">
+
         <v-card-title>
           <div class="d-flex align-center justify-space-between">
             <div class="d-flex ga-1 align-center">
@@ -144,7 +145,7 @@
           </div>
 
           <v-divider/>
-          <v-table style="max-height: 77vh" density="compact" fixed-header class="text-caption elevation-0">
+          <v-table style="max-height: 60vh" density="compact" fixed-header class="text-caption elevation-0">
             <thead>
             <tr class="text-blue-darken-4">
               <th class="text-left">№ п/п</th>

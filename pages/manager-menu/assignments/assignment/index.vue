@@ -24,51 +24,55 @@
           </div>
         </v-card-title>
 
+        <v-card-subtitle>
+          <div class="d-flex ga-4 flex-wrap">
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-file-sign"/>
+              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
+            </v-label>
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-account-tie"/>
+              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+            </v-label>
+          </div>
+        </v-card-subtitle>
+
         <v-card-item>
-          <v-sheet class="d-flex flex-column ga-4 mt-2">
-            <div class="d-flex ga-4 flex-wrap">
-              <v-label class="text-body-2">
-                <v-icon icon="mdi-file-sign"/>
-                <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
-              </v-label>
-              <v-label class="text-body-2">
-                <v-icon icon="mdi-account-tie"/>
-                <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-              </v-label>
-            </div>
-            <v-sheet class="rounded-lg pr-1" style="height: 100px; overflow-y: scroll">
-              {{ selectedAssignment?.description }}
-            </v-sheet>
-            <div class="d-flex ga-4 align-center py-1">
-              <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-                <v-btn
-                    prepend-icon="mdi-plus-box-multiple-outline"
-                    @click="navigateToBlockCreate"
-                >
-                  Добавить адрес
-                  <v-tooltip activator="parent">
-                    Добавить новый адрес нас осмотр
-                  </v-tooltip>
-                </v-btn>
-              </v-btn-group>
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  variant="solo-filled"
-                  density="compact"
-                  label="Поиск"
-                  class="ml-2"
-                  hide-details
-                  single-line
-                  flat
-              />
-            </div>
+          <v-sheet class="text-caption rounded-lg pr-1" style="height: 80px; overflow-y: scroll">
+            {{ selectedAssignment?.description }}
           </v-sheet>
         </v-card-item>
 
         <v-card-item>
+          <div class="d-flex ga-4 align-center">
+            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+              <v-btn
+                  prepend-icon="mdi-plus-box-multiple-outline"
+                  @click="navigateToBlockCreate"
+              >
+                Добавить адрес
+                <v-tooltip activator="parent">
+                  Добавить новый адрес нас осмотр
+                </v-tooltip>
+              </v-btn>
+            </v-btn-group>
+            <v-text-field
+                v-model="searchText"
+                prepend-inner-icon="mdi-magnify"
+                variant="solo-filled"
+                density="compact"
+                label="Поиск"
+                class="ml-2"
+                hide-details
+                single-line
+                flat
+            />
+          </div>
+        </v-card-item>
+
+        <v-card-item>
           <v-divider/>
-          <v-table v-if="!fetching" style="max-height: 31vh" density="comfortable" fixed-header>
+          <v-table v-if="!fetching" style="max-height: 45vh" density="comfortable" fixed-header>
             <thead>
             <tr>
               <th>Адрес</th>

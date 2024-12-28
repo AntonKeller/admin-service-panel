@@ -67,6 +67,7 @@
                     aspect-ratio="1/1"
                     cover
                     :src="img.src"
+                    alt="Загрузка изображения..."
                     class="border-sm rounded mr-2"
                 />
               </v-sheet>
@@ -79,7 +80,7 @@
             <img
                 style="max-height: 94vh; max-width: 95vw; object-fit: contain; transform: scaleX(100%)"
                 class="rounded-t-lg d-block"
-                alt="loading..."
+                alt="Загрузка изображения..."
                 loading="lazy"
                 :src="selectedImg.src"
             />

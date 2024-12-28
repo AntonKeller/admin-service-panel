@@ -2,20 +2,36 @@
   <v-card height="100vh">
     <v-layout full-height>
 
-      <v-app-bar elevation="0" :rounded="0" class="border-b-sm">
+      <v-app-bar elevation="0">
         <v-card
             class="bg-blue-darken-3"
             variant="flat"
-            :rounded="0"
+            rounded="sm"
             style="min-width: 100%;"
         >
           <v-card-item>
             <div class="d-flex justify-end align-center ga-4">
+              <v-spacer />
+              <v-list-item
+                  prepend-icon="mdi-finance"
+                  variant="tonal"
+                  title="Статистика"
+                  slim
+                  nav
+                  disabled
+                  @click=""
+              >
+                <v-tooltip activator="parent" location="bottom">
+                  Рабочая статистика
+                </v-tooltip>
+              </v-list-item>
               <v-list-item
                   prepend-icon="mdi-bell"
                   variant="tonal"
                   title="Оповещения"
+                  slim
                   nav
+                  disabled
                   @click=""
               >
                 <v-tooltip activator="parent" location="bottom">
@@ -27,6 +43,7 @@
                     variant="tonal"
                     :title="profile.fullName"
                     :subtitle="profile.email"
+                    slim
                     nav
                     @click="navigateToProfile"
                 >
@@ -48,7 +65,7 @@
         <v-list variant="text" density="default" nav rounded="lg">
           <v-list-item
               prepend-avatar="/assets/images/logotype.png"
-              class="bg-blue-darken-3"
+              class="bg-deep-orange-darken-1"
               rounded="lg"
               title="GK Breeze"
               subtitle="Inspector service"
@@ -78,7 +95,7 @@
               :active="item._id === activeItem"
               :value="item.value"
               :title="item.title"
-              color="grey-darken-3"
+              color="deep-orange-darken-3"
               density="compact"
               rounded="lg"
               @click="activeItem = item._id"
