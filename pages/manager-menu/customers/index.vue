@@ -50,7 +50,7 @@
             <tr
                 v-for="(customer, i) of customersSlice"
                 :key="customer._id"
-                class="text-caption row-hover"
+                class="text-caption"
             >
               <td>{{ customer.fullName || '-' }}</td>
               <td>{{ customer.inn || '-' }}</td>

@@ -51,13 +51,14 @@
             <tr
                 v-for="(inspector, i) of inspectorsSlice"
                 :key="inspector._id"
+                class="text-caption"
             >
               <td>{{ inspector?.firstName || '' }}</td>
               <td>{{ inspector?.surname || '' }}</td>
               <td>{{ inspector?.lastName || '' }}</td>
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
-              <td>
+              <td style="min-width: 90px; width: 90px; max-width: 90px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(inspector)"/>
                   <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>

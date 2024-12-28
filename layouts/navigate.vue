@@ -51,7 +51,7 @@
                   @click=""
               >
                 <v-tooltip activator="parent" location="bottom">
-                  Рабочая статистика
+                  Просмотр статистики
                 </v-tooltip>
               </v-list-item>
 

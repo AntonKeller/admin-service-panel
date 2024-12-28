@@ -1,7 +1,12 @@
 <template>
   <v-sheet class="d-flex flex-column ga-8 align-center justify-center h-100" border="sm">
 
-    <v-card variant="flat" class="text-center">
+    <v-card variant="flat" class="text-center ">
+      <v-card-item>
+        <div class="d-flex flex-column align-center rounded-xl">
+          <v-img src="/assets/images/logotype.png" width="60" height="60" />
+        </div>
+      </v-card-item>
       <v-card-title class="text-body-2">
         Начните работать в Mobile Inspector
       </v-card-title>
