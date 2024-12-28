@@ -16,10 +16,10 @@
               <v-list-item
                   prepend-icon="mdi-account-cog-outline"
                   variant="tonal"
-                  :title="profile.fullName"
-                  :subtitle="profile.email"
                   slim
                   nav
+                  :title="profile.fullName"
+                  :subtitle="profile.email"
                   @click="navigateToProfile"
               >
                 <v-tooltip activator="parent" location="bottom">
@@ -29,8 +29,8 @@
 
               <v-list-item
                   prepend-icon="mdi-bell"
-                  variant="tonal"
                   title="Оповещения"
+                  variant="tonal"
                   slim
                   nav
                   disabled
@@ -43,8 +43,8 @@
 
               <v-list-item
                   prepend-icon="mdi-finance"
-                  variant="tonal"
                   title="Статистика"
+                  variant="tonal"
                   slim
                   nav
                   disabled
