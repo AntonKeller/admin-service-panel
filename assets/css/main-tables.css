@@ -1,0 +1,33 @@
+thead tr th {
+    background-color: #0277BD !important;
+    color: #f3f3f3 !important;
+}
+
+thead tr th:first-child {
+    border-top-left-radius: 8px;
+}
+
+thead tr th:last-child {
+    border-top-right-radius: 8px;
+}
+
+tbody tr td {
+    border-bottom: 1px solid rgba(2, 119, 189, 0.10);
+}
+
+tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+tbody tr {
+    background-color: rgba(250, 250, 250, 0.9);
+}
+
+.row-hover:hover {
+    background-color: #fffff1;
+    cursor: pointer;
+}

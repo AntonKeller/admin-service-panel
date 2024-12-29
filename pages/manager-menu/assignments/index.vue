@@ -37,24 +37,24 @@
 
         <v-card-item>
           <v-divider/>
-          <v-table style="max-height: 77vh" density="default" fixed-header>
+          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
             <thead v-if="!getFetchingDataStatus">
             <tr>
-              <th class="rounded-ts-lg rounded-bs-sm bg-blue-darken-3">Заголовок</th>
-              <th class="bg-blue-darken-3">Договор с заказчиком</th>
-              <th class="bg-blue-darken-3">Заказчик</th>
-              <th class="bg-blue-darken-3">Описание</th>
-              <th class="rounded-te-lg rounded-be-sm bg-blue-darken-3"></th>
+              <th>Заголовок</th>
+              <th>Договор с заказчиком</th>
+              <th>Заказчик</th>
+              <th>Описание</th>
+              <th></th>
             </tr>
             </thead>
             <tbody v-if="!getFetchingDataStatus">
             <tr
                 v-for="assignment of assignmentsSLice"
                 :key="assignment._id"
-                class="text-caption my-table-row row-hover"
+                class="text-caption row-hover"
                 @click="navigateToCardMenu(assignment)"
             >
-              <td >{{ assignment.title }}</td>
+              <td>{{ assignment.title }}</td>
               <td>
                 <v-chip color="deep-purple-darken-2" density="comfortable" label>
                   {{ getContractString(assignment.contract) }}
@@ -62,7 +62,7 @@
               </td>
               <td>
                 <v-chip color="blue-darken-3" density="comfortable" label>
-                  {{ assignment.customer?.shortName|| '-' }}
+                  {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>
               <td>{{ slicer(assignment.description, 50) }}</td>

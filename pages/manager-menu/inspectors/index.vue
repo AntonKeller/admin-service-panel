@@ -36,22 +36,22 @@
 
         <v-card-item>
 <!--          <v-divider/>-->
-          <v-table style="max-height: 77vh" density="comfortable" fixed-header>
+          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
             <thead>
             <tr>
-              <th class="rounded-ts-lg rounded-bs-sm bg-blue-darken-3">Имя</th>
-              <th class="bg-blue-darken-3">Фамилия</th>
-              <th class="bg-blue-darken-3">Отчество</th>
-              <th class="bg-blue-darken-3">Номер телефона</th>
-              <th class="bg-blue-darken-3">Email</th>
-              <th class="rounded-te-lg rounded-be-sm bg-blue-darken-3"></th>
+              <th>Имя</th>
+              <th>Фамилия</th>
+              <th>Отчество</th>
+              <th>Номер телефона</th>
+              <th>Email</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>
             <tr
                 v-for="inspector of inspectorsSlice"
                 :key="inspector._id"
-                class="text-caption my-table-row"
+                class="text-caption"
             >
               <td>{{ inspector?.firstName || '' }}</td>
               <td>{{ inspector?.surname || '' }}</td>
@@ -67,7 +67,6 @@
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
         </v-card-item>
 
         <v-card-item>

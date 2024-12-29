@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("main-tables.css");
+
 @font-face {
   font-family: TildaSansRegular;
   font-style: normal;
@@ -33,10 +35,6 @@ body::-webkit-scrollbar {
   @apply bg-transparent;
 }
 
-//*::-webkit-scrollbar-thumb {
-//  @apply bg-gray-600/50 rounded-xl;
-//}
-
 ::-webkit-scrollbar {
   height: 8px;
   width: 4px;
@@ -51,16 +49,3 @@ body::-webkit-scrollbar {
   background: #546E7A;
   border-radius: 6px;
 }
-
-.my-table-row {
-  background-color: rgba(250, 250, 250, 0.7);
-}
-.row-hover:hover {
-  background-color: #fffff1;
-  cursor: pointer;
-}
-
-//tr:hover > td:not(:last-child) {
-//  text-decoration: underline;
-//  cursor: pointer;
-//}
