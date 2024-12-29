@@ -35,23 +35,23 @@
         </v-card-item>
 
         <v-card-item>
-          <v-divider/>
+<!--          <v-divider/>-->
           <v-table style="max-height: 77vh" density="comfortable" fixed-header>
             <thead>
             <tr>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Отчество</th>
-              <th>Номер телефона</th>
-              <th>Email</th>
-              <th></th>
+              <th class="rounded-ts-lg rounded-bs-sm bg-blue-darken-3">Имя</th>
+              <th class="bg-blue-darken-3">Фамилия</th>
+              <th class="bg-blue-darken-3">Отчество</th>
+              <th class="bg-blue-darken-3">Номер телефона</th>
+              <th class="bg-blue-darken-3">Email</th>
+              <th class="rounded-te-lg rounded-be-sm bg-blue-darken-3"></th>
             </tr>
             </thead>
             <tbody>
             <tr
-                v-for="(inspector, i) of inspectorsSlice"
+                v-for="inspector of inspectorsSlice"
                 :key="inspector._id"
-                class="text-caption"
+                class="text-caption my-table-row"
             >
               <td>{{ inspector?.firstName || '' }}</td>
               <td>{{ inspector?.surname || '' }}</td>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import {removeInspector} from "../../../utils/api/api_inspectors";
+import {removeInspector} from "@/utils/api/api_inspectors";
 import _ from "lodash";
 
 export default {

@@ -40,21 +40,21 @@
           <v-table style="max-height: 77vh" density="default" fixed-header>
             <thead v-if="!getFetchingDataStatus">
             <tr>
-              <th>Заголовок</th>
-              <th>Договор с заказчиком</th>
-              <th>Заказчик</th>
-              <th>Описание</th>
-              <th></th>
+              <th class="rounded-ts-lg rounded-bs-sm bg-blue-darken-3">Заголовок</th>
+              <th class="bg-blue-darken-3">Договор с заказчиком</th>
+              <th class="bg-blue-darken-3">Заказчик</th>
+              <th class="bg-blue-darken-3">Описание</th>
+              <th class="rounded-te-lg rounded-be-sm bg-blue-darken-3"></th>
             </tr>
             </thead>
             <tbody v-if="!getFetchingDataStatus">
             <tr
-                v-for="(assignment, i) of assignmentsSLice"
+                v-for="assignment of assignmentsSLice"
                 :key="assignment._id"
-                class="text-caption row-hover"
+                class="text-caption my-table-row row-hover"
                 @click="navigateToCardMenu(assignment)"
             >
-              <td>{{ assignment.title }}</td>
+              <td >{{ assignment.title }}</td>
               <td>
                 <v-chip color="deep-purple-darken-2" density="comfortable" label>
                   {{ getContractString(assignment.contract) }}
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import {slicer, unixDateToShortDateString} from "../../../utils/functions";
+import {slicer, unixDateToShortDateString} from "@/utils/functions";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 

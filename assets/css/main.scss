@@ -2,8 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: TildaSansRegular;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/tilda-sans_regular.woff);
+}
+
+@font-face {
+  font-family: GolosTextRegular;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/GolosText-Regular.woff);
+}
+
+
 * {
-  font-family: "Open Sans", sans-serif;
+  font-family: TildaSansRegular, GolosTextRegular, sans-serif;
 }
 
 body::-webkit-scrollbar {
@@ -37,6 +52,9 @@ body::-webkit-scrollbar {
   border-radius: 6px;
 }
 
+.my-table-row {
+  background-color: rgba(250, 250, 250, 0.7);
+}
 .row-hover:hover {
   background-color: #fffff1;
   cursor: pointer;

@@ -35,22 +35,22 @@
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 77vh" density="default" fixed-header>
+          <v-table style="max-height: 77vh" density="comfortable" fixed-header>
             <thead v-if="!fetching">
             <tr>
-              <th>Наименование</th>
-              <th>ИНН</th>
-              <th>Email</th>
-              <th>Номер тел.</th>
-              <th>Юридический адрес</th>
-              <th></th>
+              <th class="rounded-ts-lg rounded-bs-sm bg-blue-darken-3">Наименование</th>
+              <th class="bg-blue-darken-3">ИНН</th>
+              <th class="bg-blue-darken-3">Email</th>
+              <th class="bg-blue-darken-3">Номер тел.</th>
+              <th class="bg-blue-darken-3">Юридический адрес</th>
+              <th class="rounded-te-lg rounded-be-sm bg-blue-darken-3"></th>
             </tr>
             </thead>
             <tbody v-if="!fetching">
             <tr
-                v-for="(customer, i) of customersSlice"
+                v-for="customer of customersSlice"
                 :key="customer._id"
-                class="text-caption"
+                class="text-caption my-table-row"
             >
               <td>{{ customer.fullName || '-' }}</td>
               <td>{{ customer.inn || '-' }}</td>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import {removeCustomer} from "../../../utils/api/api_customers";
+import {removeCustomer} from "@/utils/api/api_customers";
 import {navigateTo} from "nuxt/app";
 
 export default {
