@@ -9,8 +9,7 @@
           <div class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-darken-4"
-                density="default"
+                color="blue-grey-darken-1"
                 variant="tonal"
                 @click="navigateToAddMenu"
             >
@@ -19,26 +18,15 @@
                 Добавить новое задание
               </v-tooltip>
             </v-btn>
-            <v-sheet width="100%">
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  label="Поиск заданий"
-                  variant="solo-filled"
-                  density="compact"
-                  class="ml-4"
-                  hide-details
-                  single-line
-                  flat
-              />
+            <v-sheet max-width="550" width="100%">
+              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
             </v-sheet>
           </div>
         </v-card-item>
 
         <v-card-item>
-          <v-divider/>
           <v-table style="max-height: 65vh" density="comfortable" fixed-header>
-            <thead v-if="!getFetchingDataStatus">
+            <thead>
             <tr>
               <th>Заголовок</th>
               <th>Договор с заказчиком</th>
@@ -66,7 +54,7 @@
                 </v-chip>
               </td>
               <td>{{ slicer(assignment.description, 50) }}</td>
-              <td style="min-width: 90px; width: 90px; max-width: 90px">
+              <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
                   <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
@@ -78,7 +66,13 @@
           <v-divider/>
         </v-card-item>
 
-        <v-card-item>
+        <v-card-item v-if="assignmentsSLice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
+        </v-card-item>
+
+        <v-card-item v-if="assignmentsSLice && assignmentsSLice?.length !== 0">
           <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
@@ -97,6 +91,7 @@
 
 <script>
 import {slicer, unixDateToShortDateString} from "@/utils/functions";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -113,7 +108,8 @@ export default {
         year: 'numeric',
         month: 'short', // month: 'short',
         day: 'numeric',
-      }
+      },
+      mySearchFieldStyle
     }
   },
 

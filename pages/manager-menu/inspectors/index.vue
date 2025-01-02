@@ -8,9 +8,9 @@
         <v-card-item>
           <div class="d-flex align-center">
             <v-btn
-                variant="tonal"
-                color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
+                color="blue-grey-darken-1"
+                variant="tonal"
                 @click="navigateToInspectorAdd"
             >
               Добавить
@@ -18,24 +18,13 @@
                 Добавить нового инспектора
               </v-tooltip>
             </v-btn>
-            <v-sheet width="550">
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  variant="solo-filled"
-                  label="Поиск инспектора"
-                  density="compact"
-                  class="ml-2"
-                  flat
-                  hide-details
-                  single-line
-              />
+            <v-sheet max-width="550" width="100%">
+              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
             </v-sheet>
           </div>
         </v-card-item>
 
         <v-card-item>
-<!--          <v-divider/>-->
           <v-table style="max-height: 65vh" density="comfortable" fixed-header>
             <thead>
             <tr>
@@ -58,7 +47,7 @@
               <td>{{ inspector?.lastName || '' }}</td>
               <td>{{ inspector?.phoneNumber || '' }}</td>
               <td>{{ inspector?.email || '' }}</td>
-              <td style="min-width: 90px; width: 90px; max-width: 90px">
+              <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(inspector)"/>
                   <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
@@ -69,7 +58,13 @@
           </v-table>
         </v-card-item>
 
-        <v-card-item>
+        <v-card-item v-if="inspectorsSlice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
+        </v-card-item>
+
+        <v-card-item v-if="inspectorsSlice && inspectorsSlice?.length !== 0">
           <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
@@ -88,6 +83,7 @@
 
 <script>
 import {removeInspector} from "@/utils/api/api_inspectors";
+import {mySearchFieldStyle} from "@/configs/styles";
 import _ from "lodash";
 
 export default {
@@ -100,6 +96,7 @@ export default {
       itemsPerPage: 20,
       inspectorMenuAddVisibility: false,
       inspectorMenuChangeVisibility: false,
+      mySearchFieldStyle,
     }
   },
 

@@ -1,6 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
+
       <v-card variant="text" :loading="fetching">
 
         <v-card-title>Заказчики</v-card-title>
@@ -8,9 +9,9 @@
         <v-card-item>
           <div class="d-flex align-center">
             <v-btn
-                variant="tonal"
-                color="blue-darken-4"
                 prepend-icon="mdi-plus-box-multiple-outline"
+                color="blue-grey-darken-1"
+                variant="tonal"
                 @click="navigateToCustomerAdd"
             >
               Добавить
@@ -18,24 +19,14 @@
                 Добавить нового заказчика
               </v-tooltip>
             </v-btn>
-            <v-sheet width="550">
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  variant="solo-filled"
-                  label="Поиск заказчика"
-                  density="compact"
-                  class="ml-2"
-                  flat
-                  hide-details
-                  single-line
-              />
+            <v-sheet max-width="550" width="100%">
+              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
             </v-sheet>
           </div>
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
+          <v-table style="max-height: 65vh" density="comfortable" class="bg-transparent" fixed-header>
             <thead v-if="!fetching">
             <tr>
               <th>Наименование</th>
@@ -43,7 +34,16 @@
               <th>Email</th>
               <th>Номер тел.</th>
               <th>Юридический адрес</th>
-              <th></th>
+              <th>
+                <v-btn
+                    class="d-block ml-auto rounded"
+                    icon="mdi-dots-vertical"
+                    density="comfortable"
+                    variant="text"
+                    size="small"
+                    disabled
+                />
+              </th>
             </tr>
             </thead>
             <tbody v-if="!fetching">
@@ -57,7 +57,7 @@
               <td>{{ customer.email || '-' }}</td>
               <td>{{ customer.phoneNumber || '-' }}</td>
               <td>{{ customer.address || '-' }}</td>
-              <td style="min-width: 90px; width: 90px; max-width: 90px">
+              <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(customer)"/>
                   <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
@@ -68,7 +68,13 @@
           </v-table>
         </v-card-item>
 
-        <v-card-item>
+        <v-card-item v-if="customersSlice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
+        </v-card-item>
+
+        <v-card-item v-if="customersSlice && customersSlice?.length !== 0">
           <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
@@ -87,6 +93,7 @@
 
 <script>
 import {removeCustomer} from "@/utils/api/api_customers";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -97,6 +104,7 @@ export default {
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,
+      mySearchFieldStyle,
     }
   },
 

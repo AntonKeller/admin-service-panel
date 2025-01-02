@@ -85,6 +85,7 @@
           @click="rail = false"
           elevation="0"
       >
+
         <v-list variant="text" density="default" nav rounded="lg">
           <v-list-item
               prepend-avatar="/assets/images/logotype.png"
@@ -94,15 +95,16 @@
           >
             <template #append>
               <v-btn
-                  icon="mdi-arrow-collapse-left"
-                  size="small"
+                  icon="mdi-menu-open"
+                  density="comfortable"
+                  color="blue-grey-darken-1"
                   variant="text"
                   rounded="lg"
                   :class="rail ? 'd-none' : ''"
                   @click.stop="changeRail(!rail)"
               >
                 <v-icon/>
-                <v-tooltip activator="parent">Свернуть меню</v-tooltip>
+                <v-tooltip activator="parent">Скрыть меню</v-tooltip>
               </v-btn>
             </template>
           </v-list-item>
@@ -117,7 +119,7 @@
               :active="item._id === activeItem"
               :value="item.value"
               :title="item.title"
-              color="deep-orange-darken-3"
+              color="deep-orange-darken-2"
               density="compact"
               rounded="lg"
               @click="activeItem = item._id"
