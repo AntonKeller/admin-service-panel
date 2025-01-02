@@ -7,23 +7,20 @@
           <div class="d-flex align-center justify-space-between">
             <div class="text-wrap mr-6">
               {{ objectNameTitle }}
-              <v-btn
-                  class="align-self-start"
-                  density="comfortable"
-                  color="blue-darken-3"
-                  icon="mdi-pencil-outline"
-                  variant="text"
-                  rounded="lg"
-                  size="small"
-                  @click="objectMenuChangeVisibility = true"
-              >
-                <v-icon/>
-                <v-tooltip activator="parent" location="left">
-                  Редактировать Объект
-                </v-tooltip>
-              </v-btn>
             </div>
-            <my-button-close-card @click="navigateBack" class="align-self-start"/>
+            <v-btn
+                density="comfortable"
+                color="blue-grey-darken-2"
+                icon="mdi-arrow-left"
+                variant="text"
+                rounded="lg"
+                @click="navigateBack"
+            >
+              <v-icon/>
+              <v-tooltip activator="parent" location="left">
+                Назад
+              </v-tooltip>
+            </v-btn>
           </div>
         </v-card-title>
 
@@ -178,7 +175,7 @@ export default {
   methods: {
 
     navigateBack() {
-      navigateTo('/manager-menu/assignments/assignment-card/block');
+      navigateTo('/manager-menu/assignments/assignment/block');
     },
 
     onObjectChangeSuccess() {

@@ -36,6 +36,6 @@ tbody tr {
 }
 
 .row-hover:hover {
-    background-color: #fffff1;
-    cursor: pointer;
+    background-color: #fffff1 !important;
+    cursor: pointer !important;
 }

@@ -75,7 +75,6 @@
         </v-card-item>
 
         <v-card-item>
-          <v-divider/>
           <v-table v-if="!fetching" style="max-height: 45vh" density="comfortable" fixed-header>
             <thead>
             <tr>
@@ -112,7 +111,12 @@
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
+        </v-card-item>
+
+        <v-card-item v-if="blocksSLice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
         </v-card-item>
 
         <v-card-item>

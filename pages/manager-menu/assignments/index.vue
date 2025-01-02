@@ -44,12 +44,12 @@
             >
               <td>{{ assignment.title }}</td>
               <td>
-                <v-chip color="deep-purple-darken-2" density="comfortable" label>
+                <v-chip color="deep-purple-darken-2" density="compact" label>
                   {{ getContractString(assignment.contract) }}
                 </v-chip>
               </td>
               <td>
-                <v-chip color="blue-darken-3" density="comfortable" label>
+                <v-chip color="blue-darken-3" density="compact" label>
                   {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>
@@ -63,7 +63,6 @@
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
         </v-card-item>
 
         <v-card-item v-if="assignmentsSLice?.length === 0">
