@@ -103,7 +103,7 @@ export default {
       // }
     },
     downloadMobileInspector() {
-      downloadFile('mobileInspector.apk', `${serverURL}/reports/downloadMobileApplication`);
+      downloadFile('mobileInspector.apk', `${serverURL}/applications/androidApplication`);
     }
   }
 }
