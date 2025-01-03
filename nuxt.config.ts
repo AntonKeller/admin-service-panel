@@ -3,25 +3,15 @@ import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify';
 export default defineNuxtConfig({
 
     devtools: {
-        enabled: false
+        enabled: true,
     },
 
     ssr: false,
 
-    // routeRules: {
-        // '/manager-menu/assignments': {
-        //     prerender: true,
-        // },
-        // '/manager-menu/assignments': {
-        //     swr: true,
-        // }
-    // },
-
     app: {
-        // mode: "default",
         pageTransition: {
+            mode: 'out-in',
             name: 'page',
-            mode: 'out-in'
         },
         head: {
             title: '',
@@ -72,7 +62,7 @@ export default defineNuxtConfig({
     },
 
     typescript: {
-        typeCheck: true
+        typeCheck: true,
     },
 
     build: {
@@ -106,4 +96,6 @@ export default defineNuxtConfig({
             })
         },
     ],
+
+    compatibilityDate: '2025-01-03',
 })
