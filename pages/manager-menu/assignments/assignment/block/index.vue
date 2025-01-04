@@ -102,16 +102,7 @@
 
             <v-row no-gutters>
               <v-col :cols="8">
-                <v-text-field
-                    v-model="searchText"
-                    prepend-inner-icon="mdi-magnify"
-                    label="Поиск объектов"
-                    variant="solo-filled"
-                    density="compact"
-                    hide-details
-                    single-line
-                    flat
-                />
+                <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
               </v-col>
               <v-col :cols="2">
                 <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="sm">
@@ -218,10 +209,11 @@ import {
   uploadObjects,
   downloadPhotos
 } from "../../../../../utils/api/api_assignment_blocks";
-import {removeObject, removeObjects} from "../../../../../utils/api/api_inspection_objects";
+import {removeObjects} from "../../../../../utils/api/api_inspection_objects";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -243,6 +235,7 @@ export default {
         objectIsMissing: null,
         objectWithDefect: null,
       },
+      mySearchFieldStyle,
     }
   },
 

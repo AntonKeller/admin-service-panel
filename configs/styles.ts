@@ -11,5 +11,6 @@ export const mySearchFieldStyle = {
     ['class']: "ml-2",
     ['flat']: true,
     ['hide-details']: true,
-    ['single-line']: true,
+    // ['single-line']: true,
 }
+

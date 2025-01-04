@@ -60,17 +60,7 @@
                 </v-tooltip>
               </v-btn>
             </v-btn-group>
-            <v-text-field
-                v-model="searchText"
-                prepend-inner-icon="mdi-magnify"
-                variant="solo-filled"
-                density="compact"
-                label="Поиск"
-                class="ml-2"
-                hide-details
-                single-line
-                flat
-            />
+            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
           </div>
         </v-card-item>
 
@@ -140,6 +130,7 @@
 import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
 import {unixDateToMiddleDateString} from "@/utils/functions";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -152,6 +143,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       blockMenuAddVisibility: false,
+      mySearchFieldStyle,
     }
   },
 
@@ -216,9 +208,12 @@ export default {
     },
 
     assignmentCustomer() {
-      const returnName = !this.selectedAssignment?.customer?.shortName || 'наименование отсутствует';
-      const returnInn = !this.selectedAssignment?.customer?.inn || 'отсутствует';
-      return `Компания: ${returnName} инн: ${returnInn}`
+      if (!this.selectedAssignment?.customer) {
+        return 'Компания: не задана';
+      }
+      const returnName = this.selectedAssignment?.customer?.shortName || 'имя не задано';
+      const returnInn = this.selectedAssignment?.customer?.inn || 'не задан';
+      return `Компания: ${returnName} | ${returnInn}`;
     },
 
     assignmentContract() {
@@ -246,7 +241,7 @@ export default {
     },
 
     selectedAssignment() {
-      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
+      return this.$store.getters['assignments/SELECTED'];
     },
 
     fetching() {
@@ -270,7 +265,6 @@ export default {
       }
       return `${inspector?.phoneNumber} | ${inspector?.email}`;
     },
-    //...............
 
     unixDateToMiddleDateString,
 

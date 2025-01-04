@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify';
 
 export default defineNuxtConfig({
@@ -8,10 +10,12 @@ export default defineNuxtConfig({
 
     ssr: false,
 
+
     app: {
+
         pageTransition: {
-            mode: 'out-in',
             name: 'page',
+            mode: 'out-in',
         },
         head: {
             title: '',
@@ -58,7 +62,7 @@ export default defineNuxtConfig({
                     href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",
                 },
             ],
-        },
+        }
     },
 
     typescript: {
@@ -89,6 +93,7 @@ export default defineNuxtConfig({
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
+        'nuxt-easy-lightbox',
         (_options, nuxt) => {
             nuxt.hooks.hook('vite:extendConfig', (config) => {
                 // @ts-expect-error
