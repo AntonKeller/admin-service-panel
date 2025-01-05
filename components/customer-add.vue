@@ -110,8 +110,9 @@ import {addCustomer, uploadTemplate} from "../utils/api/api_customers";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
-import {vMaska} from "maska/vue"
 import {navigateTo} from "nuxt/app";
+import {vMaska} from "maska/vue"
+
 
 export default {
   name: "customer-add",
@@ -149,7 +150,6 @@ export default {
     customerInnRules: [
       v => v.length > 0 || 'ИНН не должен быть пустым',
       v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
-
     ]
   }),
 

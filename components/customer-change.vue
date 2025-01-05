@@ -56,7 +56,7 @@
             <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+            <my-text-field v-model="hasTemplate" label="Шаблон" disabled/>
           </v-col>
         </v-row>
       </v-form>
@@ -111,9 +111,9 @@ import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
+import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
-import {navigateTo} from "nuxt/app";
 
 export default {
   name: "customer-change",
@@ -152,6 +152,17 @@ export default {
       templateFile: null,
       loading: false,
       formIsValid: false,
+    }
+  },
+
+
+  computed: {
+    hasTemplate() {
+      if (Array.isArray(this.customer.template) && this.customer.template.length > 0) {
+        return `Содержит шаблон ракурсов [${this.customer.template.length} шт.]`
+      } else {
+        return `Шаблон ракурсов отсутствует`
+      }
     }
   },
 
