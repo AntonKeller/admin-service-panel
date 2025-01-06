@@ -15,7 +15,7 @@ export function addCustomer(customer, query) {
 }
 
 export function changeCustomer(customer, query) {
-    return axios.put('/customers/change' + (query ?? ''), customer, axiosConfig);
+    return axios.put('/customers/update/' + (customer._id ?? '') + (query ?? ''), customer, axiosConfig);
 }
 
 export function removeCustomer(customerID, query) {
