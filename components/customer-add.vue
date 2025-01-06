@@ -26,10 +26,10 @@
 
         <v-row dense>
           <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" :rules="[isNotEmptyRule]" label="Короткое наименование"/>
+            <my-text-field v-model="customer.shortName" label="Короткое наименование" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.inn" label="ИНН"/>
+            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="customer.fullName" label="Полное наименование"/>
@@ -78,24 +78,18 @@
         />
         <v-divider class="my-1"/>
       </div>
-      <div class="d-flex ga-2 align-center">
-        <input
-            ref="templateInput"
-            type="file"
-            class="d-none"
-            accept=".xlsx"
-            @change="onFileChange"
-        />
-        <div v-if="customer.template">
-          <v-label class="text-caption">Загружаемый файл:</v-label>
-          <span class="text-caption ml-2">{{ customer.template ? 'Шаблон загружен' : 'Шаблон отсутствует' }}</span>
-        </div>
-      </div>
+      <input
+          ref="templateInput"
+          type="file"
+          class="d-none"
+          accept=".xlsx"
+          @change="onFileChange"
+      />
     </v-card-item>
 
     <v-card-actions>
       <my-btn-submit text="Принять" :loading="loading" @click="addCustomer"/>
-      <my-button-clear text="Очистить" @click="customer = {}"/>
+      <my-button-clear text="Очистить" @click="clear"/>
       <my-btn-submit
           prepend-icon="mdi-tray-arrow-down"
           text="Скачать пустой шаблон"
@@ -125,39 +119,41 @@ export default {
     mask: vMaska
   },
 
-  data: () => ({
+  data() {
+    return {
 
-    options: {
-      mask: "+7 (###) ###-##-##",
-      eager: true
-    },
+      options: {
+        mask: "+7 (###) ###-##-##",
+        eager: true
+      },
 
-    customer: {
-      _id: null,
-      shortName: null,
-      fullName: null,
-      inn: null,
-      address: null,
-      email: null,
-      phoneNumber: null,
-      representativeFullName: null,
-      representativePosition: null,
-      template: null,
-    },
+      customer: {
+        _id: null,
+        shortName: null,
+        fullName: null,
+        inn: null,
+        address: null,
+        email: null,
+        phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
+        template: null,
+      },
 
-    templateUploading: false,
+      templateUploading: false,
 
-    loading: false,
-    formIsValid: false,
-    customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
-    customerInnRules: [
-      v => v.length > 0 || 'ИНН не должен быть пустым',
-      v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
-    ]
-  }),
+      loading: false,
+      formIsValid: false,
+      customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
+      customerInnRules: [
+        v => v.length > 0 || 'ИНН не должен быть пустым',
+        v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
+      ]
+    }
+  },
 
   computed: {
-    customerTemplate(){
+    customerTemplate() {
       if (!!this.customer.template) {
         return this.customer.template.map(e => `${e?.type} [${e?.angles.length}]`)?.join(', ')
       }
