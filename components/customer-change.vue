@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
+import {changeCustomer} from "../utils/api/api_customers";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
