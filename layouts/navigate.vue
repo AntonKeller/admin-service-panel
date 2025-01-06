@@ -119,7 +119,7 @@
               :active="item._id === activeItem"
               :value="item.value"
               :title="item.title"
-              color="deep-orange-darken-2"
+              color="blue-grey"
               density="compact"
               rounded="lg"
               @click="activeItem = item._id"

@@ -72,12 +72,7 @@
           </v-sheet>
         </v-card-item>
 
-        <VueEasyLightbox
-            :visible="lightboxVisible"
-            :index="lightboxIndex"
-            :imgs="lightboxImages"
-            @hide="hideLightbox"
-        />
+
 
         <my-overlay v-model="objectMenuChangeVisibility">
           <object-change
@@ -86,6 +81,12 @@
           />
         </my-overlay>
       </v-card>
+      <VueEasyLightbox
+          :visible="lightboxVisible"
+          :index="lightboxIndex"
+          :imgs="lightboxImages"
+          @hide="hideLightbox"
+      />
     </v-sheet>
   </v-container>
 </template>
