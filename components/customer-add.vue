@@ -188,6 +188,7 @@ export default {
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Заказчик успешно добавлен');
             this.$store.dispatch('customers/FETCH_CUSTOMERS');
+            navigateTo('/manager-menu/customers');
           })
           .catch(err => {
             console.log('Ошибка добавления заказчика', err);

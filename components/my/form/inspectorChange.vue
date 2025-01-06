@@ -108,7 +108,7 @@ export default {
     isNotEmptyRule,
 
     navigateBack() {
-      navigateTo('/manager-menu/customers');
+      navigateTo('/manager-menu/inspectors');
     },
 
     async send() {
@@ -127,6 +127,7 @@ export default {
             this.$store.dispatch('inspectors/FETCH');
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно изменен!');
             this.$emit('change:success');
+            this.navigateBack();
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);

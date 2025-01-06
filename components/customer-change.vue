@@ -190,6 +190,7 @@ export default {
           .then(() => {
             this.$store.dispatch('customers/FETCH_CUSTOMERS');
             this.$store.commit('alert/SUCCESS', 'Запись о заказчике изменена');
+            navigateTo('/manager-menu/customers');
           })
           .catch(err => {
             console.log('Ошибка изменения данных заказчика', err);
