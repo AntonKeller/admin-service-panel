@@ -72,7 +72,6 @@
             variant="tonal"
             size="small"
             class="ml-2"
-            :disabled="!!customer.template"
             :loading="templateUploading"
             @click="onTemplateInput"
         />
