@@ -61,7 +61,6 @@
               @click="sendAssignment"
           />
           <my-button-clear text="Очистить" @click="clear"/>
-          <v-btn density="compact" variant="text" text="print" @click="console.log(this.assignment.contract)"/>
         </v-card-actions>
       </v-card>
     </v-sheet>
