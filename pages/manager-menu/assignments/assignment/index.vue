@@ -24,51 +24,48 @@
           </div>
         </v-card-title>
 
+        <v-card-subtitle>
+          <div class="d-flex ga-4 flex-wrap">
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-file-sign"/>
+              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
+            </v-label>
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-text-box-outline"/>
+              <div class="ml-2 align-self-end">{{ assignmentSubContract }}</div>
+            </v-label>
+            <v-label class="text-body-2">
+              <v-icon icon="mdi-account-tie"/>
+              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+            </v-label>
+          </div>
+        </v-card-subtitle>
+
         <v-card-item>
-          <v-sheet class="d-flex flex-column ga-4 mt-2">
-            <div class="d-flex ga-4 flex-wrap">
-              <v-label class="text-body-2">
-                <v-icon icon="mdi-file-sign"/>
-                <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
-              </v-label>
-              <v-label class="text-body-2">
-                <v-icon icon="mdi-account-tie"/>
-                <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-              </v-label>
-            </div>
-            <v-sheet class="rounded-lg pr-1" style="height: 100px; overflow-y: scroll">
-              {{ selectedAssignment?.description }}
-            </v-sheet>
-            <div class="d-flex ga-4 align-center py-1">
-              <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
-                <v-btn
-                    prepend-icon="mdi-plus-box-multiple-outline"
-                    @click="navigateToBlockCreate"
-                >
-                  Добавить адрес
-                  <v-tooltip activator="parent">
-                    Добавить новый адрес нас осмотр
-                  </v-tooltip>
-                </v-btn>
-              </v-btn-group>
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  variant="solo-filled"
-                  density="compact"
-                  label="Поиск"
-                  class="ml-2"
-                  hide-details
-                  single-line
-                  flat
-              />
-            </div>
+          <v-sheet class="text-caption rounded-lg pr-1" style="height: 80px; overflow-y: scroll">
+            {{ selectedAssignment?.description }}
           </v-sheet>
         </v-card-item>
 
         <v-card-item>
-          <v-divider/>
-          <v-table v-if="!fetching" style="max-height: 31vh" density="comfortable" fixed-header>
+          <div class="d-flex ga-4 align-center">
+            <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
+              <v-btn
+                  prepend-icon="mdi-plus-box-multiple-outline"
+                  @click="navigateToBlockCreate"
+              >
+                Добавить адрес
+                <v-tooltip activator="parent">
+                  Добавить новый адрес нас осмотр
+                </v-tooltip>
+              </v-btn>
+            </v-btn-group>
+            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
+          </div>
+        </v-card-item>
+
+        <v-card-item>
+          <v-table v-if="!fetching" style="max-height: 45vh" density="comfortable" fixed-header>
             <thead>
             <tr>
               <th>Адрес</th>
@@ -93,7 +90,7 @@
                 {{ getInspector(block?.inspector) }}
               </td>
               <td>
-                {{getInspectorContacts(block?.inspector)}}
+                {{ getInspectorContacts(block?.inspector) }}
               </td>
               <td style="min-width: 90px; width: 90px; max-width: 90px">
                 <div class="d-flex ga-2">
@@ -104,7 +101,12 @@
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
+        </v-card-item>
+
+        <v-card-item v-if="blocksSLice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
         </v-card-item>
 
         <v-card-item>
@@ -125,9 +127,10 @@
 </template>
 
 <script>
-import {removeAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
-import {fetchAssignmentOneById} from "../../../../utils/api/api_assignments";
-import {unixDateToMiddleDateString} from "../../../../utils/functions";
+import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
+import {unixDateToMiddleDateString} from "@/utils/functions";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -140,6 +143,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       blockMenuAddVisibility: false,
+      mySearchFieldStyle,
     }
   },
 
@@ -204,27 +208,40 @@ export default {
     },
 
     assignmentCustomer() {
-      if (!this.selectedAssignment?.customer) return 'Заказчик отсутствует';
-
-      const {
-        shortName, fullName, inn, phoneNumber, email, address,
-        representativePosition, representativeFullName
-      } = this.selectedAssignment.customer;
-
-      const returnName = shortName || fullName || email || phoneNumber || 'наименование отсутствует';
-      return `Компания: ${returnName} инн: ${inn}`
+      if (!this.selectedAssignment?.customer) {
+        return 'Компания: не задана';
+      }
+      const returnName = this.selectedAssignment?.customer?.shortName || 'имя не задано';
+      const returnInn = this.selectedAssignment?.customer?.inn || 'не задан';
+      return `Компания: ${returnName} | ${returnInn}`;
     },
 
     assignmentContract() {
-      if (!this.selectedAssignment?.contract) return `Договор не задан`;
+      if (
+          !this.selectedAssignment?.contract?.number ||
+          !this.selectedAssignment?.contract?.date
+      ) return `Договор не задан`;
+
       const {number, date} = this.selectedAssignment?.contract;
       if (number && date) return `№ ${number} от ${this.unixDateToMiddleDateString(date)}`;
       if (!number && date) return `№ [№ договора отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
       if (number && !date) return `№ ${number} от [дата договора отсутствует]`;
     },
 
+    assignmentSubContract() {
+      if (
+          !this.selectedAssignment?.subContract?.number ||
+          !this.selectedAssignment?.subContract?.date
+      ) return `ТЗ не задано`;
+
+      const {number, date} = this.selectedAssignment?.subContract;
+      if (number && date) return `ТЗ № ${number} от ${this.unixDateToMiddleDateString(date)}`;
+      if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
+      if (number && !date) return `ТЗ № ${number} от [дата ТЗ отсутствует]`;
+    },
+
     selectedAssignment() {
-      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
+      return this.$store.getters['assignments/SELECTED'];
     },
 
     fetching() {
@@ -248,7 +265,6 @@ export default {
       }
       return `${inspector?.phoneNumber} | ${inspector?.email}`;
     },
-    //...............
 
     unixDateToMiddleDateString,
 

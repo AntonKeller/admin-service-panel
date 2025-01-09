@@ -5,7 +5,7 @@
         :items="subContracts"
         :custom-filter="contractSearchFilter"
         @update:menu="onUpdateMenuContracts"
-        prepend-inner-icon="mdi-file-document-edit"
+        prepend-inner-icon="mdi-text-box-outline"
         :no-data-text="noDataText"
         color="yellow-darken-3"
         variant="outlined"
@@ -20,7 +20,7 @@
         <v-chip
             v-bind="props"
             :text="`${item.raw?.number} / ${unixDateToLongDateString(item.raw?.date)}`"
-            prepend-icon="mdi-file-document-edit"
+            prepend-icon="mdi-text-box-outline"
             color="blue-grey-darken-3"
             density="comfortable"
             label
@@ -30,7 +30,7 @@
       <template #item="{ props, item }">
         <v-list-item
             v-bind="props"
-            prepend-icon="mdi-file-document-edit"
+            prepend-icon="mdi-text-box-outline"
             :title="item.raw?.number"
             :subtitle="unixDateToLongDateString(item.raw?.date)"
         >

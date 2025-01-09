@@ -7,23 +7,20 @@
           <div class="d-flex align-center justify-space-between">
             <div class="text-wrap mr-6">
               {{ objectNameTitle }}
-              <v-btn
-                  class="align-self-start"
-                  density="comfortable"
-                  color="blue-darken-3"
-                  icon="mdi-pencil-outline"
-                  variant="text"
-                  rounded="lg"
-                  size="small"
-                  @click="objectMenuChangeVisibility = true"
-              >
-                <v-icon/>
-                <v-tooltip activator="parent" location="left">
-                  Редактировать Объект
-                </v-tooltip>
-              </v-btn>
             </div>
-            <my-button-close-card @click="navigateBack" class="align-self-start"/>
+            <v-btn
+                density="comfortable"
+                color="blue-grey-darken-2"
+                icon="mdi-arrow-left"
+                variant="text"
+                rounded="lg"
+                @click="navigateBack"
+            >
+              <v-icon/>
+              <v-tooltip activator="parent" location="left">
+                Назад
+              </v-tooltip>
+            </v-btn>
           </div>
         </v-card-title>
 
@@ -60,13 +57,14 @@
               <v-sheet style="overflow-y: scroll" height="120" class="d-flex pb-2">
                 <v-img
                     v-for="img of angleT.photos"
-                    @click="selectImage(img)"
+                    @click="showLightbox(angleT.photos, img._id)"
                     :min-width="150"
                     :max-width="150"
                     :height="120"
                     aspect-ratio="1/1"
                     cover
                     :src="img.src"
+                    alt="Загрузка изображения..."
                     class="border-sm rounded mr-2"
                 />
               </v-sheet>
@@ -74,20 +72,7 @@
           </v-sheet>
         </v-card-item>
 
-        <my-overlay v-model="imgFullWindowIsShow">
-          <v-sheet class="bg-transparent d-flex flex-column">
-            <img
-                style="max-height: 94vh; max-width: 95vw; object-fit: contain; transform: scaleX(100%)"
-                class="rounded-t-lg d-block"
-                alt="loading..."
-                loading="lazy"
-                :src="selectedImg.src"
-            />
-          </v-sheet>
-          <v-btn class="mt-1" color="red-darken-4" prepend-icon="mdi-close" @click="removeImg(selectedImg._id)">
-            Удалить
-          </v-btn>
-        </my-overlay>
+
 
         <my-overlay v-model="objectMenuChangeVisibility">
           <object-change
@@ -96,12 +81,18 @@
           />
         </my-overlay>
       </v-card>
+      <VueEasyLightbox
+          :visible="lightboxVisible"
+          :index="lightboxIndex"
+          :imgs="lightboxImages"
+          @hide="hideLightbox"
+      />
     </v-sheet>
   </v-container>
 </template>
 
 <script>
-import {removeImg, sendImg} from "../../../../../../utils/api/api_images.js";
+import {removeImg, sendImg} from "../../../../../../utils/api/api_images";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -115,11 +106,26 @@ export default {
       dragging: false,
       progress: 0,
       angleSelected: null,
-      imgFullWindowIsShow: false,
       objectMenuChangeVisibility: false,
       columnMax: 4,
+
+      // lightbox
+      lightboxVisible: false,
+      lightboxIndex: null,
     }
   },
+
+  // 0, 0, 0, 0, 0, 0
+  // 0, 1, 2, 3, 4, 5
+  // 0, 1, 2, 3, 4, 5
+
+  // 1, 1, 1, 1, 1,  1
+  // 0, 1, 2, 3, 4,  5
+  // 6, 7, 8, 9, 10, 11
+
+  // 2,  2,  2,  2,  2,  2
+  // 0,  1,  2,  3,  4,  5
+  // 12, 13, 14, 15, 16, 17
 
   async mounted() {
 
@@ -129,6 +135,9 @@ export default {
     }
 
     this.readSessionStorage();
+
+    console.log('anglesTransformed', this.anglesTransformed);
+    console.log('anglesTransformedToArray', this.lightboxImages);
   },
 
   unmounted() {
@@ -136,19 +145,16 @@ export default {
   },
 
   computed: {
-    array() {
-      return new Array(this.countPerRow).fill(new Array(this.columnMax)).map((e, i) => {
-        return this.photosBySelectedAngle.slice(i * this.columnMax, (i + 1) * this.columnMax)
+    lightboxImages() {
+      const array = []
+
+      this.anglesTransformed.forEach(angle => {
+        angle.photos.forEach(img => {
+          array.push({...img, title: angle.angleName})
+        })
       });
-    },
-    countPerRow() {
-      return Math.ceil(this.photosBySelectedAngle.length / this.columnMax);
-    },
-    photosBySelectedAngle() {
-      if (this.angleSelected) {
-        return this.$store.getters['angles/GET_ANGLE_BY_ID'](this.angleSelected?._id)?.photoList || [];
-      }
-      return [];
+
+      return array;
     },
     anglesTransformed() {
       const transformed = [];
@@ -169,15 +175,23 @@ export default {
     objectNameTitle() {
       return (this.inspectionObject?.name || 'Имя отсутствует') + ' / ' + (this.inspectionObject?.inventoryNumber || 'Инв. номер отсутствует')
     },
-    photoCount() {
-      return this.$store.getters['angles/GET_PHOTO_COUNT'];
-    }
   },
 
   methods: {
 
+    showLightbox(images, imgID) {
+      this.lightboxImages = images;
+      this.lightboxIndex = this.lightboxImages.findIndex(img => img._id === imgID);
+      this.lightboxVisible = true;
+    },
+
+    hideLightbox() {
+      this.lightboxVisible = false;
+      this.lightboxIndex = null;
+    },
+
     navigateBack() {
-      navigateTo('/manager-menu/assignments/assignment-card/block');
+      navigateTo('/manager-menu/assignments/assignment/block');
     },
 
     onObjectChangeSuccess() {
@@ -210,23 +224,12 @@ export default {
       this.angleSelected = this.$store.getters['angles/GET_ANGLE_BY_ID'](sessionStorage.selectedAngleId);
     },
 
-    onSelectAngle(angle) {
-      if (angle) {
-        sessionStorage.setItem('selectedAngleId', angle._id);
-      }
-    },
-
-    selectImage(img) {
-      this.selectedImg = img;
-      this.imgFullWindowIsShow = true;
-    },
-
+    // TODO: Скорректировать
     removeImg(_photoId) {
       removeImg(_photoId)
           .then(() => {
-            this.imgFullWindowIsShow = false;
-
             this.angleSelected.photoList = this.angleSelected.photoList.filter(e => e._id !== _photoId);
+
             if (this.angleSelected.photoList.length === 0) {
               this.angleSelected = null;
             }

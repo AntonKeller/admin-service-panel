@@ -1,9 +1,8 @@
 <template>
   <v-card :loading="loading" :disabled="loading" variant="flat" width="100vw" max-width="900">
-
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Редакторование данных заказчика</div>
+        <div>Редактор записи о заказчике</div>
         <v-btn
             density="comfortable"
             color="blue-grey-darken-2"
@@ -27,10 +26,10 @@
 
         <v-row dense>
           <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" :rules="[isNotEmptyRule]" label="Короткое наименование"/>
+            <my-text-field v-model="customer.shortName" label="Короткое наименование" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.inn" label="ИНН"/>
+            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="customer.fullName" label="Полное наименование"/>
@@ -56,7 +55,7 @@
             <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+            <my-text-field v-model="customerTemplate" label="Шаблон" disabled/>
           </v-col>
         </v-row>
       </v-form>
@@ -64,42 +63,39 @@
 
     <v-card-item>
       <div>
-        <v-divider/>
         <v-label>Вы можете добавить или заменить шаблон</v-label>
         <v-btn
-            class="ml-2"
+            append-icon="mdi-tray-arrow-up"
+            text="Загрузить ракурсы"
             color="blue-darken-3"
             density="comfortable"
-            :append-icon="templateFile ? 'mdi-close' : 'mdi-tray-arrow-up'"
-            :text="templateFile ? 'Убрать файл' : 'Загрузить ракурсы'"
             variant="tonal"
             size="small"
-            @click="templateUpload"
+            class="ml-2"
+            :loading="templateUploading"
+            @click="onTemplateInput"
         />
         <v-divider class="my-1"/>
       </div>
-      <div class="d-flex ga-2 align-center">
-        <input
-            ref="templateInput"
-            type="file"
-            class="d-none"
-            accept=".xlsx"
-            @change="onFileChange"
-        />
-        <div v-if="templateFile">
-          <v-label class="text-caption">Загружаемый файл:</v-label>
-          <span class="text-caption ml-2">{{ templateFile?.name || '' }}</span>
-        </div>
-      </div>
+
+      <input
+          ref="templateInput"
+          type="file"
+          class="d-none"
+          accept=".xlsx"
+          @change="onFileChange"
+      />
+
     </v-card-item>
 
     <v-card-actions>
-      <my-btn-submit text="Изменить" :loading="loading" @click="changeCustomer"/>
+      <my-btn-submit text="Принять изменения" :loading="loading" @click="changeCustomer"/>
+      <my-button-clear text="Очистить" @click="clear"/>
       <my-btn-submit
+          prepend-icon="mdi-tray-arrow-down"
+          text="Скачать пустой шаблон"
           class="ml-auto"
           variant="text"
-          text="Шаблон для заполнения"
-          prepend-icon="mdi-tray-arrow-down"
           @click="downloadTemplate"
       />
     </v-card-actions>
@@ -107,13 +103,13 @@
 </template>
 
 <script>
-import {changeCustomer, uploadTemplate} from "../utils/api/api_customers";
+import {changeCustomer, unpackAnglesTemplates} from "../utils/api/api_customers";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
+import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
-import {navigateTo} from "nuxt/app";
 
 export default {
   name: "customer-change",
@@ -149,9 +145,20 @@ export default {
         template: null,
       },
 
-      templateFile: null,
+      templateUploading: false,
+
       loading: false,
       formIsValid: false,
+    }
+  },
+
+
+  computed: {
+    customerTemplate() {
+      if (!!this.customer.template) {
+        return this.customer.template.map(e => `${e?.type} [${e?.angles.length}]`)?.join(', ')
+      }
+      return null;
     }
   },
 
@@ -159,7 +166,7 @@ export default {
 
     isNotEmptyRule,
 
-    navigateBack(){
+    navigateBack() {
       navigateTo('/manager-menu/customers');
     },
 
@@ -180,9 +187,9 @@ export default {
 
       changeCustomer(this.customer)
           .then(() => {
-            this.$emit('change:success');
             this.$store.dispatch('customers/FETCH_CUSTOMERS');
             this.$store.commit('alert/SUCCESS', 'Запись о заказчике изменена');
+            navigateTo('/manager-menu/customers');
           })
           .catch(err => {
             console.log('Ошибка изменения данных заказчика', err);
@@ -191,38 +198,50 @@ export default {
           .finally(() => {
             this.loading = false;
           })
-
-      if (!this.templateFile) {
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('photoAngles', this.templateFile);
-      uploadTemplate(this.customer._id, formData)
-          .catch(err => {
-            this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
-            console.log('Не удалось отправить шаблон', err);
-          })
-
     },
 
-    // Программно вызываем клик по скрытому input
-    templateUpload() {
-      if (this.templateFile) {
-        this.templateFile = null;
-        this.$refs.templateInput.value = '';
-      } else {
-        this.$refs.templateInput.click();
-      }
+    onTemplateInput() {
+      this.$refs.templateInput.click();
     },
 
     // Событие загрузки файла
     onFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.templateFile = file;
+        this.templateUploading = true;
+        const formData = new FormData();
+        formData.append('photoAngles', file);
+        unpackAnglesTemplates(formData)
+            .then(response => {
+              this.customer.template = response.data;
+              this.$store.commit('alert/SUCCESS', 'Шаблон успешно загружен');
+            })
+            .catch(err => {
+              console.log('Ошибка загрузки шаблона', err);
+              this.$store.commit('alert/ERROR', 'Ошибка загрузки шаблона');
+            })
+            .finally(() => {
+              this.templateUploading = false;
+              this.$refs.templateInput.value = '';
+            })
       }
     },
+
+    clear() {
+      this.$refs.templateInput.value = '';
+      this.customer = {
+        _id: this.customer._id,
+        shortName: null,
+        fullName: null,
+        inn: null,
+        address: null,
+        email: null,
+        phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
+        template: null,
+      }
+    }
   },
 }
 </script>

@@ -5,8 +5,7 @@ export const navItems: Array<TNavItem> = [
         _id: 1,
         title: 'Задания',
         route: '/manager-menu/assignments',
-        prependIcon: 'mdi-format-list-text',
-        color: 'blue-darken-3',
+        prependIcon: 'mdi-calendar-check-outline',
         value: 'assignments',
         active: false,
         badge: {
@@ -19,8 +18,7 @@ export const navItems: Array<TNavItem> = [
         _id: 2,
         title: 'Инспекторы',
         route: '/manager-menu/inspectors',
-        prependIcon: 'mdi-account-settings-outline',
-        color: 'blue-darken-3',
+        prependIcon: 'mdi-account-group-outline',
         value: 'inspectors',
         active: false,
         badge: {
@@ -33,8 +31,7 @@ export const navItems: Array<TNavItem> = [
         _id: 3,
         title: 'Заказчики',
         route: '/manager-menu/customers',
-        prependIcon: 'mdi-cards-variant',
-        color: 'blue-darken-3',
+        prependIcon: 'mdi-card-account-details-outline',
         value: 'customers',
         active: false,
         badge: {

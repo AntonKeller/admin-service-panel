@@ -26,10 +26,10 @@
 
         <v-row dense>
           <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" :rules="[isNotEmptyRule]" label="Короткое наименование"/>
+            <my-text-field v-model="customer.shortName" label="Короткое наименование" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.inn" label="ИНН"/>
+            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="customer.fullName" label="Полное наименование"/>
@@ -55,7 +55,7 @@
             <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="customer.template" label="Шаблон" disabled/>
+            <my-text-field v-model="customerTemplate" label="Шаблон" disabled/>
           </v-col>
         </v-row>
       </v-form>
@@ -65,38 +65,33 @@
       <div>
         <v-label>Вы можете добавить или заменить шаблон</v-label>
         <v-btn
-            class="ml-2"
+            append-icon="mdi-tray-arrow-up"
+            text="Загрузить ракурсы"
             color="blue-darken-3"
             density="comfortable"
-            :append-icon="templateFile ? 'mdi-close' : 'mdi-tray-arrow-up'"
-            :text="templateFile ? 'Убрать файл' : 'Загрузить ракурсы'"
             variant="tonal"
             size="small"
-            @click="templateUpload"
+            class="ml-2"
+            :loading="templateUploading"
+            @click="onTemplateInput"
         />
         <v-divider class="my-1"/>
       </div>
-      <div class="d-flex ga-2 align-center">
-        <input
-            ref="templateInput"
-            type="file"
-            class="d-none"
-            accept=".xlsx"
-            @change="onFileChange"
-        />
-        <div v-if="templateFile">
-          <v-label class="text-caption">Загружаемый файл:</v-label>
-          <span class="text-caption ml-2">{{ templateFile?.name || '' }}</span>
-        </div>
-      </div>
+      <input
+          ref="templateInput"
+          type="file"
+          class="d-none"
+          accept=".xlsx"
+          @change="onFileChange"
+      />
     </v-card-item>
 
     <v-card-actions>
       <my-btn-submit text="Принять" :loading="loading" @click="addCustomer"/>
-      <my-button-clear text="Очистить" @click="customer = {}"/>
+      <my-button-clear text="Очистить" @click="clear"/>
       <my-btn-submit
           prepend-icon="mdi-tray-arrow-down"
-          text="Шаблон для заполнения"
+          text="Скачать пустой шаблон"
           class="ml-auto"
           variant="text"
           @click="downloadTemplate"
@@ -106,12 +101,13 @@
 </template>
 
 <script>
-import {addCustomer, uploadTemplate} from "../utils/api/api_customers";
+import {addCustomer, unpackAnglesTemplates} from "../utils/api/api_customers";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
-import {vMaska} from "maska/vue"
 import {navigateTo} from "nuxt/app";
+import {vMaska} from "maska/vue"
+
 
 export default {
   name: "customer-add",
@@ -122,36 +118,47 @@ export default {
     mask: vMaska
   },
 
-  data: () => ({
+  data() {
+    return {
 
-    options: {
-      mask: "+7 (###) ###-##-##",
-      eager: true
-    },
+      options: {
+        mask: "+7 (###) ###-##-##",
+        eager: true
+      },
 
-    customer: {
-      _id: null,
-      shortName: null,
-      fullName: null,
-      inn: null,
-      address: null,
-      email: null,
-      phoneNumber: null,
-      representativeFullName: null,
-      representativePosition: null,
-      template: null,
-    },
+      customer: {
+        _id: null,
+        shortName: null,
+        fullName: null,
+        inn: null,
+        address: null,
+        email: null,
+        phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
+        template: null,
+      },
 
-    templateFile: null,
-    loading: false,
-    formIsValid: false,
-    customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
-    customerInnRules: [
-      v => v.length > 0 || 'ИНН не должен быть пустым',
-      v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
+      templateUploading: false,
 
-    ]
-  }),
+      loading: false,
+      formIsValid: false,
+      customerFullNameRules: [v => v.length > 0 || 'Наименование не должно быть пустым'],
+      customerInnRules: [
+        v => v.length > 0 || 'ИНН не должен быть пустым',
+        v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
+      ]
+    }
+  },
+
+  computed: {
+    customerTemplate() {
+      if (!!this.customer.template) {
+        return this.customer.template.map(e => `${e?.type} [${e?.angles.length}]`)?.join(', ')
+      }
+      return null;
+    }
+  },
 
   methods: {
 
@@ -176,12 +183,11 @@ export default {
 
       this.loading = true;
 
-      const _id = await addCustomer(this.customer)
-          .then((response) => {
-            this.$emit('add:success');
+      addCustomer(this.customer)
+          .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Заказчик успешно добавлен');
             this.$store.dispatch('customers/FETCH_CUSTOMERS');
-            this.$store.commit('alert/SUCCESS', 'Успешно добавлен');
-            return response.data._id;
+            navigateTo('/manager-menu/customers');
           })
           .catch(err => {
             console.log('Ошибка добавления заказчика', err);
@@ -190,42 +196,38 @@ export default {
           .finally(() => {
             this.loading = false;
           })
-
-      if (!this.templateFile) {
-        return;
-      }
-
-      if (_id) {
-        const formData = new FormData();
-        formData.append('photoAngles', this.templateFile);
-        uploadTemplate(_id, formData)
-            .then(() => {
-              this.$emit('add:success');
-            })
-            .catch(err => {
-              this.$store.commit('alert/ERROR', 'Не удалось загрузить шаблон');
-              console.log('Не удалось загрузить шаблон', err);
-            })
-      }
     },
 
     // Программно вызываем клик по скрытому input
-    templateUpload() {
-      if (this.templateFile) {
-        this.templateFile = null;
-        this.$refs.templateInput.value = '';
-      } else {
-        this.$refs.templateInput.click();
-      }
+    onTemplateInput() {
+      this.$refs.templateInput.click();
     },
+
     // Событие загрузки файла
     onFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.templateFile = file;
+        this.templateUploading = true;
+        const formData = new FormData();
+        formData.append('photoAngles', file);
+        unpackAnglesTemplates(formData)
+            .then(response => {
+              this.customer.template = response.data;
+              this.$store.commit('alert/SUCCESS', 'Шаблон успешно загружен');
+            })
+            .catch(err => {
+              console.log('Ошибка загрузки шаблона', err);
+              this.$store.commit('alert/ERROR', 'Ошибка загрузки шаблона');
+            })
+            .finally(() => {
+              this.templateUploading = false;
+              this.$refs.templateInput.value = '';
+            })
       }
     },
+
     clear() {
+      this.$refs.templateInput.value = '';
       this.customer = {
         _id: null,
         shortName: null,
@@ -238,8 +240,6 @@ export default {
         representativePosition: null,
         template: null,
       }
-      this.templateFile = null;
-      this.$refs.templateInput.value = '';
     }
   },
 }

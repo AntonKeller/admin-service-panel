@@ -39,7 +39,7 @@
               </v-col>
 
               <v-col :cols="12">
-                <my-text-field v-model="block.address" label="Адрес осмотра"/>
+                <my-text-field v-model="block.address" label="Адрес осмотра" :rules="[isNotEmptyRule]"/>
               </v-col>
 
               <v-col :cols="6">
@@ -58,7 +58,7 @@
               text="Добавить"
               prepend-icon="mdi-checkbox-multiple-marked-outline"
               :loading="sendingAssignmentBlock"
-              @click="sendBlock"
+              @click="changeBlock"
           />
           <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
@@ -69,6 +69,7 @@
 
 <script>
 import {changeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {isNotEmptyRule} from "@/utils/validators/functions";
 import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
@@ -80,26 +81,27 @@ export default {
     mask: vMaska
   },
 
-  data: () => ({
+  data() {
+    return {
+      block: {
+        _id: null,
+        title: null, // Заголовок
+        address: null, // Адрес
+        startDate: null, // Дата начала
+        pledger: null, // Залогодатель
+        contact: null, // Контакт
+        inspector: null, // Инспектор
+      },
 
-    block: {
-      _id: null,
-      title: null, // Заголовок
-      address: null, // Адрес
-      startDate: null, // Дата начала
-      pledger: null, // Залогодатель
-      contact: null, // Контакт
-      inspector: null, // Инспектор
-    },
+      formIsValid: null,
+      sendingAssignmentBlock: false,
 
-    formIsValid: null,
-    sendingAssignmentBlock: false,
-
-    options: {
-      mask: "+7 (###) ###-##-##",
-      eager: true
-    },
-  }),
+      options: {
+        mask: "+7 (###) ###-##-##",
+        eager: true
+      },
+    }
+  },
 
   beforeMount() {
     this.block = _.cloneDeep(this.$store.getters['assignmentBlocks/SELECTED']);
@@ -107,11 +109,25 @@ export default {
 
   methods: {
 
+    isNotEmptyRule,
+
     navigateBack() {
       navigateTo('/manager-menu/assignments/assignment');
     },
 
-    async updateBlock() {
+    clear() {
+      this.block = {
+        _id: null,
+        title: null, // Заголовок
+        address: null, // Адрес
+        startDate: null, // Дата начала
+        pledger: null, // Залогодатель
+        contact: null, // Контакт
+        inspector: null, // Инспектор
+      }
+    },
+
+    async changeBlock() {
 
       await this.$refs.form.validate();
 

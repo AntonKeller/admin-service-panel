@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
       <v-card variant="text">
+
         <v-card-title>
           <div class="d-flex align-center justify-space-between">
             <div class="d-flex ga-1 align-center">
@@ -31,8 +32,8 @@
           </div>
         </v-card-subtitle>
 
-        <v-card-text class="text-caption">
-          <div class="d-flex flex-column ga-1  py-1">
+        <v-card-item class="text-caption">
+          <div class="d-flex flex-column ga-2 py-1">
             <v-btn-group variant="text" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-file-download-outline"
@@ -73,7 +74,7 @@
               </v-btn>
               <v-divider vertical/>
               <v-btn
-                  prepend-icon="mdi-file-document-arrow-right-outline"
+                  prepend-icon="mdi-folder-download-outline"
                   color="blue-darken-2"
                   size="small"
                   :disabled="downloadingPhotos"
@@ -87,7 +88,7 @@
               </v-btn>
               <v-divider vertical/>
               <v-btn
-                  prepend-icon="mdi-file-document-arrow-right-outline"
+                  prepend-icon="mdi-table-large-remove"
                   color="red-darken-2"
                   size="small"
                   @click="removeObjectsAll"
@@ -101,16 +102,7 @@
 
             <v-row no-gutters>
               <v-col :cols="8">
-                <v-text-field
-                    v-model="searchText"
-                    prepend-inner-icon="mdi-magnify"
-                    label="Поиск объектов"
-                    variant="solo-filled"
-                    density="compact"
-                    hide-details
-                    single-line
-                    flat
-                />
+                <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
               </v-col>
               <v-col :cols="2">
                 <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="sm">
@@ -142,9 +134,10 @@
               </v-col>
             </v-row>
           </div>
+        </v-card-item>
 
-          <v-divider/>
-          <v-table style="max-height: 77vh" density="compact" fixed-header class="text-caption elevation-0">
+        <v-card-item>
+          <v-table style="max-height: 60vh" density="compact" fixed-header class="text-caption elevation-0">
             <thead>
             <tr class="text-blue-darken-4">
               <th class="text-left">№ п/п</th>
@@ -153,15 +146,15 @@
               <th class="text-left">Наличие объекта</th>
               <th class="text-left">Наличие дефекта</th>
               <th class="text-left">Описание дефекта</th>
-              <th class="text-left"></th>
             </tr>
             </thead>
             <tbody>
             <tr
                 v-for="(inspectionObject, i) in objectsSlice"
                 :key="inspectionObject._id"
-                @click.stop="navigateToObject(inspectionObject)"
                 :class="getColorByStatus(inspectionObject)"
+                class="row-hover"
+                @click.stop="navigateToObject(inspectionObject)"
             >
               <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
@@ -179,14 +172,18 @@
               <td style="min-width: 100px; width: 100px; max-width: 100px">
                 {{ textSlicer(inspectionObject.description, 20) || '-' }}
               </td>
-              <td style="min-width: 50px; width: 50px; max-width: 50px">
-                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeOneObject(inspectionObject._id)"/>
-              </td>
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
+        </v-card-item>
 
+        <v-card-item v-if="objectsSlice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
+        </v-card-item>
+
+        <v-card-item>
           <div class="d-flex align-center mt-2">
             <v-pagination
                 v-model="currentPage"
@@ -197,7 +194,7 @@
                 :total-visible="8"
             />
           </div>
-        </v-card-text>
+        </v-card-item>
 
         <v-file-input class="d-none" ref="excelFileInput" accept=".xlsx" @change="onExcelFileInput"/>
 
@@ -212,10 +209,11 @@ import {
   uploadObjects,
   downloadPhotos
 } from "../../../../../utils/api/api_assignment_blocks";
-import {removeObject, removeObjects} from "../../../../../utils/api/api_inspection_objects";
+import {removeObjects} from "../../../../../utils/api/api_inspection_objects";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -237,6 +235,7 @@ export default {
         objectIsMissing: null,
         objectWithDefect: null,
       },
+      mySearchFieldStyle,
     }
   },
 
@@ -341,17 +340,6 @@ export default {
       return '';
     },
 
-    removeOneObject(ID) {
-      removeObject(ID)
-          .then(() => {
-            this.fetchInspectionObjects();
-            this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно удален');
-          })
-          .catch(() => {
-            this.$store.commit('alert/ERROR', 'Неудалось удалить адрес осмотра');
-          })
-    },
-
     clickExcelInputFile() {
       this.$refs.excelFileInput.click();
     },
@@ -416,10 +404,13 @@ export default {
       return txt?.length > size ? txt.slice(0, size - 3) + '...' : txt;
     },
 
-    removeObjectsAll(blockID) {
+    removeObjectsAll() {
+
+      const blockID = this.$store.getters['assignmentBlocks/SELECTED']?._id;
+
       removeObjects(blockID)
           .then(() => {
-            this.$store.commit('alert/ERROR', 'Объекты успешно удалены');
+            this.$store.commit('alert/SUCCESS', 'Объекты успешно удалены');
             this.fetchInspectionObjects();
           })
           .catch(err => {

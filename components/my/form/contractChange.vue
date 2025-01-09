@@ -2,7 +2,7 @@
   <v-card :sending="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>Редактирование договора</div>
+        <div>{{cardTitle}}</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -18,12 +18,12 @@
             <my-text-field
                 v-model="contract.number"
                 prepend-inner-icon="mdi-file-sign"
-                label="Номер договора/ТЗ"
-                placeholder="..../..."
+                :label="placeHolderContract"
+                placeholder="xxxxxx/xxxxx xxxx.xxxxx"
             />
           </v-col>
 
-          <v-col :cols="8">
+          <v-col :cols="12" :md="8">
             <my-date-picker
                 v-model="contract.date"
                 prepend-inner-icon="mdi-calendar-range"
@@ -32,13 +32,14 @@
             />
           </v-col>
 
-          <v-col :cols="4">
+          <v-col :cols="12" :md="4">
             <v-switch
                 v-model="hideParent"
                 density="compact"
                 label="Рамочный договор"
                 color="primary"
                 class="pl-4"
+                disabled
             />
           </v-col>
 
@@ -100,6 +101,18 @@ export default {
       formIsValid: null,
       sending: false,
     }
+  },
+
+  computed: {
+
+    cardTitle() {
+      return this.hideParent ? 'Редактирование рамочного договора' : 'Редактирование ТЗ к договору';
+    },
+
+    placeHolderContract() {
+      return this.hideParent ? 'Номер рамочного договора' : 'Номер ТЗ к договору';
+    }
+
   },
 
   methods: {

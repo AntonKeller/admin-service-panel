@@ -9,8 +9,7 @@
           <div class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-darken-4"
-                density="default"
+                color="blue-grey-darken-1"
                 variant="tonal"
                 @click="navigateToAddMenu"
             >
@@ -19,26 +18,15 @@
                 Добавить новое задание
               </v-tooltip>
             </v-btn>
-            <v-sheet width="100%">
-              <v-text-field
-                  v-model="searchText"
-                  prepend-inner-icon="mdi-magnify"
-                  label="Поиск заданий"
-                  variant="solo-filled"
-                  density="compact"
-                  class="ml-4"
-                  hide-details
-                  single-line
-                  flat
-              />
+            <v-sheet max-width="550" width="100%">
+              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
             </v-sheet>
           </div>
         </v-card-item>
 
         <v-card-item>
-          <v-divider/>
-          <v-table style="max-height: 77vh" density="default" fixed-header>
-            <thead v-if="!getFetchingDataStatus">
+          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
+            <thead>
             <tr>
               <th>Заголовок</th>
               <th>Договор с заказчиком</th>
@@ -49,24 +37,24 @@
             </thead>
             <tbody v-if="!getFetchingDataStatus">
             <tr
-                v-for="(assignment, i) of assignmentsSLice"
+                v-for="assignment of assignmentsSLice"
                 :key="assignment._id"
                 class="text-caption row-hover"
                 @click="navigateToCardMenu(assignment)"
             >
               <td>{{ assignment.title }}</td>
               <td>
-                <v-chip color="deep-purple-darken-2" density="comfortable" label>
+                <v-chip color="deep-purple-darken-2" density="comfortable" size="small" class="text-caption" label>
                   {{ getContractString(assignment.contract) }}
                 </v-chip>
               </td>
               <td>
-                <v-chip color="blue-darken-3" density="comfortable" label>
-                  {{ assignment.customer|| '-' }}
+                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption" label>
+                  {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>
               <td>{{ slicer(assignment.description, 50) }}</td>
-              <td style="min-width: 90px; width: 90px; max-width: 90px">
+              <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
                   <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
@@ -75,10 +63,15 @@
             </tr>
             </tbody>
           </v-table>
-          <v-divider/>
         </v-card-item>
 
-        <v-card-item>
+        <v-card-item v-if="assignmentsSLice?.length === 0">
+          <v-label class="d-flex justify-center pb-4 border-b-sm">
+            Нет данных
+          </v-label>
+        </v-card-item>
+
+        <v-card-item v-if="assignmentsSLice && assignmentsSLice?.length !== 0">
           <div class="d-flex align-center">
             <v-pagination
                 v-model="currentPage"
@@ -96,7 +89,8 @@
 </template>
 
 <script>
-import {slicer, unixDateToShortDateString} from "../../../utils/functions";
+import {slicer, unixDateToShortDateString} from "@/utils/functions";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -113,7 +107,8 @@ export default {
         year: 'numeric',
         month: 'short', // month: 'short',
         day: 'numeric',
-      }
+      },
+      mySearchFieldStyle
     }
   },
 
@@ -130,9 +125,9 @@ export default {
       return this.$store.getters['assignments/GET_ASSIGNMENTS'];
     },
     assignmentTotalCount() {
-      return this.assignmentList.length;
+      return this.assignmentSearchFilter.length;
     },
-    assignmentFoundList() {
+    assignmentSearchFilter() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
         return this.assignmentList.filter(item => {
           return [
@@ -151,7 +146,7 @@ export default {
     assignmentsSLice() {
       const from = (this.currentPage - 1) * this.itemsPerPage;
       const to = this.currentPage * this.itemsPerPage;
-      return this.assignmentFoundList.slice(from, to);
+      return this.assignmentSearchFilter.slice(from, to);
     },
     getFetchingDataStatus() {
       return this.$store.getters['assignments/GET_FETCHING'];

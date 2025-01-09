@@ -2,8 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("main-tables.css");
+
+@font-face {
+  font-family: TildaSansRegular;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/tilda-sans_regular.woff);
+}
+
+@font-face {
+  font-family: GolosTextRegular;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/GolosText-Regular.woff);
+}
+
+
 * {
-  font-family: "Open Sans", sans-serif;
+  font-family: TildaSansRegular, GolosTextRegular, sans-serif;
 }
 
 body::-webkit-scrollbar {
@@ -17,10 +34,6 @@ body::-webkit-scrollbar {
 *::-webkit-scrollbar-track {
   @apply bg-transparent;
 }
-
-//*::-webkit-scrollbar-thumb {
-//  @apply bg-gray-600/50 rounded-xl;
-//}
 
 ::-webkit-scrollbar {
   height: 8px;
@@ -36,13 +49,3 @@ body::-webkit-scrollbar {
   background: #546E7A;
   border-radius: 6px;
 }
-
-.row-hover:hover {
-  background-color: #fffff1;
-  cursor: pointer;
-}
-
-//tr:hover > td:not(:last-child) {
-//  text-decoration: underline;
-//  cursor: pointer;
-//}

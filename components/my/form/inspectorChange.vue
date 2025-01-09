@@ -1,9 +1,21 @@
 <template>
-  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="0" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Редактирование инспектора</div>
-        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
+        <v-btn
+            density="comfortable"
+            color="blue-grey-darken-2"
+            icon="mdi-arrow-left"
+            variant="text"
+            rounded="lg"
+            @click="navigateBack"
+        >
+          <v-icon/>
+          <v-tooltip activator="parent" location="left">
+            Назад
+          </v-tooltip>
+        </v-btn>
       </div>
     </v-card-title>
 
@@ -51,7 +63,7 @@
 </template>
 
 <script>
-import {changeInspector} from "../utils/api/api_inspectors";
+import {changeInspector} from "@/utils/api/api_inspectors";
 import {isNotEmptyRule} from '@/utils/validators/functions';
 import {vMaska} from "maska/vue"
 import _ from "lodash";
@@ -61,16 +73,12 @@ export default {
 
   emits: ['change:success', 'click:close'],
 
-  props: {
-    _inspector: Object,
-  },
-
   directives: {
     mask: vMaska
   },
 
   beforeMount() {
-    this.inspector = _.cloneDeep(this._inspector);
+    this.inspector = _.cloneDeep(this.$store.getters['inspectors/GET_SELECTED']);
   },
 
   data() {
@@ -99,6 +107,10 @@ export default {
 
     isNotEmptyRule,
 
+    navigateBack() {
+      navigateTo('/manager-menu/inspectors');
+    },
+
     async send() {
 
       await this.$refs.form.validate();
@@ -112,8 +124,10 @@ export default {
 
       changeInspector(this.inspector)
           .then(() => {
+            this.$store.dispatch('inspectors/FETCH');
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно изменен!');
-            this.$emit('change:success')
+            this.$emit('change:success');
+            this.navigateBack();
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);
