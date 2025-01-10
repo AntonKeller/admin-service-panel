@@ -1,62 +1,63 @@
 <template>
   <v-container fluid>
-    <v-sheet>
-      <v-card variant="text">
+    <v-card variant="text">
+      <v-card-title>
+        <div class="d-flex align-center justify-space-between">
+          <div class="text-wrap mr-6">
+            {{ objectNameTitle }}
+          </div>
+          <v-btn
+              density="comfortable"
+              color="blue-grey-darken-2"
+              icon="mdi-arrow-left"
+              variant="text"
+              rounded="lg"
+              @click="navigateBack"
+          >
+            <v-icon/>
+            <v-tooltip activator="parent" location="left">
+              Назад
+            </v-tooltip>
+          </v-btn>
+        </div>
+      </v-card-title>
 
-        <v-card-title>
-          <div class="d-flex align-center justify-space-between">
-            <div class="text-wrap mr-6">
-              {{ objectNameTitle }}
+      <v-card-subtitle>
+        {{ inspectionObject?.address || 'Адрес отсутствует' }}
+      </v-card-subtitle>
+
+      <v-card-item>
+        <div class="text-caption">
+          {{ inspectionObject?.description || 'Описание отсутствует' }}
+        </div>
+      </v-card-item>
+
+      <v-file-input
+          v-model="files"
+          class="d-none"
+          variant="outlined"
+          density="compact"
+          capture="camera"
+          accept=".jpg, .png, .jpeg"
+          id="inputfile"
+          type="file"
+          @change="sendImages"
+      />
+
+      <v-card-item>
+        <v-sheet max-height="700px"
+                 class="d-flex flex-column ga-6 overflow-y-scroll overflow-x-hidden border-b-sm pb-6">
+          <div v-for="(angleT, i) of anglesTransformed" class="d-flex flex-column ga-2">
+
+            <div class="font-bold d-flex align-center">
+              <v-chip label color="blue-darken-4" density="comfortable">
+                {{ angleT.angleName }}
+              </v-chip>
             </div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                icon="mdi-arrow-left"
-                variant="text"
-                rounded="lg"
-                @click="navigateBack"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Назад
-              </v-tooltip>
-            </v-btn>
-          </div>
-        </v-card-title>
 
-        <v-card-subtitle>
-          {{ inspectionObject?.address || 'Адрес отсутствует' }}
-        </v-card-subtitle>
-
-        <v-card-item>
-          <div class="text-caption">
-            {{ inspectionObject?.description || 'Описание отсутствует' }}
-          </div>
-        </v-card-item>
-
-        <v-file-input
-            v-model="files"
-            class="d-none"
-            variant="outlined"
-            density="compact"
-            capture="camera"
-            accept=".jpg, .png, .jpeg"
-            id="inputfile"
-            type="file"
-            @change="sendImages"
-        />
-
-        <v-card-item>
-          <v-sheet style="overflow-y: scroll" max-height="700" class="pr-8">
-            <div v-for="(angleT, i) of anglesTransformed">
-              <div class="py-2 font-bold d-flex align-center" :class="i !== 0 ? 'mt-2' : ''">
-                <v-chip label color="blue-darken-4" density="comfortable">
-                  {{ angleT.angleName }}
-                </v-chip>
-              </div>
-              <v-sheet style="overflow-y: scroll" height="120" class="d-flex pb-2">
+            <v-sheet class="d-flex flex-wrap ga-2">
+              <div v-for="img of angleT.photos" class="">
                 <v-img
-                    v-for="img of angleT.photos"
                     @click="showLightbox(angleT.photos, img._id)"
                     :min-width="150"
                     :max-width="150"
@@ -65,29 +66,52 @@
                     cover
                     :src="img.src"
                     alt="Загрузка изображения..."
-                    class="border-sm rounded mr-2"
+                    class="rounded cursor-pointer"
                 />
-              </v-sheet>
-            </div>
-          </v-sheet>
-        </v-card-item>
+              </div>
+            </v-sheet>
+          </div>
+        </v-sheet>
+      </v-card-item>
 
 
+      <!--          <v-sheet style="overflow-y: scroll" max-height="700" class="pr-8">-->
+      <!--            <div v-for="(angleT, i) of anglesTransformed">-->
+      <!--              <div class="py-2 font-bold d-flex align-center" :class="i !== 0 ? 'mt-2' : ''">-->
+      <!--                <v-chip label color="blue-darken-4" density="comfortable">-->
+      <!--                  {{ angleT.angleName }}-->
+      <!--                </v-chip>-->
+      <!--              </div>-->
+      <!--              <v-sheet style="overflow-y: scroll" height="120" class="d-flex pb-2">-->
+      <!--                <v-img-->
+      <!--                    v-for="img of angleT.photos"-->
+      <!--                    @click="showLightbox(angleT.photos, img._id)"-->
+      <!--                    :min-width="150"-->
+      <!--                    :max-width="150"-->
+      <!--                    :height="120"-->
+      <!--                    aspect-ratio="1/1"-->
+      <!--                    cover-->
+      <!--                    :src="img.src"-->
+      <!--                    alt="Загрузка изображения..."-->
+      <!--                    class="border-sm rounded mr-2 cursor-pointer"-->
+      <!--                />-->
+      <!--              </v-sheet>-->
+      <!--            </div>-->
+      <!--          </v-sheet>-->
 
-        <my-overlay v-model="objectMenuChangeVisibility">
-          <object-change
-              @change:success="onObjectChangeSuccess"
-              @click:close="objectMenuChangeVisibility=false"
-          />
-        </my-overlay>
-      </v-card>
-      <VueEasyLightbox
-          :visible="lightboxVisible"
-          :index="lightboxIndex"
-          :imgs="lightboxImages"
-          @hide="hideLightbox"
-      />
-    </v-sheet>
+      <my-overlay v-model="objectMenuChangeVisibility">
+        <object-change
+            @change:success="onObjectChangeSuccess"
+            @click:close="objectMenuChangeVisibility=false"
+        />
+      </my-overlay>
+    </v-card>
+    <VueEasyLightbox
+        :visible="lightboxVisible"
+        :index="lightboxIndex"
+        :imgs="lightboxImages"
+        @hide="hideLightbox"
+    />
   </v-container>
 </template>
 
@@ -114,18 +138,6 @@ export default {
       lightboxIndex: null,
     }
   },
-
-  // 0, 0, 0, 0, 0, 0
-  // 0, 1, 2, 3, 4, 5
-  // 0, 1, 2, 3, 4, 5
-
-  // 1, 1, 1, 1, 1,  1
-  // 0, 1, 2, 3, 4,  5
-  // 6, 7, 8, 9, 10, 11
-
-  // 2,  2,  2,  2,  2,  2
-  // 0,  1,  2,  3,  4,  5
-  // 12, 13, 14, 15, 16, 17
 
   async mounted() {
 
