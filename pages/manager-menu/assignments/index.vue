@@ -90,7 +90,7 @@
 
 <script>
 import {slicer, unixDateToShortDateString} from "@/utils/functions";
-import {mySearchFieldStyle} from "@/configs/styles";
+import {  mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 

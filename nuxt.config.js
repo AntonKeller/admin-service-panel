@@ -10,7 +10,6 @@ export default defineNuxtConfig({
 
     ssr: false,
 
-
     app: {
 
         pageTransition: {
@@ -59,22 +58,22 @@ export default defineNuxtConfig({
                 },
                 {
                     rel: "stylesheet",
-                    href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",
-                },
-            ],
+                    href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+                }
+            ]
         }
     },
 
     typescript: {
-        typeCheck: true,
+        typeCheck: true
     },
 
     build: {
-        transpile: ['vuetify'],
+        transpile: ['vuetify']
     },
 
     css: [
-        '/assets/css/main.scss',
+        '/assets/css/main.scss'
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -86,9 +85,9 @@ export default defineNuxtConfig({
     vite: {
         vue: {
             template: {
-                transformAssetUrls,
-            },
-        },
+                transformAssetUrls
+            }
+        }
     },
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -99,8 +98,8 @@ export default defineNuxtConfig({
                 // @ts-expect-error
                 config.plugins.push(vuetify({autoImport: true}))
             })
-        },
+        }
     ],
 
-    compatibilityDate: '2025-01-03',
+    compatibilityDate: '2025-01-03'
 })
