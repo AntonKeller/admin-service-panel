@@ -1,6 +1,7 @@
 import axios from "axios";
 import {serverURL} from "@/constants/constants";
 import {vuexStore} from "@/store/vuexStore";
+import logotype from "@/components/logotype.vue";
 
 
 function createConfig() {
@@ -45,15 +46,26 @@ export async function accessTest() {
 /**
  * Загружает файл
  * */
-export async function downloadFile(saveAs, url) {
+export async function downloadFile(saveAs, url, progressObject) {
     try {
 
-        const response = await axios.get(url, {
-            responseType: 'blob',
-            headers: {
-                authorization: localStorage.accessToken ?? '',
-            }
-        });
+        progressObject.process = true;
+
+        const response = await axios
+            .get(url, {
+                responseType: 'blob',
+                headers: {
+                    authorization: localStorage.accessToken ?? '',
+                },
+                onDownloadProgress: function (progressEvent) {
+                    progressObject.percent = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                },
+            })
+            .finally(() => {
+                console.log('Загружено');
+                progressObject.process = false;
+                progressObject.percent = 0;
+            })
 
         const oURL = window.URL.createObjectURL(new Blob([response.data]));
         const selectorA = document.createElement('a');

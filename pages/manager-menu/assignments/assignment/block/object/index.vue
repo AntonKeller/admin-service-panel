@@ -27,7 +27,7 @@
       </v-card-subtitle>
 
       <v-card-item>
-        <div class="text-caption">
+        <div class="text-caption border-dashed border-sm px-1 rounded">
           {{ inspectionObject?.description || 'Описание отсутствует' }}
         </div>
       </v-card-item>

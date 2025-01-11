@@ -10,7 +10,7 @@
         color="yellow-darken-3"
         variant="outlined"
         density="compact"
-        label="Договор"
+        label="договор с заказчиком"
         closable-chips
         hide-selected
         chips
@@ -61,7 +61,7 @@
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
-        Добавить новый договор
+        Добавить новый договор с заказчиком
       </v-tooltip>
     </v-btn>
     <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
@@ -87,7 +87,7 @@ export default {
       contractsList: [], // TODO: Запросы и Vue вывод полей
       fetching: false,
       contractMenuAddVisible: false,
-      contractRules: [v => v || 'Договор должен быть выбран'],
+      contractRules: [v => v || 'договор с заказчиком должен быть выбран'],
     }
   },
 

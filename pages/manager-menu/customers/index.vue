@@ -31,9 +31,9 @@
             <tr>
               <th>Наименование</th>
               <th>ИНН</th>
-              <th>Email</th>
+              <th>Представитель</th>
               <th>Номер тел.</th>
-              <th>Юридический адрес</th>
+              <th>Email</th>
               <th>
                 <v-btn
                     class="d-block ml-auto rounded"
@@ -52,11 +52,11 @@
                 :key="customer._id"
                 class="text-caption"
             >
-              <td>{{ customer.fullName || '-' }}</td>
-              <td>{{ customer.inn || '-' }}</td>
-              <td>{{ customer.email || '-' }}</td>
-              <td>{{ customer.phoneNumber || '-' }}</td>
-              <td>{{ customer.address || '-' }}</td>
+              <td>{{ customer.shortName || '-' }}</td>
+              <td class="text-no-wrap">{{ customer.inn || '-' }}</td>
+              <td class="text-no-wrap">{{ customer.representativeFullName || '-' }}</td>
+              <td class="text-no-wrap">{{ customer.phoneNumber || '-' }}</td>
+              <td class="text-no-wrap">{{ customer.email || '-' }}</td>
               <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(customer)"/>

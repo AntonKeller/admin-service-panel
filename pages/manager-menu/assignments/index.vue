@@ -31,7 +31,6 @@
               <th>Заголовок</th>
               <th>Договор с заказчиком</th>
               <th>Заказчик</th>
-              <th>Описание</th>
               <th></th>
             </tr>
             </thead>
@@ -53,7 +52,6 @@
                   {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>
-              <td>{{ slicer(assignment.description, 50) }}</td>
               <td style="min-width: 95px; width: 95px; max-width: 95px">
                 <div class="d-flex ga-2">
                   <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
@@ -90,7 +88,7 @@
 
 <script>
 import {slicer, unixDateToShortDateString} from "@/utils/functions";
-import {  mySearchFieldStyle} from "@/configs/styles";
+import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 

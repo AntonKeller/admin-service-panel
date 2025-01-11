@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="sending" :disabled="sending"  elevation="6"  width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Создание новый записи залогодатель</div>
@@ -22,7 +22,7 @@
             <my-text-field v-model="pledger.lastName" label="Отчество"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.inn" label="ИНН"/>
+            <my-text-field v-model="pledger.inn" label="ИНН" :rules="[isINN]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="pledger.position" label="Должность"/>
@@ -44,7 +44,7 @@
 
 <script>
 import {addPledger} from "../../../utils/api/api_pledgers";
-import {isNotEmptyRule} from '@/utils/validators/functions';
+import {isINN, isNotEmptyRule} from '@/utils/validators/functions';
 
 export default {
   name: "pledgerAdd",
@@ -69,6 +69,7 @@ export default {
   methods: {
 
     isNotEmptyRule,
+    isINN,
 
     async send() {
 

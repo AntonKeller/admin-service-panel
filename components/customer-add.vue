@@ -26,16 +26,19 @@
 
         <v-row dense>
           <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" label="Короткое наименование" :rules="[isNotEmptyRule]"/>
+            <my-text-field v-model="customer.shortName" label="Краткое наименование" :rules="[isNotEmptyRule]"/>
           </v-col>
           <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isNotEmptyRule]"/>
+            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isINN]"/>
           </v-col>
           <v-col :cols="12">
             <my-text-field v-model="customer.fullName" label="Полное наименование"/>
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="customer.address" label="Адрес"/>
+            <my-text-field v-model="customer.address" label="Юридический адрес"/>
+          </v-col>
+          <v-col :cols="12">
+            <my-text-field v-model="customer.actualAddress" label="Фактический адрес"/>
           </v-col>
           <v-col :cols="6">
             <my-text-field v-model="customer.email" label="Email"/>
@@ -102,7 +105,7 @@
 
 <script>
 import {addCustomer, unpackAnglesTemplates} from "../utils/api/api_customers";
-import {isNotEmptyRule} from "@/utils/validators/functions";
+import {isINN, isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
 import {navigateTo} from "nuxt/app";
@@ -132,6 +135,7 @@ export default {
         fullName: null,
         inn: null,
         address: null,
+        actualAddress: null,
         email: null,
         phoneNumber: null,
         representativeFullName: null,
@@ -163,6 +167,7 @@ export default {
   methods: {
 
     isNotEmptyRule,
+    isINN,
 
     navigateBack() {
       navigateTo('/manager-menu/customers');
