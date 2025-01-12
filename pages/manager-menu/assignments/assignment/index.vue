@@ -45,6 +45,10 @@
         <v-card-subtitle>
           <div class="d-flex ga-4 flex-wrap">
             <v-label class="text-body-2">
+              <v-icon icon="mdi-account-tie"/>
+              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
+            </v-label>
+            <v-label class="text-body-2">
               <v-icon icon="mdi-file-sign"/>
               <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
             </v-label>
@@ -52,10 +56,7 @@
               <v-icon icon="mdi-text-box-outline"/>
               <div class="ml-2 align-self-end">{{ assignmentSubContract }}</div>
             </v-label>
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-account-tie"/>
-              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-            </v-label>
+
           </div>
         </v-card-subtitle>
 
@@ -147,7 +148,7 @@
 <script>
 import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
-import {unixDateToMiddleDateString} from "@/utils/functions";
+import {unixDateToMiddleDateString, unixDateToShortDateString} from "@/utils/functions";
 import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
@@ -241,9 +242,9 @@ export default {
       ) return `Договор не задан`;
 
       const {number, date} = this.selectedAssignment?.contract;
-      if (number && date) return `№ ${number} от ${this.unixDateToMiddleDateString(date)}`;
-      if (!number && date) return `№ [№ договора отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
-      if (number && !date) return `№ ${number} от [дата договора отсутствует]`;
+      if (number && date) return `Договор с заказчиком № ${number} от ${this.unixDateToShortDateString(date)}`;
+      if (!number && date) return `Договор с заказчиком № [№ договора отсутствует] от ${this.unixDateToShortDateString(date)}`;
+      if (number && !date) return `Договор с заказчиком № ${number} от [дата договора отсутствует]`;
     },
 
     assignmentSubContract() {
@@ -253,8 +254,8 @@ export default {
       ) return `ТЗ не задано`;
 
       const {number, date} = this.selectedAssignment?.subContract;
-      if (number && date) return `ТЗ № ${number} от ${this.unixDateToMiddleDateString(date)}`;
-      if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToMiddleDateString(date)}`;
+      if (number && date) return `ТЗ № ${number} от ${this.unixDateToShortDateString(date)}`;
+      if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToShortDateString(date)}`;
       if (number && !date) return `ТЗ № ${number} от [дата ТЗ отсутствует]`;
     },
 
@@ -285,6 +286,7 @@ export default {
     },
 
     unixDateToMiddleDateString,
+    unixDateToShortDateString,
 
     selectAssignmentBlock(block) {
       // Записываем в session storage и в vuex store
