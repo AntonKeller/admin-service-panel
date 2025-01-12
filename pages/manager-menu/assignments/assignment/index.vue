@@ -22,24 +22,7 @@
 
       <v-card variant="text">
         <v-card-title>
-          <div class="d-flex justify-space-between align-center">
-            <div class="d-flex ga-1 align-center">
-              {{ selectedAssignment?.title }}
-            </div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                icon="mdi-arrow-left"
-                variant="text"
-                rounded="lg"
-                @click="navigateBack"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Назад
-              </v-tooltip>
-            </v-btn>
-          </div>
+          {{ selectedAssignment?.title }}
         </v-card-title>
 
         <v-card-subtitle>
