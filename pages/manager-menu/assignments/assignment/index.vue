@@ -2,11 +2,29 @@
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
       <v-card variant="text">
+        <v-card-item>
+          <v-btn
+              prepend-icon="mdi-arrow-left"
+              density="comfortable"
+              color="blue-darken-3"
+              variant="tonal"
+              rounded="sm"
+              @click="navigateBack"
+          >
+            Назад
+            <v-tooltip activator="parent" location="left">
+              Вернуться назад
+            </v-tooltip>
+          </v-btn>
+        </v-card-item>
+      </v-card>
+
+
+      <v-card variant="text">
         <v-card-title>
           <div class="d-flex justify-space-between align-center">
             <div class="d-flex ga-1 align-center">
               {{ selectedAssignment?.title }}
-              [ Техническое задание ]
             </div>
             <v-btn
                 density="comfortable"
@@ -56,7 +74,7 @@
               >
                 Добавить адрес
                 <v-tooltip activator="parent">
-                  Добавить новый адрес нас осмотр
+                  Добавить новый адрес на осмотр
                 </v-tooltip>
               </v-btn>
             </v-btn-group>
@@ -209,11 +227,11 @@ export default {
 
     assignmentCustomer() {
       if (!this.selectedAssignment?.customer) {
-        return 'Компания: не задана';
+        return 'Заказчик: не задан';
       }
       const returnName = this.selectedAssignment?.customer?.shortName || 'имя не задано';
       const returnInn = this.selectedAssignment?.customer?.inn || 'не задан';
-      return `Компания: ${returnName} | ${returnInn}`;
+      return `Заказчик: ${returnName} | ${returnInn}`;
     },
 
     assignmentContract() {

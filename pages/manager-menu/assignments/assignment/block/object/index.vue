@@ -64,7 +64,7 @@
                     :height="120"
                     aspect-ratio="1/1"
                     cover
-                    :src="img.src"
+                    :lazy-src="img.src"
                     alt="Загрузка изображения..."
                     class="rounded cursor-pointer"
                 />
@@ -74,31 +74,6 @@
         </v-sheet>
       </v-card-item>
 
-
-      <!--          <v-sheet style="overflow-y: scroll" max-height="700" class="pr-8">-->
-      <!--            <div v-for="(angleT, i) of anglesTransformed">-->
-      <!--              <div class="py-2 font-bold d-flex align-center" :class="i !== 0 ? 'mt-2' : ''">-->
-      <!--                <v-chip label color="blue-darken-4" density="comfortable">-->
-      <!--                  {{ angleT.angleName }}-->
-      <!--                </v-chip>-->
-      <!--              </div>-->
-      <!--              <v-sheet style="overflow-y: scroll" height="120" class="d-flex pb-2">-->
-      <!--                <v-img-->
-      <!--                    v-for="img of angleT.photos"-->
-      <!--                    @click="showLightbox(angleT.photos, img._id)"-->
-      <!--                    :min-width="150"-->
-      <!--                    :max-width="150"-->
-      <!--                    :height="120"-->
-      <!--                    aspect-ratio="1/1"-->
-      <!--                    cover-->
-      <!--                    :src="img.src"-->
-      <!--                    alt="Загрузка изображения..."-->
-      <!--                    class="border-sm rounded mr-2 cursor-pointer"-->
-      <!--                />-->
-      <!--              </v-sheet>-->
-      <!--            </div>-->
-      <!--          </v-sheet>-->
-
       <my-overlay v-model="objectMenuChangeVisibility">
         <object-change
             @change:success="onObjectChangeSuccess"
@@ -106,6 +81,7 @@
         />
       </my-overlay>
     </v-card>
+
     <VueEasyLightbox
         :visible="lightboxVisible"
         :index="lightboxIndex"

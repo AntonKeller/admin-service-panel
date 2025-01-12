@@ -10,7 +10,7 @@
         color="yellow-darken-3"
         variant="outlined"
         density="compact"
-        label="договор с заказчиком"
+        label="Договор с заказчиком"
         closable-chips
         hide-selected
         chips
@@ -87,7 +87,7 @@ export default {
       contractsList: [], // TODO: Запросы и Vue вывод полей
       fetching: false,
       contractMenuAddVisible: false,
-      contractRules: [v => v || 'договор с заказчиком должен быть выбран'],
+      contractRules: [v => v || 'Договор с заказчиком должен быть выбран'],
     }
   },
 

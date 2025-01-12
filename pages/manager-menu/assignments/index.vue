@@ -1,6 +1,8 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
+
+
       <v-card variant="text" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
