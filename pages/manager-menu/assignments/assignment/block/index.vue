@@ -158,16 +158,16 @@
             >
               <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ textSlicer(inspectionObject?.name, 100) || '' }}
+                {{ textSlicer(inspectionObject?.name, 100) || '-' }}
               </td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '' }}
+                {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '-' }}
               </td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ inspectionObject.hasSelf ? 'Да' : 'Нет' }}
+                {{ inspectionObject.isExist ? 'Да' : 'Нет' }}
               </td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
-                {{ inspectionObject.hasDefect ? 'Да' : 'Нет' }}
+                {{ inspectionObject.isDefect ? 'Да' : 'Нет' }}
               </td>
               <td style="min-width: 100px; width: 100px; max-width: 100px">
                 {{ textSlicer(inspectionObject.description, 20) || '-' }}
@@ -278,16 +278,16 @@ export default {
 
       if (this.filter.objectIsMissing && this.filter.objectWithDefect) {
         return this.inspectionObjects
-            .filter(item => !item.hasSelf)
-            .filter(item => item.hasDefect);
+            .filter(item => !item.isExist)
+            .filter(item => item.isDefect);
       }
 
       if (this.filter.objectIsMissing && !this.filter.objectWithDefect) {
-        return this.inspectionObjects.filter(item => !item.hasSelf);
+        return this.inspectionObjects.filter(item => !item.isExist);
       }
 
       if (!this.filter.objectIsMissing && this.filter.objectWithDefect) {
-        return this.inspectionObjects.filter(item => item.hasDefect);
+        return this.inspectionObjects.filter(item => item.isDefect);
       }
 
       return this.inspectionObjects;
@@ -335,8 +335,8 @@ export default {
     },
 
     getColorByStatus(inspectionObject) {
-      if (!inspectionObject.hasSelf) return 'bg-pink-lighten-5';
-      if (!inspectionObject.hasDefect) return 'bg-amber-lighten-4';
+      if (!inspectionObject.isExist) return 'bg-pink-lighten-5';
+      if (inspectionObject.isDefect) return 'bg-amber-lighten-4';
       return '';
     },
 
