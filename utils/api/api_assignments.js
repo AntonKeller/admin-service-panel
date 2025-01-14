@@ -1,5 +1,5 @@
-import axios from "axios";
 import axiosConfig from "@/configs/axios";
+import axios from "axios";
 
 
 export function fetchAssignments(query) {

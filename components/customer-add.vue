@@ -1,6 +1,5 @@
 <template>
   <v-sheet>
-
     <v-card variant="text">
       <v-card-item>
         <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">

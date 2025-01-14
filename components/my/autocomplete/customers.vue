@@ -51,21 +51,6 @@
         </v-list-item>
       </template>
     </v-autocomplete>
-    <v-btn
-        icon="mdi-plus"
-        variant="text"
-        rounded="lg"
-        size="small"
-        @click="customerMenuAddVisible = true"
-    >
-      <v-icon/>
-      <v-tooltip activator="parent" location="left">
-        Добавить нового заказчика
-      </v-tooltip>
-    </v-btn>
-    <my-overlay v-model="customerMenuAddVisible">
-      <customer-add @add:success="onCustomerAddSuccess" @click:close="customerMenuAddVisible=false"/>
-    </my-overlay>
   </div>
 </template>
 
@@ -76,7 +61,6 @@ export default {
   name: "my-autocomplete-customers",
   data() {
     return {
-      customerMenuAddVisible: false,
       fetching: false,
       customersList: [],
     }
@@ -93,11 +77,6 @@ export default {
 
     onUpdateMenuCustomer(status) {
       if (status) this.fetchCustomersList();
-    },
-
-    async onCustomerAddSuccess() {
-      this.customerMenuAddVisible = false;
-      await this.fetchCustomersList();
     },
 
     removeCustomer(id) {
