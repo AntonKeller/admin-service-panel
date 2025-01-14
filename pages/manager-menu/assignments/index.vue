@@ -46,7 +46,7 @@
             >
               <td>{{ assignment.title }}</td>
               <td>
-                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption" label>
+                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"  prepend-icon="mdi-domain" label>
                   {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>
