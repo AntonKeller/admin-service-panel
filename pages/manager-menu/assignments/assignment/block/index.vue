@@ -1,27 +1,22 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
+
+      <v-card variant="text">
+        <v-card-item>
+          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+            Назад
+            <v-tooltip activator="parent" location="left">
+              Вернуться назад
+            </v-tooltip>
+          </v-btn>
+        </v-card-item>
+      </v-card>
+
       <v-card variant="text">
 
         <v-card-title>
-          <div class="d-flex align-center justify-space-between">
-            <div class="d-flex ga-1 align-center">
-              {{ selectedAssignmentBlock.address }}
-            </div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                icon="mdi-arrow-left"
-                variant="text"
-                rounded="lg"
-                @click="navigateBack"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Назад
-              </v-tooltip>
-            </v-btn>
-          </div>
+          {{ selectedAssignmentBlock.address }}
         </v-card-title>
 
         <v-card-subtitle>
@@ -197,7 +192,6 @@
         </v-card-item>
 
         <v-file-input class="d-none" ref="excelFileInput" accept=".xlsx" @change="onExcelFileInput"/>
-
       </v-card>
     </v-sheet>
   </v-container>
@@ -210,10 +204,10 @@ import {
   downloadPhotos
 } from "../../../../../utils/api/api_assignment_blocks";
 import {removeObjects} from "../../../../../utils/api/api_inspection_objects";
+import {mySearchFieldStyle, navigateBackBtnStyle} from "@/configs/styles";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
-import {mySearchFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -235,7 +229,10 @@ export default {
         objectIsMissing: null,
         objectWithDefect: null,
       },
+
+      // import styles
       mySearchFieldStyle,
+      navigateBackBtnStyle
     }
   },
 

@@ -1,110 +1,145 @@
 <template>
-  <v-card :loading="loading" :disabled="loading" variant="flat" width="100vw" max-width="900">
-    <v-card-title>
-      <div class="d-flex justify-space-between align-center">
-        <div>Новый заказчик</div>
-        <v-btn
-            density="comfortable"
-            color="blue-grey-darken-2"
-            icon="mdi-arrow-left"
-            variant="text"
-            rounded="lg"
-            @click="navigateBack"
-        >
-          <v-icon/>
+  <v-sheet>
+
+    <v-card variant="text">
+      <v-card-item>
+        <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+          Назад
           <v-tooltip activator="parent" location="left">
-            Назад
+            Вернуться назад
           </v-tooltip>
         </v-btn>
-      </div>
-    </v-card-title>
+      </v-card-item>
+    </v-card>
 
-    <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
+    <v-card :loading="loading" :disabled="loading" variant="flat" width="100vw" max-width="900">
+      <v-card-title>Новый заказчик</v-card-title>
+      <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 
-    <v-card-text>
-      <v-form v-model="formIsValid" ref="form">
+      <v-card-text>
+        <v-form v-model="formIsValid" ref="form">
+          <v-row dense>
+            <v-col :cols="6">
+              <v-text-field
+                  v-model="customer.shortName"
+                  v-bind="inputFieldStyle"
+                  label="Краткое наименование"
+                  :rules="[isNotEmptyRule]"
+              />
+            </v-col>
+            <v-col :cols="6" class="pl-2">
+              <v-text-field
+                  v-model="customer.inn"
+                  v-bind="inputFieldStyle"
+                  label="ИНН"
+                  :rules="[isINN]"
+              />
+            </v-col>
+            <v-col :cols="12">
+              <v-text-field
+                  v-model="customer.fullName"
+                  v-bind="inputFieldStyle"
+                  label="Полное наименование"
+              />
+            </v-col>
+            <v-col :cols="12">
+              <v-text-field
+                  v-model="customer.address"
+                  v-bind="inputFieldStyle"
+                  label="Юридический адрес"
+              />
+            </v-col>
+            <v-col :cols="12">
+              <v-text-field
+                  v-model="customer.actualAddress"
+                  v-bind="inputFieldStyle"
+                  label="Фактический адрес"
+              />
+            </v-col>
+            <v-col :cols="6">
+              <v-text-field
+                  v-model="customer.email"
+                  v-bind="inputFieldStyle"
+                  label="Email"
+              />
+            </v-col>
+            <v-col :cols="6" class="pl-2">
+              <v-text-field
+                  v-model="customer.phoneNumber"
+                  v-bind="inputFieldStyle"
+                  v-mask="options"
+                  label="Номер телефона"
+                  placeholder="+7 (___) ___-__-__"
+              />
+            </v-col>
+            <v-col :cols="6">
+              <v-text-field
+                  v-model="customer.representativeFullName"
+                  v-bind="inputFieldStyle"
+                  label="ФИО Представителя"
+              />
+            </v-col>
+            <v-col :cols="6" class="pl-2">
+              <v-text-field
+                  v-model="customer.representativePosition"
+                  v-bind="inputFieldStyle"
+                  label="Должность представителя"
+              />
+            </v-col>
+            <v-col :cols="12">
+              <v-text-field
+                  v-model="customerTemplate"
+                  v-bind="inputFieldStyle"
+                  label="Шаблон"
+                  disabled
+              />
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-card-text>
 
-        <v-row dense>
-          <v-col :cols="6">
-            <my-text-field v-model="customer.shortName" label="Краткое наименование" :rules="[isNotEmptyRule]"/>
-          </v-col>
-          <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.inn" label="ИНН" :rules="[isINN]"/>
-          </v-col>
-          <v-col :cols="12">
-            <my-text-field v-model="customer.fullName" label="Полное наименование"/>
-          </v-col>
-          <v-col :cols="12">
-            <my-text-field v-model="customer.address" label="Юридический адрес"/>
-          </v-col>
-          <v-col :cols="12">
-            <my-text-field v-model="customer.actualAddress" label="Фактический адрес"/>
-          </v-col>
-          <v-col :cols="6">
-            <my-text-field v-model="customer.email" label="Email"/>
-          </v-col>
-          <v-col :cols="6" class="pl-2">
-            <my-text-field
-                v-model="customer.phoneNumber"
-                v-mask="options"
-                label="Номер телефона"
-                placeholder="+7 (___) ___-__-__"
-            />
-          </v-col>
-          <v-col :cols="6">
-            <my-text-field v-model="customer.representativeFullName" label="ФИО Представителя"/>
-          </v-col>
-          <v-col :cols="6" class="pl-2">
-            <my-text-field v-model="customer.representativePosition" label="Должность представителя"/>
-          </v-col>
-          <v-col :cols="12">
-            <my-text-field v-model="customerTemplate" label="Шаблон" disabled/>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-card-text>
-
-    <v-card-item>
-      <div>
-        <v-label>Вы можете добавить или заменить шаблон</v-label>
-        <v-btn
-            append-icon="mdi-tray-arrow-up"
-            text="Загрузить ракурсы"
-            color="blue-darken-3"
-            density="comfortable"
-            variant="tonal"
-            size="small"
-            class="ml-2"
-            :loading="templateUploading"
-            @click="onTemplateInput"
+      <v-card-item>
+        <div>
+          <v-label>Вы можете добавить или заменить шаблон</v-label>
+          <v-btn
+              append-icon="mdi-tray-arrow-up"
+              text="Загрузить ракурсы"
+              color="blue-darken-3"
+              variant="text"
+              size="small"
+              class="ml-2"
+              :loading="templateUploading"
+              @click="onTemplateInput"
+          />
+          <v-divider class="my-1"/>
+        </div>
+        <input
+            ref="templateInput"
+            type="file"
+            class="d-none"
+            accept=".xlsx"
+            @change="onFileChange"
         />
-        <v-divider class="my-1"/>
-      </div>
-      <input
-          ref="templateInput"
-          type="file"
-          class="d-none"
-          accept=".xlsx"
-          @change="onFileChange"
-      />
-    </v-card-item>
+      </v-card-item>
 
-    <v-card-actions>
-      <my-btn-submit text="Принять" :loading="loading" @click="addCustomer"/>
-      <my-button-clear text="Очистить" @click="clear"/>
-      <my-btn-submit
-          prepend-icon="mdi-tray-arrow-down"
-          text="Скачать пустой шаблон"
-          class="ml-auto"
-          variant="text"
-          @click="downloadTemplate"
-      />
-    </v-card-actions>
-  </v-card>
+      <v-card-actions>
+        <my-btn-submit text="Принять" :loading="loading" @click="addCustomer"/>
+        <my-button-clear text="Очистить" @click="clear"/>
+        <my-btn-submit
+            prepend-icon="mdi-tray-arrow-down"
+            text="Скачать пустой шаблон"
+            class="ml-auto"
+            variant="text"
+            @click="downloadTemplate"
+        />
+      </v-card-actions>
+    </v-card>
+  </v-sheet>
 </template>
 
 <script>
 import {addCustomer, unpackAnglesTemplates} from "../utils/api/api_customers";
+import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {isINN, isNotEmptyRule} from "@/utils/validators/functions";
 import {serverURL} from "../constants/constants";
 import {downloadFile} from "../utils/api/api_";
@@ -151,7 +186,11 @@ export default {
       customerInnRules: [
         v => v.length > 0 || 'ИНН не должен быть пустым',
         v => v.length <= 12 || 'ИНН не должен превышать 12 символов',
-      ]
+      ],
+
+      // import styles
+      inputFieldStyle,
+      navigateBackBtnStyle,
     }
   },
 

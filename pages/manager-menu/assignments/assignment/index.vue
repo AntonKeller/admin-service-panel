@@ -1,16 +1,10 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280">
+
       <v-card variant="text">
         <v-card-item>
-          <v-btn
-              prepend-icon="mdi-arrow-left"
-              density="comfortable"
-              color="blue-darken-3"
-              variant="tonal"
-              rounded="sm"
-              @click="navigateBack"
-          >
+          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
             Назад
             <v-tooltip activator="parent" location="left">
               Вернуться назад
@@ -18,7 +12,6 @@
           </v-btn>
         </v-card-item>
       </v-card>
-
 
       <v-card variant="text">
         <v-card-title>
@@ -54,6 +47,8 @@
             <v-btn-group variant="tonal" color="blue-darken-4" density="compact">
               <v-btn
                   prepend-icon="mdi-plus-box-multiple-outline"
+                  color="blue-grey"
+                  variant="tonal"
                   @click="navigateToBlockCreate"
               >
                 Добавить адрес
@@ -132,7 +127,7 @@
 import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
 import {unixDateToMiddleDateString, unixDateToShortDateString} from "@/utils/functions";
-import {mySearchFieldStyle} from "@/configs/styles";
+import {mySearchFieldStyle, navigateBackBtnStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 
@@ -145,7 +140,9 @@ export default {
       currentPage: 1,
       itemsPerPage: 8,
       blockMenuAddVisibility: false,
+      // import styles
       mySearchFieldStyle,
+      navigateBackBtnStyle,
     }
   },
 

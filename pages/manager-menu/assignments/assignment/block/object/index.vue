@@ -1,26 +1,20 @@
 <template>
   <v-container fluid>
+
     <v-card variant="text">
-      <v-card-title>
-        <div class="d-flex align-center justify-space-between">
-          <div class="text-wrap mr-6">
-            {{ objectNameTitle }}
-          </div>
-          <v-btn
-              density="comfortable"
-              color="blue-grey-darken-2"
-              icon="mdi-arrow-left"
-              variant="text"
-              rounded="lg"
-              @click="navigateBack"
-          >
-            <v-icon/>
-            <v-tooltip activator="parent" location="left">
-              Назад
-            </v-tooltip>
-          </v-btn>
-        </div>
-      </v-card-title>
+      <v-card-item>
+        <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+          Назад
+          <v-tooltip activator="parent" location="left">
+            Вернуться назад
+          </v-tooltip>
+        </v-btn>
+      </v-card-item>
+    </v-card>
+
+    <v-card variant="text">
+
+      <v-card-title>{{ objectNameTitle }}</v-card-title>
 
       <v-card-subtitle>
         {{ inspectionObject?.address || 'Адрес отсутствует' }}
@@ -93,6 +87,7 @@
 
 <script>
 import {removeImg, sendImg} from "../../../../../../utils/api/api_images";
+import {navigateBackBtnStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -112,6 +107,9 @@ export default {
       // lightbox
       lightboxVisible: false,
       lightboxIndex: null,
+
+      // import styles
+      navigateBackBtnStyle,
     }
   },
 

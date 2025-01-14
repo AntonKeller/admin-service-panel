@@ -13,8 +13,9 @@
     <v-card-subtitle>Заполните поля</v-card-subtitle>
     <v-card-item>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
-        <my-text-field
+        <v-text-field
             v-model="pledgeAgreement.number"
+            v-bind="inputFieldStyle"
             label="Номер договора залога"
             prepend-inner-icon="mdi-label-variant-outline"
         />
@@ -35,6 +36,7 @@
 <script>
 
 import {addPledgeAgreement} from "@/utils/api/api_pledge-agreements";
+import {inputFieldStyle} from "@/configs/styles";
 
 export default {
   name: "pledge-agreement-add",
@@ -49,6 +51,9 @@ export default {
         date: null,
       },
       formIsValid: false,
+
+      // import styles
+      inputFieldStyle,
     }
   },
 

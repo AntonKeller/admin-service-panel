@@ -11,7 +11,7 @@
           <div class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey-darken-1"
+                color="blue-grey"
                 variant="tonal"
                 @click="navigateToAddMenu"
             >

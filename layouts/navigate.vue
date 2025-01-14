@@ -97,7 +97,7 @@
               <v-btn
                   icon="mdi-menu-open"
                   density="comfortable"
-                  color="blue-grey-darken-1"
+                  color="blue-grey"
                   variant="text"
                   rounded="lg"
                   :class="rail ? 'd-none' : ''"

@@ -1,7 +1,6 @@
 import axios from "axios";
 import {serverURL} from "@/constants/constants";
 import {vuexStore} from "@/store/vuexStore";
-import logotype from "@/components/logotype.vue";
 
 
 function createConfig() {

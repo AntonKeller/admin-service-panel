@@ -15,8 +15,9 @@
       <v-form v-model="formIsValid" ref="form" class="mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field
+            <v-text-field
                 v-model="contract.number"
+                v-bind="inputFieldStyle"
                 prepend-inner-icon="mdi-file-sign"
                 :label="placeHolderContract"
                 placeholder="xxxxxx/xxxxx xxxx.xxxxx"
@@ -72,6 +73,7 @@
 
 <script>
 import {changeContract} from "../../../utils/api/api_contracts";
+import {inputFieldStyle} from "@/configs/styles";
 import _ from "lodash";
 
 export default {
@@ -100,6 +102,9 @@ export default {
       hideParent: false,
       formIsValid: null,
       sending: false,
+
+      // import styles
+      inputFieldStyle,
     }
   },
 

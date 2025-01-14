@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="sending" :disabled="sending"  elevation="6" width="100vw" max-width="800">
+  <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
         <div>Создание новый записи контакт</div>
@@ -13,16 +13,33 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field v-model="contact.firstName" label="Имя" :rules="[isNotEmptyRule]"/>
+            <v-text-field
+                v-model="contact.firstName"
+                v-bind="inputFieldStyle"
+                label="Имя"
+                :rules="[isNotEmptyRule]"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="contact.surname" label="Фамилия"/>
+            <v-text-field
+                v-model="contact.surname"
+                v-bind="inputFieldStyle"
+                label="Фамилия"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="contact.lastName" label="Отчетство"/>
+            <v-text-field
+                v-model="contact.lastName"
+                v-bind="inputFieldStyle"
+                label="Отчетство"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="contact.phoneNumber" label="Номер телефона"/>
+            <v-text-field
+                v-model="contact.phoneNumber"
+                v-bind="inputFieldStyle"
+                label="Номер телефона"
+            />
           </v-col>
         </v-row>
       </v-form>
@@ -40,8 +57,9 @@
 </template>
 
 <script>
-import {addContact} from "../../../utils/api/api_contacts";
 import {isNotEmptyRule} from '@/utils/validators/functions';
+import {addContact} from "../../../utils/api/api_contacts";
+import {inputFieldStyle} from "@/configs/styles";
 
 export default {
   name: "contactAdd",
@@ -59,6 +77,9 @@ export default {
       },
       sending: false,
       formIsValid: null,
+
+      // import styles
+      inputFieldStyle,
     }
   },
 

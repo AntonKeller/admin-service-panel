@@ -2,7 +2,7 @@
   <v-card :sending="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
     <v-card-title>
       <div class="d-flex justify-space-between align-center">
-        <div>{{cardTitle}}</div>
+        <div>{{ cardTitle }}</div>
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
@@ -15,11 +15,12 @@
       <v-form v-model="formIsValid" ref="form" class="mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field
+            <v-text-field
                 v-model="contract.number"
+                v-bind="inputFieldStyle"
                 prepend-inner-icon="mdi-file-sign"
                 :label="placeHolderContract"
-                placeholder="..../..."
+                placeholder="Номер договора"
             />
           </v-col>
 
@@ -71,6 +72,7 @@
 
 <script>
 import {addContract} from "../../../utils/api/api_contracts";
+import {inputFieldStyle} from "@/configs/styles";
 
 export default {
   name: "contract-add",
@@ -88,6 +90,9 @@ export default {
       hideParent: false,
       formIsValid: null,
       sending: false,
+
+      // import styles
+      inputFieldStyle,
     }
   },
 

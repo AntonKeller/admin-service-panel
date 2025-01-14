@@ -14,3 +14,20 @@ export const mySearchFieldStyle = {
     // ['single-line']: true,
 }
 
+// Стили для кнопки навигации "Назад"
+export const navigateBackBtnStyle = {
+    ['prepend-icon']: "mdi-arrow-left",
+    ['density']: "comfortable",
+    ['color']: "blue-darken-3",
+    ['variant']: "tonal",
+    ['rounded']: "sm"
+}
+
+// Стили для поля ввода на формах
+export const inputFieldStyle = {
+    ['color']: "yellow-darken-3",
+    ['variant']: "outlined",
+    ['density']: "compact",
+    ['label']: "Заголовок задания",
+    ['clearable']: true
+}
