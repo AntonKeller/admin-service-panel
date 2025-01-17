@@ -13,19 +13,41 @@
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
         <v-row dense>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.firstName" :rules="[isNotEmptyRule]" label="Имя"/>
+            <v-text-field
+                v-model="pledger.firstName"
+                v-bind="inputFieldStyle"
+                :rules="[isNotEmptyRule]"
+                label="Имя"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.surname" label="Фамилия"/>
+            <v-text-field
+                v-model="pledger.surname"
+                v-bind="inputFieldStyle"
+                label="Фамилия"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.lastName" label="Отчество"/>
+            <v-text-field
+                v-model="pledger.lastName"
+                v-bind="inputFieldStyle"
+                label="Отчество"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.inn" label="ИНН" :rules="[isINN]"/>
+            <v-text-field
+                v-model="pledger.inn"
+                v-bind="inputFieldStyle"
+                label="ИНН"
+                :rules="[isINN]"
+            />
           </v-col>
           <v-col :cols="12">
-            <my-text-field v-model="pledger.position" label="Должность"/>
+            <v-text-field
+                v-model="pledger.position"
+                v-bind="inputFieldStyle"
+                label="Должность"
+            />
           </v-col>
         </v-row>
       </v-form>
@@ -43,8 +65,9 @@
 </template>
 
 <script>
-import {changePledger} from "../../../utils/api/api_pledgers";
 import {isINN, isNotEmptyRule} from '@/utils/validators/functions';
+import {changePledger} from "../../../utils/api/api_pledgers";
+import {inputFieldStyle} from "@/configs/styles";
 import _ from "lodash";
 
 export default {
@@ -72,6 +95,9 @@ export default {
       },
       formIsValid: null,
       sending: false,
+
+      // import styles
+      inputFieldStyle,
     }
   },
 

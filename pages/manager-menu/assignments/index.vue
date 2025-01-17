@@ -11,7 +11,7 @@
           <div class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey-darken-1"
+                color="blue-grey"
                 variant="tonal"
                 @click="navigateToAddMenu"
             >
@@ -46,7 +46,7 @@
             >
               <td>{{ assignment.title }}</td>
               <td>
-                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption" label>
+                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"  prepend-icon="mdi-domain" label>
                   {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>

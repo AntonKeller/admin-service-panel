@@ -1,33 +1,31 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1024">
-      <v-card variant="text">
-        <v-card-title>
-          <div class="d-flex justify-space-between align-center">
-            <div>Редактирование адреса ТЗ</div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                icon="mdi-arrow-left"
-                variant="text"
-                rounded="lg"
-                @click="navigateBack"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Назад
-              </v-tooltip>
-            </v-btn>
-          </div>
-        </v-card-title>
 
+      <v-card variant="text">
+        <v-card-item>
+          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+            Назад
+            <v-tooltip activator="parent" location="left">
+              Вернуться назад
+            </v-tooltip>
+          </v-btn>
+        </v-card-item>
+      </v-card>
+
+      <v-card variant="text">
+        <v-card-title>Редактирование адреса ТЗ</v-card-title>
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
             <v-row dense>
               <v-col :cols="12">
-                <my-text-field v-model="block.title" label="Заголовок"/>
+                <v-text-field
+                    v-model="block.title"
+                    v-bind="inputFieldStyle"
+                    label="Заголовок"
+                />
               </v-col>
 
               <v-col :cols="6">
@@ -39,7 +37,12 @@
               </v-col>
 
               <v-col :cols="12">
-                <my-text-field v-model="block.address" label="Адрес осмотра" :rules="[isNotEmptyRule]"/>
+                <v-text-field
+                    v-model="block.address"
+                    v-bind="inputFieldStyle"
+                    label="Адрес осмотра"
+                    :rules="[isNotEmptyRule]"
+                />
               </v-col>
 
               <v-col :cols="6">
@@ -70,6 +73,7 @@
 <script>
 import {changeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {isNotEmptyRule} from "@/utils/validators/functions";
+import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
@@ -100,6 +104,10 @@ export default {
         mask: "+7 (###) ###-##-##",
         eager: true
       },
+
+      // import styles
+      inputFieldStyle,
+      navigateBackBtnStyle
     }
   },
 

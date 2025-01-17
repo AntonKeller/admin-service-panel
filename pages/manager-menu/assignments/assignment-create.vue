@@ -1,34 +1,30 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1024">
-      <v-card variant="flat" :loading="sending" :disabled="sending">
-        <v-card-title>
-          <div class="d-flex justify-space-between align-center">
-            <div>Новое задание</div>
-            <v-btn
-                density="comfortable"
-                color="blue-grey-darken-2"
-                icon="mdi-arrow-left"
-                variant="text"
-                rounded="lg"
-                @click="navigateBack"
-            >
-              <v-icon/>
-              <v-tooltip activator="parent" location="left">
-                Назад
-              </v-tooltip>
-            </v-btn>
-          </div>
-        </v-card-title>
 
+      <v-card variant="text">
+        <v-card-item>
+          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+            Назад
+            <v-tooltip activator="parent" location="left">
+              Вернуться назад
+            </v-tooltip>
+          </v-btn>
+        </v-card-item>
+      </v-card>
+
+      <v-card variant="flat" :loading="sending" :disabled="sending">
+
+        <v-card-title>Новое задание</v-card-title>
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
             <v-row dense>
               <v-col :cols="12">
-                <my-text-field
+                <v-text-field
                     v-model="assignment.title"
+                    v-bind="inputFieldStyle"
                     :rules="assignmentTitleRules"
                     label="Заголовок задания"
                     prepend-inner-icon="mdi-label-variant-outline"
@@ -69,6 +65,7 @@
 
 <script>
 import {addNewAssignment} from "../../../utils/api/api_assignments";
+import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -90,6 +87,10 @@ export default {
       formIsValid: false,
       sending: false,
       assignmentTitleRules: [v => v && v?.length <= 50 || 'Кол-во символов должно быть <= 50'],
+
+      // import styles
+      inputFieldStyle,
+      navigateBackBtnStyle
     }
   },
 

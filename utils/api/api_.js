@@ -1,7 +1,6 @@
 import axios from "axios";
 import {serverURL} from "@/constants/constants";
 import {vuexStore} from "@/store/vuexStore";
-import logotype from "@/components/logotype.vue";
 
 
 function createConfig() {
@@ -49,27 +48,36 @@ export async function accessTest() {
 export async function downloadFile(saveAs, url, progressObject) {
     try {
 
-        progressObject.process = true;
+        let response = null;
 
-        const response = await axios
-            .get(url, {
+        if (progressObject && progressObject.hasOwnProperty('process') && progressObject.hasOwnProperty('percent')) {
+            progressObject.process = true;
+            response = await axios
+                .get(url, {
+                    responseType: 'blob',
+                    headers: {
+                        authorization: localStorage.accessToken ?? '',
+                    },
+                    onDownloadProgress: function (progressEvent) {
+                        progressObject.percent = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                    },
+                })
+                .finally(() => {
+                    console.log('Загружено');
+                    progressObject.process = false;
+                    progressObject.percent = 0;
+                })
+        } else {
+            response = await axios.get(url, {
                 responseType: 'blob',
                 headers: {
                     authorization: localStorage.accessToken ?? '',
                 },
-                onDownloadProgress: function (progressEvent) {
-                    progressObject.percent = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                },
             })
-            .finally(() => {
-                console.log('Загружено');
-                progressObject.process = false;
-                progressObject.percent = 0;
-            })
+        }
 
         const oURL = window.URL.createObjectURL(new Blob([response.data]));
         const selectorA = document.createElement('a');
-
         selectorA.download = saveAs;
         selectorA.href = oURL;
         document.body.appendChild(selectorA);
