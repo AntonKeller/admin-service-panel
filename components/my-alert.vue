@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="visible" :color="color">
+  <v-snackbar v-model="visible" :color="color" location="left bottom">
     <v-icon>mdi-alert-circle-outline</v-icon>
     <span class="ml-3">{{ message }}</span>
   </v-snackbar>

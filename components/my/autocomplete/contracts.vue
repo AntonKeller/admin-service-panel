@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1">
+  <div class="d-flex ga-2">
     <v-autocomplete
         :items="contracts"
         :loading="fetching"
@@ -51,10 +51,12 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
         v-if="!hideButtonAdd"
+        class="border-sm border-dashed"
+        variant="outlined"
         icon="mdi-plus"
-        variant="text"
         rounded="lg"
         size="small"
         @click="contractMenuAddVisible = true"
@@ -64,6 +66,7 @@
         Добавить новый договор с заказчиком
       </v-tooltip>
     </v-btn>
+
     <v-overlay v-model="contractMenuAddVisible" class="d-flex justify-center align-center">
       <my-form-contract-add @add:success="onContractAddSuccess" @click:close="contractMenuAddVisible = false"/>
     </v-overlay>

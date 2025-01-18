@@ -44,7 +44,7 @@
                 class="text-caption row-hover"
                 @click="navigateToCardMenu(assignment)"
             >
-              <td>{{ assignment.title }}</td>
+              <td>{{ assignment.title || '-' }}</td>
               <td>
                 <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"  prepend-icon="mdi-domain" label>
                   {{ assignment.customer?.shortName || '-' }}
@@ -56,7 +56,7 @@
                 </v-chip>
               </td>
               <td>
-                <v-chip color="deep-purple-darken-2" density="comfortable" size="small" class="text-caption" label>
+                <v-chip color="blue-grey-darken-2" density="comfortable" size="small" class="text-caption" label>
                   {{ getContractString(assignment.subContract) }}
                 </v-chip>
               </td>
@@ -167,7 +167,7 @@ export default {
     getContractString(contract) {
       const a = contract?.number;
       const b = contract?.date;
-      if (!a && !b) return 'Договор отсутствует';
+      if (!a && !b) return '-';
       if (a && !b) return `№ ${contract?.number} от [дата отсутствует]`;
       if (!a && b) return `[№ отсутствует] от ${this.unixDateToShortDateString(contract?.date)}`;
       if (a && b) return `№ ${contract?.number} от ${this.unixDateToShortDateString(contract?.date)}`;

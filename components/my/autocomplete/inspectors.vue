@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1">
+  <div class="d-flex ga-2">
     <v-autocomplete
         :items="inspectors"
         :loading="fetching"
@@ -51,27 +51,25 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
     <v-btn
+        class="border-sm border-dashed"
+        variant="outlined"
         icon="mdi-plus"
-        variant="text"
         rounded="lg"
         size="small"
-        @click="inspectorFormAddVisible = true"
+        @click="navigateTo('/manager-menu/inspectors/inspector-add')"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить инспектора
       </v-tooltip>
     </v-btn>
-    <v-overlay v-model="inspectorFormAddVisible" class="d-flex align-center justify-center">
-      <my-form-inspector-add @add:success="onInspectorAddSuccess" @click:close="inspectorFormAddVisible=false"/>
-    </v-overlay>
   </div>
 </template>
 
 <script>
 import {fetchInspectors, removeInspector} from "../../../utils/api/api_inspectors";
-import alert from "../../../store/modules/alert.js";
 
 export default {
   name: "inspectors",
@@ -90,11 +88,6 @@ export default {
     },
   },
   methods: {
-
-    onInspectorAddSuccess() {
-      this.fetchInspectorsList();
-      this.inspectorFormAddVisible = false;
-    },
 
     onUpdateMenuInspectors(status) {
       if (status) this.fetchInspectorsList();

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1">
+  <div class="d-flex ga-2">
     <v-autocomplete
         :loading="fetching"
         :items="loanAgreementsList"
@@ -54,10 +54,11 @@
     </v-autocomplete>
 
     <v-btn
+        class="border-sm border-dashed"
+        variant="outlined"
         icon="mdi-plus"
-        variant="text"
-        size="small"
         rounded="lg"
+        size="small"
         @click="loanAgreementMenuAddVisible = true"
     >
       <v-icon/>

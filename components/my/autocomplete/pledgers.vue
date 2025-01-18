@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1">
+  <div class="d-flex ga-2">
     <v-autocomplete
         :items="pledgerList"
         :loading="fetching"
@@ -52,8 +52,9 @@
     </v-autocomplete>
 
     <v-btn
+        class="border-sm border-dashed"
+        variant="outlined"
         icon="mdi-plus"
-        variant="text"
         rounded="lg"
         size="small"
         @click="pledgerFormAddVisible = true"

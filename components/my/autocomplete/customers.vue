@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1">
+  <div class="d-flex ga-2">
     <v-autocomplete
         :loading="fetching"
         :items="customersList"
@@ -16,6 +16,7 @@
         chips
         v-bind="$attrs"
     >
+
       <template #chip="{ props, item }">
         <v-chip
             v-bind="props"
@@ -51,6 +52,20 @@
         </v-list-item>
       </template>
     </v-autocomplete>
+
+    <v-btn
+        class="border-sm border-dashed"
+        variant="outlined"
+        icon="mdi-plus"
+        rounded="lg"
+        size="small"
+        @click="navigateTo('/manager-menu/customers/customer-add')"
+    >
+      <v-icon/>
+      <v-tooltip activator="parent" location="left">
+        Добавить заказчика
+      </v-tooltip>
+    </v-btn>
   </div>
 </template>
 

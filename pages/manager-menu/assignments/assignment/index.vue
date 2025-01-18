@@ -253,14 +253,14 @@ export default {
     // table fields
     getInspector(inspector) {
       if (!inspector?.surname && !inspector?.firstName && !inspector?.lastName) {
-        return 'Отсутствует'
+        return '-'
       }
       return `${inspector?.surname || ''} ${inspector?.firstName || ''} ${inspector?.lastName || ''}`
     },
 
     getInspectorContacts(inspector) {
       if (!inspector?.phoneNumber && !inspector?.email) {
-        return 'Отсутствуют'
+        return '-'
       }
       return `${inspector?.phoneNumber} | ${inspector?.email}`;
     },

@@ -86,7 +86,7 @@
                   prepend-icon="mdi-table-large-remove"
                   color="red-darken-2"
                   size="small"
-                  @click="removeObjectsAll"
+                  @click="removeAllQuestionIsVisible = true"
               >
                 Удалить все
                 <v-tooltip activator="parent" location="top">
@@ -193,6 +193,19 @@
 
         <v-file-input class="d-none" ref="excelFileInput" accept=".xlsx" @change="onExcelFileInput"/>
       </v-card>
+
+      <my-overlay v-model="removeAllQuestionIsVisible">
+        <v-card color="red-darken-4" rounded="sm">
+          <v-card-text>
+            <v-icon>mdi-progress-question</v-icon>
+            <span class="ml-2">Хотите удалить все объекты?</span>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click.stop="removeObjectsAll" variant="elevated" text="Да"/>
+            <v-btn @click.stop="removeAllQuestionIsVisible=false" text="Отмена"/>
+          </v-card-actions>
+        </v-card>
+      </my-overlay>
     </v-sheet>
   </v-container>
 </template>
@@ -225,6 +238,7 @@ export default {
       blockMenuChangeVisibility: false,
       filterMenuVisible: false,
       downloadingPhotos: false,
+      removeAllQuestionIsVisible: false,
       filter: {
         objectIsMissing: null,
         objectWithDefect: null,

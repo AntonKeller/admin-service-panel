@@ -4,7 +4,7 @@
 
       <v-card variant="text">
         <v-card-item>
-          <v-btn v-bind="navigateBackBtnStyle" @click="$router.back()">
+          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
             Назад
             <v-tooltip activator="parent" location="left">
               Вернуться назад
@@ -86,6 +86,7 @@
           <my-button-clear text="Очистить" @click="clear"/>
         </v-card-actions>
       </v-card>
+
     </v-sheet>
   </v-container>
 </template>
@@ -96,6 +97,7 @@ import {isNotEmptyRule} from '@/utils/validators/functions';
 import {changeInspector} from "@/utils/api/api_inspectors";
 import {vMaska} from "maska/vue"
 import _ from "lodash";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "inspector-change",
@@ -137,6 +139,14 @@ export default {
   methods: {
 
     isNotEmptyRule,
+
+    navigateBack() {
+      if (window.history.length <= 1) {
+        navigateTo('/manager-menu/inspectors');
+      } else {
+        this.$router.back();
+      }
+    },
 
     async sendInspector() {
 

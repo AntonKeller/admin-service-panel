@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-1" style="width: 100%">
+  <div class="d-flex ga-2" style="width: 100%">
     <v-text-field
         v-model="textField"
         :rules="[v => textDateValid(v)]"
@@ -13,7 +13,13 @@
         density="compact"
         v-bind="$attrs"
     />
-    <v-btn icon="mdi-calendar" size="small" variant="text" rounded="lg">
+    <v-btn
+        class="border-sm border-dashed"
+        variant="outlined"
+        icon="mdi-calendar"
+        rounded="lg"
+        size="small"
+    >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Открыть календарь

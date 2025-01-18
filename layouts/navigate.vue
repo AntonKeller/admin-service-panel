@@ -97,7 +97,7 @@
               <v-btn
                   icon="mdi-menu-open"
                   density="comfortable"
-                  color="blue-grey"
+                  color="blue-darken-1"
                   variant="text"
                   rounded="lg"
                   :class="rail ? 'd-none' : ''"
@@ -119,7 +119,7 @@
               :active="item._id === activeItem"
               :value="item.value"
               :title="item.title"
-              color="blue-grey"
+              color="blue-darken-1"
               density="compact"
               rounded="lg"
               @click="activeItem = item._id"

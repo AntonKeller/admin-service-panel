@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import {addNewAssignment} from "../../../utils/api/api_assignments";
+import {addNewAssignment} from "@/utils/api/api_assignments";
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 

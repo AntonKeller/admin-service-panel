@@ -11,9 +11,9 @@ export async function addContact(contact, query) {
 }
 
 export async function changeContact(contact, query) {
-    return axios.put('/contacts/update/:id' + contact._id + (query ?? ''), contact, axiosConfig);
+    return axios.put('/contacts/update/' + contact._id + (query ?? ''), contact, axiosConfig);
 }
 
 export async function removeContact(contactID, query) {
-    return axios.delete('/contacts/remove/:id' + contactID + (query ?? ''), axiosConfig);
+    return axios.delete('/contacts/remove/' + contactID + (query ?? ''), axiosConfig);
 }
