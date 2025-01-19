@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex ga-2" style="width: 100%">
+  <div class="d-flex ga-1" style="width: 100%">
     <v-text-field
         v-model="textField"
         :rules="[v => textDateValid(v)]"

@@ -1,14 +1,14 @@
 thead tr th {
-    background-color: #0277BD !important;
+    background-color: #1976D2 !important;
     color: #e7e7e7 !important;
 }
 
 thead tr th:first-child {
-    border-top-left-radius: 8px;
+    border-top-left-radius: 2px;
 }
 
 thead tr th:last-child {
-    border-top-right-radius: 8px;
+    border-top-right-radius: 2px;
 }
 
 tbody tr td {
@@ -24,11 +24,11 @@ tbody tr td:not(td:last-child) {
 }
 
 tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: 2px;
 }
 
 tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
+    border-bottom-right-radius: 2px;
 }
 
 tbody tr {

@@ -26,15 +26,15 @@
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 65vh" density="comfortable" class="bg-transparent" fixed-header>
+          <v-table style="max-height: 65vh" density="comfortable" class="table-scroll bg-transparent" fixed-header>
             <thead v-if="!fetching">
             <tr>
-              <th>Наименование</th>
-              <th>ИНН</th>
-              <th>Представитель</th>
-              <th>Номер тел.</th>
-              <th>Email</th>
-              <th>
+              <th style="position: sticky;">Наименование</th>
+              <th style="position: sticky;">ИНН</th>
+              <th style="position: sticky;">Представитель</th>
+              <th style="position: sticky;">Номер тел.</th>
+              <th style="position: sticky;">Email</th>
+              <th style="position: sticky;">
                 <v-btn
                     class="d-block ml-auto rounded"
                     icon="mdi-dots-vertical"

@@ -3,11 +3,12 @@
     <v-layout full-height>
 
       <v-app-bar elevation="0">
+
+
         <v-card
-            class="bg-blue-darken-3"
+            class="bg-blue-darken-2"
             variant="text"
             elevation="1"
-            rounded="sm"
             style="min-width: 100%;"
         >
           <v-card-item>

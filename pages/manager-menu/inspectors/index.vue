@@ -28,9 +28,7 @@
           <v-table style="max-height: 65vh" density="comfortable" fixed-header>
             <thead>
             <tr>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Отчество</th>
+              <th>ФИО Инспектора</th>
               <th>Номер телефона</th>
               <th>Email</th>
               <th></th>
@@ -42,9 +40,7 @@
                 :key="inspector._id"
                 class="text-caption"
             >
-              <td>{{ inspector?.firstName || '-' }}</td>
-              <td>{{ inspector?.surname || '-' }}</td>
-              <td>{{ inspector?.lastName || '-' }}</td>
+              <td>{{ getFullName(inspector) }}</td>
               <td>{{ inspector?.phoneNumber || '-' }}</td>
               <td>{{ inspector?.email || '-' }}</td>
               <td style="min-width: 95px; width: 95px; max-width: 95px">
@@ -141,6 +137,13 @@ export default {
   },
 
   methods: {
+
+    getFullName(inspector) {
+      if (!inspector.firstName && !inspector.surname && !inspector.lastName) return '-';
+      return (inspector.firstName ? `${inspector.firstName}` : '') +
+          (inspector.surname ? ` ${inspector.surname}` : '') +
+          (inspector.lastName ? ` ${inspector.lastName}` : '');
+    },
 
     selectInspector(inspector) {
       this.$store.commit('inspectors/SELECT', _.cloneDeep(inspector));

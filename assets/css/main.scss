@@ -27,17 +27,18 @@ body::-webkit-scrollbar {
   width: 0;
 }
 
-*::-webkit-scrollbar {
-  @apply w-1.5 h-1;
-}
+//*::-webkit-scrollbar {
+//  @apply w-1.5 h-1;
+//}
 
 *::-webkit-scrollbar-track {
   @apply bg-transparent;
 }
 
 ::-webkit-scrollbar {
+  z-index: -1;
   height: 8px;
-  width: 4px;
+  width: 2px;
 }
 
 ::-webkit-scrollbar-track {
@@ -46,6 +47,6 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #546E7A;
+  background: #bac8cc;
   border-radius: 6px;
 }
