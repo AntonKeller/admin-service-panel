@@ -151,20 +151,20 @@
                 class="row-hover"
                 @click.stop="navigateToObject(inspectionObject)"
             >
-              <td style="min-width: 70px; width: 70px; max-width: 70px">{{ i + 1 }}</td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
+              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ i + 1 }}</td>
+              <td style="min-width: 260px; width: 260px; max-width: 260px">
                 {{ textSlicer(inspectionObject?.name, 100) || '-' }}
               </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
+              <td style="min-width: 120px; width: 120px; max-width: 120px">
                 {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '-' }}
               </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
+              <td style="min-width: 80px; width: 80px; max-width: 80px">
                 {{ inspectionObject.isExist ? 'Да' : 'Нет' }}
               </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
+              <td style="min-width: 80px; width: 80px; max-width: 80px">
                 {{ inspectionObject.isDefect ? 'Да' : 'Нет' }}
               </td>
-              <td style="min-width: 100px; width: 100px; max-width: 100px">
+              <td>
                 {{ textSlicer(inspectionObject.description, 20) || '-' }}
               </td>
             </tr>
@@ -215,12 +215,12 @@ import {
   fetchAssignmentBlockOneById,
   uploadObjects,
   downloadPhotos
-} from "../../../../../utils/api/api_assignment_blocks";
-import {removeObjects} from "../../../../../utils/api/api_inspection_objects";
+} from "@/utils/api/api_assignment_blocks";
+import {removeObjects} from "@/utils/api/api_inspection_objects";
 import {mySearchFieldStyle, navigateBackBtnStyle} from "@/configs/styles";
-import {unixDateToMiddleDateString} from "../../../../../utils/functions";
-import {serverURL} from "../../../../../constants/constants";
-import {downloadFile} from "../../../../../utils/api/api_";
+import {unixDateToMiddleDateString} from "@/utils/functions";
+import {serverURL} from "@/constants/constants";
+import {downloadFile} from "@/utils/api/api_";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 

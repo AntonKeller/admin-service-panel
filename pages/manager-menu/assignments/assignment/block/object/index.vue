@@ -41,7 +41,7 @@
       <v-card-item>
         <v-sheet max-height="700px"
                  class="d-flex flex-column ga-6 overflow-y-scroll overflow-x-hidden border-b-sm pb-6">
-          <div v-for="(angleT, i) of anglesTransformed" class="d-flex flex-column ga-2">
+          <div v-for="angleT of anglesTransformed" class="d-flex flex-column ga-2">
 
             <div class="font-bold d-flex align-center">
               <v-chip label color="blue-darken-4" density="comfortable">
@@ -53,12 +53,12 @@
               <div v-for="img of angleT.photos" class="">
                 <v-img
                     @click="showLightbox(angleT.photos, img._id)"
-                    :min-width="150"
-                    :max-width="150"
-                    :height="120"
+                    :min-width="120"
+                    :max-width="120"
+                    :height="100"
                     aspect-ratio="1/1"
                     cover
-                    :lazy-src="img.src"
+                    :src="img.src"
                     alt="Загрузка изображения..."
                     class="rounded cursor-pointer"
                 />
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import {removeImg, sendImg} from "../../../../../../utils/api/api_images";
+import {removeImg, sendImg} from "@/utils/api/api_images";
 import {navigateBackBtnStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 
