@@ -40,7 +40,7 @@
 
       <v-card-item>
         <v-sheet max-height="700px"
-                 class="d-flex flex-column ga-6 overflow-y-scroll overflow-x-hidden border-b-sm pb-6">
+                 class="d-flex flex-column ga-6 overflow-y-scroll overflow-x-hidden pb-6">
           <div v-for="angleT of anglesTransformed" class="d-flex flex-column ga-2">
 
             <div class="font-bold d-flex align-center">
@@ -52,13 +52,13 @@
             <v-sheet class="d-flex flex-wrap ga-2">
               <div v-for="img of angleT.photos" class="">
                 <v-img
-                    @click="showLightbox(angleT.photos, img._id)"
-                    :min-width="120"
-                    :max-width="120"
-                    :height="100"
+                    @click="showLightbox(img._id)"
+                    :min-width="100"
+                    :max-width="100"
+                    :height="130"
                     aspect-ratio="1/1"
                     cover
-                    :src="img.src"
+                    :src="img['150x150']"
                     alt="Загрузка изображения..."
                     class="rounded cursor-pointer"
                 />
@@ -122,8 +122,8 @@ export default {
 
     this.readSessionStorage();
 
-    console.log('anglesTransformed', this.anglesTransformed);
-    console.log('anglesTransformedToArray', this.lightboxImages);
+    // console.log('anglesTransformed', this.anglesTransformed);
+    // console.log('anglesTransformedToArray', this.lightboxImages);
   },
 
   unmounted() {
@@ -133,13 +133,15 @@ export default {
   computed: {
     lightboxImages() {
       const array = []
-
       this.anglesTransformed.forEach(angle => {
         angle.photos.forEach(img => {
-          array.push({...img, title: angle.angleName})
+          array.push({
+            _id: img._id,
+            src: img.fullSize,
+            title: angle.angleName
+          });
         })
       });
-
       return array;
     },
     anglesTransformed() {
@@ -165,8 +167,9 @@ export default {
 
   methods: {
 
-    showLightbox(images, imgID) {
-      this.lightboxImages = images;
+    showLightbox(imgID) {
+      // console.log('search in this.lightboxImages: ', this.lightboxImages);
+      // console.log('search by _id: ', imgID);
       this.lightboxIndex = this.lightboxImages.findIndex(img => img._id === imgID);
       this.lightboxVisible = true;
     },
