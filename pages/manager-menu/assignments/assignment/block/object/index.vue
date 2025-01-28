@@ -3,7 +3,7 @@
 
     <v-card variant="text">
       <v-card-item>
-        <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+        <v-btn v-bind="navigateBackBtnStyle" @click="$router.back">
           Назад
           <v-tooltip activator="parent" location="left">
             Вернуться назад
@@ -76,12 +76,51 @@
       </my-overlay>
     </v-card>
 
+    <my-overlay v-model="questionIsVisible">
+      <v-card color="red-darken-4" rounded="sm">
+        <v-card-text>
+          <v-icon>mdi-progress-question</v-icon>
+          <span class="ml-2">Хотите удалить запись ?</span>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click.stop="removeImg" variant="elevated" text="Да"/>
+          <v-btn @click.stop="questionIsVisible=false" text="Отмена"/>
+        </v-card-actions>
+      </v-card>
+    </my-overlay>
+
     <VueEasyLightbox
         :visible="lightboxVisible"
-        :index="lightboxIndex"
+        :index="initPhotoIndex"
         :imgs="lightboxImages"
         @hide="hideLightbox"
-    />
+        @on-index-change="onChangeLightboxIndex"
+    >
+      <template #toolbar="{ toolbarMethods }">
+        <div class="position-absolute left-0 right-0 bottom-0 d-flex justify-center ga-1 mb-2">
+          <v-btn-group density="default" variant="flat">
+            <v-btn @click="toolbarMethods.zoomIn" icon="mdi-magnify-plus-outline">
+              <v-icon icon="mdi-magnify-plus-outline"/>
+              <v-tooltip activator="parent" location="top start">
+                Увеличить
+              </v-tooltip>
+            </v-btn>
+            <v-btn @click="toolbarMethods.zoomOut" icon="mdi-magnify-minus-outline">
+              <v-icon icon="mdi-magnify-minus-outline"/>
+              <v-tooltip activator="parent" location="top start">
+                Уменьшить
+              </v-tooltip>
+            </v-btn>
+            <v-btn @click="questionIsVisible = true" icon="mdi-close-box-multiple-outline">
+              <v-icon icon="mdi-close-box-multiple-outline"/>
+              <v-tooltip activator="parent" location="top start">
+                Удалить
+              </v-tooltip>
+            </v-btn>
+          </v-btn-group>
+        </div>
+      </template>
+    </VueEasyLightbox>
   </v-container>
 </template>
 
@@ -104,26 +143,40 @@ export default {
       objectMenuChangeVisibility: false,
       columnMax: 4,
 
+      questionIsVisible: false,
+
       // lightbox
       lightboxVisible: false,
-      lightboxIndex: null,
+      initPhotoIndex: null,
+      currentPhotoIndex: null,
+      currentPhotoId: null,
 
       // import styles
       navigateBackBtnStyle,
     }
   },
 
-  async mounted() {
+  watch: {
+    initPhotoIndex() {
+      if (this.initPhotoIndex !== null && this.initPhotoIndex !== undefined) {
+        this.currentPhotoIndex = this.initPhotoIndex;
+        console.log('Current Index is changed: ', this.currentPhotoIndex);
+      }
+    },
+    currentPhotoIndex() {
+      if (this.lightboxImages[this.initPhotoIndex]?._id) {
+        this.currentPhotoId = this.lightboxImages[this.initPhotoIndex]?._id;
+        console.log('Current ID is changed: ', this.currentPhotoId);
+        console.log('lightboxImages:', this.lightboxImages);
+      }
+    }
+  },
 
+  async mounted() {
     if (this.inspectionObject?._id) {
-      // Загружаем картинки в Store
       await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
     }
-
     this.readSessionStorage();
-
-    // console.log('anglesTransformed', this.anglesTransformed);
-    // console.log('anglesTransformedToArray', this.lightboxImages);
   },
 
   unmounted() {
@@ -167,16 +220,25 @@ export default {
 
   methods: {
 
+    onChangeLightboxIndex(oldIndex, newIndex) {
+      if (
+          newIndex !== null &&
+          newIndex !== undefined &&
+          this.lightboxImages[newIndex]?._id
+      ) {
+        this.currentPhotoIndex = newIndex;
+        this.currentPhotoId = this.lightboxImages[newIndex]?._id;
+      }
+    },
+
     showLightbox(imgID) {
-      // console.log('search in this.lightboxImages: ', this.lightboxImages);
-      // console.log('search by _id: ', imgID);
-      this.lightboxIndex = this.lightboxImages.findIndex(img => img._id === imgID);
+      this.initPhotoIndex = this.lightboxImages.findIndex(img => img._id === imgID);
       this.lightboxVisible = true;
     },
 
     hideLightbox() {
       this.lightboxVisible = false;
-      this.lightboxIndex = null;
+      this.initPhotoIndex = null;
     },
 
     navigateBack() {
@@ -205,29 +267,44 @@ export default {
     readSessionStorage() {
       // Считываем Просматриваемый ракурс из session storage -> vuex store
       if (!sessionStorage.selectedAngleId) return;
-
       // Проверяем наличие такого в store
       const has = this.$store.getters['angles/HAS_ANGLE'](sessionStorage.selectedAngleId);
       if (!has) return;
-
       this.angleSelected = this.$store.getters['angles/GET_ANGLE_BY_ID'](sessionStorage.selectedAngleId);
     },
 
-    // TODO: Скорректировать
-    removeImg(_photoId) {
-      removeImg(_photoId)
-          .then(() => {
-            this.angleSelected.photoList = this.angleSelected.photoList.filter(e => e._id !== _photoId);
+    removeImg() {
+      const photoId = this.currentPhotoId;
+      if (photoId) {
+        removeImg(photoId)
+            .then(async () => {
 
-            if (this.angleSelected.photoList.length === 0) {
-              this.angleSelected = null;
-            }
+              // Запросим новые ракурсы с фотографиями
+              if (this.inspectionObject?._id) {
+                await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+              }
 
-            this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
-          })
-          .catch(err => {
-            console.log('Ошибка удаления фотографии', err);
-          })
+              // Проверим текущий индекс или рядом стоящие
+              const has = this.lightboxImages[this.currentPhotoIndex];
+              const size = this.lightboxImages.length;
+
+              if (has) {
+                this.initPhotoIndex = this.currentPhotoIndex;
+              } else if (!has && size <= 0) {
+                this.initPhotoIndex = null;
+                this.currentPhotoIndex = null;
+              } else if (!has && size >= 0) {
+                this.initPhotoIndex = size - 1;
+              }
+
+            })
+            .catch(err => {
+              console.log('Ошибка удаления фотографии', err);
+            })
+            .finally(() => {
+              this.questionIsVisible = false;
+            })
+      }
     },
 
     sendImages() {
@@ -256,6 +333,7 @@ export default {
       }
       this.files = [];
     },
+
     back() {
       navigateTo('/manager-menu/assignments/assignment-card/block');
     },
