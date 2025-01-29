@@ -41,26 +41,23 @@
       <v-card-item>
         <v-sheet max-height="700px"
                  class="d-flex flex-column ga-6 overflow-y-scroll overflow-x-hidden pb-6">
-          <div v-for="angleT of anglesTransformed" class="d-flex flex-column ga-2">
+          <div v-for="angle of angles" class="d-flex flex-column ga-2">
 
             <div class="font-bold d-flex align-center">
               <v-chip label color="blue-darken-4" density="comfortable">
-                {{ angleT.angleName }}
+                {{ angle.name }}
               </v-chip>
             </div>
 
             <v-sheet class="d-flex flex-wrap ga-2">
-              <div v-for="img of angleT.photos" class="">
-                <v-img
-                    @click="showLightbox(img._id)"
-                    :min-width="100"
-                    :max-width="100"
-                    :height="130"
-                    aspect-ratio="1/1"
-                    cover
-                    :src="img['150x150']"
+              <div v-for="photo of angle.photoList" class="">
+                <img
+                    @click="showLightbox(photo._id)"
+                    style="min-width: 120px; max-width: 120px; height: 100px"
+                    content="cover"
+                    :src="photo['150x150']"
                     alt="Загрузка изображения..."
-                    class="rounded cursor-pointer"
+                    class="rounded cursor-pointer border-sm border-dashed"
                 />
               </div>
             </v-sheet>
@@ -196,28 +193,42 @@ export default {
   computed: {
     lightboxImages() {
       const array = []
-      this.anglesTransformed.forEach(angle => {
-        angle.photos.forEach(img => {
+
+      this.angles.forEach(angle => {
+        angle.photoList.forEach(photo => {
           array.push({
-            _id: img._id,
-            src: img.fullSize,
-            title: angle.angleName
+            _id: photo._id,
+            src: photo.fullSize,
+            title: angle.name
           });
         })
       });
+
+      // this.anglesTransformed.forEach(angle => {
+      //   angle.photos.forEach(img => {
+      //     array.push({
+      //       _id: img._id,
+      //       src: img.fullSize,
+      //       title: angle.angleName
+      //     });
+      //   })
+      // });
+
+
       return array;
     },
-    anglesTransformed() {
-      const transformed = [];
-      this.angles.forEach(angle => {
-        transformed.push({
-          angleName: angle.name,
-          photos: angle.photoList.map(img => img)
-        });
-      });
-      return transformed;
-    },
+    // anglesTransformed() {
+    //   const transformed = [];
+    //   this.angles.forEach(angle => {
+    //     transformed.push({
+    //       angleName: angle.name,
+    //       photos: angle.photoList.map(img => img)
+    //     });
+    //   });
+    //   return transformed;
+    // },
     angles() {
+      console.log('this.$store.getters[\'angles/GET_ANGLES\']', this.$store.getters['angles/GET_ANGLES'])
       return this.$store.getters['angles/GET_ANGLES'];
     },
     inspectionObject() {
