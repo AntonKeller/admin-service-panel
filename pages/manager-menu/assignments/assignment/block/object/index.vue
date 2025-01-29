@@ -128,6 +128,7 @@
 import {removeImg, sendImg} from "@/utils/api/api_images";
 import {navigateBackBtnStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
+import _ from "lodash";
 
 export default {
   name: "object-page",
@@ -160,14 +161,23 @@ export default {
     initPhotoIndex() {
       if (this.initPhotoIndex !== null && this.initPhotoIndex !== undefined) {
         this.currentPhotoIndex = this.initPhotoIndex;
-        console.log('Current Index is changed: ', this.currentPhotoIndex);
+        console.log('\n\n--------------------------------------------------------------');
+        console.log('Исполнен Watcher [initPhotoIndex]');
+        console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
+        console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
+        console.log('this.currentPhotoId:\t', this.currentPhotoId);
+        console.log('--------------------------------------------------------------\n');
       }
     },
     currentPhotoIndex() {
       if (this.lightboxImages[this.initPhotoIndex]?._id) {
         this.currentPhotoId = this.lightboxImages[this.initPhotoIndex]?._id;
-        console.log('Current ID is changed: ', this.currentPhotoId);
-        console.log('lightboxImages:', this.lightboxImages);
+        console.log('\n\n--------------------------------------------------------------');
+        console.log('Исполнен Watcher [currentPhotoIndex]');
+        console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
+        console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
+        console.log('this.currentPhotoId:\t', this.currentPhotoId);
+        console.log('--------------------------------------------------------------\n');
       }
     }
   },
@@ -221,14 +231,21 @@ export default {
   methods: {
 
     onChangeLightboxIndex(oldIndex, newIndex) {
-      if (
-          newIndex !== null &&
-          newIndex !== undefined &&
-          this.lightboxImages[newIndex]?._id
-      ) {
-        this.currentPhotoIndex = newIndex;
-        this.currentPhotoId = this.lightboxImages[newIndex]?._id;
+      if (!_.isNil(newIndex) && !_.isNil(this.lightboxImages[newIndex]?._id)) {
+        this.initPhotoIndex = newIndex;
       }
+      console.log('\n\n--------------------------------------------------------------');
+      console.log('Исполнено событие обновления [Lightbox Index]');
+      console.log('--------------------------------------------------------------');
+      console.log('Параметры события:');
+      console.log('Старый индекс:\t', oldIndex);
+      console.log('Новый индекс:\t', newIndex);
+      console.log('--------------------------------------------------------------');
+      console.log('Состояние Data:');
+      console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
+      console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
+      console.log('this.currentPhotoId:\t', this.currentPhotoId);
+      console.log('--------------------------------------------------------------\n');
     },
 
     showLightbox(imgID) {
@@ -275,26 +292,49 @@ export default {
 
     removeImg() {
       const photoId = this.currentPhotoId;
+
+      console.log('\n\n--------------------------------------------------------------');
+      console.log('Информаци о состоянии до удаления');
+      console.log('--------------------------------------------------------------');
+      console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
+      console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
+      console.log('this.currentPhotoId:\t', this.currentPhotoId);
+      console.log('this.lightboxImages.length:\t', this.lightboxImages.length);
+      console.log('--------------------------------------------------------------\n');
+
+
+      console.log('lightboxImages.len - currentPhotoIndex:', (this.lightboxImages.length - 1) - this.currentPhotoIndex)
+
       if (photoId) {
         removeImg(photoId)
             .then(async () => {
 
               // Запросим новые ракурсы с фотографиями
-              if (this.inspectionObject?._id) {
-                await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
-              }
+              // if (this.inspectionObject?._id) {
+              //   await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
+              // }
 
-              // Проверим текущий индекс или рядом стоящие
-              const has = this.lightboxImages[this.currentPhotoIndex];
-              const size = this.lightboxImages.length;
+              // Если удаление на сервере успешно -> удаляем из store
+              this.$store.commit('angles/REMOVE_PHOTO_BY_ID', photoId);
 
-              if (has) {
-                this.initPhotoIndex = this.currentPhotoIndex;
-              } else if (!has && size <= 0) {
+              // Если фотографий не осталось
+              if (this.lightboxImages.length === 0) {
+                this.lightboxVisible = false;
                 this.initPhotoIndex = null;
                 this.currentPhotoIndex = null;
-              } else if (!has && size >= 0) {
-                this.initPhotoIndex = size - 1;
+                this.currentPhotoId = null;
+              }
+
+              if (this.lightboxImages.length > 0) {
+
+                if (this.currentPhotoIndex >= this.lightboxImages.length) {
+                  this.initPhotoIndex -= 1;
+                }
+
+                if (this.currentPhotoIndex < this.lightboxImages.length) {
+                  this.currentPhotoId = this.lightboxImages[this.currentPhotoIndex]._id;
+                }
+
               }
 
             })
@@ -303,6 +343,15 @@ export default {
             })
             .finally(() => {
               this.questionIsVisible = false;
+
+              console.log('\n\n--------------------------------------------------------------');
+              console.log('Информаци о состоянии после удаления');
+              console.log('--------------------------------------------------------------');
+              console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
+              console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
+              console.log('this.currentPhotoId:\t', this.currentPhotoId);
+              console.log('this.lightboxImages.length:\t', this.lightboxImages.length);
+              console.log('--------------------------------------------------------------\n');
             })
       }
     },

@@ -1,4 +1,4 @@
-import {fetchAngles} from "@/utils/api/api_angles.js";
+import {fetchAngles} from "@/utils/api/api_angles";
 
 const initial = () => ({
     angles: [],
@@ -15,17 +15,30 @@ const angles = {
         GET_ANGLE_BY_ID: (state) => (ID) => state.angles.find(e => e._id === ID),
     },
     mutations: {
-        SET_ANGLES(state, data) {
-            state.angles = data;
+        SET_ANGLES(state, angles) {
+            state.angles = angles;
+            console.log('fetch result angles:', angles)
         },
         SET_FETCHING(state, status) {
             state.fetching = status;
         },
+        REMOVE_PHOTO_BY_ID(state, photoID) {
+            state.angles = state.angles
+                .map(angle => {
+                    const filtered = angle?.photoList.filter(photo => photo._id !== photoID) || [];
+                    return filtered.length > 0 ? {
+                        description: angle?.description,
+                        name: angle?.name,
+                        photoList: angle?.photoList.filter(photo => photo._id !== photoID) || [],
+                    } : null;
+                })
+                .filter(angle => {
+                    return !!angle;
+                });
+        }
     },
     actions: {
         async FETCH({commit, getters}, objectID) {
-
-            console.log('[angles/FETCH]');
 
             commit('SET_FETCHING', true);
 
