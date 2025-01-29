@@ -370,7 +370,7 @@ export default {
     sendImages() {
 
       if (!Array.isArray(this.files) || this.files.length === 0) {
-        this.$store.commit('inspectionObjects/ALERT_ERROR', 'Ошибка. Файлы не выбраны')
+        this.$store.commit('inspectionObjects/ALERT_ERROR', 'Ошибка. Файлы не выбраны');
       }
 
       let step = 100 / this.files.length;

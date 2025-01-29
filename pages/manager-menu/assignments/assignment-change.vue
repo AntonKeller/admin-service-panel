@@ -15,7 +15,7 @@
 
       <v-card variant="flat" :loading="sending" :disabled="sending">
 
-        <v-card-title>едактирование задания</v-card-title>
+        <v-card-title>Редактирование задания</v-card-title>
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
