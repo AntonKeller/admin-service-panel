@@ -10,7 +10,6 @@
       >
         <v-card-item>
           <div class="d-flex justify-start align-center ga-4">
-
             <v-list-item
                 prepend-icon="mdi-account-cog-outline"
                 variant="tonal"
@@ -61,8 +60,8 @@
 
             <v-list-item
                 prepend-icon=""
-                variant="outlined"
-                class="white"
+                color="white"
+                class="bg-white"
                 density="compact"
                 title="Пополнить баланс"
                 slim
@@ -82,8 +81,8 @@
         :rail="rail"
         @click="rail = false"
         elevation="0"
+        width="230"
     >
-
       <v-list variant="text" density="default" nav rounded="lg">
         <v-list-item
             prepend-avatar="/assets/images/logotype.png"

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1080">
+    <v-sheet min-width="400" max-width="1120">
 
       <v-card variant="text" :loading="getFetchingDataStatus">
 

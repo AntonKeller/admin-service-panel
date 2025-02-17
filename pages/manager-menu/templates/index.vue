@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1080">
+    <v-sheet min-width="400" max-width="1120">
       <v-card variant="text" :loading="fetching">
 
         <v-card-title>
@@ -36,8 +36,9 @@
               :headers="headers"
               :search="search"
               items-per-page-text="Кол-во на странице"
-              items-per-page="5"
               density="comfortable"
+              items-per-page="5"
+              item-value="_id"
               show-select
           />
         </v-card-item>

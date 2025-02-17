@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1080">
+    <v-sheet min-width="400" max-width="1120">
 
       <v-card variant="text" :loading="fetching">
 
@@ -36,8 +36,9 @@
               :search="searchText"
               items-per-page-text="Кол-во на странице"
               no-data-text="Нет данных"
-              items-per-page="5"
               density="comfortable"
+              items-per-page="5"
+              item-value="_id"
               fixed-header
               show-select
           >
@@ -77,7 +78,7 @@ export default {
           key: 'shortName',
           value: 'shortName',
           sortable: true,
-          title: 'Наименование организации',
+          title: 'Организация',
 
         },
         {
@@ -99,7 +100,7 @@ export default {
           align: 'start',
           key: 'phoneNumber',
           sortable: true,
-          title: 'Номер тел.',
+          title: 'Номер представителя',
           wrap: false,
         },
         {
