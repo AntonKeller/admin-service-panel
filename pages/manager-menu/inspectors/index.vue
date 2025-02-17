@@ -1,15 +1,20 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1280">
+    <v-sheet min-width="400" max-width="1080">
       <v-card variant="text" :loading="fetchingInspectors">
-
-        <v-card-title>Инспекторы</v-card-title>
+        <v-card-title>
+          Инспекторы
+        </v-card-title>
+        <v-card-subtitle class="d-flex align-center ga-2">
+          <v-icon icon="mdi-account-group-outline" />
+          Добавляйте, редактируйте данные ваших сюрвейеров
+        </v-card-subtitle>
 
         <v-card-item>
-          <div class="d-flex align-center">
+          <v-card-title class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey"
+                color="blue-grey-darken-1"
                 variant="tonal"
                 @click="navigateToInspectorAdd"
             >
@@ -18,59 +23,36 @@
                 Добавить нового инспектора
               </v-tooltip>
             </v-btn>
-            <v-sheet max-width="550" width="100%">
-              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-            </v-sheet>
-          </div>
+            <v-spacer />
+            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
+          </v-card-title>
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
-            <thead>
-            <tr>
-              <th>ФИО Инспектора</th>
-              <th>Номер телефона</th>
-              <th>Email</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-                v-for="inspector of inspectorsSlice"
-                :key="inspector._id"
-                class="text-caption"
-            >
-              <td>{{ getFullName(inspector) }}</td>
-              <td>{{ inspector?.phoneNumber || '-' }}</td>
-              <td>{{ inspector?.email || '-' }}</td>
-              <td style="min-width: 95px; width: 95px; max-width: 95px">
-                <div class="d-flex ga-2">
-                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(inspector)"/>
-                  <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(inspector._id)"/>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </v-table>
-        </v-card-item>
-
-        <v-card-item v-if="inspectorsSlice?.length === 0">
-          <v-label class="d-flex justify-center pb-4 border-b-sm">
-            Нет данных
-          </v-label>
-        </v-card-item>
-
-        <v-card-item v-if="inspectorsSlice && inspectorsSlice?.length !== 0">
-          <div class="d-flex align-center">
-            <v-pagination
-                v-model="currentPage"
-                density="comfortable"
-                color="blue-grey-darken-2"
-                show-first-last-page
-                :length="totalPages"
-                :total-visible="8"
-            />
-          </div>
+          <v-data-table
+              :items="inspectorsSlice"
+              :headers="headers"
+              :search="searchText"
+              items-per-page-text="Кол-во на странице"
+              no-data-text="Нет данных"
+              items-per-page="5"
+              density="comfortable"
+              fixed-header
+              show-select
+          >
+            <template #item.name="{ item }">
+              {{
+                (item.surname ? `${item.surname}` : '') + (item.firstName ? ` ${item.firstName}` : '') + (item.lastName ? ` ${item.lastName}` : '')
+              }}
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(item)"/>
+              <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(item._id)" class="ml-2"/>
+            </template>
+            <template #loading>
+              <v-skeleton-loader type="table-row@10" />
+            </template>
+          </v-data-table>
         </v-card-item>
       </v-card>
     </v-sheet>
@@ -87,6 +69,35 @@ export default {
 
   data() {
     return {
+      headers: [
+        {
+          align: 'start',
+          key: 'name',
+          value: 'surname',
+          sortable: true,
+          title: 'ФИО Инспектора',
+
+        },
+        {
+          align: 'start',
+          key: 'phoneNumber',
+          sortable: true,
+          title: 'Номер телефона',
+        },
+        {
+          align: 'start',
+          key: 'email',
+          sortable: true,
+          title: 'Email',
+        },
+        {
+          align: 'end',
+          key: 'actions',
+          sortable: false,
+          width: 100,
+        },
+      ],
+
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,

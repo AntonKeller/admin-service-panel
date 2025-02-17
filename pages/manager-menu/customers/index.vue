@@ -1,16 +1,21 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1280">
+    <v-sheet min-width="400" max-width="1080">
 
       <v-card variant="text" :loading="fetching">
 
         <v-card-title>Заказчики</v-card-title>
 
+        <v-card-subtitle class="d-flex align-center ga-2">
+          <v-icon icon="mdi-account-tie-outline"/>
+          Добавляйте заказчиков в таблицу и работайте в привычном формате
+        </v-card-subtitle>
+
         <v-card-item>
-          <div class="d-flex align-center">
+          <v-card-title class="d-flex align-center">
             <v-btn
                 prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey"
+                color="blue-grey-darken-1"
                 variant="tonal"
                 @click="navigateToCustomerAdd"
             >
@@ -19,72 +24,37 @@
                 Добавить нового заказчика
               </v-tooltip>
             </v-btn>
-            <v-sheet max-width="550" width="100%">
-              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-            </v-sheet>
-          </div>
+            <v-spacer/>
+            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
+          </v-card-title>
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 65vh" density="comfortable" class="table-scroll bg-transparent" fixed-header>
-            <thead v-if="!fetching">
-            <tr>
-              <th style="position: sticky;">Наименование</th>
-              <th style="position: sticky;">ИНН</th>
-              <th style="position: sticky;">Представитель</th>
-              <th style="position: sticky;">Номер тел.</th>
-              <th style="position: sticky;">Email</th>
-              <th style="position: sticky;">
-                <v-btn
-                    class="d-block ml-auto rounded"
-                    icon="mdi-dots-vertical"
-                    density="comfortable"
-                    variant="text"
-                    size="small"
-                    disabled
-                />
-              </th>
-            </tr>
-            </thead>
-            <tbody v-if="!fetching">
-            <tr
-                v-for="customer of customersSlice"
-                :key="customer._id"
-                class="text-caption"
-            >
-              <td>{{ customer.shortName || '-' }}</td>
-              <td class="text-no-wrap">{{ customer.inn || '-' }}</td>
-              <td class="text-no-wrap">{{ customer.representativeFullName || '-' }}</td>
-              <td class="text-no-wrap">{{ customer.phoneNumber || '-' }}</td>
-              <td class="text-no-wrap">{{ customer.email || '-' }}</td>
-              <td style="min-width: 95px; width: 95px; max-width: 95px">
-                <div class="d-flex ga-2">
-                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(customer)"/>
-                  <my-button-table-remove :prompt="'Удалить заказчика'" @click:yes="removeCustomer(customer._id)"/>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </v-table>
-        </v-card-item>
-
-        <v-card-item v-if="customersSlice?.length === 0">
-          <v-label class="d-flex justify-center pb-4 border-b-sm">
-            Нет данных
-          </v-label>
-        </v-card-item>
-
-        <v-card-item v-if="customersSlice && customersSlice?.length !== 0">
-          <div class="d-flex align-center">
-            <v-pagination
-                v-model="currentPage"
-                density="comfortable"
-                color="blue-grey-darken-2"
-                show-first-last-page
-                :length="totalPages"
-                :total-visible="8"
-            />
-          </div>
+          <v-data-table
+              :items="customersSlice"
+              :headers="headers"
+              :search="searchText"
+              items-per-page-text="Кол-во на странице"
+              no-data-text="Нет данных"
+              items-per-page="5"
+              density="comfortable"
+              fixed-header
+              show-select
+          >
+            <template #item.inn="{ item }">
+              <span class="text-no-wrap">{{ item.inn }}</span>
+            </template>
+            <template #item.phoneNumber="{ item }">
+              <span class="text-no-wrap">{{ item.phoneNumber }}</span>
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(item)"/>
+              <my-button-table-remove :prompt="'Удалить'" @click:yes="removeCustomer(item._id)" class="ml-2"/>
+            </template>
+            <template #loading>
+              <v-skeleton-loader type="table-row@10"/>
+            </template>
+          </v-data-table>
         </v-card-item>
       </v-card>
     </v-sheet>
@@ -101,6 +71,51 @@ export default {
 
   data() {
     return {
+      headers: [
+        {
+          align: 'start',
+          key: 'shortName',
+          value: 'shortName',
+          sortable: true,
+          title: 'Наименование организации',
+
+        },
+        {
+          align: 'start',
+          key: 'inn',
+          value: 'inn',
+          sortable: true,
+          title: 'ИНН Организации',
+
+        },
+        {
+          align: 'start',
+          key: 'representativeFullName',
+          value: 'representativeFullName',
+          sortable: true,
+          title: 'Представитель',
+        },
+        {
+          align: 'start',
+          key: 'phoneNumber',
+          sortable: true,
+          title: 'Номер тел.',
+          wrap: false,
+        },
+        {
+          align: 'start',
+          key: 'email',
+          sortable: true,
+          title: 'Email',
+        },
+        {
+          align: 'end',
+          key: 'actions',
+          sortable: false,
+          width: 100,
+        },
+      ],
+
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,

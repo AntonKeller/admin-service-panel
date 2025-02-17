@@ -40,5 +40,18 @@ export const navItems: Array<TNavItem> = [
             content: "12"
         },
     },
+    {
+        _id: 4,
+        title: 'Шаблоны',
+        route: '/manager-menu/templates',
+        prependIcon: 'mdi-folder-table-outline',
+        value: 'templates',
+        active: false,
+        badge: {
+            show: false,
+            color: "info",
+            content: "12"
+        },
+    },
 
 ];

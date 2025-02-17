@@ -1,7 +1,7 @@
 <template>
   <v-btn
       class="d-inline"
-      icon="mdi-progress-close"
+      icon="mdi-delete-forever-outline"
       rounded
       variant="text"
       color="red-darken-4"

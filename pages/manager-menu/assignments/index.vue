@@ -1,11 +1,17 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1280">
-
+    <v-sheet min-width="400" max-width="1080">
 
       <v-card variant="text" :loading="getFetchingDataStatus">
 
-        <v-card-title>Список заданий</v-card-title>
+        <v-card-title>
+          Список заданий
+        </v-card-title>
+
+        <v-card-subtitle class="d-flex align-center ga-2">
+          <v-icon icon="mdi-calendar-check-outline"/>
+          Добавляйте и контролируйте задания на осмотр
+        </v-card-subtitle>
 
         <v-card-item>
           <div class="d-flex align-center">
@@ -20,6 +26,7 @@
                 Добавить новое задание
               </v-tooltip>
             </v-btn>
+            <v-spacer/>
             <v-sheet max-width="550" width="100%">
               <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
             </v-sheet>
@@ -46,7 +53,8 @@
             >
               <td>{{ assignment.title || '-' }}</td>
               <td>
-                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"  prepend-icon="mdi-domain" label>
+                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"
+                        prepend-icon="mdi-domain" label>
                   {{ assignment.customer?.shortName || '-' }}
                 </v-chip>
               </td>

@@ -128,9 +128,8 @@
       <template #append>
         <v-list variant="text" density="compact" rounded="lg" nav>
           <v-list-item
-              class="bg-grey-lighten-4"
+              border="sm"
               prepend-icon="mdi-logout"
-              variant="text"
               title="Выход"
               @click="logout"
           >
