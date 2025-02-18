@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1120">
-
+    <v-sheet min-width="400" max-width="1150">
       <v-card variant="text" :loading="fetching">
 
         <v-card-title>Заказчики</v-card-title>
@@ -11,12 +10,13 @@
           Добавляйте заказчиков в таблицу и работайте в привычном формате
         </v-card-subtitle>
 
+        <v-card-item/>
+
         <v-card-item>
           <v-card-title class="d-flex align-center">
             <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey-darken-1"
-                variant="tonal"
+                variant="outlined"
+                class="bg-blue-darken-2"
                 @click="navigateToCustomerAdd"
             >
               Добавить
@@ -30,32 +30,35 @@
         </v-card-item>
 
         <v-card-item>
-          <v-data-table
-              :items="customersSlice"
-              :headers="headers"
-              :search="searchText"
-              items-per-page-text="Кол-во на странице"
-              no-data-text="Нет данных"
-              density="comfortable"
-              items-per-page="5"
-              item-value="_id"
-              fixed-header
-              show-select
-          >
-            <template #item.inn="{ item }">
-              <span class="text-no-wrap">{{ item.inn }}</span>
-            </template>
-            <template #item.phoneNumber="{ item }">
-              <span class="text-no-wrap">{{ item.phoneNumber }}</span>
-            </template>
-            <template v-slot:item.actions="{ item }">
-              <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(item)"/>
-              <my-button-table-remove :prompt="'Удалить'" @click:yes="removeCustomer(item._id)" class="ml-2"/>
-            </template>
-            <template #loading>
-              <v-skeleton-loader type="table-row@10"/>
-            </template>
-          </v-data-table>
+          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+            <v-data-table
+                :items="customersSlice"
+                :headers="headers"
+                :search="searchText"
+                class="bg-transparent"
+                items-per-page-text="Кол-во на странице"
+                no-data-text="Нет данных"
+                density="comfortable"
+                items-per-page="5"
+                item-value="_id"
+                fixed-header
+                show-select
+            >
+              <template #item.inn="{ item }">
+                {{ item?.inn ?? '-' }}
+              </template>
+              <template #item.phoneNumber="{ item }">
+                {{ item?.phoneNumber ?? '-' }}
+              </template>
+              <template v-slot:item.actions="{ item }">
+                <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(item)"/>
+                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeCustomer(item._id)" class="ml-2"/>
+              </template>
+              <template #loading>
+                <v-skeleton-loader type="table-row@10"/>
+              </template>
+            </v-data-table>
+          </v-sheet>
         </v-card-item>
       </v-card>
     </v-sheet>
@@ -79,7 +82,6 @@ export default {
           value: 'shortName',
           sortable: true,
           title: 'Организация',
-
         },
         {
           align: 'start',
@@ -87,7 +89,7 @@ export default {
           value: 'inn',
           sortable: true,
           title: 'ИНН Организации',
-
+          nowrap: true,
         },
         {
           align: 'start',
@@ -101,7 +103,7 @@ export default {
           key: 'phoneNumber',
           sortable: true,
           title: 'Номер представителя',
-          wrap: false,
+          nowrap: true,
         },
         {
           align: 'start',

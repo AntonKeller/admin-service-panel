@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1120">
+    <v-sheet min-width="400" max-width="650">
       <v-card variant="text" :loading="fetching">
 
         <v-card-title>
@@ -12,35 +12,38 @@
           Редактируйте, создавайте шаблоны под требования заказчика
         </v-card-subtitle>
 
+        <v-card-item/>
+
         <v-card-item>
           <v-card-title class="d-flex align-center">
             <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey-darken-1"
-                variant="tonal"
-                @click="navigateToInspectorAdd"
+                variant="outlined"
+                class="bg-blue-darken-2"
+                @click="navigateToTemplateAdd"
             >
               Добавить
               <v-tooltip activator="parent">
                 Добавить нового инспектора
               </v-tooltip>
             </v-btn>
-            <v-spacer />
+            <v-spacer/>
             <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
           </v-card-title>
         </v-card-item>
 
         <v-card-item>
-          <v-data-table
-              :items="templates"
-              :headers="headers"
-              :search="search"
-              items-per-page-text="Кол-во на странице"
-              density="comfortable"
-              items-per-page="5"
-              item-value="_id"
-              show-select
-          />
+          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+            <v-data-table
+                :items="templates"
+                :headers="headers"
+                :search="search"
+                items-per-page-text="Кол-во на странице"
+                density="comfortable"
+                items-per-page="5"
+                item-value="_id"
+                show-select
+            />
+          </v-sheet>
         </v-card-item>
       </v-card>
     </v-sheet>
@@ -49,6 +52,7 @@
 
 <script>
 import {mySearchFieldStyle} from "@/configs/styles";
+
 export default {
   name: "index",
   data() {

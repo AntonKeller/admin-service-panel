@@ -106,7 +106,7 @@
           </template>
         </v-list-item>
 
-        <v-divider class="mb-1 mt-2"/>
+        <v-divider class="mb-6 mt-2"/>
 
         <v-list-item
             v-for="item of navItems"
@@ -116,9 +116,12 @@
             :active="item._id === activeItem"
             :value="item.value"
             :title="item.title"
-            color="blue-darken-1"
+            color="blue-darken-2"
+            class="border-t-sm border-b-sm"
+            :class="false ? 'px-4' : ''"
             density="compact"
-            rounded="lg"
+            variant="flat"
+            rounded
             @click="activeItem = item._id"
         />
 
@@ -127,9 +130,9 @@
       <template #append>
         <v-list variant="text" density="compact" rounded="lg" nav>
           <v-list-item
-              border="sm"
               prepend-icon="mdi-logout"
               title="Выход"
+              border="sm"
               @click="logout"
           >
             <v-tooltip activator="parent">Выйти из системы</v-tooltip>

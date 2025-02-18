@@ -2,20 +2,21 @@
   <v-container fluid>
     <v-sheet min-width="400" max-width="1120">
       <v-card variant="text" :loading="fetchingInspectors">
-        <v-card-title>
-          Инспекторы
-        </v-card-title>
+
+        <v-card-title>Инспекторы</v-card-title>
+
         <v-card-subtitle class="d-flex align-center ga-2">
           <v-icon icon="mdi-account-group-outline" />
           Добавляйте, редактируйте данные ваших сюрвейеров
         </v-card-subtitle>
 
+        <v-card-item/>
+
         <v-card-item>
           <v-card-title class="d-flex align-center">
             <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey-darken-1"
-                variant="tonal"
+                variant="outlined"
+                class="bg-blue-darken-2"
                 @click="navigateToInspectorAdd"
             >
               Добавить
@@ -29,31 +30,33 @@
         </v-card-item>
 
         <v-card-item>
-          <v-data-table
-              :items="inspectorsSlice"
-              :headers="headers"
-              :search="searchText"
-              items-per-page-text="Кол-во на странице"
-              no-data-text="Нет данных"
-              density="comfortable"
-              items-per-page="5"
-              item-value="_id"
-              fixed-header
-              show-select
-          >
-            <template #item.name="{ item }">
-              {{
-                (item.surname ? `${item.surname}` : '') + (item.firstName ? ` ${item.firstName}` : '') + (item.lastName ? ` ${item.lastName}` : '')
-              }}
-            </template>
-            <template v-slot:item.actions="{ item }">
-              <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(item)"/>
-              <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(item._id)" class="ml-2"/>
-            </template>
-            <template #loading>
-              <v-skeleton-loader type="table-row@10" />
-            </template>
-          </v-data-table>
+          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+            <v-data-table
+                :items="inspectorsSlice"
+                :headers="headers"
+                :search="searchText"
+                items-per-page-text="Кол-во на странице"
+                no-data-text="Нет данных"
+                density="comfortable"
+                items-per-page="5"
+                item-value="_id"
+                fixed-header
+                show-select
+            >
+              <template #item.name="{ item }">
+                {{
+                  (item.surname ? `${item.surname}` : '') + (item.firstName ? ` ${item.firstName}` : '') + (item.lastName ? ` ${item.lastName}` : '')
+                }}
+              </template>
+              <template v-slot:item.actions="{ item }">
+                <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToInspectorChange(item)"/>
+                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeInspector(item._id)" class="ml-2"/>
+              </template>
+              <template #loading>
+                <v-skeleton-loader type="table-row@10" />
+              </template>
+            </v-data-table>
+          </v-sheet>
         </v-card-item>
       </v-card>
     </v-sheet>

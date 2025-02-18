@@ -1,24 +1,22 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1120">
-
+    <v-sheet min-width="400" max-width="1150">
       <v-card variant="text" :loading="getFetchingDataStatus">
 
-        <v-card-title>
-          Список заданий
-        </v-card-title>
+        <v-card-title>Список заданий</v-card-title>
 
         <v-card-subtitle class="d-flex align-center ga-2">
           <v-icon icon="mdi-calendar-check-outline"/>
           Добавляйте и контролируйте задания на осмотр
         </v-card-subtitle>
 
+        <v-card-item/>
+
         <v-card-item>
           <div class="d-flex align-center">
             <v-btn
-                prepend-icon="mdi-plus-box-multiple-outline"
-                color="blue-grey"
-                variant="tonal"
+                variant="outlined"
+                class="bg-blue-darken-2"
                 @click="navigateToAddMenu"
             >
               Добавить
@@ -34,49 +32,98 @@
         </v-card-item>
 
         <v-card-item>
-          <v-table style="max-height: 65vh" density="comfortable" fixed-header>
-            <thead>
-            <tr>
-              <th>Заголовок</th>
-              <th>Заказчик</th>
-              <th>Договор с заказчиком</th>
-              <th>Техническое задание к договору</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody v-if="!getFetchingDataStatus">
-            <tr
-                v-for="assignment of assignmentsSLice"
-                :key="assignment._id"
-                class="text-caption row-hover"
-                @click="navigateToCardMenu(assignment)"
+          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+
+            <v-data-table
+                :items="assignmentsSLice"
+                :headers="headers"
+                :search="searchText"
+                class="bg-transparent"
+                items-per-page-text="Кол-во на странице"
+                no-data-text="Нет данных"
+                density="comfortable"
+                items-per-page="5"
+                item-value="_id"
+                fixed-header
+                show-select
             >
-              <td>{{ assignment.title || '-' }}</td>
-              <td>
-                <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"
-                        prepend-icon="mdi-domain" label>
-                  {{ assignment.customer?.shortName || '-' }}
-                </v-chip>
-              </td>
-              <td>
-                <v-chip color="deep-purple-darken-2" density="comfortable" size="small" class="text-caption" label>
-                  {{ getContractString(assignment.contract) }}
-                </v-chip>
-              </td>
-              <td>
-                <v-chip color="blue-grey-darken-2" density="comfortable" size="small" class="text-caption" label>
-                  {{ getContractString(assignment.subContract) }}
-                </v-chip>
-              </td>
-              <td style="min-width: 95px; width: 95px; max-width: 95px">
-                <div class="d-flex ga-2">
-                  <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
-                  <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </v-table>
+              <template #item.customerShortName="{ item }">
+                <v-chip
+                    :prepend-icon="item?.customer?.shortName ? 'mdi-domain' : ''"
+                    color="blue-darken-4"
+                    density="comfortable"
+                    class="text-caption"
+                    size="small"
+                    label
+                    :text="item?.customer?.shortName ?? '-'"
+                />
+              </template>
+
+              <template #item.assignmentContract="{ item }">
+                <v-chip
+                    :prepend-icon="item?.contract ? 'mdi-domain' : ''"
+                    color="deep-purple-darken-2"
+                    density="comfortable"
+                    class="text-caption"
+                    size="small"
+                    label
+                    :text="getContractString(item?.contract) ?? '-'"
+                />
+              </template>
+              <template #item.actions="{ item }">
+                <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToAssignmentChange(item)"/>
+                <my-button-table-remove :prompt="'Удалить'" @click:yes="removeAssignment(item._id)" class="ml-2"/>
+              </template>
+              <template #loading>
+                <v-skeleton-loader type="table-row@10"/>
+              </template>
+            </v-data-table>
+
+
+            <v-table style="max-height: 65vh" density="comfortable" fixed-header>
+              <thead>
+              <tr>
+                <th>Заголовок</th>
+                <th>Заказчик</th>
+                <th>Договор с заказчиком</th>
+                <th>Техническое задание к договору</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody v-if="!getFetchingDataStatus">
+              <tr
+                  v-for="assignment of assignmentsSLice"
+                  :key="assignment._id"
+                  class="text-caption row-hover"
+                  @click="navigateToCardMenu(assignment)"
+              >
+                <td>{{ assignment.title || '-' }}</td>
+                <td>
+                  <v-chip color="blue-darken-3" density="comfortable" size="small" class="text-caption"
+                          prepend-icon="mdi-domain" label>
+                    {{ assignment.customer?.shortName || '-' }}
+                  </v-chip>
+                </td>
+                <td>
+                  <v-chip color="deep-purple-darken-2" density="comfortable" size="small" class="text-caption" label>
+                    {{ getContractString(assignment.contract) }}
+                  </v-chip>
+                </td>
+                <td>
+                  <v-chip color="blue-grey-darken-2" density="comfortable" size="small" class="text-caption" label>
+                    {{ getContractString(assignment.subContract) }}
+                  </v-chip>
+                </td>
+                <td style="min-width: 95px; width: 95px; max-width: 95px">
+                  <div class="d-flex ga-2">
+                    <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToChangeMenu(assignment)"/>
+                    <my-button-table-remove prompt="Удалить" @click:yes="removeAssignment(assignment._id)"/>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </v-table>
+          </v-sheet>
         </v-card-item>
 
         <v-card-item v-if="assignmentsSLice?.length === 0">
@@ -113,6 +160,47 @@ export default {
 
   data() {
     return {
+      headers: [
+        {
+          align: 'start',
+          key: 'title',
+          value: 'title',
+          sortable: true,
+          title: 'Заголовок',
+          nowrap: false,
+        },
+        {
+          align: 'start',
+          key: 'customerShortName',
+          value: 'title',
+          sortable: true,
+          title: 'Заказчик',
+          nowrap: false,
+        },
+        {
+          align: 'start',
+          key: 'assignmentContract',
+          value: 'title',
+          sortable: true,
+          title: 'Договор с заказчиком',
+          nowrap: false,
+        },
+        {
+          align: 'start',
+          key: 'inn',
+          value: 'inn',
+          sortable: true,
+          title: 'Техническое задание к договору',
+          nowrap: false,
+        },
+        {
+          align: 'end',
+          key: 'actions',
+          sortable: false,
+          width: 100,
+        },
+      ],
+
       searchText: '',
       currentPage: 1,
       itemsPerPage: 10,
@@ -169,7 +257,6 @@ export default {
 
   methods: {
 
-    slicer,
     unixDateToShortDateString,
 
     getContractString(contract) {
