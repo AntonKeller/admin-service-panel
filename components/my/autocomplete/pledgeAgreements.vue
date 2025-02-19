@@ -6,11 +6,11 @@
         :custom-filter="pledgeAgreementSearchFilter"
         @update:menu="onUpdateMenuPledgeAgreements"
         prepend-inner-icon="mdi-file-sign"
+        label="Список договоров залога"
         no-data-text="нет данных"
         color="yellow-darken-3"
         density="compact"
         variant="outlined"
-        label="Список договоров залога"
         closable-chips
         hide-selected
         multiple
@@ -37,8 +37,8 @@
         >
           <template #append>
             <v-btn
-                icon="mdi-progress-close"
-                color="red-darken-4"
+                icon="mdi-close"
+                size="small"
                 density="comfortable"
                 variant="text"
                 @click.stop="removePledgeAgreement(item.raw._id)"

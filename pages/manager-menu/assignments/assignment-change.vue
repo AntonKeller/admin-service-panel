@@ -37,8 +37,10 @@
                 <my-autocomplete-contracts v-model="assignment.contract"/>
               </v-col>
               <v-col :cols="12">
-                <my-autocomplete-subContracts v-model="assignment.subContract"
-                                              :parentID="assignment.contract?._id || null"/>
+                <my-autocomplete-subContracts
+                    v-model="assignment.subContract"
+                    :parentID="assignment.contract?._id || null"
+                />
               </v-col>
               <v-col :cols="12">
                 <my-autocomplete-loanAgreements v-model="assignment.loanAgreements"/>

@@ -2,7 +2,7 @@ thead tr {
 }
 thead tr th {
     font-weight: 600 !important;
-    background-color: transparent !important;
+    /*background-color: white !important;*/
     /*background-color: #1976D2 !important;*/
     /*color: #e7e7e7 !important;*/
 }

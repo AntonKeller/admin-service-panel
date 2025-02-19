@@ -1,29 +1,42 @@
 <template>
   <v-btn
-      class="d-inline"
-      icon="mdi-delete-forever-outline"
-      rounded
+      density="comfortable"
+      icon="mdi-close"
       variant="text"
-      color="red-darken-4"
-      density="compact"
-      v-bind="$attrs"
+      size="small"
+      rounded
       @click.stop="questionIsVisible = true"
+      v-bind="$attrs"
   >
     <v-icon/>
     <v-tooltip activator="parent" location="left">
       {{ prompt ? prompt : '...' }}
     </v-tooltip>
     <my-overlay v-model="questionIsVisible">
-      <v-card color="red-darken-4" rounded="sm">
-        <v-card-text>
-          <v-icon>mdi-progress-question</v-icon>
-          <span class="ml-2">Хотите удалить запись ?</span>
-        </v-card-text>
+      <v-sheet class="px-4 py-1 bg-white rounded-lg">
+
+        <v-card-item>
+          Хотите удалить запись ?
+        </v-card-item>
+        <v-card-item>
+          <v-divider/>
+        </v-card-item>
         <v-card-actions>
-          <v-btn @click.stop="onclickYes" variant="elevated" text="Да"/>
-          <v-btn @click.stop="questionIsVisible=false" text="Отмена"/>
+          <v-btn
+              @click.stop="onclickYes"
+              variant="flat"
+              density="comfortable"
+              class="border-sm rounded-lg"
+              text="Да"
+          />
+          <v-btn
+              @click.stop="questionIsVisible=false"
+              density="comfortable"
+              class="rounded-lg"
+              text="Отмена"
+          />
         </v-card-actions>
-      </v-card>
+      </v-sheet>
     </my-overlay>
   </v-btn>
 </template>

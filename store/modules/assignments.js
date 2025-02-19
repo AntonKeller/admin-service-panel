@@ -66,7 +66,7 @@ const assignments = {
             switch (answer.status) {
                 case 200:
                     commit('REMOVE_ITEM', payload);
-                    commit('alert/ERROR', 'Успешно удалено' || answer.statusText, {root: true});
+                    commit('alert/SUCCESS', 'Успешно удалено' || answer.statusText, {root: true});
                     break;
                 case 403:
                     commit('alert/ERROR', 'Отказано в доступе' || answer.statusText, {root: true});
