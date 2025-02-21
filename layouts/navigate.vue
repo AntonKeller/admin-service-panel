@@ -8,71 +8,71 @@
           :rounded="0"
           style="min-width: 100%;"
       >
-        <v-card-item>
-          <div class="d-flex justify-start align-center ga-4">
-            <v-list-item
-                prepend-icon="mdi-account-cog-outline"
-                variant="tonal"
-                slim
-                nav
-                :title="profile.fullName"
-                :subtitle="profile.email"
-                @click="navigateToProfile"
-            >
-              <v-tooltip activator="parent" location="bottom">
-                Настройки профиля
-              </v-tooltip>
-            </v-list-item>
+<!--        <v-card-item>-->
+<!--          <div class="d-flex justify-start align-center ga-4">-->
+<!--            <v-list-item-->
+<!--                prepend-icon="mdi-account-cog-outline"-->
+<!--                variant="tonal"-->
+<!--                slim-->
+<!--                nav-->
+<!--                :title="profile.fullName"-->
+<!--                :subtitle="profile.email"-->
+<!--                @click="navigateToProfile"-->
+<!--            >-->
+<!--              <v-tooltip activator="parent" location="bottom">-->
+<!--                Настройки профиля-->
+<!--              </v-tooltip>-->
+<!--            </v-list-item>-->
 
-            <v-list-item
-                prepend-icon="mdi-bell"
-                title="Оповещения"
-                variant="tonal"
-                slim
-                nav
-                disabled
-                @click=""
-            >
-              <v-tooltip activator="parent" location="bottom">
-                Проверить оповещения
-              </v-tooltip>
-            </v-list-item>
+<!--            <v-list-item-->
+<!--                prepend-icon="mdi-bell"-->
+<!--                title="Оповещения"-->
+<!--                variant="tonal"-->
+<!--                slim-->
+<!--                nav-->
+<!--                disabled-->
+<!--                @click=""-->
+<!--            >-->
+<!--              <v-tooltip activator="parent" location="bottom">-->
+<!--                Проверить оповещения-->
+<!--              </v-tooltip>-->
+<!--            </v-list-item>-->
 
-            <v-list-item
-                prepend-icon="mdi-finance"
-                title="Статистика"
-                variant="tonal"
-                slim
-                nav
-                disabled
-                @click=""
-            >
-              <v-tooltip activator="parent" location="bottom">
-                Просмотр статистики
-              </v-tooltip>
-            </v-list-item>
+<!--            <v-list-item-->
+<!--                prepend-icon="mdi-finance"-->
+<!--                title="Статистика"-->
+<!--                variant="tonal"-->
+<!--                slim-->
+<!--                nav-->
+<!--                disabled-->
+<!--                @click=""-->
+<!--            >-->
+<!--              <v-tooltip activator="parent" location="bottom">-->
+<!--                Просмотр статистики-->
+<!--              </v-tooltip>-->
+<!--            </v-list-item>-->
 
-            <v-spacer/>
+<!--            <v-spacer/>-->
 
-            <v-label class="text-caption">
-              Текущий баланс аккаунта 1 000 объектов
-            </v-label>
+<!--            <v-label class="text-caption">-->
+<!--              Текущий баланс аккаунта 1 000 объектов-->
+<!--            </v-label>-->
 
-            <v-list-item
-                prepend-icon=""
-                color="white"
-                class="bg-white"
-                density="compact"
-                title="Пополнить баланс"
-                slim
-                disabled
-                nav
-                @click=""
-            >
-            </v-list-item>
+<!--            <v-list-item-->
+<!--                prepend-icon=""-->
+<!--                color="white"-->
+<!--                class="bg-white"-->
+<!--                density="compact"-->
+<!--                title="Пополнить баланс"-->
+<!--                slim-->
+<!--                disabled-->
+<!--                nav-->
+<!--                @click=""-->
+<!--            >-->
+<!--            </v-list-item>-->
 
-          </div>
-        </v-card-item>
+<!--          </div>-->
+<!--        </v-card-item>-->
       </v-card>
     </v-app-bar>
 
@@ -85,11 +85,13 @@
     >
       <v-list variant="text" density="default" nav rounded="lg">
         <v-list-item
-            prepend-avatar="/assets/images/logotype.png"
-            rounded="lg"
-            title="GK Breeze"
-            subtitle="Inspector service"
+
         >
+<!--          prepend-avatar="/assets/images/logotype.png"-->
+<!--          rounded="lg"-->
+<!--          title="GK Breeze"-->
+<!--          subtitle="Inspector service"-->
+
           <template #append>
             <v-btn
                 icon="mdi-menu-open"

@@ -1,4 +1,5 @@
 import moment from "moment/min/moment-with-locales";
+
 // import 'moment/dist/locale/ru'; // "moment/locale/ru.js";
 
 export function slicer(str, len) {
@@ -14,11 +15,11 @@ const configDefault = {
 
 // Короткая дата из Unix date
 export function unixDateToShortDateString(unixDate) {
-    return moment(parseInt(unixDate)).locale('ru').format('DD.MM.YYYY');
+    return unixDate ? moment(parseInt(unixDate)).locale('ru').format('DD.MM.YYYY') : '-';
 }
 
 export function unixDateToMiddleDateString(unixDate) {
-    return moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM');
+    return unixDate ? moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM') : '-';
 }
 
 // Широкая дата из Unix date

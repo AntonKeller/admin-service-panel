@@ -4,7 +4,7 @@ export const navItems: Array<TNavItem> = [
     {
         _id: 1,
         title: 'Задания',
-        route: '/manager-menu/assignments',
+        route: '/manager/assignments',
         prependIcon: 'mdi-calendar-check-outline',
         value: 'assignments',
         active: false,
@@ -17,7 +17,7 @@ export const navItems: Array<TNavItem> = [
     {
         _id: 2,
         title: 'Инспекторы',
-        route: '/manager-menu/inspectors',
+        route: '/manager/inspectors',
         prependIcon: 'mdi-account-group-outline',
         value: 'inspectors',
         active: false,
@@ -30,7 +30,7 @@ export const navItems: Array<TNavItem> = [
     {
         _id: 3,
         title: 'Заказчики',
-        route: '/manager-menu/customers',
+        route: '/manager/customers',
         prependIcon: 'mdi-card-account-details-outline',
         value: 'customers',
         active: false,
@@ -43,7 +43,7 @@ export const navItems: Array<TNavItem> = [
     {
         _id: 4,
         title: 'Шаблоны',
-        route: '/manager-menu/templates',
+        route: '/manager/templates',
         prependIcon: 'mdi-folder-table-outline',
         value: 'templates',
         active: false,

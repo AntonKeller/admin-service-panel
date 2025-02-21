@@ -14,11 +14,7 @@
 
         <v-card-item>
           <div class="d-flex align-center">
-            <v-btn
-                variant="outlined"
-                class="bg-blue-darken-2"
-                @click="addAssignment"
-            >
+            <v-btn v-bind="myBtnPlus" @click="onAddAssignment">
               Добавить
               <v-tooltip activator="parent">
                 Добавить новое задание
@@ -33,10 +29,12 @@
           <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
             <v-data-table
                 v-model="selectedItems"
-                @update:current-items="this.selectedItems = []"
+                v-model:items-per-page="itemsPerPage"
+                :items-per-page-options="itemsPerPageOptions"
+                :items-per-page="itemsPerPage"
                 :items="assignmentsMap"
-                :headers="headers"
                 :search="searchText"
+                :headers="headers"
                 style="max-height: 600px"
                 items-per-page-text="Кол-во на странице"
                 loading-text="Загрузка данных..."
@@ -47,6 +45,7 @@
                 item-value="_id"
                 fixed-header
                 show-select
+                @update:current-items="this.selectedItems = []"
             >
               <template #item.customerShortName="{ item }">
                 <v-chip
@@ -79,7 +78,7 @@
                     color="deep-orange"
                     variant="text"
                     size="small"
-                    @click.stop="navigateToCard(item)"
+                    @click.stop="onOpenAssignmentCard(item._id)"
                 >
                   <v-icon/>
                   <v-tooltip activator="parent" location="left">
@@ -89,12 +88,12 @@
                 <my-change-button
                     class="ml-2"
                     prompt="Редактировать ТЗ"
-                    @click.stop="navigateToChange(item)"
+                    @click.stop="onChangeAssignment(item._id)"
                 />
                 <my-button-table-remove
                     :prompt="'Удалить'"
                     class="ml-2"
-                    @click:yes="removeAssignment(item._id)"
+                    @click:yes="onRemoveAssignment(item._id)"
                 />
               </template>
             </v-data-table>
@@ -107,17 +106,16 @@
 
 <script>
 import {unixDateToShortDateString} from "@/utils/functions";
-import {mySearchFieldStyle} from "@/configs/styles";
+import {mySearchFieldStyle, myBtnPlus} from "../../../configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
-import {addNewAssignment} from "@/utils/api/api_assignments.js";
+import {addNewAssignment} from "../../../utils/api/api_assignments";
 
 export default {
   name: "assignments-page",
 
   data() {
     return {
-      mySearchFieldStyle,
       selectedItems: [],
       headers: [
         {
@@ -127,6 +125,7 @@ export default {
           value: 'title',
           sortable: true,
           nowrap: false,
+          _$visible: true,
         },
         {
           title: 'Заказчик',
@@ -135,6 +134,7 @@ export default {
           value: 'customerShortName',
           sortable: true,
           nowrap: false,
+          _$visible: true,
         },
         {
           title: 'Договор с заказчиком',
@@ -143,6 +143,7 @@ export default {
           value: 'assignmentContract',
           sortable: true,
           nowrap: false,
+          _$visible: true,
         },
         {
           title: 'Техническое задание к договору',
@@ -151,6 +152,7 @@ export default {
           value: 'subContract',
           sortable: true,
           nowrap: false,
+          _$visible: true,
         },
         {
           align: 'end',
@@ -169,6 +171,16 @@ export default {
         month: 'short', // month: 'short',
         day: 'numeric',
       },
+      itemsPerPage: 10,
+      itemsPerPageOptions: [
+        {value: 10, title: '10'},
+        {value: 25, title: '25'},
+        {value: 50, title: '50'},
+      ],
+
+      // IMPORT STYLES
+      mySearchFieldStyle,
+      myBtnPlus,
     }
   },
 
@@ -228,18 +240,7 @@ export default {
       this.$store.dispatch('assignments/FETCH');
     },
 
-    removeAssignment(_id) {
-      this.$store.dispatch('assignments/REMOVE_ITEM', _id);
-    },
-
-    selectAssignment(assignment) {
-      // Записываем в session storage и во vuex store
-      sessionStorage.selectedAssignmentID = assignment._id;
-      sessionStorage.selectedAssignment = JSON.stringify(assignment);
-      this.$store.commit('assignments/SELECT', _.cloneDeep(assignment));
-    },
-
-    addAssignment() {
+    onAddAssignment() {
       const assignment = {
         _id: null, // _id - всегда null при добавлении
         title: '[пустое задание]', // Заголовок задачи
@@ -262,15 +263,17 @@ export default {
           })
     },
 
-    navigateToChange(assignment) {
-      this.selectAssignment(assignment);
-      navigateTo('/manager-menu/assignments/assignment-change');
+    onChangeAssignment(id) {
+      navigateTo(`/manager/assignments/${id}/change`);
     },
 
-    navigateToCard(assignment) {
-      this.selectAssignment(assignment);
-      navigateTo('/manager-menu/assignments/assignment');
-    }
+    onOpenAssignmentCard(id) {
+      navigateTo(`/manager/assignments/${id}/`);
+    },
+
+    onRemoveAssignment(id) {
+      this.$store.dispatch('assignments/REMOVE_ITEM', id);
+    },
 
   }
 }
