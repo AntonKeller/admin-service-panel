@@ -140,7 +140,7 @@
 
 <script>
 import {addCustomer, unpackAnglesTemplates} from "@/utils/api/api_customers.js";
-import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles.js";
+import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {isINN, isNotEmptyRule} from "@/utils/validators/functions.js";
 import {serverURL} from "@/constants/constants.js";
 import {downloadFile} from "@/utils/api/api_.js";
