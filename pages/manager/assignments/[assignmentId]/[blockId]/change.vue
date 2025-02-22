@@ -120,7 +120,11 @@ export default {
     isNotEmptyRule,
 
     navigateBack() {
-      navigateTo('/manager-menu/assignments/assignment');
+      // if (window.history.length <= 2) {
+      navigateTo(`/manager/assignments/${useRoute().params.assignmentId}/`);
+      // } else {
+      //   this.$router.back();
+      // }
     },
 
     clear() {

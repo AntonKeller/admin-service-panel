@@ -126,21 +126,17 @@ import {removeImg, sendImg} from "@/utils/api/api_images";
 import {navigateBackBtnStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
+import {fetchAngles} from "@/utils/api/api_angles.js";
 
 export default {
   name: "object-page",
 
   data() {
     return {
+      angles: [],
       files: [],
-      photos: [],
-      selectedImg: null,
-      dragging: false,
       progress: 0,
-      angleSelected: null,
       objectMenuChangeVisibility: false,
-      columnMax: 4,
-
       questionIsVisible: false,
 
       // lightbox
@@ -149,9 +145,28 @@ export default {
       currentPhotoIndex: null,
       currentPhotoId: null,
 
-      // import styles
+      // IMPORT STYLES
       navigateBackBtnStyle,
     }
+  },
+
+  async beforeMount() {
+
+    fetchAngles(useRoute().params.objectId)
+        .then(() => {
+          fetchAngles(useRoute().params.objectId)
+              .then(response => {
+                this.angles = response.data;
+                this.$store.commit('SET_ANGLES', response.data);
+              })
+              .catch(err => {
+                console.log('Ошибка получения списка ракурсов')
+              })
+        })
+        .catch(err => {
+          this.$store.commit('alert/ERROR', 'Такого объекта не существует');
+          this.navigateBack();
+        })
   },
 
   watch: {
@@ -179,21 +194,9 @@ export default {
     }
   },
 
-  async mounted() {
-    if (this.inspectionObject?._id) {
-      await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
-    }
-    this.readSessionStorage();
-  },
-
-  unmounted() {
-    this.$store.commit('inspectionObjects/RESET_SELECTED');
-  },
-
   computed: {
     lightboxImages() {
-      const array = []
-
+      const array = [];
       this.angles.forEach(angle => {
         angle.photoList.forEach(photo => {
           array.push({
@@ -203,30 +206,8 @@ export default {
           });
         })
       });
-
-      // this.anglesTransformed.forEach(angle => {
-      //   angle.photos.forEach(img => {
-      //     array.push({
-      //       _id: img._id,
-      //       src: img.fullSize,
-      //       title: angle.angleName
-      //     });
-      //   })
-      // });
-
-
       return array;
     },
-    // anglesTransformed() {
-    //   const transformed = [];
-    //   this.angles.forEach(angle => {
-    //     transformed.push({
-    //       angleName: angle.name,
-    //       photos: angle.photoList.map(img => img)
-    //     });
-    //   });
-    //   return transformed;
-    // },
     angles() {
       console.log('this.$store.getters[\'angles/GET_ANGLES\']', this.$store.getters['angles/GET_ANGLES'])
       return this.$store.getters['angles/GET_ANGLES'];
@@ -270,7 +251,12 @@ export default {
     },
 
     navigateBack() {
-      navigateTo('/manager-menu/assignments/assignment/block');
+      // if (window.history.length <= 2) {
+      const p = useRoute().params;
+      navigateTo(`/manager/assignments/${p.assignmentId}/${p.blockId}/`);
+      // } else {
+      //   this.$router.back();
+      // }
     },
 
     onObjectChangeSuccess() {
@@ -292,15 +278,6 @@ export default {
       }
     },
 
-    readSessionStorage() {
-      // Считываем Просматриваемый ракурс из session storage -> vuex store
-      if (!sessionStorage.selectedAngleId) return;
-      // Проверяем наличие такого в store
-      const has = this.$store.getters['angles/HAS_ANGLE'](sessionStorage.selectedAngleId);
-      if (!has) return;
-      this.angleSelected = this.$store.getters['angles/GET_ANGLE_BY_ID'](sessionStorage.selectedAngleId);
-    },
-
     removeImg() {
       const photoId = this.currentPhotoId;
 
@@ -319,11 +296,6 @@ export default {
       if (photoId) {
         removeImg(photoId)
             .then(async () => {
-
-              // Запросим новые ракурсы с фотографиями
-              // if (this.inspectionObject?._id) {
-              //   await this.$store.dispatch('angles/FETCH', this.inspectionObject._id);
-              // }
 
               // Если удаление на сервере успешно -> удаляем из store
               this.$store.commit('angles/REMOVE_PHOTO_BY_ID', photoId);
@@ -392,10 +364,6 @@ export default {
         this.progress += Math.floor(step);
       }
       this.files = [];
-    },
-
-    back() {
-      navigateTo('/manager-menu/assignments/assignment-card/block');
     },
   }
 }

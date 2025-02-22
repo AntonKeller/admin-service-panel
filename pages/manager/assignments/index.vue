@@ -26,7 +26,7 @@
         </v-card-item>
 
         <v-card-item>
-          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+          <v-sheet v-bind="myTableSheetStyle">
             <v-data-table
                 v-model="selectedItems"
                 v-model:items-per-page="itemsPerPage"
@@ -106,7 +106,7 @@
 
 <script>
 import {unixDateToShortDateString} from "@/utils/functions";
-import {mySearchFieldStyle, myBtnPlus} from "../../../configs/styles";
+import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
 import {addNewAssignment} from "../../../utils/api/api_assignments";
@@ -180,6 +180,7 @@ export default {
 
       // IMPORT STYLES
       mySearchFieldStyle,
+      myTableSheetStyle,
       myBtnPlus,
     }
   },

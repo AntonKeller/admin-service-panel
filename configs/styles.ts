@@ -25,9 +25,10 @@ export const mySearchFieldStyle = {
 // Стили для кнопки навигации "Назад"
 export const navigateBackBtnStyle = {
     ['prepend-icon']: "mdi-arrow-left",
-    ['density']: "comfortable",
-    ['color']: "blue-darken-3",
-    ['variant']: "text",
+    ['color']: "blue-darken-2",
+    ['size']: 'small',
+    ['border']: true,
+    ['variant']: "tonal",
     ['rounded']: "lg"
 }
 
@@ -38,4 +39,8 @@ export const inputFieldStyle = {
     ['density']: "compact",
     ['label']: "Заголовок задания",
     ['clearable']: true
+}
+
+export const myTableSheetStyle = {
+    ['class']: "border-sm rounded-xl bg-white px-8 pt-8 pb-2"
 }

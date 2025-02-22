@@ -66,10 +66,9 @@
 </template>
 
 <script>
-import {changeAssignment, fetchAssignmentOneById} from "../../../utils/api/api_assignments";
+import {changeAssignment, fetchAssignmentOneById} from "@/utils/api/api_assignments";
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
-import _ from "lodash";
 
 export default {
   name: "assignment-change-page",
@@ -97,31 +96,20 @@ export default {
   },
 
   async beforeMount() {
-    if (!this.selectedAssignment?._id) {
-      this.navigateBack();
-    } else {
-      await fetchAssignmentOneById(this.selectedAssignment._id)
-          .then((resp) => {
-            this.$store.commit('assignments/SELECT', resp.data);
-            this.assignment = _.cloneDeep(resp.data);
-            sessionStorage.selectedAssignment = JSON.stringify(resp.data);
-          })
-          .catch(err => {
-            console.log('К сожалению карточка больше не существует', err);
-            sessionStorage.removeItem('selectedAssignment');
-            this.$store.commit('assignments/RESET_SELECT');
-            this.navigateBack();
-            this.$store.commit('alert/ERROR', 'Карточка больше не существует!');
-          });
-    }
+    fetchAssignmentOneById(useRoute().params.assignmentId)
+        .then(response => {
+          this.assignment = response.data ?? this.assignment;
+        })
+        .catch(err => {
+          console.log('Ошибка, такого задания не существует');
+          this.$store.commit('alert/SUCCESS', 'Такого задания не существует');
+          this.navigateBack();
+        })
   },
 
   computed: {
     assignments() {
       return this.$store.getters['assignments/GET_ASSIGNMENTS'] || [];
-    },
-    selectedAssignment() {
-      return this.$store.getters['assignments/GET_SELECTED_ITEM'];
     },
   },
 
@@ -136,7 +124,11 @@ export default {
   methods: {
 
     navigateBack() {
-      navigateTo('/manager-menu/assignments');
+      // if (window.history.length <= 2) {
+      navigateTo(`/manager/assignments`);
+      // } else {
+      //   this.$router.back();
+      // }
     },
 
     async sendAssignment() {

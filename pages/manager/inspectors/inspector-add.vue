@@ -1,10 +1,9 @@
 <template>
   <v-container fluid>
     <v-sheet>
-
       <v-card variant="text">
         <v-card-item>
-          <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
+          <v-btn v-bind="navigateBackBtnStyle" @click="$emit('close-form')">
             Назад
             <v-tooltip activator="parent" location="left">
               Вернуться назад
@@ -95,7 +94,6 @@ import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {addInspector} from "../../../utils/api/api_inspectors";
 import {isNotEmptyRule} from '@/utils/validators/functions';
 import {vMaska} from "maska/vue"
-import {navigateTo} from "nuxt/app";
 
 export default {
   name: "inspector-add",
@@ -107,6 +105,7 @@ export default {
   data() {
     return {
       inspector: {
+        _id: null,
         firstName: null,
         surname: null,
         lastName: null,
@@ -134,14 +133,6 @@ export default {
 
     isNotEmptyRule,
 
-    navigateBack(){
-      if (window.history.length <= 1) {
-        navigateTo('/manager-menu/inspectors');
-      } else {
-        this.$router.back();
-      }
-    },
-
     async addInspector() {
 
       await this.$refs.form.validate();
@@ -155,7 +146,6 @@ export default {
 
       addInspector(this.inspector)
           .then(() => {
-            this.$store.dispatch('inspectors/FETCH');
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно добавлен');
             this.$emit('add:success');
             this.navigateBack();
@@ -171,6 +161,7 @@ export default {
 
     clear() {
       this.inspector = {
+        _id: this.inspector._id,
         firstName: null,
         surname: null,
         lastName: null,

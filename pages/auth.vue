@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import {serverURL} from "../constants/constants";
-import {showAlert} from "../utils/functions";
+import {serverURL} from "../constants/constants.js";
+import {showAlert} from "../utils/functions.js";
 import {reloadNuxtApp} from "nuxt/app";
 import axios from "axios";
 

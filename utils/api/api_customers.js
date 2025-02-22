@@ -10,6 +10,10 @@ export function fetchCustomersAll(query) {
     return axios.get('/customers/all' + (query ?? ''), axiosConfig);
 }
 
+export function fetchCustomerOneById(customerID) {
+    return axios.get('/customers/findOneById/' + (customerID ?? ''), axiosConfig);
+}
+
 export function addCustomer(customer, query) {
     return axios.post('/customers/add' + (query ?? ''), customer, axiosConfig);
 }

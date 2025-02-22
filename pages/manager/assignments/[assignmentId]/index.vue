@@ -14,8 +14,10 @@
       </v-card>
 
       <v-card variant="text">
+
         <v-card-title>{{ assignment?.title }}</v-card-title>
-        <v-card-subtitle>
+
+        <v-card-item>
           <div class="d-flex ga-4 flex-wrap">
             <v-label class="text-body-2">
               <v-icon icon="mdi-account-tie"/>
@@ -30,7 +32,7 @@
               <div class="ml-2 align-self-end">{{ assignmentSubContract }}</div>
             </v-label>
           </div>
-        </v-card-subtitle>
+        </v-card-item>
 
         <v-card-item>
           <v-sheet class="text-caption rounded-lg pr-1" style="height: 80px; overflow-y: scroll">
@@ -52,7 +54,7 @@
         </v-card-item>
 
         <v-card-item>
-          <v-sheet class="border-sm rounded-lg bg-white px-7 pt-5 pb-2">
+          <v-sheet v-bind="myTableSheetStyle">
             <v-data-table
                 v-model="selectedItems"
                 v-model:items-per-page="itemsPerPage"
@@ -110,7 +112,7 @@
 <script>
 import {fetchAssignmentBlocks, sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
 import {unixDateToMiddleDateString, unixDateToShortDateString} from "../../../../utils/functions";
-import {mySearchFieldStyle, navigateBackBtnStyle, myBtnPlus} from "../../../../configs/styles";
+import {mySearchFieldStyle, navigateBackBtnStyle, myBtnPlus, myTableSheetStyle} from "../../../../configs/styles";
 import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
 import {navigateTo} from "nuxt/app";
@@ -182,6 +184,7 @@ export default {
       // IMPORT STYLES
       navigateBackBtnStyle,
       mySearchFieldStyle,
+      myTableSheetStyle,
       myBtnPlus,
     }
   },
@@ -193,8 +196,8 @@ export default {
           this.fetchBlocks();
         })
         .catch(err => {
-          console.log('Ошибка получения задания', err);
-          this.$store.commit('alert/ERROR', 'Записи не существует');
+          console.log('Ошибка, такого задания не существует');
+          this.$store.commit('alert/ERROR', 'Такого задания не существует');
           this.navigateBack();
         })
   },
@@ -323,11 +326,11 @@ export default {
     },
 
     navigateBack() {
-      if (window.history.length <= 1) {
-        navigateTo(`/manager/assignments/${useRoute().params.assignmentId}/`);
-      } else {
-        this.$router.back();
-      }
+      // if (window.history.length <= 2) {
+      navigateTo(`/manager/assignments`);
+      // } else {
+      //   this.$router.back();
+      // }
     },
   }
 }

@@ -17,120 +17,134 @@
 
         <v-card-title>{{ block?.address ?? '-' }}</v-card-title>
 
-        <v-card-subtitle>
-          <div class="d-flex flex-column ga-2">
-            <div class="d-flex ga-2">
-              <b>Начало:</b>{{ dateFromTo }}
+        <v-card-item>
+          <div class="d-flex flex-column ga-4">
+            <div class="d-flex align-center ga-2">
+              <v-icon icon="mdi-weather-cloudy-clock"/>
+              <div>
+                <b>Начало:</b>
+                <span class="ml-3">{{ dateFromTo }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-center ga-2">
+              <v-icon icon="mdi-badge-account-outline"/>
+              <div>
+                <b>Инспектор:</b>
+                <span class="ml-3">{{ inspector }}</span>
+              </div>
             </div>
           </div>
-        </v-card-subtitle>
+        </v-card-item>
 
         <v-card-item class="text-caption">
-          <div class="d-flex flex-column ga-2 py-1">
-            <v-btn-group variant="text" color="blue-darken-4" density="compact">
-              <v-btn
-                  prepend-icon="mdi-file-download-outline"
-                  color="blue-grey-darken-2"
-                  size="small"
-                  @click="downloadObjectsTemplate"
-              >
-                Скачать шаблон
-                <v-tooltip activator="parent" location="top">
-                  Скачать шаблон для заполнения объектами
-                </v-tooltip>
-              </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-table-arrow-up"
-                  color="blue-grey-darken-2"
-                  size="small"
-                  @click="clickExcelInputFile"
-              >
-                Загрузить объекты
-                <v-tooltip activator="parent" location="top">
-                  Загрузить объекты из xlsx
-                </v-tooltip>
-              </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-file-document-arrow-right-outline"
-                  color="blue-darken-2"
-                  size="small"
-                  :disabled="reportDownloading"
-                  :loading="reportDownloading"
-                  @click="downloadReport"
-              >
+          <div class="d-flex align-end ga-1 py-1">
+            <v-btn
+                prepend-icon="mdi-file-download-outline"
+                color="blue-grey-darken-2"
+                variant="text"
+                size="small"
+                rounded="lg"
+                border="sm"
+                @click="downloadObjectsTemplate"
+            >
+              Скачать шаблон
+              <v-tooltip activator="parent" location="top">
+                Скачать шаблон для заполнения объектами
+              </v-tooltip>
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-table-arrow-up"
+                color="blue-grey-darken-2"
+                variant="text"
+                size="small"
+                rounded="lg"
+                border="sm"
+                @click="clickExcelInputFile"
+            >
+              Загрузить объекты
+              <v-tooltip activator="parent" location="top">
+                Загрузить объекты из xlsx
+              </v-tooltip>
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-file-document-arrow-right-outline"
+                color="blue-darken-2"
+                variant="text"
+                size="small"
+                rounded="lg"
+                border="sm"
+                :disabled="reportDownloading"
+                :loading="reportDownloading"
+                @click="downloadReport"
+            >
+              Скачать отчет
+              <v-tooltip activator="parent" location="top">
                 Скачать отчет
-                <v-tooltip activator="parent" location="top">
-                  Скачать отчет
-                </v-tooltip>
-              </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-folder-download-outline"
-                  color="blue-darken-2"
-                  size="small"
-                  :disabled="downloadingPhotos"
-                  :loading="downloadingPhotos"
-                  @click="downloadPhotos"
-              >
+              </v-tooltip>
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-folder-download-outline"
+                color="blue-darken-2"
+                variant="text"
+                size="small"
+                rounded="lg"
+                border="sm"
+                :disabled="downloadingPhotos"
+                :loading="downloadingPhotos"
+                @click="downloadPhotos"
+            >
+              Скачать фотоматериалы
+              <v-tooltip activator="parent" location="top">
                 Скачать фотоматериалы
-                <v-tooltip activator="parent" location="top">
-                  Скачать фотоматериалы
-                </v-tooltip>
-              </v-btn>
-              <v-divider vertical/>
-              <v-btn
-                  prepend-icon="mdi-table-large-remove"
-                  color="red-darken-2"
-                  size="small"
-                  @click="removeAllQuestionIsVisible = true"
-              >
-                Удалить все
-                <v-tooltip activator="parent" location="top">
-                  Удалить все объекты
-                </v-tooltip>
-              </v-btn>
-            </v-btn-group>
-
-            <v-row no-gutters>
-              <v-col :cols="8">
-                <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-              </v-col>
-              <v-col :cols="2">
-                <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="sm">
-                  <v-icon/>
-                  <v-menu v-model="filterMenuVisible" activator="parent" :close-on-content-click="false"
-                          location="start">
-                    <v-card min-width="250">
-                      <v-card-item>
-                        <div class="px-2">
-                          <v-switch
-                              v-model="filter.objectIsMissing"
-                              color="blue-darken-3"
-                              label="Отсутствующие"
-                              density="compact"
-                              hide-details
-                          />
-                          <v-switch
-                              v-model="filter.objectWithDefect"
-                              color="blue-darken-3"
-                              label="С дефектами"
-                              density="compact"
-                              hide-details
-                          />
-                        </div>
-                      </v-card-item>
-                    </v-card>
-                  </v-menu>
-                </v-btn>
-              </v-col>
-            </v-row>
+              </v-tooltip>
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-table-large-remove"
+                color="red-darken-2"
+                variant="text"
+                size="small"
+                rounded="lg"
+                border="sm"
+                @click="removeAllQuestionVisible = true"
+            >
+              Удалить все
+              <v-tooltip activator="parent" location="top">
+                Удалить все объекты
+              </v-tooltip>
+            </v-btn>
+            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle" width="250"/>
+            <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="lg">
+              <v-icon/>
+              <v-menu v-model="filterMenuVisible" activator="parent" :close-on-content-click="false"
+                      location="start">
+                <v-card min-width="250">
+                  <v-card-item>
+                    <div class="px-2">
+                      <v-switch
+                          v-model="filter.objectIsMissing"
+                          color="blue-darken-3"
+                          label="Отсутствующие"
+                          density="compact"
+                          hide-details
+                      />
+                      <v-switch
+                          v-model="filter.objectWithDefect"
+                          color="blue-darken-3"
+                          label="С дефектами"
+                          density="compact"
+                          hide-details
+                      />
+                    </div>
+                  </v-card-item>
+                </v-card>
+              </v-menu>
+            </v-btn>
           </div>
         </v-card-item>
 
         <v-card-item>
-          <v-sheet class="border-sm rounded-lg bg-white px-7 pt-5 pb-2">
+          <v-sheet v-bind="myTableSheetStyle">
             <v-data-table
                 v-model="selectedItems"
                 v-model:items-per-page="itemsPerPage"
@@ -152,6 +166,41 @@
                 show-select
                 @update:current-items="selectedItems = []"
             >
+              <template #item.objectType="{ item }">
+                <v-chip
+                    append-icon="mdi-menu-down"
+                    class="cursor-pointer"
+                    density="compact"
+                    border="thin"
+                    size="small"
+                    color="teal"
+                    label
+                >
+                  {{ item.objectType }}
+                  <v-tooltip>Выбрать тип</v-tooltip>
+                  <v-menu activator="parent" location="left top">
+                    <v-sheet
+                        max-height="250"
+                        min-width="250"
+                        class="border-sm rounded-lg bg-white mr-1"
+                        transition="slide-y-reverse-transition"
+                    >
+                      <v-sheet class="pr-2 py-2">
+                        <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
+                      </v-sheet>
+                      <v-divider/>
+                      <div v-if="itemsObjectTypes.length === 0" class="text-center py-2">Пусто</div>
+                      <v-list-item
+                          v-for="type of itemsObjectTypes"
+                          :title="type"
+                          class=" text-caption"
+                          density="compact"
+                          @click=""
+                      />
+                    </v-sheet>
+                  </v-menu>
+                </v-chip>
+              </template>
               <template #item.actions="{ item }">
                 <v-btn
                     icon="mdi-open-in-new"
@@ -168,74 +217,27 @@
                 </v-btn>
                 <my-change-button
                     class="ml-2"
-                    prompt="Редактировать ТЗ"
+                    prompt="Редактировать объект"
                     @click.stop="onObjectChange(item._id)"
-                />
-                <my-button-table-remove
-                    :prompt="'Удалить'"
-                    class="ml-2"
-                    @click:yes="onRemoveObject(item._id)"
                 />
               </template>
             </v-data-table>
           </v-sheet>
         </v-card-item>
-
-
-        <!--        <v-card-item>-->
-        <!--          <v-table style="max-height: 60vh" density="compact" fixed-header class="text-caption elevation-0">-->
-        <!--            <thead>-->
-        <!--            <tr class="text-blue-darken-4">-->
-        <!--              <th class="text-left">№ п/п</th>-->
-        <!--              <th class="text-left">Наименование</th>-->
-        <!--              <th class="text-left">Инв. №</th>-->
-        <!--              <th class="text-left">Наличие объекта</th>-->
-        <!--              <th class="text-left">Наличие дефекта</th>-->
-        <!--              <th class="text-left">Описание дефекта</th>-->
-        <!--            </tr>-->
-        <!--            </thead>-->
-        <!--            <tbody>-->
-        <!--            <tr-->
-        <!--                v-for="(inspectionObject, i) in objectsSlice"-->
-        <!--                :key="inspectionObject._id"-->
-        <!--                :class="getColorByStatus(inspectionObject)"-->
-        <!--                class="row-hover"-->
-        <!--                @click.stop="navigateToObject(inspectionObject)"-->
-        <!--            >-->
-        <!--              <td style="min-width: 100px; width: 100px; max-width: 100px">{{ i + 1 }}</td>-->
-        <!--              <td style="min-width: 260px; width: 260px; max-width: 260px">-->
-        <!--                {{ textSlicer(inspectionObject?.name, 100) || '-' }}-->
-        <!--              </td>-->
-        <!--              <td style="min-width: 120px; width: 120px; max-width: 120px">-->
-        <!--                {{ textSlicer(inspectionObject?.inventoryNumber, 25) || '-' }}-->
-        <!--              </td>-->
-        <!--              <td style="min-width: 80px; width: 80px; max-width: 80px">-->
-        <!--                {{ inspectionObject.isExist ? 'Да' : 'Нет' }}-->
-        <!--              </td>-->
-        <!--              <td style="min-width: 80px; width: 80px; max-width: 80px">-->
-        <!--                {{ inspectionObject.isDefect ? 'Да' : 'Нет' }}-->
-        <!--              </td>-->
-        <!--              <td>-->
-        <!--                {{ textSlicer(inspectionObject.description, 20) || '-' }}-->
-        <!--              </td>-->
-        <!--            </tr>-->
-        <!--            </tbody>-->
-        <!--          </v-table>-->
-        <!--        </v-card-item>-->
       </v-card>
 
-      <!--      <my-overlay v-model="removeAllQuestionIsVisible">-->
-      <!--        <v-card color="red-darken-4" rounded="sm">-->
-      <!--          <v-card-text>-->
-      <!--            <v-icon>mdi-progress-question</v-icon>-->
-      <!--            <span class="ml-2">Хотите удалить все объекты?</span>-->
-      <!--          </v-card-text>-->
-      <!--          <v-card-actions>-->
-      <!--            <v-btn @click.stop="removeObjectsAll" variant="elevated" text="Да"/>-->
-      <!--            <v-btn @click.stop="removeAllQuestionIsVisible=false" text="Отмена"/>-->
-      <!--          </v-card-actions>-->
-      <!--        </v-card>-->
-      <!--      </my-overlay>-->
+      <my-overlay v-model="removeAllQuestionVisible">
+        <v-card color="red-darken-4" rounded="sm">
+          <v-card-text>
+            <v-icon>mdi-progress-question</v-icon>
+            <span class="ml-2">Хотите удалить все объекты?</span>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click.stop="removeObjectsAll" variant="elevated" text="Да"/>
+            <v-btn @click.stop="removeAllQuestionVisible=false" text="Отмена"/>
+          </v-card-actions>
+        </v-card>
+      </my-overlay>
 
     </v-sheet>
 
@@ -249,13 +251,17 @@ import {
   uploadObjects,
   downloadPhotos
 } from "../../../../../utils/api/api_assignment_blocks";
-import {myBtnPlus, mySearchFieldStyle, navigateBackBtnStyle} from "../../../../../configs/styles";
+import {
+  myBtnPlus,
+  mySearchFieldStyle,
+  myTableSheetStyle,
+  navigateBackBtnStyle,
+} from "../../../../../configs/styles";
 import {fetchInspectionObjects, removeObjects} from "../../../../../utils/api/api_inspection_objects";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
 import {navigateTo} from "nuxt/app";
-import _ from "lodash";
 
 export default {
   name: "block-page",
@@ -274,9 +280,9 @@ export default {
         },
         {
           title: 'Наименование',
-          align: 'name',
+          align: 'start',
           key: 'name',
-          value: 'start',
+          value: 'name',
           sortable: true,
           nowrap: false,
           _$visible: true,
@@ -292,7 +298,7 @@ export default {
         },
         {
           title: 'Наличие объекта',
-          align: 'start',
+          align: 'end',
           key: 'isExist',
           value: 'isExist',
           sortable: true,
@@ -301,7 +307,7 @@ export default {
         },
         {
           title: 'Наличие дефекта',
-          align: 'start',
+          align: 'end',
           key: 'isDefect',
           value: 'isDefect',
           sortable: true,
@@ -309,8 +315,17 @@ export default {
           _$visible: true,
         },
         {
+          title: 'Тип объекта',
+          align: 'end',
+          key: 'objectType',
+          value: 'objectType',
+          sortable: true,
+          nowrap: false,
+          _$visible: true,
+        },
+        {
           title: 'Описание дефекта',
-          align: 'start',
+          align: 'end',
           key: 'defectDescription',
           value: 'defectDescription',
           sortable: true,
@@ -332,6 +347,7 @@ export default {
       fetching: false,
       block: null,
       searchText: '',
+      searchTypes: '',
       itemsPerPage: 10,
       itemsPerPageOptions: [
         {value: 10, title: '10'},
@@ -342,16 +358,14 @@ export default {
       // IMPORT STYLES
       navigateBackBtnStyle,
       mySearchFieldStyle,
+      myTableSheetStyle,
       myBtnPlus,
 
-      visibility: false,
-      currentPage: 1,
       loading: false,
       reportDownloading: false,
-      blockMenuChangeVisibility: false,
       filterMenuVisible: false,
       downloadingPhotos: false,
-      removeAllQuestionIsVisible: false,
+      removeAllQuestionVisible: false,
       filter: {
         objectIsMissing: null,
         objectWithDefect: null,
@@ -367,8 +381,9 @@ export default {
           this.fetchInspectionObjects();
         })
         .catch(err => {
-          console.log('Ошибка получения списка объектов');
-          // this.$store.commit('alert/ERROR', 'Ошибка получения списка объектов');
+          console.log('Ошибка, такого адреса не существует');
+          this.$store.commit('alert/ERROR', 'Такого адреса не существует');
+          this.navigateBack();
         })
   },
 
@@ -378,10 +393,11 @@ export default {
       return this.itemsSearchFilter.map((e, i) => ({
         _id: e._id,
         number: i + 1,
-        name: e?.name ? this.textSlicer(e?.name, 100) : '-',
+        name: e?.name, //  ? this.textSlicer(e?.name, 100) : '-',
         inventoryNumber: e?.inventoryNumber ? this.textSlicer(e?.inventoryNumber, 25) : '-',
         isExist: e.isExist === null ? '-' : e.isExist === true ? 'Да' : 'Нет',
         isDefect: e.isDefect === null ? '-' : e.isDefect === true ? 'Да' : 'Нет',
+        objectType: e.objectType ?? '-',
         defectDescription: e.description ? this.textSlicer(e.description, 20) : '-',
       }))
     },
@@ -406,9 +422,36 @@ export default {
       }
     },
 
+    itemsObjectTypes() {
+      return this.itemsObjectTypes2
+          .concat(this.itemsObjectTypes2)
+          .concat(this.itemsObjectTypes2)
+          .concat(this.itemsObjectTypes2)
+          .concat(this.itemsObjectTypes2)
+          .concat(this.itemsObjectTypes2)
+    },
+
+    itemsObjectTypes2() {
+      const ex = new RegExp(this.searchTypes, 'ig')
+      return this.items.map(e => e.objectType)?.filter(e => {
+        return !!e && ex.test(e);
+      })
+    },
+
     dateFromTo() {
       return unixDateToMiddleDateString(this.block?.startDate);
     },
+
+    inspector() {
+      if (!this.block?.inspector?.firstName
+          && !this.block?.inspector?.lastName
+          && !this.block?.inspector?.phoneNumber
+      ) return '[Не указан]'
+
+      return this.block?.inspector?.firstName +
+          (this.block?.inspector?.lastName ? ` ${this.block?.inspector?.lastName}` : '') +
+          (this.block?.inspector?.phoneNumber ? `, ${this.block?.inspector?.phoneNumber}` : '')
+    }
 
   },
 
@@ -447,9 +490,6 @@ export default {
     },
 
     onExcelFileInput(event) {
-
-      console.log('event.target.files:', event.target.files)
-
       if (event.target.files && event.target.files.length > 0) {
         const formData = new FormData();
         formData.append('excelObjects', event.target.files[0]);
@@ -476,27 +516,23 @@ export default {
     },
 
     navigateBack() {
-      if (window.history.length <= 1) {
-        const p = useRoute().params;
-        navigateTo(`/manager/assignments/${p.assignmentId}/${p.blockId}/`);
-      } else {
-        this.$router.back();
-      }
+      // if (window.history.length <= 2) {
+      navigateTo(`/manager/assignments/${useRoute().params.assignmentId}/`);
+      // } else {
+      //   this.$router.back();
+      // }
     },
 
     textSlicer(txt, size) {
       return txt?.length > size ? txt.slice(0, size - 3) + '...' : txt;
     },
 
-
     onOpenObjectCard(id) {
       navigateTo(`${id}/`);
     },
+
     onObjectChange(id) {
       navigateTo(`${id}/change`);
-    },
-    onRemoveObject(id) {
-
     },
 
     removeObjectsAll() {

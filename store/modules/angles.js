@@ -9,10 +9,7 @@ const angles = {
     namespaced: true,
     state: () => initial(),
     getters: {
-        HAS_ANGLE: (state) => (ID) => state.angles.find(angle => angle._id === ID),
-        GET_PHOTO_COUNT: (state) => state.angles.reduce((num, item) => num + item.photoList.length, 0),
         GET_ANGLES: (state) => state.angles,
-        GET_ANGLE_BY_ID: (state) => (ID) => state.angles.find(e => e._id === ID),
     },
     mutations: {
         SET_ANGLES(state, angles) {

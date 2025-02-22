@@ -78,8 +78,8 @@
 
         <v-card-actions>
           <my-btn-submit
-              text="Принять"
               prepend-icon="mdi-checkbox-multiple-marked-outline"
+              text="Принять"
               :loading="sending"
               @click="sendInspector"
           />
@@ -94,10 +94,9 @@
 <script>
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {isNotEmptyRule} from '@/utils/validators/functions';
-import {changeInspector} from "@/utils/api/api_inspectors";
-import {vMaska} from "maska/vue"
-import _ from "lodash";
+import {changeInspector, fetchInspectorOneById} from "@/utils/api/api_inspectors";
 import {navigateTo} from "nuxt/app";
+import {vMaska} from "maska/vue"
 
 export default {
   name: "inspector-change",
@@ -107,7 +106,15 @@ export default {
   },
 
   beforeMount() {
-    this.inspector = _.cloneDeep(this.$store.getters['inspectors/GET_SELECTED']);
+    fetchInspectorOneById(useRoute().params.inspectorId)
+        .then(response => {
+          this.inspector = response.data;
+        })
+        .catch(err => {
+          console.log('Такого инспектора не сущетсвует', err);
+          this.$store.commit('alert/ERROR', 'Такого инспектора не существует');
+          this.navigateBack();
+        })
   },
 
   data() {
@@ -141,11 +148,7 @@ export default {
     isNotEmptyRule,
 
     navigateBack() {
-      if (window.history.length <= 1) {
-        navigateTo('/manager-menu/inspectors');
-      } else {
-        this.$router.back();
-      }
+      navigateTo('/manager/inspectors');
     },
 
     async sendInspector() {

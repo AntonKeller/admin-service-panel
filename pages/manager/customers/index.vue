@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1150">
-      <v-card variant="text" :loading="fetching">
+      <v-card variant="text">
 
         <v-card-title>Заказчики</v-card-title>
 
@@ -14,11 +14,7 @@
 
         <v-card-item>
           <v-card-title class="d-flex align-center">
-            <v-btn
-                variant="outlined"
-                class="bg-blue-darken-2"
-                @click="navigateToCustomerAdd"
-            >
+            <v-btn v-bind="myBtnPlus" @click="onAddCustomer">
               Добавить
               <v-tooltip activator="parent">
                 Добавить нового заказчика
@@ -30,14 +26,15 @@
         </v-card-item>
 
         <v-card-item>
-          <v-sheet class="border-sm rounded-lg bg-white px-6 pt-4 pb-1">
+          <v-sheet v-bind="myTableSheetStyle">
             <v-data-table
-                :items="customersSlice"
+                :items="itemsMap"
                 :headers="headers"
                 :search="searchText"
-                class="bg-transparent"
+                :loading="fetchingItems"
                 items-per-page-text="Кол-во на странице"
                 no-data-text="Нет данных"
+                class="bg-transparent"
                 density="comfortable"
                 items-per-page="5"
                 item-value="_id"
@@ -51,11 +48,8 @@
                 {{ item?.phoneNumber ?? '-' }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <my-change-button prompt="Редактировать ТЗ" @click.stop="navigateToCustomerChange(item)"/>
+                <my-change-button prompt="Редактировать ТЗ" @click.stop="onChangeCustomer(item._id)"/>
                 <my-button-table-remove :prompt="'Удалить'" @click:yes="removeCustomer(item._id)" class="ml-2"/>
-              </template>
-              <template #loading>
-                <v-skeleton-loader type="table-row@10"/>
               </template>
             </v-data-table>
           </v-sheet>
@@ -66,8 +60,8 @@
 </template>
 
 <script>
-import {removeCustomer} from "@/utils/api/api_customers";
-import {mySearchFieldStyle} from "@/configs/styles";
+import {addCustomer, fetchCustomers, removeCustomer} from "@/utils/api/api_customers";
+import {myBtnPlus, mySearchFieldStyle, myTableSheetStyle} from "@/configs/styles";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -118,39 +112,30 @@ export default {
           width: 100,
         },
       ],
-
+      items: [],
+      fetchingItems: false,
       searchText: '',
       currentPage: 1,
       itemsPerPage: 20,
+
+      // IMPORT STYLES
       mySearchFieldStyle,
+      myTableSheetStyle,
+      myBtnPlus,
     }
   },
 
   beforeMount() {
-    this.$store.dispatch('customers/FETCH_CUSTOMERS');
+    this.fetchCustomers();
   },
 
   computed: {
-    customers() {
-      return this.$store.getters['customers/GET_CUSTOMERS'];
+    itemsMap() {
+      return this.itemsSearchFilter;
     },
-    fetching() {
-      return this.$store.getters['customers/GET_FETCHING'];
-    },
-    totalPages() {
-      return Math.ceil(this.customersFoundCount / this.itemsPerPage);
-    },
-    customersFoundCount() {
-      return this.customersFound.length;
-    },
-    customersSlice() {
-      const from = (this.currentPage - 1) * this.itemsPerPage;
-      const to = this.currentPage * this.itemsPerPage;
-      return this.customersFound.slice(from, to);
-    },
-    customersFound() {
+    itemsSearchFilter() {
       if (typeof this.searchText === 'string' && this.searchText.length > 0) {
-        return this.customers.filter(e => {
+        return this.items.filter(e => {
           return (new RegExp(this.searchText, 'ig')).test([
             e?.fullName || null,
             e?.shortName || null,
@@ -159,32 +144,66 @@ export default {
           ].filter(e => !!e).join(' '));
         })
       } else {
-        return this.customers;
+        return this.items;
       }
     }
   },
 
   methods: {
 
-    navigateToCustomerAdd() {
-      navigateTo('/manager-menu/customers/customer-add');
+    fetchCustomers() {
+      this.fetchingItems = true;
+      fetchCustomers()
+          .then(response => {
+            this.items = response.data;
+          })
+          .catch(err => {
+            console.log('Ошибка загрузки списка заказчиков', err);
+            this.$store.commit('alert/ERROR', 'Ошибка загрузки списка заказчиков');
+          })
+          .finally(() => {
+            this.fetchingItems = false;
+          });
     },
 
-    navigateToCustomerChange(customer) {
-      this.customerSelect(customer);
-      navigateTo('/manager-menu/customers/customer-change');
+    onAddCustomer() {
+      // TODO: Логика добавления
+      const customer = {
+        _id: null,
+        shortName: null,
+        fullName: null,
+        inn: null,
+        address: null,
+        actualAddress: null,
+        email: null,
+        phoneNumber: null,
+        representativeFullName: null,
+        representativePosition: null,
+        template: null,
+      }
+
+      addCustomer(customer)
+          .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Добавлен новый заказчик');
+            this.$store.dispatch('customers/FETCH_CUSTOMERS');
+          })
+          .catch(err => {
+            console.log('Ошибка добавления заказчика', err);
+            this.$store.commit('alert/ERROR', 'Ошибка добавления');
+          })
+          .finally(() => {
+            this.loading = false;
+          })
     },
 
-    customerSelect(customer) {
-      this.$store.commit('customers/SELECT', customer);
-      sessionStorage.selectedCustomer = JSON.stringify(customer);
+    onChangeCustomer(id) {
+      navigateTo(`/manager/customers/${id}/change`);
     },
 
     removeCustomer(id) {
       removeCustomer(id)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален');
-            this.$store.dispatch('customers/FETCH_CUSTOMERS');
           })
           .catch((err) => {
             this.$store.commit('alert/ERROR', 'Ошибка удаления заказчика');
