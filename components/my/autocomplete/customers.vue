@@ -59,13 +59,17 @@
         icon="mdi-plus"
         rounded="lg"
         size="small"
-        @click="navigateTo('/manager-menu/customers/customer-add')"
+        @click="formCustomerAddVisible=true"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить заказчика
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="formCustomerAddVisible">
+      <form-customer-add @add:success="onFormCustomerAddClose" @close="formCustomerAddVisible=false"/>
+    </v-overlay>
   </div>
 </template>
 
@@ -78,9 +82,15 @@ export default {
     return {
       fetching: false,
       customersList: [],
+      formCustomerAddVisible: false,
     }
   },
   methods: {
+
+    onFormCustomerAddClose() {
+      this.formCustomerAddVisible = false;
+      this.fetchCustomers();
+    },
 
     customerSearchFilter(value, query, item) {
       return [
@@ -91,14 +101,14 @@ export default {
     },
 
     onUpdateMenuCustomer(status) {
-      if (status) this.fetchCustomersList();
+      if (status) this.fetchCustomers();
     },
 
     removeCustomer(id) {
       removeCustomer(id)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Заказчик успешно удален!');
-            this.fetchCustomersList();
+            this.fetchCustomers();
           })
           .catch(err => {
             this.$store.commit('alert/ERROR', 'Ошибка удаления заказчика!');
@@ -106,7 +116,7 @@ export default {
           })
     },
 
-    async fetchCustomersList() {
+    async fetchCustomers() {
 
       this.fetching = true;
 

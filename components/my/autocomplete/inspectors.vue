@@ -58,13 +58,17 @@
         icon="mdi-plus"
         rounded="lg"
         size="small"
-        @click="navigateTo('/manager-menu/inspectors/inspector-add')"
+        @click="formInspectorAddVisible=true"
     >
       <v-icon/>
       <v-tooltip activator="parent" location="left">
         Добавить инспектора
       </v-tooltip>
     </v-btn>
+
+    <v-overlay v-model="formInspectorAddVisible">
+      <form-inspector-add @add:success="onFormInspectorAddClose" @close="formInspectorAddVisible=false"/>
+    </v-overlay>
   </div>
 </template>
 
@@ -78,7 +82,7 @@ export default {
     return {
       inspectorsList: [], // TODO: Запросы и Vue вывод полей
       fetching: false,
-      inspectorFormAddVisible: false,
+      formInspectorAddVisible: false,
       inspectorRules: [v => v || 'Выберите инспектора'],
     }
   },
@@ -89,8 +93,13 @@ export default {
   },
   methods: {
 
+    onFormInspectorAddClose() {
+      this.formInspectorAddVisible = false;
+      this.fetchInspectors()
+    },
+
     onUpdateMenuInspectors(status) {
-      if (status) this.fetchInspectorsList();
+      if (status) this.fetchInspectors();
     },
 
     inspectorSearchFilter(value, query, item) {
@@ -105,14 +114,14 @@ export default {
     removeInspector(id) {
       removeInspector(id)
           .then(() => {
-            this.fetchInspectorsList();
+            this.fetchInspectors();
           })
           .catch(err => {
             console.log('Не удалось удалить', err);
           })
     },
 
-    async fetchInspectorsList() {
+    async fetchInspectors() {
 
       this.fetching = true;
 

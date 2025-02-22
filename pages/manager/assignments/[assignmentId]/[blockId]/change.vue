@@ -72,8 +72,8 @@
 
 <script>
 import {changeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
-import {isNotEmptyRule} from "@/utils/validators/functions";
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
+import {isNotEmptyRule} from "@/utils/validators/functions";
 import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
 import _ from "lodash";

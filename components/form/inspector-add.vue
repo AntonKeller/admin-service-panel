@@ -3,10 +3,10 @@
     <v-sheet>
       <v-card variant="text">
         <v-card-item>
-          <v-btn v-bind="navigateBackBtnStyle" @click="$emit('close-form')">
+          <v-btn v-bind="navigateBackBtnStyle" @click="$emit('close')">
             Назад
             <v-tooltip activator="parent" location="left">
-              Вернуться назад
+              Закрыть
             </v-tooltip>
           </v-btn>
         </v-card-item>
@@ -91,12 +91,14 @@
 
 <script>
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
-import {addInspector} from "../../../utils/api/api_inspectors";
+import {addInspector} from "../../utils/api/api_inspectors";
 import {isNotEmptyRule} from '@/utils/validators/functions';
 import {vMaska} from "maska/vue"
 
 export default {
   name: "inspector-add",
+
+  emits: ['add:success', 'close'],
 
   directives: {
     mask: vMaska
@@ -148,7 +150,6 @@ export default {
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Инспектор успешно добавлен');
             this.$emit('add:success');
-            this.navigateBack();
           })
           .catch((err) => {
             console.log('Ошибка добавление инспектора', err);

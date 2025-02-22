@@ -8,7 +8,7 @@ export const myBtnPlus = {
     ['color']: "blue-darken-4",
     ['variant']: "text",
     ['border']: "sm",
-    ['rounded']: "lg"
+    ['rounded']: "xl"
 }
 
 export const mySearchFieldStyle = {
@@ -17,7 +17,7 @@ export const mySearchFieldStyle = {
     ['label']: "Поиск",
     ['density']: "compact",
     ['class']: "ml-2",
-    ['rounded']: "lg",
+    ['rounded']: "xl",
     ['hide-details']: true,
     ['flat']: true
 }

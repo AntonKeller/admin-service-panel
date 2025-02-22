@@ -64,7 +64,7 @@
                 :loading="fetching"
                 :headers="headers"
                 :items="itemsMap"
-                style="max-height: 600px"
+                style="max-height: 400px"
                 items-per-page-text="Кол-во на странице"
                 loading-text="Загрузка данных..."
                 no-data-text="Нет данных"

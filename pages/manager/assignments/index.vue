@@ -35,7 +35,7 @@
                 :items="assignmentsMap"
                 :search="searchText"
                 :headers="headers"
-                style="max-height: 600px"
+                style="max-height: 500px"
                 items-per-page-text="Кол-во на странице"
                 loading-text="Загрузка данных..."
                 no-data-text="Нет данных"
@@ -105,11 +105,10 @@
 </template>
 
 <script>
-import {unixDateToShortDateString} from "@/utils/functions";
 import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
-import {navigateTo} from "nuxt/app";
-import _ from "lodash";
 import {addNewAssignment} from "../../../utils/api/api_assignments";
+import {unixDateToShortDateString} from "@/utils/functions";
+import {navigateTo} from "nuxt/app";
 
 export default {
   name: "assignments-page",

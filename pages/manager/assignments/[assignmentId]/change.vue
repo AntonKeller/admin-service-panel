@@ -101,7 +101,7 @@ export default {
           this.assignment = response.data ?? this.assignment;
         })
         .catch(err => {
-          console.log('Ошибка, такого задания не существует');
+          console.log('Ошибка, такого задания не существует', err);
           this.$store.commit('alert/SUCCESS', 'Такого задания не существует');
           this.navigateBack();
         })
@@ -124,11 +124,7 @@ export default {
   methods: {
 
     navigateBack() {
-      // if (window.history.length <= 2) {
       navigateTo(`/manager/assignments`);
-      // } else {
-      //   this.$router.back();
-      // }
     },
 
     async sendAssignment() {
