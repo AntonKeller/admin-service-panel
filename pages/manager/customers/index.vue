@@ -39,7 +39,7 @@
                 items-per-page="5"
                 item-value="_id"
                 fixed-header
-                show-select
+                :show-select="false"
             >
               <template #item.inn="{ item }">
                 {{ item?.inn ?? '-' }}

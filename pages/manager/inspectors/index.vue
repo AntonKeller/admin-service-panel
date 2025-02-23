@@ -37,7 +37,7 @@
                 items-per-page="5"
                 item-value="_id"
                 fixed-header
-                show-select
+                :show-select="false"
             >
               <template #item.name="{ item }">
                 {{ getFullName(item) }}

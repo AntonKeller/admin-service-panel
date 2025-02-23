@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1280">
+    <v-sheet min-width="400" max-width="1280" class="bg-transparent">
 
       <v-card variant="text">
         <v-card-item>
@@ -18,43 +18,54 @@
         <v-card-title>{{ assignment?.title }}</v-card-title>
 
         <v-card-item>
-          <div class="d-flex ga-4 flex-wrap">
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-account-tie"/>
-              <div class="ml-2 align-self-end">{{ assignmentCustomer }}</div>
-            </v-label>
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-file-sign"/>
-              <div class="ml-2 align-self-end">{{ assignmentContract }}</div>
-            </v-label>
-            <v-label class="text-body-2">
-              <v-icon icon="mdi-text-box-outline"/>
-              <div class="ml-2 align-self-end">{{ assignmentSubContract }}</div>
-            </v-label>
-          </div>
-        </v-card-item>
-
-        <v-card-item>
-          <v-sheet class="text-caption rounded-lg pr-1" style="height: 80px; overflow-y: scroll">
-            {{ assignment?.description }}
-          </v-sheet>
-        </v-card-item>
-
-        <v-card-item>
-          <div class="d-flex ga-4 align-center">
-            <v-btn v-bind="myBtnPlus" @click="onAddBlock">
-              Добавить адрес
-              <v-tooltip activator="parent">
-                Добавить новый адрес на осмотр
-              </v-tooltip>
-            </v-btn>
-            <v-spacer/>
-            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-          </div>
+          <v-row>
+            <v-col cols="4">
+              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+                <div class="d-flex align-center justify-space-between">
+                  <v-icon size="small" color="blue-darken-4" icon="mdi-account-tie"/>
+                  <v-divider style="max-width: 50%"/>
+                  <div>Заказчик</div>
+                </div>
+                <div class="mt-7 align-self-end">{{ assignmentCustomer }}</div>
+              </v-sheet>
+            </v-col>
+            <v-col cols="4">
+              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+                <div class="d-flex align-center justify-space-between">
+                  <v-icon size="small" color="blue-darken-4" icon="mdi-file-sign"/>
+                  <v-divider style="max-width: 50%"/>
+                  <div>Договор</div>
+                </div>
+                <div class="mt-7 align-self-end">{{ assignmentContract }}</div>
+              </v-sheet>
+            </v-col>
+            <v-col cols="4">
+              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+                <div class="d-flex align-center justify-space-between">
+                  <v-icon size="small" color="blue-darken-4" icon="mdi-text-box-outline"/>
+                  <v-divider style="max-width: 50%"/>
+                  <div>Доп. соглашение</div>
+                </div>
+                <div class="mt-7 align-self-end text-no-wrap">{{ assignmentSubContract }}</div>
+              </v-sheet>
+            </v-col>
+          </v-row>
         </v-card-item>
 
         <v-card-item>
           <v-sheet v-bind="myTableSheetStyle">
+            <div class="d-flex ga-4 align-center mb-6">
+              <span class="font-weight-bold opacity-80">Адреса осмотров</span>
+              <v-spacer/>
+              <v-btn v-bind="myBtnPlus" @click="onAddBlock">
+                Добавить адрес
+                <v-tooltip activator="parent">
+                  Добавить новый адрес на осмотр
+                </v-tooltip>
+              </v-btn>
+              <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
+            </div>
+            <v-divider/>
             <v-data-table
                 v-model="selectedItems"
                 v-model:items-per-page="itemsPerPage"
@@ -73,7 +84,7 @@
                 items-per-page="5"
                 item-value="_id"
                 fixed-header
-                show-select
+                :show-select="false"
                 @update:current-items="selectedItems = []"
             >
               <template #item.actions="{ item }">
@@ -110,9 +121,9 @@
 </template>
 
 <script>
+import {mySearchFieldStyle, navigateBackBtnStyle, myBtnPlus, myTableSheetStyle} from "../../../../configs/styles";
 import {fetchAssignmentBlocks, sendAssignmentBlock} from "../../../../utils/api/api_assignment_blocks";
 import {unixDateToMiddleDateString, unixDateToShortDateString} from "../../../../utils/functions";
-import {mySearchFieldStyle, navigateBackBtnStyle, myBtnPlus, myTableSheetStyle} from "../../../../configs/styles";
 import {removeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
 import {fetchAssignmentOneById} from "@/utils/api/api_assignments";
 import {navigateTo} from "nuxt/app";
@@ -227,22 +238,22 @@ export default {
     },
 
     assignmentCustomer() {
-      if (!this.assignment?.customer) return 'Заказчик: не задан';
-      const returnName = this.assignment?.customer?.shortName || 'имя не задано';
-      const returnInn = this.assignment?.customer?.inn || 'не задан';
-      return `Заказчик: ${returnName} | ${returnInn}`;
+      if (!this.assignment?.customer) return '[Пусто]';
+      const returnName = this.assignment?.customer?.shortName || '[имя не указано]';
+      const returnInn = this.assignment?.customer?.inn || '[ИНН не указан]';
+      return `${returnName} | ${returnInn}`;
     },
 
     assignmentContract() {
-      if (!this.assignment?.contract?.number || !this.assignment?.contract?.date) return `Договор не задан`;
+      if (!this.assignment?.contract?.number || !this.assignment?.contract?.date) return '[Пусто]';
       const {number, date} = this.assignment?.contract;
-      if (number && date) return `Договор с заказчиком № ${number} от ${this.unixDateToShortDateString(date)}`;
-      if (!number && date) return `Договор с заказчиком № [№ договора отсутствует] от ${this.unixDateToShortDateString(date)}`;
-      if (number && !date) return `Договор с заказчиком № ${number} от [дата договора отсутствует]`;
+      if (number && date) return `№ ${number} от ${this.unixDateToShortDateString(date)}`;
+      if (!number && date) return `[№  отсутствует] от ${this.unixDateToShortDateString(date)}`;
+      if (number && !date) return `№ ${number} от [дата отсутствует]`;
     },
 
     assignmentSubContract() {
-      if (!this.assignment?.subContract?.number || !this.assignment?.subContract?.date) return `ТЗ не задано`;
+      if (!this.assignment?.subContract?.number || !this.assignment?.subContract?.date) return `[Пусто]`;
       const {number, date} = this.assignment?.subContract;
       if (number && date) return `ТЗ № ${number} от ${this.unixDateToShortDateString(date)}`;
       if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToShortDateString(date)}`;

@@ -58,7 +58,7 @@
 
         <v-card-actions>
           <my-btn-submit
-              text="Добавить"
+              text="Принять"
               prepend-icon="mdi-checkbox-multiple-marked-outline"
               :loading="sendingAssignmentBlock"
               @click="changeBlock"

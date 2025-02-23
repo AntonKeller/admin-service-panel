@@ -27,7 +27,7 @@
             <v-list-item
                 prepend-icon="mdi-bell"
                 title="Оповещения"
-                variant="tonal"
+                variant="text"
                 slim
                 nav
                 disabled
@@ -41,7 +41,6 @@
             <v-list-item
                 prepend-icon="mdi-finance"
                 title="Статистика"
-                variant="tonal"
                 slim
                 nav
                 disabled
@@ -60,10 +59,10 @@
 
             <v-list-item
                 prepend-icon=""
-                color="white"
-                class="bg-white"
                 density="compact"
                 title="Пополнить баланс"
+                border="sm"
+                rounded
                 slim
                 disabled
                 nav
@@ -86,12 +85,10 @@
       <v-list variant="text" density="default" nav rounded="lg">
         <v-list-item
             prepend-avatar="/assets/images/logotype.png"
-            rounded="lg"
+            subtitle="System"
             title="GK Breeze"
-            subtitle="Inspector service"
+            rounded="lg"
         >
-
-
           <template #append>
             <v-btn
                 icon="mdi-menu-open"
@@ -107,7 +104,7 @@
           </template>
         </v-list-item>
 
-        <v-divider class="mb-6 mt-2"/>
+        <v-divider class="mb-2 mt-2"/>
 
         <v-list-item
             v-for="item of navItems"
@@ -117,15 +114,12 @@
             :active="item._id === activeItem"
             :value="item.value"
             :title="item.title"
-            color="blue-darken-2"
-            class="border-t-sm border-b-sm"
-            :class="false ? 'px-4' : ''"
+            color="blue-darken-3"
             density="compact"
-            variant="flat"
             rounded
             @click="activeItem = item._id"
         />
-
+        <v-divider class="mb-2 mt-2"/>
       </v-list>
 
       <template #append>
@@ -142,7 +136,7 @@
       </template>
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="bg-grey-lighten-5">
       <slot/>
     </v-main>
 

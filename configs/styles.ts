@@ -4,11 +4,11 @@ export const myStyles = {
 }
 
 export const myBtnPlus = {
-    ['prepend-icon']: "mdi-plus-circle-multiple-outline",
+    ['prepend-icon']: "mdi-plus-box-multiple-outline",
     ['color']: "blue-darken-4",
     ['variant']: "text",
     ['border']: "sm",
-    ['rounded']: "xl"
+    ['rounded']: "lg"
 }
 
 export const mySearchFieldStyle = {
@@ -17,7 +17,7 @@ export const mySearchFieldStyle = {
     ['label']: "Поиск",
     ['density']: "compact",
     ['class']: "ml-2",
-    ['rounded']: "xl",
+    ['rounded']: "lg",
     ['hide-details']: true,
     ['flat']: true
 }
@@ -25,11 +25,11 @@ export const mySearchFieldStyle = {
 // Стили для кнопки навигации "Назад"
 export const navigateBackBtnStyle = {
     ['prepend-icon']: "mdi-arrow-left",
-    ['color']: "blue-darken-2",
+    ['color']: "blue-darken-4",
     ['size']: 'small',
-    ['border']: true,
-    ['variant']: "tonal",
-    ['rounded']: "lg"
+    ['border']: false,
+    ['variant']: "text",
+    ['rounded']: "sm"
 }
 
 // Стили для поля ввода на формах
@@ -42,5 +42,5 @@ export const inputFieldStyle = {
 }
 
 export const myTableSheetStyle = {
-    ['class']: "border-sm rounded-xl bg-white px-8 pt-8 pb-2"
+    ['class']: "border-sm rounded-lg bg-white px-8 pt-6 pb-2"
 }

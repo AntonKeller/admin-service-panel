@@ -1,10 +1,11 @@
 <template>
   <v-container fluid>
-    <v-card variant="solo">
+    <v-card variant="text">
       <v-card-title>Профиль пользователя</v-card-title>
       <v-card-item>
-        <v-sheet elevation="0" height="400" width="400">
-          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column  mt-2">
+        <v-sheet elevation="0" height="400" width="400" class="px-4 py-6 bg-white border-sm rounded-lg">
+          <v-card-subtitle class="text-caption">Данные профиля</v-card-subtitle>
+          <v-form v-model="formIsValid" ref="form" class="d-flex flex-column  mt-2 px-2">
             <v-text-field
                 v-model="profile.email"
                 prepend-inner-icon="mdi-email-lock-outline"
@@ -52,19 +53,38 @@
                 disabled
                 flat
             />
+            <v-btn density="comfortable" size="small" variant="tonal">Изменить</v-btn>
           </v-form>
-          <v-divider class="my-2"/>
-          <v-sheet>Приложения</v-sheet>
-          <v-divider class="my-2"/>
-          <v-sheet class="bg-blue-grey-lighten-5 d-flex flex-column">
-            <v-btn size="small" variant="tonal" prepend-icon="mdi-tray-arrow-down" @click="downloadMobileInspector">
-              Мобильный инспектор
-              <v-tooltip activator="parent" location="top">
-                <div>Скачать приложение</div>
-                <div>Мобильный инспектор</div>
-              </v-tooltip>
-            </v-btn>
-          </v-sheet>
+
+
+
+          <v-card-subtitle class="text-caption mt-4">Приложения</v-card-subtitle>
+<!--          <v-sheet class="bg-blue-grey-lighten-5 d-flex flex-column">-->
+<!--            <v-row>-->
+<!--              <v-col cols="6">-->
+<!--                <v-sheet class="px-4 py-4">-->
+<!--                  <v-btn size="small" variant="tonal" prepend-icon="mdi-tray-arrow-down" @click="downloadMobileInspector">-->
+<!--                    Мобильный инспектор-->
+<!--                    <v-tooltip activator="parent" location="top">-->
+<!--                      <div>Скачать приложение</div>-->
+<!--                      <div>Мобильный инспектор</div>-->
+<!--                    </v-tooltip>-->
+<!--                  </v-btn>-->
+<!--                </v-sheet>-->
+<!--              </v-col>-->
+<!--              <v-col cols="6">-->
+<!--                <v-sheet class="px-4 py-4">-->
+<!--                  <v-btn size="small" variant="tonal" prepend-icon="mdi-tray-arrow-down" @click="downloadMobileInspector">-->
+<!--                    Мобильный инспектор-->
+<!--                    <v-tooltip activator="parent" location="top">-->
+<!--                      <div>Скачать приложение</div>-->
+<!--                      <div>Мобильный инспектор</div>-->
+<!--                    </v-tooltip>-->
+<!--                  </v-btn>-->
+<!--                </v-sheet>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+<!--          </v-sheet>-->
         </v-sheet>
       </v-card-item>
     </v-card>

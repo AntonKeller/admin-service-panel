@@ -14,7 +14,6 @@
     </v-tooltip>
     <my-overlay v-model="questionIsVisible">
       <v-sheet class="px-4 py-1 bg-white rounded-lg">
-
         <v-card-item>
           Хотите удалить запись ?
         </v-card-item>

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1150">
+    <v-sheet min-width="400" max-width="1150" class="bg-transparent">
       <v-card variant="text" :loading="getFetchingDataStatus">
 
         <v-card-title>Список заданий</v-card-title>
@@ -44,7 +44,7 @@
                 items-per-page="5"
                 item-value="_id"
                 fixed-header
-                show-select
+                :show-select="false"
                 @update:current-items="this.selectedItems = []"
             >
               <template #item.customerShortName="{ item }">
