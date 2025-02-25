@@ -2,7 +2,6 @@
   <v-btn
       class="align-self-start"
       density="comfortable"
-      color="blue-darken-3"
       icon="mdi-pencil-outline"
       variant="text"
       rounded="lg"

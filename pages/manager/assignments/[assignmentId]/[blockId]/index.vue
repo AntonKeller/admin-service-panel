@@ -15,15 +15,24 @@
 
       <v-card variant="text">
 
-        <v-card-title>{{ block?.address ?? '-' }}</v-card-title>
-
         <v-card-item>
+          <div class="d-flex align-center ga-2 text-body-1">
+            <v-icon icon="mdi-map-marker-outline"/>
+            <div>
+              <b>Адрес:</b>
+              <span class="ml-3">{{ block?.address ?? '-' }}</span>
+            </div>
+          </div>
+        </v-card-item>
+
+        <v-card-item class="text-body-2 ml-1">
           <div class="d-flex ga-8">
             <div class="d-flex align-center ga-2">
               <v-icon icon="mdi-weather-cloudy-clock"/>
               <div>
                 <b>Начало:</b>
-                <span class="ml-3">{{ dateFromTo }}</span>
+                <span class="ml-3 text-blue-accent-3">{{ dateFromTo }}</span>
+                <!--                <v-chip class="ml-3" size="small" color="blue-accent-4" variant="flat" label>{{ dateFromTo }}</v-chip>-->
               </div>
             </div>
 
@@ -31,7 +40,8 @@
               <v-icon icon="mdi-badge-account-outline"/>
               <div>
                 <b>Инспектор:</b>
-                <span class="ml-3">{{ inspector }}</span>
+                <!--                <span class="ml-3">{{ inspector }}</span>-->
+                <span class="ml-3 text-blue-accent-3">{{ inspector }}</span>
               </div>
             </div>
           </div>
@@ -44,7 +54,7 @@
             <v-sheet class="d-flex align-center ga-1 py-2 px-2 bg-lighten-5" border="sm" rounded="lg">
               <v-btn
                   prepend-icon="mdi-file-download-outline"
-                  color="deep-purple"
+                  color="deep-purple-accent-4"
                   class="text-caption"
                   density="comfortable"
                   rounded="middle"
@@ -75,7 +85,7 @@
               <v-btn
                   prepend-icon="mdi-file-document-arrow-right-outline"
                   append-icon="mdi-chevron-down"
-                  color="blue-darken-4"
+                  color="blue-accent-3"
                   class="text-caption"
                   density="comfortable"
                   rounded="middle"
@@ -89,10 +99,11 @@
                   Скачать
                 </v-tooltip>
                 <v-menu activator="parent" transition="slide-y-reverse-transition">
-                  <v-sheet class="mt-1 rounded-lg border-sm elevation-0">
+                  <v-sheet class="px-2 py-2 mt-1 rounded-lg border-sm elevation-0 text-blue-accent-4">
                     <v-list-item
                         title="Скачать отчет"
                         density="compact"
+                        rounded
                         @click="downloadReport"
                     >
                       <template #append>
@@ -102,6 +113,7 @@
                     <v-list-item
                         title="Скачать фотоматериалы"
                         density="compact"
+                        rounded
                         :disabled="downloadingPhotos"
                         :loading="downloadingPhotos"
                         @click="downloadPhotos"
@@ -184,32 +196,6 @@
                 <b>Объекты осмотра</b>
                 <v-spacer/>
                 <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-                <!--              <v-btn icon="mdi-filter-cog-outline" size="small" variant="plain" rounded="lg">-->
-                <!--                <v-icon/>-->
-                <!--                <v-menu v-model="filterMenuVisible" activator="parent" :close-on-content-click="false"-->
-                <!--                        location="start">-->
-                <!--                  <v-card min-width="250">-->
-                <!--                    <v-card-item>-->
-                <!--                      <div class="px-2">-->
-                <!--                        <v-switch-->
-                <!--                            v-model="filter.objectIsMissing"-->
-                <!--                            color="blue-darken-3"-->
-                <!--                            label="Отсутствующие"-->
-                <!--                            density="compact"-->
-                <!--                            hide-details-->
-                <!--                        />-->
-                <!--                        <v-switch-->
-                <!--                            v-model="filter.objectWithDefect"-->
-                <!--                            color="blue-darken-3"-->
-                <!--                            label="С дефектами"-->
-                <!--                            density="compact"-->
-                <!--                            hide-details-->
-                <!--                        />-->
-                <!--                      </div>-->
-                <!--                    </v-card-item>-->
-                <!--                  </v-card>-->
-                <!--                </v-menu>-->
-                <!--              </v-btn>-->
               </v-sheet>
               <v-data-table
                   v-model="selectedItems"
@@ -243,6 +229,16 @@
                       label
                   >
                     {{ item.objectType }}
+                    <template #prepend>
+                      <v-progress-circular
+                          v-if="updatingIds.includes(item._id)"
+                          color="teal-accent-4"
+                          indeterminate
+                          width="1"
+                          size="8"
+                          class="mr-1"
+                      />
+                    </template>
                     <v-tooltip>Выбрать тип</v-tooltip>
                     <v-menu activator="parent" location="left top">
                       <v-sheet
@@ -261,7 +257,7 @@
                             :title="type"
                             class=" text-caption"
                             density="compact"
-                            @click=""
+                            @click="onChangeObjectType(item._id, type)"
                         />
                       </v-sheet>
                     </v-menu>
@@ -271,9 +267,9 @@
                   <v-btn
                       icon="mdi-open-in-new"
                       density="comfortable"
-                      color="deep-orange"
                       variant="text"
                       size="small"
+                      rounded
                       @click.stop="onOpenObjectCard(item._id)"
                   >
                     <v-icon/>
@@ -339,7 +335,11 @@ import {
   myTableSheetStyle,
   navigateBackBtnStyle,
 } from "../../../../../configs/styles";
-import {fetchInspectionObjects, removeObjects} from "../../../../../utils/api/api_inspection_objects";
+import {
+  changeInspectionObject,
+  fetchInspectionObjects,
+  removeObjects
+} from "../../../../../utils/api/api_inspection_objects";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
@@ -358,6 +358,7 @@ export default {
           value: 'number',
           sortable: true,
           nowrap: false,
+          minWidth: 80,
           _$visible: true,
         },
         {
@@ -367,6 +368,8 @@ export default {
           value: 'name',
           sortable: true,
           nowrap: false,
+          minWidth: 100,
+          maxWidth: 200,
           _$visible: true,
         },
         {
@@ -383,6 +386,7 @@ export default {
           align: 'end',
           key: 'isExist',
           value: 'isExist',
+          maxWidth: 80,
           sortable: true,
           nowrap: false,
           _$visible: true,
@@ -392,6 +396,7 @@ export default {
           align: 'end',
           key: 'isDefect',
           value: 'isDefect',
+          maxWidth: 80,
           sortable: true,
           nowrap: false,
           _$visible: true,
@@ -401,6 +406,8 @@ export default {
           align: 'end',
           key: 'objectType',
           value: 'objectType',
+          minWidth: 100,
+          maxWidth: 180,
           sortable: true,
           nowrap: false,
           _$visible: true,
@@ -437,6 +444,8 @@ export default {
         {value: 50, title: '50'},
       ],
 
+      updatingIds: [],
+
       // IMPORT STYLES
       navigateBackBtnStyle,
       mySearchFieldStyle,
@@ -463,7 +472,7 @@ export default {
           this.fetchInspectionObjects();
         })
         .catch(err => {
-          console.log('Ошибка, такого адреса не существует');
+          console.log('Ошибка, такого адреса не существует', err);
           this.$store.commit('alert/ERROR', 'Такого адреса не существует');
           this.navigateBack();
         })
@@ -479,7 +488,7 @@ export default {
         inventoryNumber: e?.inventoryNumber ? this.textSlicer(e?.inventoryNumber, 25) : '-',
         isExist: e.isExist === null ? '-' : e.isExist === true ? 'Да' : 'Нет',
         isDefect: e.isDefect === null ? '-' : e.isDefect === true ? 'Да' : 'Нет',
-        objectType: e.objectType ?? '-',
+        objectType: e.objectType ?? 'не задан',
         defectDescription: e.description ? this.textSlicer(e.description, 20) : '-',
       }))
     },
@@ -538,6 +547,39 @@ export default {
   },
 
   methods: {
+
+    onChangeSomeObjectsTypes(newType) {
+      if (this.selectedItems && this.selectedItems.length > 0) {
+        // TODO: Запрос на редактирование нескольких записей
+
+      }
+    },
+
+    onChangeObjectType(id, newType) {
+
+      this.searchTypes = '';
+
+      const searchItem = this.items.find(e => e._id === id);
+
+      if (!searchItem) {
+        this.$store.commit('alert/ERROR', 'Ошибка редактирования. Не найден элемент');
+        return;
+      }
+
+      this.updatingIds.push(id);
+
+      changeInspectionObject({
+        ...searchItem,
+        objectType: newType,
+      }).then(() => {
+        searchItem.objectType = newType;
+      }).catch(err => {
+        console.log('Ошибка редактирования', err);
+        this.$store.commit('alert/ERROR', 'Не удалось отредактировать');
+      }).finally(() => {
+        this.updatingIds.filter(_id => _id !== id);
+      });
+    },
 
     async downloadPhotos() {
       this.downloadingPhotos = true;
@@ -631,6 +673,9 @@ export default {
           .catch(err => {
             this.$store.commit('alert/ERROR', 'Не удалось удалить объекты');
             console.log('Ошибка удаления объектов', err);
+          })
+          .finally(() => {
+            this.removeAllQuestionVisible = false;
           })
     }
   }

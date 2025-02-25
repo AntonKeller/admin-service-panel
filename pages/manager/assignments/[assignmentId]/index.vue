@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1280" class="bg-transparent">
+    <v-sheet min-width="400" max-width="1024" class="bg-transparent">
 
       <v-card variant="text">
         <v-card-item>
@@ -15,35 +15,40 @@
 
       <v-card variant="text">
 
-        <v-card-title>{{ assignment?.title }}</v-card-title>
+        <v-card-title>
+          <v-sheet class="bg-transparent px-2 py-4 rounded-lg">
+            <v-icon icon="mdi-checkbox-marked-circle-auto-outline"/>
+            <span class="ml-3">{{ assignment?.title }}</span>
+          </v-sheet>
+        </v-card-title>
 
         <v-card-item>
           <v-row>
             <v-col cols="4">
-              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+              <v-sheet class="border-thin px-6 py-4 rounded-lg h-100">
                 <div class="d-flex align-center justify-space-between">
-                  <v-icon size="small" color="blue-darken-4" icon="mdi-account-tie"/>
-                  <v-divider style="max-width: 50%"/>
+                  <v-icon size="small" color="blue-accent-4" icon="mdi-account-tie"/>
+                  <v-spacer/>
                   <div>Заказчик</div>
                 </div>
                 <div class="mt-7 align-self-end">{{ assignmentCustomer }}</div>
               </v-sheet>
             </v-col>
             <v-col cols="4">
-              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+              <v-sheet class="border-thin px-6 py-4 rounded-lg h-100">
                 <div class="d-flex align-center justify-space-between">
-                  <v-icon size="small" color="blue-darken-4" icon="mdi-file-sign"/>
-                  <v-divider style="max-width: 50%"/>
+                  <v-icon size="small" color="blue-accent-4" icon="mdi-file-sign"/>
+                  <v-spacer/>
                   <div>Договор</div>
                 </div>
                 <div class="mt-7 align-self-end">{{ assignmentContract }}</div>
               </v-sheet>
             </v-col>
             <v-col cols="4">
-              <v-sheet class="border-sm white px-6 py-4 rounded-lg">
+              <v-sheet class="border-thin px-6 py-4 rounded-lg h-100">
                 <div class="d-flex align-center justify-space-between">
-                  <v-icon size="small" color="blue-darken-4" icon="mdi-text-box-outline"/>
-                  <v-divider style="max-width: 50%"/>
+                  <v-icon size="small" color="blue-accent-4" icon="mdi-text-box-outline"/>
+                  <v-spacer/>
                   <div>Доп. соглашение</div>
                 </div>
                 <div class="mt-7 align-self-end text-no-wrap">{{ assignmentSubContract }}</div>
@@ -91,7 +96,6 @@
                 <v-btn
                     icon="mdi-open-in-new"
                     density="comfortable"
-                    color="deep-orange"
                     variant="text"
                     size="small"
                     @click.stop="onOpenBlockCard(item._id)"

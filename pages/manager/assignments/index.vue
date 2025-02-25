@@ -75,7 +75,6 @@
                 <v-btn
                     icon="mdi-open-in-new"
                     density="comfortable"
-                    color="deep-orange"
                     variant="text"
                     size="small"
                     @click.stop="onOpenAssignmentCard(item._id)"

@@ -25,7 +25,7 @@ export const mySearchFieldStyle = {
 // Стили для кнопки навигации "Назад"
 export const navigateBackBtnStyle = {
     ['prepend-icon']: "mdi-arrow-left",
-    ['color']: "blue-darken-4",
+    ['color']: "blue-accent-4",
     ['size']: 'small',
     ['border']: false,
     ['variant']: "text",
@@ -42,5 +42,5 @@ export const inputFieldStyle = {
 }
 
 export const myTableSheetStyle = {
-    ['class']: "border-sm rounded-lg bg-white px-8 pt-6 pb-2"
+    ['class']: "border-thin rounded-lg bg-white px-8 pt-6 pb-2"
 }
