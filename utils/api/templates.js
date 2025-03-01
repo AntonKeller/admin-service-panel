@@ -21,11 +21,10 @@ export function removeSomeTemplates(ids) {
     return axios.post(`/templates/deleteMany`, ids, axiosConfig);
 }
 
-export function uploadExcelTemplate(excelTemplateFormData) {
+export function uploadExcelTemplate(file) {
     const formData = new FormData();
-    formData.append('photoAngles', event.target.files[0]);
-
-    return axios.post(`/templates/uploadTemplates`, excelTemplateFormData, axiosConfig);
+    formData.append('photoAngles', file);
+    return axios.post(`/templates/uploadTemplates`, formData, axiosConfig);
 }
 
 export function downloadExcelTemplate() {

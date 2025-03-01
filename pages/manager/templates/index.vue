@@ -6,7 +6,7 @@
       <v-sheet class="border-b bg-white pb-3">
         <v-card-title class="">Шаблоны объектов осмотра</v-card-title>
         <v-card-subtitle class="d-flex align-center ga-2">
-          <v-icon icon="mdi-calendar-check-outline" size="small"/>
+          <v-icon icon="mdi-layers-triple-outline" size="small"/>
           Редактируйте, создавайте шаблоны под требования заказчика
         </v-card-subtitle>
       </v-sheet>
@@ -251,7 +251,7 @@ export default {
     updateTable() {
       this.fetching = true;
       const timeoutId = setTimeout(() => {
-        this.$store.dispatch('assignments/FETCH');
+        this.fetchTemplates();
         this.fetching = false;
         clearTimeout(timeoutId);
       }, 500)
