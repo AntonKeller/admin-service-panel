@@ -26,10 +26,11 @@ export const mySearchFieldStyle = {
 export const navigateBackBtnStyle = {
     ['prepend-icon']: "mdi-arrow-left",
     ['color']: "blue-accent-4",
+    ['density']: 'comfortable',
     ['size']: 'small',
     ['border']: false,
-    ['variant']: "text",
-    ['rounded']: "sm"
+    ['variant']: "tonal",
+    ['rounded']: "md"
 }
 
 // Стили для поля ввода на формах

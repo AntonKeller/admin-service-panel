@@ -5,38 +5,37 @@
       variant="text"
       size="small"
       rounded
-      @click.stop="questionIsVisible = true"
       v-bind="$attrs"
   >
     <v-icon/>
     <v-tooltip activator="parent" location="left">
       {{ prompt ? prompt : '...' }}
     </v-tooltip>
-    <my-overlay v-model="questionIsVisible">
-      <v-sheet class="px-4 py-1 bg-white rounded-lg">
-        <v-card-item>
-          Хотите удалить запись ?
-        </v-card-item>
-        <v-card-item>
-          <v-divider/>
-        </v-card-item>
-        <v-card-actions>
+
+    <v-menu activator="parent" location="top right" width="205">
+      <v-sheet class="elevation-0 rounded-lg border-sm px-4 py-3">
+        <div>Подтвердите удаление</div>
+        <v-divider class="my-3 "/>
+        <div class="d-flex align-center ga-1">
           <v-btn
-              @click.stop="onclickYes"
-              variant="flat"
-              density="comfortable"
-              class="border-sm rounded-lg"
-              text="Да"
-          />
-          <v-btn
-              @click.stop="questionIsVisible=false"
               density="comfortable"
               class="rounded-lg"
+              variant="flat"
+              size="small"
+              border="sm"
+              text="Ок"
+              @click="onclickYes"
+          />
+          <v-btn
+              density="comfortable"
+              class="rounded-lg"
+              variant="flat"
+              size="small"
               text="Отмена"
           />
-        </v-card-actions>
+        </div>
       </v-sheet>
-    </my-overlay>
+    </v-menu>
   </v-btn>
 </template>
 
@@ -48,12 +47,8 @@ export default {
     prompt: String,
   },
 
-  data: () => ({
-    questionIsVisible: false,
-  }),
-
   methods: {
-    onclickYes(e) {
+    onclickYes() {
       this.questionIsVisible = false;
       this.$emit('click:yes');
     }

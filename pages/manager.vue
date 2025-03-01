@@ -16,11 +16,11 @@ export default {
 <style>
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.25s, transform 0.35s;
+  transition: opacity 0.25s, transform 0.3s;
 }
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateX(10px);
 }
 </style>

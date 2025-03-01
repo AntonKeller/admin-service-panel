@@ -5,7 +5,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (import.meta.client) {
 
-        let tokenTest = await accessTest().then(r => r.data);
+        let tokenTest = await accessTest()
+            .then(r => r.data)
+            .catch(() => null)
 
         if (!tokenTest && !/^\/auth$/i.test(to?.fullPath)) {
             return navigateTo('/auth');

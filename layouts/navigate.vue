@@ -80,7 +80,8 @@
         :rail="rail"
         @click="rail = false"
         elevation="0"
-        width="230"
+        width="210"
+        class="bg-grey-lighten-5"
     >
       <v-list variant="text" density="default" nav rounded="lg">
         <v-list-item
@@ -104,28 +105,32 @@
           </template>
         </v-list-item>
 
-        <v-divider class="mb-2 mt-2"/>
+        <v-divider class="mb-3 mt-1"/>
 
         <v-list-item
             v-for="item of navItems"
             :key="item._id"
             :to="item.route"
-            :prepend-icon="item.prependIcon"
             :active="item._id === activeItem"
             :value="item.value"
             :title="item.title"
             color="blue-accent-4"
             density="compact"
+            border
             rounded
             @click="activeItem = item._id"
-        />
-        <v-divider class="mb-2 mt-2"/>
+        >
+          <template #prepend>
+            <v-icon :icon="item.prependIcon" size="small"/>
+          </template>
+        </v-list-item>
       </v-list>
 
       <template #append>
         <v-list variant="text" density="compact" rounded="lg" nav>
           <v-list-item
               prepend-icon="mdi-logout"
+              class="bg-white"
               title="Выход"
               border="sm"
               @click="logout"

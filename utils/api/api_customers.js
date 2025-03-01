@@ -26,7 +26,6 @@ export function removeCustomer(customerID, query) {
     return axios.delete('/customers/' + (customerID ?? '') + (query ?? ''), axiosConfig);
 }
 
-// Распаковывает шаблоны ракурсов из файла excel и возвращает их в виде массива
-export function unpackAnglesTemplates(file, query) {
-    return axios.post('/customers/parsingExcelFile' + (query ?? ''), file, axiosConfig);
+export function removeSomeCustomers(ids) {
+    return axios.post('/customers/deleteMany', ids, axiosConfig);
 }

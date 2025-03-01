@@ -1,120 +1,229 @@
 <template>
-  <v-container fluid>
-    <v-sheet min-width="400" max-width="1150" class="bg-transparent">
-      <v-card variant="text" :loading="getFetchingDataStatus">
+  <v-container fluid class="bg-white">
+    <v-sheet max-width="1280" class="bg-transparent">
 
-        <v-card-title>Список заданий</v-card-title>
-
+      <v-sheet class="border-b bg-white pb-3">
+        <v-card-title class="">Список заданий</v-card-title>
         <v-card-subtitle class="d-flex align-center ga-2">
-          <v-icon icon="mdi-calendar-check-outline"/>
+          <v-icon icon="mdi-calendar-check-outline" size="small"/>
           Добавляйте и контролируйте задания на осмотр
         </v-card-subtitle>
+      </v-sheet>
 
-        <v-card-item/>
+      <v-sheet class="border-b bg-white py-4 pl-4 pr-1">
+        <div class="d-flex align-center">
+          <v-btn
+              prepend-icon="mdi-playlist-plus"
+              color="blue-accent-4"
+              variant="text"
+              size="small"
+              rounded="md"
+              border
+              @click="onAddAssignment"
+          >
+            Добавить задание
+            <v-tooltip activator="parent" text="Добавить новую запись"/>
+          </v-btn>
 
-        <v-card-item>
-          <div class="d-flex align-center">
-            <v-btn v-bind="myBtnPlus" @click="onAddAssignment">
-              Добавить
-              <v-tooltip activator="parent">
-                Добавить новое задание
-              </v-tooltip>
-            </v-btn>
-            <v-spacer/>
-            <v-text-field v-model="searchText" v-bind="mySearchFieldStyle"/>
-          </div>
-        </v-card-item>
+          <div class="mx-2"></div>
 
-        <v-card-item>
-          <v-sheet v-bind="myTableSheetStyle">
-            <v-data-table
-                v-model="selectedItems"
-                v-model:items-per-page="itemsPerPage"
-                :items-per-page-options="itemsPerPageOptions"
-                :items-per-page="itemsPerPage"
-                :items="assignmentsMap"
-                :search="searchText"
-                :headers="headers"
-                style="max-height: 500px"
-                items-per-page-text="Кол-во на странице"
-                loading-text="Загрузка данных..."
-                no-data-text="Нет данных"
-                class="bg-transparent"
-                density="comfortable"
-                items-per-page="5"
-                item-value="_id"
-                fixed-header
-                :show-select="false"
-                @update:current-items="this.selectedItems = []"
-            >
-              <template #item.customerShortName="{ item }">
-                <v-chip
-                    :prepend-icon="item?.customer?.shortName ? 'mdi-domain' : ''"
-                    :text="item.customerShortName"
-                    color="blue-darken-4"
-                    density="comfortable"
-                    class="text-caption"
-                    size="small"
-                    label
-                />
-              </template>
-
-              <template #item.assignmentContract="{ item }">
-                <v-chip
-                    :prepend-icon="item?.contract ? 'mdi-domain' : ''"
-                    :text="item.assignmentContract"
-                    color="deep-purple-darken-2"
-                    density="comfortable"
-                    class="text-caption"
-                    size="small"
-                    label
-                />
-              </template>
-
-              <template #item.actions="{ item }">
-                <v-btn
-                    icon="mdi-open-in-new"
-                    density="comfortable"
-                    variant="text"
-                    size="small"
-                    @click.stop="onOpenAssignmentCard(item._id)"
+          <v-btn
+              append-icon="mdi-chevron-down"
+              variant="text"
+              size="small"
+              rounded="md"
+              border
+              :disabled="!selectedItems.length"
+          >
+            Операции
+            <v-tooltip activator="parent" text="Операции с выделенными"/>
+            <v-menu activator="parent" transition="scale-transition">
+              <v-sheet rounded="md" class="mt-1" elevation="0" border>
+                <v-list-item
+                    append-icon="mdi-format-list-checks"
+                    density="compact"
+                    @click="selectedItems=[]"
                 >
-                  <v-icon/>
-                  <v-tooltip activator="parent" location="left">
-                    Открыть карточку
-                  </v-tooltip>
-                </v-btn>
-                <my-change-button
-                    class="ml-2"
-                    prompt="Редактировать ТЗ"
-                    @click.stop="onChangeAssignment(item._id)"
-                />
-                <my-button-table-remove
-                    :prompt="'Удалить'"
-                    class="ml-2"
-                    @click:yes="onRemoveAssignment(item._id)"
-                />
-              </template>
-            </v-data-table>
-          </v-sheet>
-        </v-card-item>
-      </v-card>
+                  <template #append>
+                    <v-icon icon="mdi-format-list-checks" size="small"/>
+                  </template>
+                  <v-list-item-title>Снять выделение</v-list-item-title>
+                </v-list-item>
+                <v-divider/>
+                <v-list-item
+                    append-icon="mdi-delete-sweep-outline"
+                    density="compact"
+                    @click=""
+                >
+                  <template #append>
+                    <v-icon icon="mdi-delete-sweep-outline" size="small"/>
+                  </template>
+                  <v-list-item-title>Удалить выделенные</v-list-item-title>
+                  <v-menu activator="parent" location="top right" width="205">
+                    <v-sheet class="elevation-0 rounded-lg border-sm px-4 py-3">
+                      <div>Подтвердите удаление</div>
+                      <v-divider class="my-3 "/>
+                      <div class="d-flex align-center ga-1">
+                        <v-btn
+                            density="comfortable"
+                            class="rounded-lg"
+                            variant="flat"
+                            size="small"
+                            border="sm"
+                            text="Ок"
+                            @click="onRemoveSomeAssignments"
+                        />
+                        <v-btn
+                            density="comfortable"
+                            class="rounded-lg"
+                            variant="flat"
+                            size="small"
+                            text="Отмена"
+                        />
+                      </div>
+                    </v-sheet>
+                  </v-menu>
+                </v-list-item>
+              </v-sheet>
+            </v-menu>
+          </v-btn>
+
+          <div class="mx-1"></div>
+
+          <v-btn
+              :loading="fetching"
+              prepend-icon="mdi-update"
+              variant="text"
+              size="small"
+              rounded="md"
+              border
+              @click="updateTable"
+          >
+            Обновить
+            <v-tooltip activator="parent" text="Обновить данные"/>
+          </v-btn>
+
+          <v-spacer/>
+
+          <v-progress-circular
+              v-if="searching"
+              color="grey"
+              size="25"
+              indeterminate
+          />
+
+          <v-text-field
+              v-model="_searchText"
+              v-bind="mySearchFieldStyle"
+              style="max-width: 350px"
+              @update:modelValue="updateSearch"
+          />
+        </div>
+      </v-sheet>
+
+      <v-data-table
+          v-model="selectedItems"
+          v-model:items-per-page="itemsPerPage"
+          :items-per-page-options="itemsPerPageOptions"
+          :items-per-page="itemsPerPage"
+          :items="assignmentsMap"
+          :search="searchText"
+          :headers="headers"
+          style="max-height: 500px"
+          items-per-page-text="Кол-во на странице"
+          loading-text="Загрузка данных..."
+          no-data-text="Нет данных"
+          class="bg-transparent"
+          density="comfortable"
+          items-per-page="5"
+          item-value="_id"
+          fixed-header
+          show-select
+          @update:current-items="selectedItems = []"
+      >
+        <template #item.title="{ item }">
+          <v-icon
+              icon="mdi-label-multiple-outline"
+              size="small"
+              color="grey-darken-1"
+              class="mr-1"
+          />
+          {{ item?.title ?? '-' }}
+        </template>
+
+
+        <template #item.customerShortName="{ item }">
+          <v-chip
+              :prepend-icon="item?.customer?.shortName ? 'mdi-domain' : ''"
+              :text="item.customerShortName"
+              color="blue-darken-4"
+              class="text-caption"
+              density="compact"
+              size="small"
+              label
+          />
+        </template>
+
+        <template #item.assignmentContract="{ item }">
+          <v-chip
+              :prepend-icon="item?.contract ? 'mdi-domain' : ''"
+              :text="item.assignmentContract"
+              color="deep-purple-darken-2"
+              class="text-caption"
+              density="compact"
+              size="small"
+              label
+          />
+        </template>
+
+        <template #item.actions="{ item }">
+          <v-btn
+              icon="mdi-open-in-new"
+              density="comfortable"
+              variant="text"
+              size="small"
+              @click.stop="onOpenAssignmentCard(item._id)"
+          >
+            <v-icon/>
+            <v-tooltip activator="parent" location="left">
+              Открыть карточку
+            </v-tooltip>
+          </v-btn>
+          <my-change-button
+              class="ml-2"
+              prompt="Редактировать ТЗ"
+              @click.stop="onChangeAssignment(item._id)"
+          />
+          <my-button-table-remove
+              :prompt="'Удалить'"
+              class="ml-2"
+              @click:yes="onRemoveAssignment(item._id)"
+          />
+        </template>
+
+        <template #footer.prepend>
+          <div class="mr-auto text-grey-darken-1 pl-4 mt-2" v-if="selectedItems.length">
+            <v-icon icon="mdi-order-bool-ascending-variant" class="mr-1"/>
+            Выбрано элементов: {{ selectedItems.length }}
+          </div>
+        </template>
+      </v-data-table>
     </v-sheet>
   </v-container>
 </template>
 
 <script>
 import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
-import {addNewAssignment} from "../../../utils/api/api_assignments";
+import {addNewAssignment, removeAssignment, removeAssignments} from "../../../utils/api/api_assignments";
 import {unixDateToShortDateString} from "@/utils/functions";
 import {navigateTo} from "nuxt/app";
+import _ from "lodash";
 
 export default {
   name: "assignments-page",
 
   data() {
     return {
-      selectedItems: [],
       headers: [
         {
           title: 'Заголовок',
@@ -162,7 +271,11 @@ export default {
           nowrap: true,
         },
       ],
+      selectedItems: [],
+      _searchText: '',
       searchText: '',
+      fetching: false,
+      searching: false,
       timeDateConfig: {
         weekday: 'short', // weekday: 'short',
         year: 'numeric',
@@ -183,12 +296,14 @@ export default {
     }
   },
 
-  mounted() {
-    this.assignmentsStoreUpdate();
+  watch: {
+    _searchText() {
+      this.searching = true;
+    }
   },
 
-  unmounted() {
-    this.$store.commit('assignments/RESET_ASSIGNMENT_LIST');
+  mounted() {
+    this.assignmentsStoreUpdate();
   },
 
   computed: {
@@ -217,14 +332,25 @@ export default {
       }
       return this.assignments;
     },
-    getFetchingDataStatus() {
-      return this.$store.getters['assignments/GET_FETCHING'];
-    },
   },
 
   methods: {
 
     unixDateToShortDateString,
+
+    updateTable() {
+      this.fetching = true;
+      const timeoutId = setTimeout(() => {
+        this.$store.dispatch('assignments/FETCH');
+        this.fetching = false;
+        clearTimeout(timeoutId);
+      }, 500)
+    },
+
+    updateSearch: _.debounce(function (search) {
+      this.searchText = search;
+      this.searching = false;
+    }, 900),
 
     getContractString(contract) {
       const a = contract?.number;
@@ -254,7 +380,7 @@ export default {
             this.$store.commit('alert/SUCCESS', 'Задание добавлено');
             this.$store.dispatch('assignments/FETCH');
           })
-          .catch((err) => {
+          .catch(() => {
             this.$store.commit('alert/ERROR', 'Ошибка добавления');
           })
           .finally(() => {
@@ -270,8 +396,30 @@ export default {
       navigateTo(`/manager/assignments/${id}/`);
     },
 
+    onRemoveSomeAssignments() {
+      if (!this.selectedItems || this.selectedItems.length === 0) return;
+      removeAssignments(this.selectedItems)
+          .then(() => {
+            this.assignmentsStoreUpdate();
+            this.$store.commit('alert/SUCCESS', 'Записи удалены');
+          })
+          .catch(err => {
+            console.log('Ошибка удаления', err);
+            this.$store.commit('alert/ERROR', 'Ошибка удаления');
+          })
+    },
+
     onRemoveAssignment(id) {
-      this.$store.dispatch('assignments/REMOVE_ITEM', id);
+      removeAssignment(id)
+          .then(() => {
+            this.selectedItems = [];
+            this.$store.commit('alert/SUCCESS', 'Успешно удалено');
+            this.$store.dispatch('assignments/FETCH');
+          })
+          .catch(err => {
+            console.log('Не удалось удалить', err);
+            this.$store.commit('alert/ERROR', 'Не удалось удалить');
+          })
     },
 
   }

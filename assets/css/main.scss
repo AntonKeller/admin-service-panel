@@ -11,16 +11,9 @@
   src: url(../fonts/tilda-sans_regular.woff);
 }
 
-@font-face {
-  font-family: GolosTextRegular;
-  font-style: normal;
-  font-weight: 400;
-  src: url(../fonts/GolosText-Regular.woff);
-}
-
 
 * {
-  font-family: TildaSansRegular, GolosTextRegular, sans-serif;
+  font-family: TildaSansRegular, sans-serif;
 }
 
 body::-webkit-scrollbar {

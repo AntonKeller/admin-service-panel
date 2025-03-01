@@ -22,11 +22,14 @@ export function removeAssignmentBlock(blockId, query) {
     return axios.delete(`/assignment-blocks/` + blockId + (query ?? ''), axiosConfig);
 }
 
+export function removeSomeBlocks(ids) {
+    return axios.post(`/assignment-blocks/deleteMany`, ids, axiosConfig);
+}
+
 // Загружает на сервер файл Excel со списокм объектов
 export function uploadObjects(blockID, objectsExcelBlob, query) {
     return axios.post('/inspection-objects/uploadObjects/' + (blockID ?? '') + (query ?? ''), objectsExcelBlob, axiosConfig);
 }
-
 
 export async function downloadPhotos(assignmentBlockID, query) {
     try {

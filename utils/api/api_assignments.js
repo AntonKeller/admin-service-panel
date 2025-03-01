@@ -21,3 +21,7 @@ export function changeAssignment(assignment, query) {
 export function removeAssignment(id, query) {
     return axios.delete('/assignments/' + id + (query ?? ''), axiosConfig);
 }
+
+export function removeAssignments(ids) {
+    return axios.post('/assignments/deleteMany', ids, axiosConfig);
+}
