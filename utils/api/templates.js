@@ -31,3 +31,29 @@ export function uploadExcelTemplate(excelTemplateFormData) {
 export function downloadExcelTemplate() {
     return axios.get(`/templates/downloadExcelTemplates`, axiosConfig);
 }
+
+// export function sdfsdf() {
+//
+//
+//     const structure = {
+//         _id: '6s6dfgs6dg6sd6g6sd5g5sd5gsd',
+//         title: 'Шаблон 1 (базовы)',
+//         isBase: true,
+//         types: [
+//             {
+//                 _id: '6sd56gs415dgs65gs65d65gs6d2g62sd32gs3d',
+//                 typeName: 'Автомобиль',
+//                 angles: [
+//                     {
+//                         _id: string,
+//                         angle: string,
+//                         numberOfPhotos: string,
+//                         description: string,
+//                     }
+//                 ]
+//             }
+//         ],
+//     }
+//
+//
+// }

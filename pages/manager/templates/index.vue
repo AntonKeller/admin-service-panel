@@ -34,7 +34,7 @@
               size="small"
               rounded="md"
               border
-              @click=""
+              @click="$refs.excelFileInput.click()"
           >
             Загрузить
             <v-tooltip activator="parent" text="Загрузить шаблон"/>
