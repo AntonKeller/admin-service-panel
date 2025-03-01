@@ -467,7 +467,8 @@ export default {
     }
   },
 
-  async beforeMount() {
+  beforeMount() {
+
     fetchAssignmentBlockOneById(useRoute().params.blockId)
         .then(response => {
           this.block = response.data ?? null;
@@ -477,7 +478,9 @@ export default {
           console.log('Ошибка, такого адреса не существует', err);
           this.$store.commit('alert/ERROR', 'Такого адреса не существует');
           this.navigateBack();
-        })
+        });
+
+
   },
 
   computed: {
@@ -538,13 +541,6 @@ export default {
   },
 
   methods: {
-
-    onChangeSomeObjectsTypes(newType) {
-      if (this.selectedItems && this.selectedItems.length > 0) {
-        // TODO: Запрос на редактирование нескольких записей
-
-      }
-    },
 
     async downloadPhotos() {
       this.downloadingPhotos = true;

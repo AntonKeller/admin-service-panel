@@ -20,10 +20,24 @@
               size="small"
               rounded="md"
               border
-              @click="onAddAssignment"
+              disabled
+              @click=""
           >
-            Добавить задание
+            Добавить шаблон
             <v-tooltip activator="parent" text="Добавить новую запись"/>
+          </v-btn>
+          <div class="mx-1"></div>
+          <v-btn
+              prepend-icon="mdi-tray-arrow-up"
+              color="blue-accent-4"
+              variant="text"
+              size="small"
+              rounded="md"
+              border
+              @click=""
+          >
+            Загрузить
+            <v-tooltip activator="parent" text="Загрузить шаблон"/>
           </v-btn>
 
           <div class="mx-2"></div>
@@ -95,7 +109,7 @@
           v-model:items-per-page="itemsPerPage"
           :items-per-page-options="itemsPerPageOptions"
           :items-per-page="itemsPerPage"
-          :items="assignmentsMap"
+          :items="items"
           :search="searchText"
           :headers="headers"
           style="max-height: 500px"
@@ -143,6 +157,16 @@
         </template>
       </v-data-table>
 
+      <v-overlay v-model="overlay" class="d-flex justify-center align-center">
+
+      </v-overlay>
+
+      <v-file-input
+          class="d-none"
+          ref="excelFileInput"
+          accept=".xlsx"
+          @change="onUploadTemplate"
+      />
     </v-sheet>
   </v-container>
 </template>
@@ -150,6 +174,7 @@
 <script>
 import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
 import _ from "lodash";
+import {getTemplates, uploadExcelTemplate} from "@/utils/api/templates.js";
 
 export default {
   name: "index",
@@ -176,6 +201,7 @@ export default {
         {value: 50, title: '50'},
       ],
 
+      overlay: false,
       templates: [
         {
           _id: 1,
@@ -237,11 +263,31 @@ export default {
     }, 900),
 
     fetchTemplates() {
-
+      this.fetching = true;
+      getTemplates()
+          .then(response => {
+            this.items = response.data;
+          })
+          .catch(err => {
+            console.log('Ошибка получения данных', err);
+            this.$store.commit('alert/ERROR', 'Ошибка получения данных');
+          })
+          .finally(() => {
+            this.fetching = false;
+          })
     },
 
-    onAddTemplate() {
-
+    onUploadTemplate(event) {
+      if (event.target.files && event.target.files.length > 0) {
+        uploadExcelTemplate(event.target.files[0])
+            .then(() => {
+              this.$store.commit('alert/SUCCESS', 'Доабвлен новый шаблон');
+            })
+            .catch(err => {
+              console.log('Ошибка добавления нового шаблона', err);
+              this.$store.commit('alert/ERROR', 'Ошибка добавления нового шаблона');
+            })
+      }
     },
 
     onChangeTemplate() {
