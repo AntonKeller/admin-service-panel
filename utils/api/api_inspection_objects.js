@@ -18,6 +18,10 @@ export function changeInspectionObject(inspectionObject) {
     return axios.put('/inspection-objects/' + inspectionObject._id, inspectionObject, axiosConfig);
 }
 
+export function changeSomeObjects(objects) {
+    return axios.put('/inspection-objects/updateMany', objects, axiosConfig);
+}
+
 export function uploadObjects(blockID, file, query) {
     return axios.post('/inspection-objects/inspectionObjectsUpload/' + (blockID ?? '') + (query ?? ''), file, axiosConfig);
 }

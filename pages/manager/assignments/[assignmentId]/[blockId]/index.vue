@@ -158,13 +158,13 @@
                             <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
                           </v-sheet>
                           <v-divider/>
-                          <div v-if="itemsObjectTypes.length === 0" class="text-center py-2">Пусто</div>
+                          <div v-if="objectTypesSearchFilter.length === 0" class="text-center py-2">Пусто</div>
                           <v-list-item
-                              v-for="type of itemsObjectTypes"
+                              v-for="type of objectTypesSearchFilter"
                               :title="type"
                               class=" text-caption"
                               density="compact"
-                              @click="onChangeTypeSelectedObjects"
+                              @click="onChangeTypeSelectedObjects(type)"
                           />
                         </v-sheet>
                       </v-menu>
@@ -251,9 +251,9 @@
                           <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
                         </v-sheet>
                         <v-divider/>
-                        <div v-if="itemsObjectTypes.length === 0" class="text-center py-2">Пусто</div>
+                        <div v-if="objectTypesSearchFilter.length === 0" class="text-center py-2">Пусто</div>
                         <v-list-item
-                            v-for="type of itemsObjectTypes"
+                            v-for="type of objectTypesSearchFilter"
                             :title="type"
                             class=" text-caption"
                             density="compact"
@@ -336,7 +336,7 @@ import {
   navigateBackBtnStyle,
 } from "../../../../../configs/styles";
 import {
-  changeInspectionObject,
+  changeInspectionObject, changeSomeObjects,
   fetchInspectionObjects,
   removeObjects
 } from "../../../../../utils/api/api_inspection_objects";
@@ -444,6 +444,8 @@ export default {
         {value: 50, title: '50'},
       ],
 
+      objectTypesItems: [],
+
       updatingIds: [],
 
       // IMPORT STYLES
@@ -513,20 +515,9 @@ export default {
       }
     },
 
-    itemsObjectTypes() {
-      return this.itemsObjectTypes2
-          .concat(this.itemsObjectTypes2)
-          .concat(this.itemsObjectTypes2)
-          .concat(this.itemsObjectTypes2)
-          .concat(this.itemsObjectTypes2)
-          .concat(this.itemsObjectTypes2)
-    },
-
-    itemsObjectTypes2() {
+    objectTypesSearchFilter() {
       const ex = new RegExp(this.searchTypes, 'ig')
-      return this.items.map(e => e.objectType)?.filter(e => {
-        return !!e && ex.test(e);
-      })
+      return this.objectTypesItems?.filter(e => !!e && ex.test(e));
     },
 
     dateFromTo() {
@@ -555,6 +546,18 @@ export default {
       }
     },
 
+    async downloadPhotos() {
+      this.downloadingPhotos = true;
+      await downloadPhotos(this.block._id);
+      this.downloadingPhotos = false;
+    },
+
+    getColorByStatus(inspectionObject) {
+      if (!inspectionObject.isExist) return 'bg-pink-lighten-5';
+      if (inspectionObject.isDefect) return 'bg-amber-lighten-4';
+      return '';
+    },
+
     onChangeObjectType(id, newType) {
 
       this.searchTypes = '';
@@ -581,21 +584,27 @@ export default {
       });
     },
 
-    async downloadPhotos() {
-      this.downloadingPhotos = true;
-      await downloadPhotos(this.block._id);
-      this.downloadingPhotos = false;
-    },
+    onChangeTypeSelectedObjects(type) {
+      if (!this.selectedItems || this.selectedItems.length === 0) return;
 
-    getColorByStatus(inspectionObject) {
-      if (!inspectionObject.isExist) return 'bg-pink-lighten-5';
-      if (inspectionObject.isDefect) return 'bg-amber-lighten-4';
-      return '';
-    },
+      const itemsForChange = [];
 
-    onChangeTypeSelectedObjects() {
-      console.log('[function] onChangeTypeSelectedObjects');
-      // TODO: Добавить логику изменения типов объектов для выделенных объектов
+      this.selectedItems.forEach(id => {
+        itemsForChange.push({
+          ...this.items.find(e => e._id === id),
+          objectType: type,
+        })
+      })
+
+      changeSomeObjects(itemsForChange)
+          .then(() => {
+            this.$store.commit('alert/SUCCESS', 'Записи изменены');
+            this.fetchInspectionObjects();
+          })
+          .catch(err => {
+            console.log('Не удалось изменить записи', err);
+            this.$store.commit('alert/ERROR', 'Не удалось изменить записи');
+          })
     },
 
     clickExcelInputFile() {

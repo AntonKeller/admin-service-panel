@@ -26,9 +26,8 @@
         <v-row>
           <v-col cols="4">
             <v-sheet class="px-6 py-4 rounded h-100">
-              <div class="d-flex align-center justify-space-between">
+              <div class="d-flex align-center ga-3">
                 <v-icon size="small" color="blue-darken-3" icon="mdi-account-tie"/>
-                <v-spacer/>
                 <div>Заказчик</div>
               </div>
               <div class="mt-7 align-self-end">{{ assignmentCustomer }}</div>
@@ -36,9 +35,8 @@
           </v-col>
           <v-col cols="4">
             <v-sheet class="border-s px-6 py-4 rounded h-100">
-              <div class="d-flex align-center justify-space-between">
+              <div class="d-flex align-center ga-3">
                 <v-icon size="small" color="blue-darken-3" icon="mdi-file-sign"/>
-                <v-spacer/>
                 <div>Договор</div>
               </div>
               <div class="mt-7 align-self-end">{{ assignmentContract }}</div>
@@ -46,9 +44,8 @@
           </v-col>
           <v-col cols="4">
             <v-sheet class="border-s px-6 py-4 rounded h-100">
-              <div class="d-flex align-center justify-space-between">
+              <div class="d-flex align-center ga-3">
                 <v-icon size="small" color="blue-darken-3" icon="mdi-text-box-outline"/>
-                <v-spacer/>
                 <div>Доп. соглашение</div>
               </div>
               <div class="mt-7 align-self-end text-no-wrap">{{ assignmentSubContract }}</div>
@@ -305,17 +302,23 @@ export default {
     }
   },
 
-  async beforeMount() {
+  beforeMount() {
     fetchAssignmentOneById(useRoute().params.assignmentId)
         .then(resp => {
           this.assignment = resp.data;
           this.fetchBlocks();
         })
         .catch(err => {
-          console.log('Ошибка, такого задания не существует');
+          console.log('Ошибка, такого задания не существует', err);
           this.$store.commit('alert/ERROR', 'Такого задания не существует');
           this.navigateBack();
         })
+  },
+
+  watch: {
+    _searchText() {
+      this.searching = true;
+    }
   },
 
   computed: {

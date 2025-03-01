@@ -307,9 +307,6 @@ export default {
   },
 
   computed: {
-    assignments() {
-      return this.$store.getters['assignments/GET_ASSIGNMENTS'];
-    },
     assignmentsMap() {
       return this.assignmentsSearchFilter.map(e => ({
         _id: e?._id,
@@ -331,6 +328,9 @@ export default {
         })
       }
       return this.assignments;
+    },
+    assignments() {
+      return this.$store.getters['assignments/GET_ASSIGNMENTS'];
     },
   },
 

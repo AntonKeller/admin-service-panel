@@ -9,6 +9,10 @@ export function getTemplateOne(id) {
     return axios.get(`/templates/findOneById/${id}`, axiosConfig);
 }
 
+export function getObjectTypesForAddress(id) {
+    return axios.get(`/......./${id}`, axiosConfig);
+}
+
 export function removeTemplate(id) {
     return axios.delete(`/templates/${id}`, axiosConfig);
 }
