@@ -12,4 +12,5 @@ export default interface TNavItem {
     value: String,
     active: Boolean,
     badge: TNavItemBadge,
+    classes?: string,
 }

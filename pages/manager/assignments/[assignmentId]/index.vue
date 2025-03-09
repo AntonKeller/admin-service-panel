@@ -25,30 +25,68 @@
 
         <v-row>
           <v-col cols="4">
-            <v-sheet class="px-6 py-4 rounded h-100">
-              <div class="d-flex align-center ga-3">
-                <v-icon size="small" color="blue-darken-3" icon="mdi-account-tie"/>
-                <div>Заказчик</div>
+            <v-sheet class="d-flex flex-column ga-4 px-7 py-4 h-100">
+
+              <div class="d-flex justify-space-between align-center ga-3">
+                <div class="d-flex align-center ga-3">
+                  <v-icon size="small" icon="mdi-account-tie"/>
+                  <div>Заказчик</div>
+                </div>
+                <v-icon size="small" icon="mdi-dots-horizontal" disabled/>
               </div>
-              <div class="mt-7 align-self-end">{{ assignmentCustomer }}</div>
+              <v-divider/>
+              <div class="d-flex flex-column ga-2">
+                <div>
+                  {{ assignmentCustomer }}
+                </div>
+                <div>
+                  {{ assignmentCustomerInn }}
+                </div>
+              </div>
             </v-sheet>
           </v-col>
+          <v-divider vertical/>
           <v-col cols="4">
-            <v-sheet class="border-s px-6 py-4 rounded h-100">
-              <div class="d-flex align-center ga-3">
-                <v-icon size="small" color="blue-darken-3" icon="mdi-file-sign"/>
-                <div>Договор</div>
+            <v-sheet class="d-flex flex-column ga-4 px-7 py-4 h-100">
+              <div class="d-flex justify-space-between align-center ga-3">
+                <div class="d-flex align-center ga-3">
+                  <v-icon size="small" icon="mdi-file-sign"/>
+                  <div>Договор</div>
+                </div>
+                <v-icon size="small" icon="mdi-dots-horizontal" disabled/>
               </div>
-              <div class="mt-7 align-self-end">{{ assignmentContract }}</div>
+              <v-divider/>
+              <div class="d-flex flex-column ga-2">
+                <div>
+                  {{ assignment?.contract?.number }}
+                </div>
+                <div class="d-flex align-center ga-3">
+                  <v-icon icon="mdi-calendar-range" size="x-small"/>
+                  {{ assignmentContractDate }}
+                </div>
+              </div>
             </v-sheet>
           </v-col>
+          <v-divider vertical/>
           <v-col cols="4">
-            <v-sheet class="border-s px-6 py-4 rounded h-100">
-              <div class="d-flex align-center ga-3">
-                <v-icon size="small" color="blue-darken-3" icon="mdi-text-box-outline"/>
-                <div>Доп. соглашение</div>
+            <v-sheet class="d-flex flex-column ga-4 px-7 py-4 h-100">
+              <div class="d-flex justify-space-between align-center ga-3">
+                <div class="d-flex align-center ga-3">
+                  <v-icon size="small" icon="mdi-file-sign"/>
+                  <div>Доп. соглашение</div>
+                </div>
+                <v-icon size="small" icon="mdi-dots-horizontal" disabled/>
               </div>
-              <div class="mt-7 align-self-end text-no-wrap">{{ assignmentSubContract }}</div>
+              <v-divider/>
+              <div class="d-flex flex-column ga-2">
+                <div>
+                  {{ assignmentSubContract }}
+                </div>
+                <div class="d-flex align-center ga-3">
+                  <v-icon icon="mdi-calendar-range" size="x-small"/>
+                  {{ assignmentSubContractDate }}
+                </div>
+              </div>
             </v-sheet>
           </v-col>
         </v-row>
@@ -293,6 +331,12 @@ export default {
         {value: 25, title: '25'},
         {value: 50, title: '50'},
       ],
+      timeDateConfig: {
+        weekday: 'short', // weekday: 'short',
+        year: 'numeric',
+        month: 'short', // month: 'short',
+        day: 'numeric',
+      },
 
       // IMPORT STYLES
       navigateBackBtnStyle,
@@ -345,28 +389,34 @@ export default {
       return this.items;
     },
 
+    assignmentCustomerInn() {
+      const inn = this.assignment?.customer?.inn;
+      return inn ? `ИНН: ${inn}` : '[ИНН не указан]';
+    },
+
     assignmentCustomer() {
-      if (!this.assignment?.customer) return '[Пусто]';
-      const returnName = this.assignment?.customer?.shortName || '[имя не указано]';
-      const returnInn = this.assignment?.customer?.inn || '[ИНН не указан]';
-      return `${returnName} | ${returnInn}`;
+      return this.assignment?.customer?.shortName || '[Организация не указана]';
+    },
+
+    assignmentContractDate() {
+      const date = this.assignment?.contract?.date;
+      return date ? new Date(date).toLocaleDateString(undefined, this.timeDateConfig) : '[дата не указана]';
     },
 
     assignmentContract() {
-      if (!this.assignment?.contract?.number || !this.assignment?.contract?.date) return '[Пусто]';
-      const {number, date} = this.assignment?.contract;
-      if (number && date) return `№ ${number} от ${this.unixDateToShortDateString(date)}`;
-      if (!number && date) return `[№  отсутствует] от ${this.unixDateToShortDateString(date)}`;
-      if (number && !date) return `№ ${number} от [дата отсутствует]`;
+      const number = this.assignment?.contract?.number;
+      return number ? `№ ${number}` : '[Номер договора отсутствует]';
     },
 
     assignmentSubContract() {
-      if (!this.assignment?.subContract?.number || !this.assignment?.subContract?.date) return `[Пусто]`;
-      const {number, date} = this.assignment?.subContract;
-      if (number && date) return `ТЗ № ${number} от ${this.unixDateToShortDateString(date)}`;
-      if (!number && date) return `ТЗ № [№ отсутствует] от ${this.unixDateToShortDateString(date)}`;
-      if (number && !date) return `ТЗ № ${number} от [дата ТЗ отсутствует]`;
+      const num = this.assignment?.subContract?.number;
+      return num ? num : '[Номер не указан]'
     },
+
+    assignmentSubContractDate() {
+      const date = this.assignment?.subContract?.date;
+      return date ? new Date(date).toLocaleDateString(undefined, this.timeDateConfig) : '[дата не указана]';
+    }
   },
 
   methods: {

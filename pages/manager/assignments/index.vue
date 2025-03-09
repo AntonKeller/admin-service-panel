@@ -13,17 +13,27 @@
       <v-sheet class="border-b bg-white py-4 pl-4 pr-1">
         <div class="d-flex align-center">
           <v-btn
+              class="border rounded "
               prepend-icon="mdi-playlist-plus"
               color="blue-accent-4"
               variant="text"
               size="small"
-              rounded="md"
-              border
               @click="onAddAssignment"
           >
             Добавить задание
             <v-tooltip activator="parent" text="Добавить новую запись"/>
           </v-btn>
+<!--          <v-btn-->
+<!--              class="border-e border-t border-b rounded rounded-s-0"-->
+<!--              icon="mdi-chevron-down"-->
+<!--              color="blue-accent-4"-->
+<!--              variant="text"-->
+<!--              density="comfortable"-->
+<!--              size="small"-->
+<!--          >-->
+<!--            <v-icon />-->
+<!--            <v-tooltip activator="parent" text="Добавить новую запись"/>-->
+<!--          </v-btn>-->
 
           <div class="mx-2"></div>
 
@@ -123,12 +133,12 @@
 
       <v-data-table
           v-model="selectedItems"
-          v-model:items-per-page="itemsPerPage"
-          :items-per-page-options="itemsPerPageOptions"
-          :items-per-page="itemsPerPage"
+          v-model:items-per-page="configAssignmentsPage.itemsPerPage"
+          :items-per-page-options="configAssignmentsPage.itemsPerPageOptions"
+          :items-per-page="configAssignmentsPage.itemsPerPage"
           :items="assignmentsMap"
           :search="searchText"
-          :headers="headers"
+          :headers="configAssignmentsPage.tableHeaders"
           style="max-height: 500px"
           items-per-page-text="Кол-во на странице"
           loading-text="Загрузка данных..."
@@ -213,8 +223,9 @@
 </template>
 
 <script>
-import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
 import {addNewAssignment, removeAssignment, removeAssignments} from "../../../utils/api/api_assignments";
+import {mySearchFieldStyle, myBtnPlus, myTableSheetStyle} from "../../../configs/styles";
+import configAssignmentsPage from "@/configs/configAssignmentsPage";
 import {unixDateToShortDateString} from "@/utils/functions";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
@@ -224,53 +235,6 @@ export default {
 
   data() {
     return {
-      headers: [
-        {
-          title: 'Заголовок',
-          align: 'start',
-          key: 'title',
-          value: 'title',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Заказчик',
-          align: 'start',
-          key: 'customerShortName',
-          value: 'customerShortName',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Договор с заказчиком',
-          align: 'start',
-          key: 'assignmentContract',
-          value: 'assignmentContract',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Техническое задание к договору',
-          align: 'start',
-          key: 'subContract',
-          value: 'subContract',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          align: 'end',
-          key: 'actions',
-          sortable: false,
-          minWidth: 150,
-          maxWidth: 150,
-          width: 150,
-          nowrap: true,
-        },
-      ],
       selectedItems: [],
       _searchText: '',
       searchText: '',
@@ -282,14 +246,9 @@ export default {
         month: 'short', // month: 'short',
         day: 'numeric',
       },
-      itemsPerPage: 10,
-      itemsPerPageOptions: [
-        {value: 10, title: '10'},
-        {value: 25, title: '25'},
-        {value: 50, title: '50'},
-      ],
 
       // IMPORT STYLES
+      configAssignmentsPage,
       mySearchFieldStyle,
       myTableSheetStyle,
       myBtnPlus,

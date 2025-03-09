@@ -1,16 +1,16 @@
 import axios from "axios";
 import axiosConfig from "@/configs/axios";
 
-export function getTemplates() {
+export function fetchTemplates() {
     return axios.get('/templates', axiosConfig);
 }
 
-export function getTemplateOne(id) {
+export function fetchTemplate(id) {
     return axios.get(`/templates/findOneById/${id}`, axiosConfig);
 }
 
-export function getObjectTypesForAddress(id) {
-    return axios.get(`/......./${id}`, axiosConfig);
+export function createTemplate(data) {
+    return axios.post(`/templates/createTemplate`, data, axiosConfig);
 }
 
 export function removeTemplate(id) {
@@ -21,38 +21,24 @@ export function removeSomeTemplates(ids) {
     return axios.post(`/templates/deleteMany`, ids, axiosConfig);
 }
 
-export function uploadExcelTemplate(file) {
+export function uploadExcelTemplate(templateId, file) {
     const formData = new FormData();
     formData.append('photoAngles', file);
-    return axios.post(`/templates/uploadTemplates`, formData, axiosConfig);
+    return axios.post(`/templates/uploadTemplates/${templateId}`, formData, axiosConfig);
 }
 
-export function downloadExcelTemplate() {
-    return axios.get(`/templates/downloadExcelTemplates`, axiosConfig);
-}
+export async function downloadExcelTemplate(saveAs) {
+    const answer = await axios.get(`/templates/downloadExcelTemplate`, {
+        ...axiosConfig,
+        responseType: 'blob',
+    });
 
-// export function sdfsdf() {
-//
-//
-//     const structure = {
-//         _id: '6s6dfgs6dg6sd6g6sd5g5sd5gsd',
-//         title: 'Шаблон 1 (базовы)',
-//         isBase: true,
-//         types: [
-//             {
-//                 _id: '6sd56gs415dgs65gs65d65gs6d2g62sd32gs3d',
-//                 typeName: 'Автомобиль',
-//                 angles: [
-//                     {
-//                         _id: string,
-//                         angle: string,
-//                         numberOfPhotos: string,
-//                         description: string,
-//                     }
-//                 ]
-//             }
-//         ],
-//     }
-//
-//
-// }
+    const oURL = window.URL.createObjectURL(new Blob([answer.data]));
+    const selectorA = document.createElement('a');
+    selectorA.download = saveAs;
+    selectorA.href = oURL;
+    document.body.appendChild(selectorA);
+    selectorA.click();
+    selectorA.parentNode.removeChild(selectorA);
+    return answer;
+}

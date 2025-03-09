@@ -1,8 +1,72 @@
 <template>
   <v-container fluid>
     <v-sheet min-width="400" max-width="1280" class="bg-transparent">
-
       <v-card variant="text">
+
+        <v-card-item>
+          <div class="d-flex align-center text-body-1">
+            <v-icon icon="mdi-map-marker-outline"/>
+            <span class="ml-2">{{ block?.address ?? '-' }}</span>
+          </div>
+        </v-card-item>
+
+        <v-card-item class="text-body-2 ml-1">
+          <div class="d-flex ga-8">
+
+            <div class="d-flex align-center ga-2">
+              <v-icon icon="mdi-weather-cloudy-clock"/>
+              <div>
+                <b>Начало:</b>
+                <span class="ml-3 text-blue-accent-3">{{ dateFromTo }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-center ga-2">
+              <v-icon icon="mdi-badge-account-outline"/>
+              <div>
+                <b>Инспектор:</b>
+                <span class="ml-3 text-blue-accent-3">{{ inspector }}</span>
+              </div>
+            </div>
+
+            <v-btn
+                prepend-icon="mdi-file-document-arrow-right-outline"
+                append-icon="mdi-chevron-down"
+                :color="!block?.template ? 'orange-accent-3' : ''"
+                class="text-caption"
+                density="comfortable"
+                rounded="middle"
+                variant="text"
+                size="small"
+                :disabled="reportDownloading"
+                :loading="reportDownloading"
+            >
+              {{ block?.template || 'Выберите шаблон' }}
+              <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition">
+                <v-sheet
+                    max-height="250"
+                    min-width="250"
+                    class="border-sm rounded-lg bg-white mt-1"
+                    transition="slide-y-reverse-transition"
+                >
+                  <v-sheet class="pr-2 py-2">
+                    <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
+                  </v-sheet>
+                  <v-divider/>
+                  <div v-if="templatesSearchFilter.length === 0" class="text-center py-2">Пусто</div>
+                  <v-list-item
+                      v-for="template of templatesSearchFilter"
+                      :title="template?.title || ''"
+                      class=" text-caption"
+                      density="compact"
+                      @click="onSetTemplate(template)"
+                  />
+                </v-sheet>
+              </v-menu>
+            </v-btn>
+          </div>
+        </v-card-item>
+
         <v-card-item>
           <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
             Назад
@@ -11,41 +75,6 @@
             </v-tooltip>
           </v-btn>
         </v-card-item>
-      </v-card>
-
-      <v-card variant="text">
-
-        <v-card-item>
-          <div class="d-flex align-center ga-2 text-body-1">
-            <v-icon icon="mdi-map-marker-outline"/>
-            <div>
-              <b>Адрес:</b>
-              <span class="ml-3">{{ block?.address ?? '-' }}</span>
-            </div>
-          </div>
-        </v-card-item>
-
-        <v-card-item class="text-body-2 ml-1">
-          <div class="d-flex ga-8">
-            <div class="d-flex align-center ga-2">
-              <v-icon icon="mdi-weather-cloudy-clock"/>
-              <div>
-                <b>Начало:</b>
-                <span class="ml-3 text-blue-accent-3">{{ dateFromTo }}</span>
-                <!--                <v-chip class="ml-3" size="small" color="blue-accent-4" variant="flat" label>{{ dateFromTo }}</v-chip>-->
-              </div>
-            </div>
-
-            <div class="d-flex align-center ga-2">
-              <v-icon icon="mdi-badge-account-outline"/>
-              <div>
-                <b>Инспектор:</b>
-                <!--                <span class="ml-3">{{ inspector }}</span>-->
-                <span class="ml-3 text-blue-accent-3">{{ inspector }}</span>
-              </div>
-            </div>
-          </div>
-        </v-card-item>
 
         <v-card-item/>
 
@@ -53,7 +82,7 @@
           <v-sheet class="d-flex flex-column ga-4 bg-transparent">
             <v-sheet class="d-flex align-center ga-1 py-2 px-2 bg-lighten-5" border="sm" rounded="lg">
               <v-btn
-                  prepend-icon="mdi-file-download-outline"
+                  prepend-icon="mdi-tray-arrow-down"
                   color="deep-purple-accent-4"
                   class="text-caption"
                   density="comfortable"
@@ -68,15 +97,15 @@
                 </v-tooltip>
               </v-btn>
               <v-btn
-                  prepend-icon="mdi-table-arrow-up"
+                  prepend-icon="mdi-tray-arrow-up"
                   class="text-caption"
                   density="comfortable"
                   rounded="middle"
                   variant="text"
                   size="small"
-                  @click="clickExcelInputFile"
+                  @click="$refs.excelFileInput.click()"
               >
-                Загрузить объекты
+                Загрузить шаблон
                 <v-tooltip activator="parent" location="top">
                   Загрузить объекты из xlsx
                 </v-tooltip>
@@ -85,7 +114,6 @@
               <v-btn
                   prepend-icon="mdi-file-document-arrow-right-outline"
                   append-icon="mdi-chevron-down"
-                  color="blue-accent-3"
                   class="text-caption"
                   density="comfortable"
                   rounded="middle"
@@ -94,12 +122,9 @@
                   :disabled="reportDownloading"
                   :loading="reportDownloading"
               >
-                Скачать
-                <v-tooltip activator="parent" location="top">
-                  Скачать
-                </v-tooltip>
+                Отчет
                 <v-menu activator="parent" transition="slide-y-reverse-transition">
-                  <v-sheet class="px-2 py-2 mt-1 rounded-lg border-sm elevation-0 text-blue-accent-4">
+                  <v-sheet class="mt-1 rounded-lg border-sm elevation-0">
                     <v-list-item
                         title="Скачать отчет"
                         density="compact"
@@ -131,17 +156,16 @@
                   class="text-caption"
                   density="comfortable"
                   rounded="middle"
-                  border="sm"
                   variant="text"
                   size="small"
+                  border="sm"
               >
                 Операции
-                <v-tooltip activator="parent">
+                <v-tooltip activator="parent" location="top">
                   Операции с выделенными объектами
                 </v-tooltip>
                 <v-menu activator="parent" transition="slide-y-reverse-transition">
                   <v-sheet class="mt-1 rounded-lg elevation-0 border-sm">
-                    <v-list-item density="compact" title="Удалить объекты" @click=""/>
                     <v-list-item
                         append-icon="mdi-menu-right"
                         title="Изменить тип объектов"
@@ -169,6 +193,12 @@
                         </v-sheet>
                       </v-menu>
                     </v-list-item>
+                    <v-divider/>
+                    <v-list-item
+                        density="compact"
+                        title="Удалить объекты"
+                        @click=""
+                    />
                   </v-sheet>
                 </v-menu>
               </v-btn>
@@ -204,7 +234,7 @@
                   :items-per-page="itemsPerPage"
                   :search="searchText"
                   :loading="fetching"
-                  :headers="headers"
+                  :headers="tableHeaders"
                   :items="itemsMap"
                   style="max-height: 500px"
                   items-per-page-text="Кол-во на странице"
@@ -225,14 +255,14 @@
                       density="compact"
                       border="thin"
                       size="small"
-                      color="teal"
+                      color="indigo"
                       label
                   >
                     {{ item.objectType }}
                     <template #prepend>
                       <v-progress-circular
                           v-if="updatingIds.includes(item._id)"
-                          color="teal-accent-4"
+                          color="indigo-accent-4"
                           indeterminate
                           width="1"
                           size="8"
@@ -246,6 +276,7 @@
                           min-width="250"
                           class="border-sm rounded-lg bg-white mr-1"
                           transition="slide-y-reverse-transition"
+                          elevation="0"
                       >
                         <v-sheet class="pr-2 py-2">
                           <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
@@ -303,9 +334,9 @@
           <v-card-actions>
             <v-btn
                 @click.stop="removeObjectsAll"
-                variant="flat"
-                density="comfortable"
                 class="border-sm rounded-lg"
+                density="comfortable"
+                variant="flat"
                 text="Да"
             />
             <v-btn
@@ -325,24 +356,24 @@
 
 <script>
 import {
-  fetchAssignmentBlockOneById,
+  fetchInspectionObjects,
+  changeInspectionObject,
+  changeSomeObjects,
+  removeObjects,
   uploadObjects,
-  downloadPhotos
-} from "../../../../../utils/api/api_assignment_blocks";
+} from "../../../../../utils/api/api_inspection_objects";
 import {
-  myBtnPlus,
+  navigateBackBtnStyle,
   mySearchFieldStyle,
   myTableSheetStyle,
-  navigateBackBtnStyle,
+  myBtnPlus,
 } from "../../../../../configs/styles";
-import {
-  changeInspectionObject, changeSomeObjects,
-  fetchInspectionObjects,
-  removeObjects
-} from "../../../../../utils/api/api_inspection_objects";
+import {fetchAssignmentAddress, downloadPhotos} from "../../../../../utils/api/api_assignment_blocks";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
+import {fetchTemplates} from "@/utils/api/templates";
+import {tableHeaders} from "@/configs/objects";
 import {navigateTo} from "nuxt/app";
 
 export default {
@@ -350,87 +381,7 @@ export default {
 
   data() {
     return {
-      headers: [
-        {
-          title: '№ п/п',
-          align: 'start',
-          key: 'number',
-          value: 'number',
-          sortable: true,
-          nowrap: false,
-          minWidth: 80,
-          _$visible: true,
-        },
-        {
-          title: 'Наименование',
-          align: 'start',
-          key: 'name',
-          value: 'name',
-          sortable: true,
-          nowrap: false,
-          minWidth: 100,
-          maxWidth: 200,
-          _$visible: true,
-        },
-        {
-          title: 'Инв. №',
-          align: 'start',
-          key: 'inventoryNumber',
-          value: 'inventoryNumber',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Наличие объекта',
-          align: 'end',
-          key: 'isExist',
-          value: 'isExist',
-          maxWidth: 80,
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Наличие дефекта',
-          align: 'end',
-          key: 'isDefect',
-          value: 'isDefect',
-          maxWidth: 80,
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Тип объекта',
-          align: 'end',
-          key: 'objectType',
-          value: 'objectType',
-          minWidth: 100,
-          maxWidth: 180,
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          title: 'Описание дефекта',
-          align: 'end',
-          key: 'defectDescription',
-          value: 'defectDescription',
-          sortable: true,
-          nowrap: false,
-          _$visible: true,
-        },
-        {
-          align: 'end',
-          key: 'actions',
-          sortable: false,
-          minWidth: 150,
-          maxWidth: 150,
-          width: 150,
-          nowrap: true,
-        },
-      ],
+      tableHeaders,
       items: [],
       selectedItems: [],
       fetching: false,
@@ -444,32 +395,24 @@ export default {
         {value: 50, title: '50'},
       ],
 
-      objectTypesItems: [],
-
       updatingIds: [],
+      reportDownloading: false,
+      downloadingPhotos: false,
+      removeAllQuestionVisible: false,
+
+      templates: [],
 
       // IMPORT STYLES
       navigateBackBtnStyle,
       mySearchFieldStyle,
       myTableSheetStyle,
       myBtnPlus,
-
-      loading: false,
-      reportDownloading: false,
-      filterMenuVisible: false,
-      downloadingPhotos: false,
-      removeAllQuestionVisible: false,
-      filter: {
-        objectIsMissing: null,
-        objectWithDefect: null,
-      },
-
     }
   },
 
   beforeMount() {
 
-    fetchAssignmentBlockOneById(useRoute().params.blockId)
+    fetchAssignmentAddress(useRoute().params.blockId)
         .then(response => {
           this.block = response.data ?? null;
           this.fetchInspectionObjects();
@@ -480,7 +423,14 @@ export default {
           this.navigateBack();
         });
 
-
+    fetchTemplates()
+        .then(response => {
+          this.templates = response.data || [];
+        })
+        .catch(err => {
+          console.log('Ошибка загрузки шаблонов', err);
+          this.$store.commit('alert/ERROR', 'Ошибка загрузки шаблонов');
+        })
   },
 
   computed: {
@@ -518,10 +468,24 @@ export default {
       }
     },
 
+    templatesSearchFilter() {
+      return this.templates;
+    },
+
     objectTypesSearchFilter() {
       const ex = new RegExp(this.searchTypes, 'ig')
-      return this.objectTypesItems?.filter(e => !!e && ex.test(e));
+      return this.objectTypes.filter(e => ex.test(e));
     },
+
+    objectTypes() {
+      if (!this.block?.template) {
+        return this.templates
+            ?.find(e => !e.isBase)?.ObjectTypes
+            ?.map(e => e.type)
+      }
+      return this.block?.template.ObjectTypes.map(e => e.type);
+    },
+
 
     dateFromTo() {
       return unixDateToMiddleDateString(this.block?.startDate);
@@ -576,7 +540,7 @@ export default {
         console.log('Ошибка редактирования', err);
         this.$store.commit('alert/ERROR', 'Не удалось отредактировать');
       }).finally(() => {
-        this.updatingIds.filter(_id => _id !== id);
+        this.updatingIds = this.updatingIds.filter(_id => _id !== id);
       });
     },
 
@@ -603,10 +567,6 @@ export default {
           })
     },
 
-    clickExcelInputFile() {
-      this.$refs.excelFileInput.click();
-    },
-
     downloadObjectsTemplate() {
       downloadFile('objects template.xlsx', serverURL + '/inspection-objects/inspectionObjectTemplates');
     },
@@ -625,9 +585,7 @@ export default {
 
     onExcelFileInput(event) {
       if (event.target.files && event.target.files.length > 0) {
-        const formData = new FormData();
-        formData.append('excelObjects', event.target.files[0]);
-        uploadObjects(this.block._id, formData)
+        uploadObjects(this.block._id, event.target.files[0])
             .then(() => {
               this.$refs.excelFileInput.value = '';
               this.fetchInspectionObjects();
@@ -650,11 +608,7 @@ export default {
     },
 
     navigateBack() {
-      // if (window.history.length <= 2) {
       navigateTo(`/manager/assignments/${useRoute().params.assignmentId}/`);
-      // } else {
-      //   this.$router.back();
-      // }
     },
 
     textSlicer(txt, size) {
@@ -682,7 +636,7 @@ export default {
           .finally(() => {
             this.removeAllQuestionVisible = false;
           })
-    }
+    },
   }
 }
 </script>
