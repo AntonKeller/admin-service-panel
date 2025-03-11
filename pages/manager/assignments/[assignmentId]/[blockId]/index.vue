@@ -484,10 +484,10 @@ export default {
     objectTypes() {
       if (!this.block?.template) {
         return this.templates
-            ?.find(e => !e.isBase)?.ObjectTypes
+            ?.find(e => !e.isBase)?.objectTypes
             ?.map(e => e.type)
       }
-      return this.block?.template.ObjectTypes.map(e => e.type);
+      return this.block?.template?.objectTypes.map(e => e.type);
     },
 
 
@@ -516,7 +516,8 @@ export default {
       // TODO: запрос на изменение block
       changeAssignmentBlock(this.block)
           .then(resp => {
-            this.$store.commit('alert/ERROR', 'Шаблон изменен');
+            this.$store.commit('alert/SUCCESS', 'Шаблон изменен');
+            console.log(this.block.template)
           })
           .catch(err => {
             this.$store.commit('alert/ERROR', 'Не удалось изменить шаблон');
