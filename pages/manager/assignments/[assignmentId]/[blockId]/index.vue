@@ -32,7 +32,7 @@
             <v-btn
                 prepend-icon="mdi-file-document-arrow-right-outline"
                 append-icon="mdi-chevron-down"
-                :color="!block?.template ? 'orange-accent-3' : ''"
+                :color="!block?.template ? 'orange-accent-4' : ''"
                 class="text-caption"
                 density="comfortable"
                 rounded="middle"
@@ -41,7 +41,7 @@
                 :disabled="reportDownloading"
                 :loading="reportDownloading"
             >
-              {{ block?.template || 'Выберите шаблон' }}
+              {{ block?.template?.title || 'Базовый шаблон' }}
               <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition">
                 <v-sheet
                     max-height="250"
@@ -368,7 +368,11 @@ import {
   myTableSheetStyle,
   myBtnPlus,
 } from "../../../../../configs/styles";
-import {fetchAssignmentAddress, downloadPhotos} from "../../../../../utils/api/api_assignment_blocks";
+import {
+  fetchAssignmentAddress,
+  downloadPhotos,
+  changeAssignmentBlock
+} from "../../../../../utils/api/api_assignment_blocks";
 import {unixDateToMiddleDateString} from "../../../../../utils/functions";
 import {serverURL} from "../../../../../constants/constants";
 import {downloadFile} from "../../../../../utils/api/api_";
@@ -474,7 +478,7 @@ export default {
 
     objectTypesSearchFilter() {
       const ex = new RegExp(this.searchTypes, 'ig')
-      return this.objectTypes.filter(e => ex.test(e));
+      return this.objectTypes?.filter(e => ex.test(e)) || [];
     },
 
     objectTypes() {
@@ -505,6 +509,21 @@ export default {
   },
 
   methods: {
+
+    onSetTemplate(template) {
+      this.block.template = template;
+
+      // TODO: запрос на изменение block
+      changeAssignmentBlock(this.block)
+          .then(resp => {
+            this.$store.commit('alert/ERROR', 'Шаблон изменен');
+          })
+          .catch(err => {
+            this.$store.commit('alert/ERROR', 'Не удалось изменить шаблон');
+            this.block.template = null;
+          })
+
+    },
 
     async downloadPhotos() {
       this.downloadingPhotos = true;

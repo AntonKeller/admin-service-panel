@@ -14,8 +14,8 @@ export function sendAssignmentBlock(assignmentId, block, query) {
     return axios.post('/assignment-blocks/add/' + assignmentId + (query ?? ''), block, axiosConfig);
 }
 
-export function changeAssignmentBlock(assignmentId, block, query) {
-    return axios.put('/assignment-blocks/' + assignmentId + '/change/' + block._id + (query ?? ''), block, axiosConfig);
+export function changeAssignmentBlock(block) {
+    return axios.put('/assignment-blocks/change/' + block._id, block, axiosConfig);
 }
 
 export function removeAssignmentBlock(blockId, query) {

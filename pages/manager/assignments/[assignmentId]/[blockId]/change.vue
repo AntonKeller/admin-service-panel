@@ -155,7 +155,7 @@ export default {
 
       this.sending = true;
 
-      changeAssignmentBlock(this.$store.getters['assignments/GET_SELECTED_ITEM']?._id, this.block)
+      changeAssignmentBlock(this.block)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Адрес осмотра успешно изменен');
             this.navigateBack();
