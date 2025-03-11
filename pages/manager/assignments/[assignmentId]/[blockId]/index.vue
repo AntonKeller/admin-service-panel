@@ -484,8 +484,8 @@ export default {
     objectTypes() {
       if (!this.block?.template) {
         return this.templates
-            ?.find(e => !e.isBase)?.objectTypes
-            ?.map(e => e.type)
+            ?.find(e => e.isBase)?.objectTypes
+            ?.map(e => e.type) || []
       }
       return this.block?.template?.objectTypes.map(e => e.type);
     },
