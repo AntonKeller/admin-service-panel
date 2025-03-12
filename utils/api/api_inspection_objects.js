@@ -19,7 +19,7 @@ export function changeInspectionObject(inspectionObject) {
 }
 
 export function changeSomeObjects(objects) {
-    return axios.put('/inspection-objects/updateMany', objects, axiosConfig);
+    return axios.post('/inspection-objects/updateMany', objects, axiosConfig);
 }
 
 // Загружает на сервер файл Excel со списокм объектов
@@ -27,6 +27,10 @@ export function uploadObjects(blockID, file) {
     const formData = new FormData();
     formData.append('excelObjects', file);
     return axios.post(`/inspection-objects/uploadObjects/${blockID}`, formData, axiosConfig);
+}
+
+export function removeSomeObjects(ids) {
+    return axios.post('/inspection-objects/deleteMany', ids, axiosConfig);
 }
 
 export function removeObject(objectID, query) {

@@ -197,7 +197,7 @@
                     <v-list-item
                         density="compact"
                         title="Удалить объекты"
-                        @click=""
+                        @click="onRemoveSomeObjects"
                     />
                   </v-sheet>
                 </v-menu>
@@ -360,7 +360,7 @@ import {
   changeInspectionObject,
   changeSomeObjects,
   removeObjects,
-  uploadObjects,
+  uploadObjects, removeSomeObjects,
 } from "../../../../../utils/api/api_inspection_objects";
 import {
   navigateBackBtnStyle,
@@ -643,10 +643,26 @@ export default {
       navigateTo(`${id}/change`);
     },
 
+    onRemoveSomeObjects() {
+      if (Array.isArray(this.selectedItems) && this.selectedItems.length > 0) {
+        removeSomeObjects(this.selectedItems)
+            .then(() => {
+              this.$store.commit('alert/SUCCESS', 'Объекты успешно удалены');
+              this.selectedItems = [];
+              this.fetchInspectionObjects();
+            })
+            .catch(err => {
+              this.$store.commit('alert/ERROR', 'Не удалось удалить объекты');
+              console.log('Ошибка удаления объектов', err);
+            });
+      }
+    },
+
     removeObjectsAll() {
       removeObjects(this.block._id)
           .then(() => {
             this.$store.commit('alert/SUCCESS', 'Объекты успешно удалены');
+            this.selectedItems = [];
             this.fetchInspectionObjects();
           })
           .catch(err => {

@@ -21,6 +21,10 @@ export function removeSomeTemplates(ids) {
     return axios.post(`/templates/deleteMany`, ids, axiosConfig);
 }
 
+export function changeTemplate(template) {
+    return axios.put('/templates/...', template, axiosConfig);
+}
+
 export function uploadExcelTemplate(templateId, file) {
     const formData = new FormData();
     formData.append('photoAngles', file);

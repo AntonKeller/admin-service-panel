@@ -1,8 +1,11 @@
 <template>
   <v-container fluid>
-    <v-sheet min-width="400" max-width="1024">
+    <v-sheet min-width="400" max-width="1024" rounded="lg">
 
       <v-card variant="text">
+        <v-card-title>Редактирование адреса ТЗ</v-card-title>
+        <v-card-subtitle>Заполните поля</v-card-subtitle>
+
         <v-card-item>
           <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
             Назад
@@ -11,11 +14,6 @@
             </v-tooltip>
           </v-btn>
         </v-card-item>
-      </v-card>
-
-      <v-card variant="text">
-        <v-card-title>Редактирование адреса ТЗ</v-card-title>
-        <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>
           <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
@@ -71,12 +69,11 @@
 </template>
 
 <script>
-import {changeAssignmentBlock} from "@/utils/api/api_assignment_blocks";
+import {changeAssignmentBlock, fetchAssignmentAddress} from "@/utils/api/api_assignment_blocks";
 import {navigateBackBtnStyle, inputFieldStyle} from "@/configs/styles";
 import {isNotEmptyRule} from "@/utils/validators/functions";
 import {navigateTo} from "nuxt/app";
 import {vMaska} from "maska/vue"
-import _ from "lodash";
 
 export default {
   name: "block-change",
@@ -112,7 +109,15 @@ export default {
   },
 
   beforeMount() {
-    this.block = _.cloneDeep(this.$store.getters['assignmentBlocks/SELECTED']);
+    fetchAssignmentAddress(useRoute().params.blockId)
+        .then(response => {
+          this.block = response.data ?? null;
+        })
+        .catch(err => {
+          console.log('Ошибка, такого адреса не существует', err);
+          this.$store.commit('alert/ERROR', 'Такого адреса не существует');
+          this.navigateBack();
+        });
   },
 
   methods: {
@@ -120,11 +125,7 @@ export default {
     isNotEmptyRule,
 
     navigateBack() {
-      // if (window.history.length <= 2) {
       navigateTo(`/manager/assignments/${useRoute().params.assignmentId}/`);
-      // } else {
-      //   this.$router.back();
-      // }
     },
 
     clear() {
@@ -145,11 +146,6 @@ export default {
 
       if (!this.formIsValid) {
         this.$store.commit('alert/ERROR', 'Заполните обязательные поля!');
-        return;
-      }
-
-      if (!this.$store.getters['assignments/SELECTED']?._id) {
-        this.$store.commit('alert/ERROR', 'Не выбранно задание для добавления блока');
         return;
       }
 
