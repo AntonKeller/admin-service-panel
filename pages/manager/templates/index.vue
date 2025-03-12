@@ -123,7 +123,7 @@
           <my-change-button
               class="ml-2"
               prompt="Редактировать шаблон"
-              @click.stop="onChangeTemplate(item._id)"
+              @click.stop="onShowChangeMenuTemplate(item._id)"
           />
           <my-button-table-remove
               :prompt="'Удалить'"
@@ -139,36 +139,6 @@
           </div>
         </template>
       </v-data-table>
-
-      <v-overlay v-model="changeTemplateOverlayVisible" class="d-flex justify-center align-center">
-        <v-sheet class="d-flex flex-column ga-4 px-7 py-4 h-100 rounded-lg" width="800">
-          Редактор шаблона
-          <v-card-item>
-            <v-form v-model="changeTemplateFormIsValid" ref="changeTemplateForm" class="d-flex flex-column mt-2">
-              <v-row dense>
-                <v-col :cols="12">
-                  <!--                  <v-text-field-->
-                  <!--                      v-model="assignment.title"-->
-                  <!--                      v-bind="inputFieldStyle"-->
-                  <!--                      :rules="assignmentTitleRules"-->
-                  <!--                      label="Заголовок задания"-->
-                  <!--                      prepend-inner-icon="mdi-label-variant-outline"-->
-                  <!--                  />-->
-                </v-col>
-                <v-col :cols="12">
-                  <!--                  <v-text-field-->
-                  <!--                      v-model="assignment.title"-->
-                  <!--                      v-bind="inputFieldStyle"-->
-                  <!--                      :rules="assignmentTitleRules"-->
-                  <!--                      label="Заголовок задания"-->
-                  <!--                      prepend-inner-icon="mdi-label-variant-outline"-->
-                  <!--                  />-->
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-card-item>
-        </v-sheet>
-      </v-overlay>
 
       <v-overlay v-model="objectTypesOverlay" class="d-flex justify-center align-center">
         <v-sheet class="d-flex flex-column ga-4 px-7 py-4 h-100 rounded-lg" width="800">
@@ -296,6 +266,41 @@
         </v-sheet>
       </v-overlay>
 
+      <v-overlay v-model="changeTemplateOverlay" class="d-flex justify-center align-center">
+        <v-sheet rounded="lg" width="600px">
+          <v-card-item>Редактирование шаблона</v-card-item>
+          <v-card-item>
+            <v-form v-model="changeTemplateFormIsValid" ref="changeTemplateForm" class="d-flex flex-column mt-2">
+              <v-row dense>
+                <v-col :cols="12">
+                  <v-text-field
+                      v-model="selectedTemplate.title"
+                      v-bind="inputFieldStyle"
+                      label="Заголовок"
+                  />
+                </v-col>
+
+                <v-col :cols="12">
+                  <v-text-field
+                      v-model="selectedTemplate.title"
+                      v-bind="inputFieldStyle"
+                      label="Заголовок"
+                  />
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-card-item>
+          <v-card-actions>
+            <my-btn-submit
+                text="Принять"
+                prepend-icon="mdi-checkbox-multiple-marked-outline"
+                @click="onChangeTemplate"
+            />
+            <my-button-clear text="Очистить" @click="clear"/>
+          </v-card-actions>
+        </v-sheet>
+      </v-overlay>
+
       <v-file-input
           class="d-none"
           ref="excelFileInput"
@@ -308,9 +313,9 @@
 
 <script setup>
 import {downloadExcelTemplate, removeTemplate, uploadExcelTemplate} from "@/utils/api/templates";
+import {mySearchFieldStyle, inputFieldStyle} from "@/configs/styles";
 import configTemplatesPage from "@/configs/configTemplatesPage";
 import useTemplates from "@/composables/useTemplates";
-import {mySearchFieldStyle} from "@/configs/styles";
 import useSearch from "@/composables/useSearch";
 import {useStore} from 'vuex';
 import {ref, watch} from 'vue';
@@ -337,7 +342,7 @@ const selectedTemplates = ref([]);
 const selectedObjectTypes = ref([]);
 const objectTypesOverlay = ref(false);
 const changeTemplateFormIsValid = ref(false);
-const changeTemplateOverlayVisible = ref(false);
+const changeTemplateOverlay = ref(false);
 
 onBeforeMount(() => {
   fetchTemplatesCollection()
@@ -348,7 +353,6 @@ onBeforeMount(() => {
 
 watch(selectedTemplateId, () => {
   selectedTemplate.value = _.cloneDeep(templatesCollection.value.find(e => e._id === selectedTemplateId.value));
-  // console.log('selectedTemplate.value', selectedTemplate.value);
 })
 
 const anglesMap = computed(() => {
@@ -397,6 +401,10 @@ const onDownloadTemplate = () => {
       })
 }
 
+const onChangeTemplate = () => {
+  //   TODO: Дописать логику
+}
+
 const onUploadTemplate = (event) => {
   console.log('selectedTemplateId.value', selectedTemplateId.value)
   if (event.target.files && event.target.files.length > 0 && selectedTemplateId.value) {
@@ -425,9 +433,9 @@ const onRemoveTemplate = (id) => {
 }
 
 
-const onChangeTemplate = (templateId) => {
+const onShowChangeMenuTemplate = (templateId) => {
   selectedTemplateId.value = templateId;
-  changeTemplateOverlayVisible.value = true;
+  changeTemplateOverlay.value = true;
 }
 
 const onRemoveSomeTemplates = () => {
