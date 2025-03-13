@@ -296,7 +296,6 @@
                 prepend-icon="mdi-checkbox-multiple-marked-outline"
                 @click="onChangeTemplate"
             />
-            <my-button-clear text="Очистить" @click="clear"/>
           </v-card-actions>
         </v-sheet>
       </v-overlay>
@@ -402,7 +401,8 @@ const onDownloadTemplate = () => {
 }
 
 const onChangeTemplate = () => {
-  //   TODO: Дописать логику
+    //   TODO: Дописать логику
+
 }
 
 const onUploadTemplate = (event) => {

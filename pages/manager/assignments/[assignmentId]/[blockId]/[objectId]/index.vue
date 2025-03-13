@@ -50,14 +50,13 @@
             </div>
 
             <v-sheet class="d-flex flex-wrap ga-2">
-              <div v-for="photo of angle.photoList" class="">
-                <img
-                    @click="showLightbox(photo._id)"
-                    style="min-width: 120px; max-width: 120px; height: 100px"
-                    content="cover"
+              <div v-for="photo of angle.photoList">
+                <v-img
                     :src="photo['150x150']"
-                    alt="Загрузка изображения..."
+                    :lazy-src="photo['150x150']"
+                    style="min-width: 120px; max-width: 120px; height: 100px"
                     class="rounded cursor-pointer border-sm border-dashed"
+                    @click="showLightbox(photo._id)"
                 />
               </div>
             </v-sheet>
@@ -124,9 +123,9 @@
 <script>
 import {removeImg, sendImg} from "@/utils/api/api_images";
 import {navigateBackBtnStyle} from "@/configs/styles";
+import {fetchAngles} from "@/utils/api/api_angles";
 import {navigateTo} from "nuxt/app";
 import _ from "lodash";
-import {fetchAngles} from "@/utils/api/api_angles.js";
 
 export default {
   name: "object-page",
@@ -150,20 +149,13 @@ export default {
     }
   },
 
-  async beforeMount() {
-
+  beforeMount() {
     fetchAngles(useRoute().params.objectId)
-        .then(() => {
-          fetchAngles(useRoute().params.objectId)
-              .then(response => {
-                this.angles = response.data;
-                this.$store.commit('SET_ANGLES', response.data);
-              })
-              .catch(err => {
-                console.log('Ошибка получения списка ракурсов')
-              })
+        .then((response) => {
+          this.angles = response.data;
         })
         .catch(err => {
+          console.log('Такого объекта не существует', err);
           this.$store.commit('alert/ERROR', 'Такого объекта не существует');
           this.navigateBack();
         })
@@ -173,19 +165,13 @@ export default {
     initPhotoIndex() {
       if (this.initPhotoIndex !== null && this.initPhotoIndex !== undefined) {
         this.currentPhotoIndex = this.initPhotoIndex;
-        console.log('\n\n--------------------------------------------------------------');
-        console.log('Исполнен Watcher [initPhotoIndex]');
-        console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
-        console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
-        console.log('this.currentPhotoId:\t', this.currentPhotoId);
-        console.log('--------------------------------------------------------------\n');
       }
     },
     currentPhotoIndex() {
       if (this.lightboxImages[this.initPhotoIndex]?._id) {
         this.currentPhotoId = this.lightboxImages[this.initPhotoIndex]?._id;
         console.log('\n\n--------------------------------------------------------------');
-        console.log('Исполнен Watcher [currentPhotoIndex]');
+        console.log('Watcher [currentPhotoIndex]');
         console.log('this.initPhotoIndex:\t', this.initPhotoIndex);
         console.log('this.currentPhotoIndex:\t', this.currentPhotoIndex);
         console.log('this.currentPhotoId:\t', this.currentPhotoId);
@@ -198,36 +184,33 @@ export default {
     lightboxImages() {
       const array = [];
       this.angles.forEach(angle => {
-        angle.photoList.forEach(photo => {
+        angle.photoList.forEach(e => {
           array.push({
-            _id: photo._id,
-            src: photo.fullSize,
+            _id: e._id,
+            src: e.fullSize,
             title: angle.name
           });
         })
       });
       return array;
     },
-    angles() {
-      console.log('this.$store.getters[\'angles/GET_ANGLES\']', this.$store.getters['angles/GET_ANGLES'])
-      return this.$store.getters['angles/GET_ANGLES'];
-    },
     inspectionObject() {
       return this.$store.getters['inspectionObjects/GET_SELECTED'];
     },
     objectNameTitle() {
-      return (this.inspectionObject?.name || 'Имя отсутствует') + ' / ' + (this.inspectionObject?.inventoryNumber || 'Инв. номер отсутствует')
+      return (this.inspectionObject?.name || 'Имя отсутствует') + ' / ' + (this.inspectionObject?.inventoryNumber || 'Инв. номер отсутствует');
     },
   },
 
   methods: {
 
     onChangeLightboxIndex(oldIndex, newIndex) {
+
       if (!_.isNil(newIndex) && !_.isNil(this.lightboxImages[newIndex]?._id)) {
         this.initPhotoIndex = newIndex;
       }
       console.log('\n\n--------------------------------------------------------------');
-      console.log('Исполнено событие обновления [Lightbox Index]');
+      console.log('Исполнено событие обновления [onChangeLightboxIndex]');
       console.log('--------------------------------------------------------------');
       console.log('Параметры события:');
       console.log('Старый индекс:\t', oldIndex);
@@ -251,12 +234,8 @@ export default {
     },
 
     navigateBack() {
-      // if (window.history.length <= 2) {
       const p = useRoute().params;
       navigateTo(`/manager/assignments/${p.assignmentId}/${p.blockId}/`);
-      // } else {
-      //   this.$router.back();
-      // }
     },
 
     onObjectChangeSuccess() {
@@ -289,8 +268,6 @@ export default {
       console.log('this.currentPhotoId:\t', this.currentPhotoId);
       console.log('this.lightboxImages.length:\t', this.lightboxImages.length);
       console.log('--------------------------------------------------------------\n');
-
-
       console.log('lightboxImages.len - currentPhotoIndex:', (this.lightboxImages.length - 1) - this.currentPhotoIndex)
 
       if (photoId) {
@@ -298,7 +275,12 @@ export default {
             .then(async () => {
 
               // Если удаление на сервере успешно -> удаляем из store
-              this.$store.commit('angles/REMOVE_PHOTO_BY_ID', photoId);
+              this.angles = this.angles.map(angle => {
+                angle.photoList = angle.photoList.filter(e => {
+                  return e._id !== photoId;
+                })
+                return angle;
+              })
 
               // Если фотографий не осталось
               if (this.lightboxImages.length === 0) {
