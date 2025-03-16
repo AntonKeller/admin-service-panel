@@ -1,19 +1,23 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-card variant="text">
-        <v-card-item>
-          <v-btn v-bind="navigateBackBtnStyle" @click="$emit('close')">
-            Назад
-            <v-tooltip activator="parent" location="left">
-              Закрыть
-            </v-tooltip>
-          </v-btn>
-        </v-card-item>
-      </v-card>
-
       <v-card :loading="sending" :disabled="sending" elevation="0" width="100vw" max-width="800">
-        <v-card-title>Добавление нового инспектора</v-card-title>
+
+        <v-card-title class="d-flex align-center">
+          Добавление нового инспектора
+          <v-btn
+              density="comfortable"
+              class="ml-auto"
+              variant="text"
+              size="small"
+              icon=""
+              @click="$emit('close')"
+          >
+            <v-icon icon="mdi-close"/>
+            <v-tooltip activator="parent">Закрыть окно</v-tooltip>
+          </v-btn>
+        </v-card-title>
+
         <v-card-subtitle>Заполните поля</v-card-subtitle>
 
         <v-card-item>

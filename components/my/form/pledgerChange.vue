@@ -6,9 +6,11 @@
         <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
       </div>
     </v-card-title>
+
     <v-card-subtitle>
       Заполните поля (сведения о залогодателе)
     </v-card-subtitle>
+
     <v-card-item>
       <v-form v-model="formIsValid" ref="form" class="d-flex flex-column mt-2">
         <v-row dense>

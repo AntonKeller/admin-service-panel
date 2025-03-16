@@ -22,7 +22,7 @@ export function removeSomeTemplates(ids) {
 }
 
 export function changeTemplate(template) {
-    return axios.put('/templates/...', template, axiosConfig);
+    return axios.put(`/templates/updateTemplateById/${template._id}`, template, axiosConfig);
 }
 
 export function uploadExcelTemplate(templateId, file) {

@@ -292,7 +292,6 @@ export default {
     },
 
     onAddCustomer() {
-      // TODO: Логика добавления
       const customer = {
         _id: null,
         shortName: null,

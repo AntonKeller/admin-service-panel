@@ -66,7 +66,7 @@
       </v-tooltip>
     </v-btn>
 
-    <v-overlay v-model="formInspectorAddVisible">
+    <v-overlay v-model="formInspectorAddVisible" class="d-flex justify-center align-center">
       <form-inspector-add @add:success="onFormInspectorAddClose" @close="formInspectorAddVisible=false"/>
     </v-overlay>
   </div>

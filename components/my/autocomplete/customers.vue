@@ -67,7 +67,7 @@
       </v-tooltip>
     </v-btn>
 
-    <v-overlay v-model="formCustomerAddVisible">
+    <v-overlay v-model="formCustomerAddVisible" class="d-flex justify-center align-center">
       <form-customer-add @add:success="onFormCustomerAddClose" @close="formCustomerAddVisible=false"/>
     </v-overlay>
   </div>

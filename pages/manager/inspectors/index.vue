@@ -159,6 +159,7 @@
 <script>
 import {addInspector, fetchInspectors, removeInspector, removeSomeInspectors} from "@/utils/api/api_inspectors";
 import {myBtnPlus, mySearchFieldStyle, myTableSheetStyle} from "@/configs/styles";
+import headers from "@/configs/inspectorsTableHeaders";
 import _ from "lodash";
 
 export default {
@@ -166,34 +167,7 @@ export default {
 
   data() {
     return {
-      headers: [
-        {
-          align: 'start',
-          key: 'name',
-          value: 'surname',
-          sortable: true,
-          title: 'ФИО Инспектора',
-
-        },
-        {
-          align: 'start',
-          key: 'phoneNumber',
-          sortable: true,
-          title: 'Номер телефона',
-        },
-        {
-          align: 'start',
-          key: 'email',
-          sortable: true,
-          title: 'Email',
-        },
-        {
-          align: 'end',
-          key: 'actions',
-          sortable: false,
-          width: 100,
-        },
-      ],
+      headers,
       items: [],
       selectedItems: [],
       fetching: false,

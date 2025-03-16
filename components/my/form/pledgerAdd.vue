@@ -1,10 +1,18 @@
 <template>
   <v-card :loading="sending" :disabled="sending" elevation="6" width="100vw" max-width="800">
-    <v-card-title>
-      <div class="d-flex justify-space-between align-center">
-        <div>Создание новый записи залогодатель</div>
-        <my-button-close-card @click="$emit('click:close')" class="align-self-start"/>
-      </div>
+    <v-card-title class="d-flex align-center">
+      Создание новый записи залогодатель
+      <v-btn
+          density="comfortable"
+          class="ml-auto"
+          variant="text"
+          size="small"
+          icon=""
+          @click="$emit('click:close')"
+      >
+        <v-icon icon="mdi-close"/>
+        <v-tooltip activator="parent">Закрыть окно</v-tooltip>
+      </v-btn>
     </v-card-title>
     <v-card-subtitle>
       Заполните поля (сведения о залогодателе)

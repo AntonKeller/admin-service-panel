@@ -1,20 +1,22 @@
 <template>
   <v-container fluid>
     <v-sheet>
-      <v-card variant="text">
-        <v-card-item>
-          <v-btn v-bind="navigateBackBtnStyle" @click="$emit('close')">
-            Закрыть
-            <v-tooltip activator="parent" location="left">
-              Вернуться назад
-            </v-tooltip>
-          </v-btn>
-        </v-card-item>
-      </v-card>
-
       <v-card :loading="loading" :disabled="loading" variant="flat" width="100vw" max-width="900">
 
-        <v-card-title>Новый заказчик</v-card-title>
+        <v-card-title class="d-flex align-center">
+          Новый заказчик
+          <v-btn
+              density="comfortable"
+              class="ml-auto"
+              variant="text"
+              size="small"
+              icon=""
+              @click="$emit('close')"
+          >
+            <v-icon icon="mdi-close"/>
+            <v-tooltip activator="parent">Закрыть окно</v-tooltip>
+          </v-btn>
+        </v-card-title>
         <v-card-subtitle>Введите информацию о заказчике/организации</v-card-subtitle>
 
         <v-card-text>

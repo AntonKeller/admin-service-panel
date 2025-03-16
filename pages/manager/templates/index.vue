@@ -90,11 +90,11 @@
       </v-sheet>
       <v-data-table
           v-model="selectedTemplates"
-          v-model:items-per-page="configTemplatesPage.itemsPerPage"
-          :items-per-page-options="configTemplatesPage.itemsPerPageOptions"
-          :items-per-page="configTemplatesPage.itemsPerPage"
+          v-model:items-per-page="templatesItemsPerPage"
+          :items-per-page-options="templatesItemsPerPageOptions"
+          :items-per-page="templatesItemsPerPage"
           :items="templatesMap"
-          :headers="configTemplatesPage.templatesHeaders"
+          :headers="templatesTableHeaders"
           style="max-height: 500px"
           items-per-page-text="Кол-во на странице"
           loading-text="Загрузка данных..."
@@ -184,11 +184,11 @@
           <div>
             <v-data-table
                 v-model="selectedObjectTypes"
-                v-model:items-per-page="configTemplatesPage.itemsPerPage"
-                :items-per-page-options="configTemplatesPage.itemsPerPageOptions"
-                :items-per-page="configTemplatesPage.itemsPerPage"
+                v-model:items-per-page="objectTypesItemsPerPage"
+                :items-per-page-options="objectTypesItemsPerPageOptions"
+                :items-per-page="objectTypesItemsPerPage"
                 :items="objectTypesMap"
-                :headers="configTemplatesPage.objectTypesHeaders"
+                :headers="objectTypesHeaders"
                 style="max-height: 300px"
                 items-per-page-text="Кол-во на странице"
                 loading-text="Загрузка данных..."
@@ -222,64 +222,15 @@
               </template>
             </v-data-table>
           </div>
-          <v-spacer/>
-          <v-divider/>
-          <v-chip text="Ракурсы выбранного объекта" color="teal-darken-1" variant="flat" label/>
-          <v-data-table
-              v-model:items-per-page="configTemplatesPage.itemsPerPage"
-              :items-per-page-options="configTemplatesPage.itemsPerPageOptions"
-              :items-per-page="configTemplatesPage.itemsPerPage"
-              :items="anglesMap"
-              :headers="configTemplatesPage.anglesHeaders"
-              style="max-height: 300px"
-              items-per-page-text="Кол-во на странице"
-              loading-text="Загрузка данных..."
-              no-data-text="Нет данных"
-              class="bg-transparent"
-              density="comfortable"
-              items-per-page="5"
-              item-value="_id"
-              fixed-header
-              show-select
-              @update:current-items="selectedTemplates = []"
-          >
-            <template #item.actions="{ item }">
-              <my-change-button
-                  class="ml-2"
-                  prompt="Редактировать"
-                  @click.stop=""
-              />
-              <my-button-table-remove
-                  :prompt="'Удалить'"
-                  class="ml-2"
-                  @click:yes="onRemoveTemplate(item._id)"
-              />
-            </template>
-
-            <template #footer.prepend>
-              <div class="mr-auto text-grey-darken-1 pl-4 mt-2" v-if="selectedTemplates.length">
-                <v-icon icon="mdi-order-bool-ascending-variant" class="mr-1"/>
-                Выбрано элементов: {{ selectedTemplates.length }}
-              </div>
-            </template>
-          </v-data-table>
         </v-sheet>
       </v-overlay>
 
       <v-overlay v-model="changeTemplateOverlay" class="d-flex justify-center align-center">
         <v-sheet rounded="lg" width="600px">
-          <v-card-item>Редактирование шаблона</v-card-item>
+          <v-card-item>Редактирование заголовка</v-card-item>
           <v-card-item>
             <v-form v-model="changeTemplateFormIsValid" ref="changeTemplateForm" class="d-flex flex-column mt-2">
               <v-row dense>
-                <v-col :cols="12">
-                  <v-text-field
-                      v-model="selectedTemplate.title"
-                      v-bind="inputFieldStyle"
-                      label="Заголовок"
-                  />
-                </v-col>
-
                 <v-col :cols="12">
                   <v-text-field
                       v-model="selectedTemplate.title"
@@ -311,9 +262,17 @@
 </template>
 
 <script setup>
-import {downloadExcelTemplate, removeTemplate, uploadExcelTemplate} from "@/utils/api/templates";
+import {
+  changeTemplate,
+  downloadExcelTemplate,
+  removeSomeTemplates,
+  removeTemplate,
+  uploadExcelTemplate
+} from "@/utils/api/templates";
 import {mySearchFieldStyle, inputFieldStyle} from "@/configs/styles";
-import configTemplatesPage from "@/configs/configTemplatesPage";
+import templatesTableHeaders from "@/configs/templatesTableHeaders";
+import objectTypesHeaders from "@/configs/objectTypesHeaders";
+import useTableOptions from "@/composables/useTableOptions";
 import useTemplates from "@/composables/useTemplates";
 import useSearch from "@/composables/useSearch";
 import {useStore} from 'vuex';
@@ -330,9 +289,18 @@ const {
   fetching,
   createNewTemplate,
   templatesCollection,
-  templatesCollectionCount,
   fetchTemplatesCollection
 } = useTemplates();
+
+const {
+  itemsPerPage: templatesItemsPerPage,
+  itemsPerPageOptions: templatesItemsPerPageOptions
+} = useTableOptions();
+
+const {
+  itemsPerPage: objectTypesItemsPerPage,
+  itemsPerPageOptions: objectTypesItemsPerPageOptions
+} = useTableOptions();
 
 const store = useStore();
 const selectedTemplate = ref(null);
@@ -354,16 +322,14 @@ watch(selectedTemplateId, () => {
   selectedTemplate.value = _.cloneDeep(templatesCollection.value.find(e => e._id === selectedTemplateId.value));
 })
 
-const anglesMap = computed(() => {
-  return [];
-});
-
 const objectTypesMap = computed(() => {
-  return templatesCollection.value.find(e => e._id === selectedTemplateId.value)?.objectTypes?.map(e => ({
-    _id: e._id,
-    type: e.type,
-    anglesCount: e.angles?.length ?? 0,
-  })) ?? [];
+  return templatesCollection.value
+      ?.find(e => e._id === selectedTemplateId.value)
+      ?.objectTypes?.map(e => ({
+        _id: e._id,
+        type: e.type,
+        anglesCount: e.angles?.length ?? 0,
+      })) ?? [];
 });
 
 
@@ -401,8 +367,16 @@ const onDownloadTemplate = () => {
 }
 
 const onChangeTemplate = () => {
-    //   TODO: Дописать логику
-
+  changeTemplate(selectedTemplate.value)
+      .then(() => {
+        store.commit('alert/SUCCESS', 'Заголовок изменен');
+        changeTemplateOverlay.value = false;
+        fetchTemplatesCollection();
+      })
+      .catch(err => {
+        console.log('Ошибка изменения', err);
+        store.commit('alert/ERROR', 'Ошибка изменения');
+      })
 }
 
 const onUploadTemplate = (event) => {
@@ -432,14 +406,21 @@ const onRemoveTemplate = (id) => {
       })
 }
 
-
 const onShowChangeMenuTemplate = (templateId) => {
   selectedTemplateId.value = templateId;
   changeTemplateOverlay.value = true;
 }
 
 const onRemoveSomeTemplates = () => {
-  // TODO: Доработать логику
-  store.commit('alert/ERROR', 'В разработке...');
+  if (selectedTemplates.value.length === 0) store.commit('alert/ERROR', 'Не выбраны шаблоны');
+
+  removeSomeTemplates(selectedTemplates.value)
+      .then(() => {
+        store.commit('alert/SUCCESS', 'Успешно удалены');
+        fetchTemplatesCollection();
+      })
+      .catch(err => {
+        store.commit('alert/ERROR', 'Ошибка удаления');
+      })
 }
 </script>

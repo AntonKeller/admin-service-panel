@@ -12,7 +12,6 @@
 
         <v-card-item class="text-body-2 ml-1">
           <div class="d-flex ga-8">
-
             <div class="d-flex align-center ga-2">
               <v-icon icon="mdi-weather-cloudy-clock"/>
               <div>
@@ -20,7 +19,6 @@
                 <span class="ml-3 text-blue-accent-3">{{ dateFromTo }}</span>
               </div>
             </div>
-
             <div class="d-flex align-center ga-2">
               <v-icon icon="mdi-badge-account-outline"/>
               <div>
@@ -28,42 +26,6 @@
                 <span class="ml-3 text-blue-accent-3">{{ inspector }}</span>
               </div>
             </div>
-
-            <v-btn
-                prepend-icon="mdi-file-document-arrow-right-outline"
-                append-icon="mdi-chevron-down"
-                :color="!block?.template ? 'orange-accent-4' : ''"
-                class="text-caption"
-                density="comfortable"
-                rounded="middle"
-                variant="text"
-                size="small"
-                :disabled="reportDownloading"
-                :loading="reportDownloading"
-            >
-              {{ block?.template?.title || 'Базовый шаблон' }}
-              <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition">
-                <v-sheet
-                    max-height="250"
-                    min-width="250"
-                    class="border-sm rounded-lg bg-white mt-1"
-                    transition="slide-y-reverse-transition"
-                >
-                  <v-sheet class="pr-2 py-2">
-                    <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
-                  </v-sheet>
-                  <v-divider/>
-                  <div v-if="templatesSearchFilter.length === 0" class="text-center py-2">Пусто</div>
-                  <v-list-item
-                      v-for="template of templatesSearchFilter"
-                      :title="template?.title || ''"
-                      class=" text-caption"
-                      density="compact"
-                      @click="onSetTemplate(template)"
-                  />
-                </v-sheet>
-              </v-menu>
-            </v-btn>
           </div>
         </v-card-item>
 
@@ -203,6 +165,40 @@
                 </v-menu>
               </v-btn>
               <v-spacer/>
+              <v-btn
+                  prepend-icon="mdi-file-document-arrow-right-outline"
+                  append-icon="mdi-chevron-down"
+                  :color="!block?.template ? 'orange-accent-4' : ''"
+                  class="text-caption"
+                  density="comfortable"
+                  rounded="middle"
+                  variant="text"
+                  size="small"
+                  :disabled="items && items.length > 0"
+              >
+                {{ block?.template?.title || 'Базовый шаблон' }}
+                <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition" >
+                  <v-sheet
+                      max-height="250"
+                      min-width="250"
+                      class="border-sm rounded-lg bg-white mt-1"
+                      transition="slide-y-reverse-transition"
+                  >
+                    <v-sheet class="pr-2 py-2">
+                      <v-text-field v-model="searchTypes" v-bind="mySearchFieldStyle" @click.stop/>
+                    </v-sheet>
+                    <v-divider/>
+                    <div v-if="templatesSearchFilter.length === 0" class="text-center py-2">Пусто</div>
+                    <v-list-item
+                        v-for="template of templatesSearchFilter"
+                        :title="template?.title || ''"
+                        class=" text-caption"
+                        density="compact"
+                        @click="onSetTemplate(template)"
+                    />
+                  </v-sheet>
+                </v-menu>
+              </v-btn>
               <v-divider vertical/>
               <v-btn
                   prepend-icon="mdi-table-large-remove"
@@ -512,8 +508,6 @@ export default {
 
     onSetTemplate(template) {
       this.block.template = template;
-
-      // TODO: запрос на изменение block
       changeAssignmentBlock(this.block)
           .then(resp => {
             this.$store.commit('alert/SUCCESS', 'Шаблон изменен');
@@ -593,8 +587,7 @@ export default {
 
     downloadReport() {
       this.reportDownloading = true;
-      const assignmentBlockId = this.$store.getters['assignmentBlocks/GET_SELECTED_ITEM']?._id;
-      downloadFile('Отчет.docx', `${serverURL}/reports/${assignmentBlockId}/commercial-proposal`)
+      downloadFile('Отчет.docx', `${serverURL}/reports/${useRoute().params.blockId}/commercial-proposal`)
           .catch(err => {
             console.log('Ошибка загрузки отчета', err);
           })
