@@ -73,6 +73,16 @@
                 </v-tooltip>
               </v-btn>
               <v-divider vertical/>
+              <v-progress-circular
+                  v-if="reportDownloadingProcess.percent > 0"
+                  :model-value="reportDownloadingProcess.percent"
+                  :size="18"
+                  :width="2"
+                  color="teal"
+                  style="font-size: 10px"
+              >
+                {{ reportDownloadingProcess.percent }}
+              </v-progress-circular>
               <v-btn
                   prepend-icon="mdi-file-document-arrow-right-outline"
                   append-icon="mdi-chevron-down"
@@ -81,11 +91,10 @@
                   rounded="middle"
                   variant="text"
                   size="small"
-                  :disabled="reportDownloading"
-                  :loading="reportDownloading"
               >
-                Отчет
-                <v-menu activator="parent" transition="slide-y-reverse-transition">
+                {{ reportDownloadingProcess.process ? 'Загрузка...' : 'Отчет' }}
+                <v-menu :disabled="reportDownloadingProcess.process" activator="parent"
+                        transition="slide-y-reverse-transition">
                   <v-sheet class="mt-1 rounded-lg border-sm elevation-0">
                     <v-list-item
                         title="Скачать отчет"
@@ -177,7 +186,7 @@
                   :disabled="items && items.length > 0"
               >
                 {{ block?.template?.title || 'Базовый шаблон' }}
-                <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition" >
+                <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition">
                   <v-sheet
                       max-height="250"
                       min-width="250"
@@ -395,6 +404,11 @@ export default {
         {value: 50, title: '50'},
       ],
 
+      reportDownloadingProcess: {
+        process: false,
+        percent: 0,
+      },
+
       updatingIds: [],
       reportDownloading: false,
       downloadingPhotos: false,
@@ -522,7 +536,7 @@ export default {
 
     async downloadPhotos() {
       this.downloadingPhotos = true;
-      await downloadPhotos(this.block._id);
+      await downloadPhotos(this.block._id, this.reportDownloadingProcess);
       this.downloadingPhotos = false;
     },
 
@@ -587,7 +601,10 @@ export default {
 
     downloadReport() {
       this.reportDownloading = true;
-      downloadFile('Отчет.docx', `${serverURL}/reports/${useRoute().params.blockId}/commercial-proposal`)
+
+      const url = `${serverURL}/reports/${useRoute().params.blockId}/commercial-proposal`;
+
+      downloadFile('Отчет.docx', url, this.reportDownloadingProcess)
           .catch(err => {
             console.log('Ошибка загрузки отчета', err);
           })

@@ -26,15 +26,23 @@ export function removeSomeBlocks(ids) {
     return axios.post(`/assignment-blocks/deleteMany`, ids, axiosConfig);
 }
 
-export async function downloadPhotos(assignmentBlockID, query) {
+export async function downloadPhotos(assignmentBlockID, progressObject) {
     try {
 
-        const response = await axios.get('/assignment-blocks/archivePhoto/' + (assignmentBlockID ?? '') + (query ?? ''), {
+        progressObject.process = true;
+
+        const response = await axios.get('/assignment-blocks/archivePhoto/' + (assignmentBlockID ?? ''), {
             ...axiosConfig,
             responseType: 'blob',
+            onDownloadProgress: function (progressEvent) {
+                progressObject.percent = parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+            },
         }).catch(err => {
             vuexStore.commit('alert/ERROR', 'Ошибка загрузки. Фотографии отсутствуют');
             console.log('Ошибка загрузки. Фотографии отсутствуют', err);
+        }).finally(() => {
+            progressObject.process = false;
+            progressObject.percent = 0;
         })
 
         if (!response.data) return;
