@@ -19,7 +19,7 @@
               size="small"
               rounded="md"
               border
-              @click="onAddInspector"
+              @click="onAddNewInspector"
           >
             Добавить инспектора
             <v-tooltip activator="parent" text="Добавить новую запись"/>
@@ -31,7 +31,7 @@
               size="small"
               rounded="md"
               border
-              :disabled="!selectedItems.length"
+              :disabled="!selectedInspectors.length"
           >
             Операции
             <v-tooltip activator="parent" text="Операции с выделенными"/>
@@ -40,7 +40,7 @@
                 <v-list-item
                     append-icon="mdi-format-list-checks"
                     density="compact"
-                    @click="selectedItems=[]"
+                    @click="selectedInspectors=[]"
                 >
                   <template #append>
                     <v-icon icon="mdi-format-list-checks" size="small"/>
@@ -102,28 +102,27 @@
           <v-spacer/>
 
           <v-progress-circular
-              v-if="searching"
+              v-if="inspectorSearching"
               color="grey"
               size="25"
               indeterminate
           />
 
           <v-text-field
-              v-model="_searchText"
+              v-model="_inspectorSearchTxt"
               v-bind="mySearchFieldStyle"
               style="max-width: 350px"
-              @update:modelValue="updateSearch"
           />
         </div>
       </v-sheet>
 
       <v-data-table
-          v-model="selectedItems"
+          v-model="selectedInspectors"
           v-model:items-per-page="itemsPerPage"
           :items-per-page-options="itemsPerPageOptions"
           :items-per-page="itemsPerPage"
           :items="itemsSearchFilter"
-          :search="searchText"
+          :search="inspectorSearchTxt"
           :headers="headers"
           style="max-height: 500px"
           items-per-page-text="Кол-во на странице"
@@ -135,7 +134,7 @@
           item-value="_id"
           fixed-header
           show-select
-          @update:current-items="selectedItems = []"
+          @update:current-items="selectedInspectors = []"
       >
         <template #item.name="{ item }">
           {{ getFullName(item) }}
@@ -145,9 +144,9 @@
           <my-button-table-remove :prompt="'Удалить'" @click:yes="onRemoveInspector(item._id)" class="ml-2"/>
         </template>
         <template #footer.prepend>
-          <div class="mr-auto text-grey-darken-1 pl-4 mt-2" v-if="selectedItems.length">
+          <div class="mr-auto text-grey-darken-1 pl-4 mt-2" v-if="selectedInspectors.length">
             <v-icon icon="mdi-order-bool-ascending-variant" class="mr-1"/>
-            Выбрано элементов: {{ selectedItems.length }}
+            Выбрано элементов: {{ selectedInspectors.length }}
           </div>
         </template>
       </v-data-table>
@@ -156,160 +155,127 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
 import {addInspector, fetchInspectors, removeInspector, removeSomeInspectors} from "@/utils/api/api_inspectors";
-import {myBtnPlus, mySearchFieldStyle, myTableSheetStyle} from "@/configs/styles";
+import useTableOptions from "@/composables/useTableOptions";
 import headers from "@/configs/inspectorsTableHeaders";
-import _ from "lodash";
+import {mySearchFieldStyle} from "@/configs/styles";
+import useSearch from "@/composables/useSearch";
+import {useStore} from "vuex";
+import {ref} from 'vue';
 
-export default {
-  name: "inspectors-page",
+const {
+  itemsPerPage,
+  itemsPerPageOptions,
+} = useTableOptions();
 
-  data() {
-    return {
-      headers,
-      items: [],
-      selectedItems: [],
-      fetching: false,
-      _searchText: '',
-      searchText: '',
-      searching: false,
-      itemsPerPage: 10,
-      itemsPerPageOptions: [
-        {value: 10, title: '10'},
-        {value: 25, title: '25'},
-        {value: 50, title: '50'},
-      ],
+const {
+  _search: _inspectorSearchTxt,
+  search: inspectorSearchTxt,
+  searching: inspectorSearching,
+  searchIsNotEmpty,
+} = useSearch();
 
-      // IMPORT STYLES
-      mySearchFieldStyle,
-      myTableSheetStyle,
-      myBtnPlus,
-    }
-  },
+const store = useStore();
+const inspectors = ref([]);
+const fetching = ref(false);
+const selectedInspectors = ref([]);
 
-  mounted() {
-    this.fetchInspectors();
-  },
+onBeforeMount(() => {
+  fetchInspectorsCollection();
+});
 
-  watch: {
-    _searchText() {
-      this.searching = true;
-    }
-  },
+const itemsSearchFilter = computed(() => {
+  if (!searchIsNotEmpty) return inspectors.value;
+  const ex = new RegExp(inspectorSearchTxt.value, 'ig');
+  return inspectors.value.filter(e => {
+    return ex.test([
+      e?.firstName ?? null,
+      e?.surname ?? null,
+      e?.lastName ?? null,
+      e?.phoneNumber ?? null,
+      e?.email ?? null
+    ].filter(e => !!e).join(' '));
+  })
+});
 
-  computed: {
-    itemsSearchFilter() {
-      if (typeof this.searchText === 'string' && this.searchText.length > 0) {
-        const ex = new RegExp(this.searchText, 'ig');
-        return this.items.filter(e => {
-          return ex.test([
-            e?.firstName || null,
-            e?.surname || null,
-            e?.lastName || null,
-            e?.phoneNumber || null,
-            e?.email || null
-          ].filter(e => !!e).join(' '));
-        })
-      } else {
-        return this.items;
-      }
-    },
-  },
+const fetchInspectorsCollection = () => {
+  fetching.value = true;
+  fetchInspectors()
+      .then(response => {
+        inspectors.value = response.data;
+      })
+      .catch(err => {
+        console.log('Ошибка получения списка инспекторов', err);
+        store.commit('alert/ERROR', 'Ошибка получения списка инспекторов');
+      })
+      .finally(() => {
+        fetching.value = false;
+        selectedInspectors.value = [];
+      })
+}
 
-  methods: {
+const getFullName = (user) => {
+  return `${user?.surname ?? ''} ${user?.firstName ?? ''} ${user?.lastName ?? ''}`;
+}
 
-    updateSearch: _.debounce(function (search) {
-      this.searchText = search;
-      this.searching = false;
-    }, 900),
+const onAddNewInspector = () => {
+  addInspector({
+    _id: null,
+    firstName: null,
+    surname: null,
+    lastName: null,
+    phoneNumber: null,
+    email: null,
+    login: null,
+    password: null,
+  }).then(() => {
+    fetchInspectorsCollection();
+    store.commit('alert/SUCCESS', 'Добавлен новый инспектор');
+  }).catch((err) => {
+    console.log('Ошибка добавление инспектора', err);
+    store.commit('alert/ERROR', 'Ошибка добавление инспектора');
+  }).finally(() => {
+    selectedInspectors.value = [];
+  })
+}
 
-    updateTable() {
-      this.fetching = true;
-      const timeoutId = setTimeout(() => {
-        this.fetchInspectors();
-        clearTimeout(timeoutId);
-      }, 500)
-    },
+const onChangeInspector = (id) => {
+  navigateTo(`/manager/inspectors/${id}/change`);
+}
 
-    getFullName(user) {
-      return (user?.surname ? `${user?.surname}` : '') +
-          (user?.firstName ? ` ${user?.firstName}` : '') +
-          (user?.lastName ? ` ${user?.lastName}` : '');
-    },
+const updateTable = () => {
+  fetching.value = true;
+  const timeoutId = setTimeout(() => {
+    fetchInspectorsCollection();
+    clearTimeout(timeoutId);
+  }, 500)
+}
 
-    onAddInspector() {
-      const inspector = {
-        _id: null,
-        firstName: null,
-        surname: null,
-        lastName: null,
-        phoneNumber: null,
-        email: null,
-        login: null,
-        password: null,
-      }
-      addInspector(inspector)
-          .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Добавлен новый инспектор');
-            this.fetchInspectors();
-          })
-          .catch((err) => {
-            console.log('Ошибка добавление инспектора', err);
-            this.$store.commit('alert/ERROR', 'Ошибка добавление инспектора');
-          })
-          .finally(() => {
-            this.sending = false;
-            this.selectedItems = [];
-          })
-    },
+const onRemoveInspector = (id) => {
+  removeInspector(id)
+      .then(() => {
+        store.commit('alert/SUCCESS', 'Инспектор успешно удален');
+        fetchInspectorsCollection();
+      })
+      .catch(() => {
+        store.commit('alert/ERROR', 'Ошибка удаления инспектора');
+      })
+      .finally(() => {
+        selectedInspectors.value = [];
+      })
+}
 
-    fetchInspectors() {
-      this.fetching = true;
-      fetchInspectors()
-          .then(response => {
-            this.items = response.data;
-          })
-          .catch(err => {
-            console.log('Ошибка получения списка инспекторов', err);
-            this.$store.commit('alert/ERROR', 'Ошибка получения списка инспекторов');
-          })
-          .finally(() => {
-            this.fetching = false;
-            this.selectedItems = [];
-          })
-    },
-
-    onChangeInspector(id) {
-      navigateTo(`/manager/inspectors/${id}/change`);
-    },
-
-    onRemoveSomeInspectors() {
-      if (!this.selectedItems || this.selectedItems.length === 0) return;
-      removeSomeInspectors(this.selectedItems)
-          .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Записи удалены');
-            this.fetchInspectors();
-          })
-          .catch(err => {
-            console.log('Ошибка удаления записей', err);
-            this.$store.commit('alert/SUCCESS', 'Ошибка удаления записей');
-          })
-    },
-
-    onRemoveInspector(id) {
-      removeInspector(id)
-          .then(() => {
-            this.$store.commit('alert/SUCCESS', 'Инспектор успешно удален');
-            this.fetchInspectors();
-          })
-          .catch(() => {
-            this.$store.commit('alert/ERROR', 'Ошибка удаления инспектора');
-          })
-          .finally(() => {
-            this.selectedItems = [];
-          })
-    },
-  }
+const onRemoveSomeInspectors = () => {
+  if (!selectedInspectors.value || selectedInspectors.value.length === 0) return;
+  removeSomeInspectors(selectedInspectors.value)
+      .then(() => {
+        fetchInspectorsCollection();
+        store.commit('alert/SUCCESS', 'Записи удалены');
+      })
+      .catch(err => {
+        console.log('Ошибка удаления записей', err);
+        store.commit('alert/SUCCESS', 'Ошибка удаления записей');
+      })
 }
 </script>

@@ -5,7 +5,6 @@ const headers = [
         value: 'surname',
         sortable: true,
         title: 'ФИО Инспектора',
-
     },
     {
         align: 'start',

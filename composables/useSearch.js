@@ -7,6 +7,10 @@ export default function () {
     const search = ref('');
     const searching = ref(false)
 
+    const searchIsNotEmpty = computed(() => {
+        return typeof search.value === "string" && search.value.length > 0;
+    });
+
     const updateSearch = debounce(function () {
         search.value = _search.value;
         searching.value = false;
@@ -20,6 +24,7 @@ export default function () {
     return {
         _search,
         search,
-        searching
+        searching,
+        searchIsNotEmpty
     }
 }

@@ -274,8 +274,8 @@ import objectTypesHeaders from "@/configs/objectTypesHeaders";
 import useTableOptions from "@/composables/useTableOptions";
 import useTemplates from "@/composables/useTemplates";
 import useSearch from "@/composables/useSearch";
-import {useStore} from 'vuex';
 import {ref, watch} from 'vue';
+import {useStore} from 'vuex';
 import _ from "lodash";
 
 const {
