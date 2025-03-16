@@ -73,16 +73,12 @@
     </v-card>
 
     <my-overlay v-model="questionIsVisible">
-      <v-card color="red-darken-4" rounded="sm">
-        <v-card-text>
-          <v-icon>mdi-progress-question</v-icon>
-          <span class="ml-2">Хотите удалить запись ?</span>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn @click.stop="removeImg" variant="elevated" text="Да"/>
-          <v-btn @click.stop="questionIsVisible=false" text="Отмена"/>
-        </v-card-actions>
-      </v-card>
+      <v-sheet class="bg-white rounded px-6 py-4">
+        <span class="ml-2">Хотите удалить фото?</span>
+        <v-divider class="my-2" />
+        <v-btn density="comfortable" size="small" @click.stop="removeImg" variant="elevated" text="Да"/>
+        <v-btn density="comfortable" size="small" @click.stop="questionIsVisible=false" text="Нет" class="ml-4"/>
+      </v-sheet>
     </my-overlay>
 
     <VueEasyLightbox
