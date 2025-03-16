@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="bg-white">
     <v-sheet min-width="400" max-width="1024">
 
       <v-card variant="text">

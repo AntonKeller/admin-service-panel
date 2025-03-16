@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="bg-white">
     <v-sheet>
       <v-card variant="text">
         <v-card-item>
@@ -90,43 +90,9 @@
           </v-form>
         </v-card-text>
 
-        <!--        <v-card-item>-->
-        <!--          <div>-->
-        <!--            <v-label>Вы можете добавить или заменить шаблон</v-label>-->
-        <!--            <v-btn-->
-        <!--                append-icon="mdi-tray-arrow-up"-->
-        <!--                text="Загрузить ракурсы"-->
-        <!--                color="blue-darken-3"-->
-        <!--                density="comfortable"-->
-        <!--                variant="tonal"-->
-        <!--                size="small"-->
-        <!--                class="ml-2"-->
-        <!--                :loading="templateUploading"-->
-        <!--                @click="onTemplateInput"-->
-        <!--            />-->
-        <!--            <v-divider class="my-1"/>-->
-        <!--          </div>-->
-
-        <!--          <input-->
-        <!--              ref="templateInput"-->
-        <!--              type="file"-->
-        <!--              class="d-none"-->
-        <!--              accept=".xlsx"-->
-        <!--              @change="onFileChange"-->
-        <!--          />-->
-
-        <!--        </v-card-item>-->
-
         <v-card-actions>
           <my-btn-submit text="Принять" :loading="loading" @click="changeCustomer"/>
           <my-button-clear text="Очистить" @click="clear"/>
-          <!--          <my-btn-submit-->
-          <!--              prepend-icon="mdi-tray-arrow-down"-->
-          <!--              text="Скачать пустой шаблон"-->
-          <!--              class="ml-auto"-->
-          <!--              variant="text"-->
-          <!--              @click="downloadTemplate"-->
-          <!--          />-->
         </v-card-actions>
       </v-card>
     </v-sheet>

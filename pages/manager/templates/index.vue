@@ -1,5 +1,4 @@
 <template>
-
   <v-container fluid class="bg-white">
     <v-sheet max-width="1280" class="bg-transparent">
 

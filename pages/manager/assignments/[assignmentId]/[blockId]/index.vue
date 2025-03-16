@@ -313,11 +313,11 @@
                       Открыть карточку
                     </v-tooltip>
                   </v-btn>
-                  <my-change-button
-                      class="ml-2"
-                      prompt="Редактировать объект"
-                      @click.stop="onObjectChange(item._id)"
-                  />
+<!--                  <my-change-button-->
+<!--                      class="ml-2"-->
+<!--                      prompt="Редактировать объект"-->
+<!--                      @click.stop="onObjectChange(item._id)"-->
+<!--                  />-->
                 </template>
               </v-data-table>
             </v-sheet>

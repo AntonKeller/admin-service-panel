@@ -1,7 +1,6 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="bg-white">
     <v-sheet>
-
       <v-card variant="text">
         <v-card-item>
           <v-btn v-bind="navigateBackBtnStyle" @click="navigateBack">
