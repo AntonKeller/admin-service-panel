@@ -6,7 +6,7 @@
         <v-card-item>
           <div class="d-flex align-center text-body-1">
             <v-icon icon="mdi-map-marker-outline"/>
-            <span class="ml-2">{{ block?.address ?? '-' }}</span>
+            <span class="ml-2">{{ block?.address ?? '[Адрес не указан]' }}</span>
           </div>
         </v-card-item>
 
@@ -65,11 +65,12 @@
                   rounded="middle"
                   variant="text"
                   size="small"
+                  :disabled="!block?.template"
                   @click="$refs.excelFileInput.click()"
               >
-                Загрузить шаблон
+                Загрузить объекты
                 <v-tooltip activator="parent" location="top">
-                  Загрузить объекты из xlsx
+                  Загрузить объекты из excel
                 </v-tooltip>
               </v-btn>
               <v-divider vertical/>
@@ -91,6 +92,7 @@
                   rounded="middle"
                   variant="text"
                   size="small"
+                  :disabled="!items || items.length === 0"
               >
                 {{ reportDownloadingProcess.process ? 'Загрузка...' : 'Отчет' }}
                 <v-menu :disabled="reportDownloadingProcess.process" activator="parent"
@@ -175,7 +177,7 @@
               </v-btn>
               <v-spacer/>
               <v-btn
-                  prepend-icon="mdi-file-document-arrow-right-outline"
+                  prepend-icon="mdi-text-box-outline"
                   append-icon="mdi-chevron-down"
                   :color="!block?.template ? 'orange-accent-4' : ''"
                   class="text-caption"
@@ -185,7 +187,7 @@
                   size="small"
                   :disabled="items && items.length > 0"
               >
-                {{ block?.template?.title || 'Базовый шаблон' }}
+                {{ block?.template?.title || '[Выберите шаблон]' }}
                 <v-menu :open-on-focus="false" activator="parent" transition="slide-y-reverse-transition">
                   <v-sheet
                       max-height="250"
@@ -217,6 +219,7 @@
                   rounded="middle"
                   variant="text"
                   size="small"
+                  :disabled="!items || items.length === 0"
                   @click="removeAllQuestionVisible = true"
               >
                 Удалить все

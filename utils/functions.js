@@ -19,7 +19,7 @@ export function unixDateToShortDateString(unixDate) {
 }
 
 export function unixDateToMiddleDateString(unixDate) {
-    return unixDate ? moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM') : '-';
+    return unixDate ? moment(parseInt(unixDate)).locale('ru').format('dd DD MMMM') : '[Не указано]';
 }
 
 // Широкая дата из Unix date
